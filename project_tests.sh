@@ -2,5 +2,5 @@
 set -e
 
 rm -f build/*.xml
-proofreader src/ bin/ tests/ web/
+proofreader src/ web/
 vendor/bin/phpunit --log-junit build/phpunit.xml
