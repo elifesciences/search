@@ -30,7 +30,7 @@ class Kernel
             'JMS\Serializer\Annotation', self::ROOT.'/vendor/jms/serializer/src'
         );
 
-        $app->get('/', function() {
+        $app->get('/search', function() {
             return "> Search API";
         });
 
