@@ -17,7 +17,8 @@ class Kernel
 {
     const ROOT = __DIR__.'/../..';
 
-    public static function create(array $config = []) : Application {
+    public static function create(array $config = []) : Application
+    {
         // Create application.
         $app = new Application();
         // Load config
@@ -30,8 +31,8 @@ class Kernel
             'JMS\Serializer\Annotation', self::ROOT.'/vendor/jms/serializer/src'
         );
 
-        $app->get('/search', function() {
-            return "> Search API";
+        $app->get('/search', function () {
+            return '> Search API';
         });
 
         // DI.
@@ -62,7 +63,6 @@ class Kernel
 
             return self::handleException($e, $app);
         });
-
 
         return $app;
     }
@@ -111,5 +111,4 @@ class Kernel
     private static function validate($app, $request, $response)
     {
     }
-
 }

@@ -4,5 +4,5 @@ namespace eLife\Search\Api;
 
 interface IsVersioned
 {
-  public function getVersion();
+    public function getVersion();
 }

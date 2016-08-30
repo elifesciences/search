@@ -1,4 +1,5 @@
 <?php
+
 namespace eLife\Search\Api;
 
 use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
@@ -22,35 +23,35 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
  */
 final class VersionResolver
 {
-  private $version;
+    private $version;
 
-  private $default;
+    private $default;
 
-  public function accept(string $contentType, callable $fn, $isDefault = false)
-  {
-    $this->version[$contentType] = $fn;
-    if ($isDefault) {
-      $this->default = $fn;
+    public function accept(string $contentType, callable $fn, $isDefault = false)
+    {
+        $this->version[$contentType] = $fn;
+        if ($isDefault) {
+            $this->default = $fn;
+        }
     }
-  }
 
-  public function resolve(string $acceptType, ...$args)
-  {
-    if (strtolower($acceptType) === 'application/json') {
-      if (null === $this->default) {
-        // 406 exception if no default set.
+    public function resolve(string $acceptType, ...$args)
+    {
+        if (strtolower($acceptType) === 'application/json') {
+            if (null === $this->default) {
+                // 406 exception if no default set.
         throw new NotAcceptableHttpException('Not acceptable response');
-      }
+            }
       // Is generic application/json return default type.
       $resolver = $this->default;
-    } elseif (isset($this->version[$acceptType])) {
-      // If a version exists.
+        } elseif (isset($this->version[$acceptType])) {
+            // If a version exists.
       $resolver = $this->version[$acceptType];
-    } else {
-      // 406 exception if not valid.
+        } else {
+            // 406 exception if not valid.
       throw new NotAcceptableHttpException('Not acceptable response');
-    }
+        }
 
-    return $resolver(...$args);
-  }
+        return $resolver(...$args);
+    }
 }
