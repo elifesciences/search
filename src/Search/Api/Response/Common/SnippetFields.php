@@ -40,8 +40,9 @@ trait SnippetFields
     public function getType() : string
     {
         if (!isset($this->type)) {
-            throw new LogicException('Missing `type` property on class: ' . __CLASS__);
+            throw new LogicException('Missing `type` property on class: '.__CLASS__);
         }
+
         return $this->type;
     }
 }

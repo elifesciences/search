@@ -42,6 +42,7 @@ class SearchController
         if ($data instanceof HasHeaders) {
             $headers = $data->getHeaders();
         }
+
         return new Response($json, 200, $headers);
     }
 
@@ -49,13 +50,13 @@ class SearchController
     {
         $blog = $this->responseFromArray(BlogArticleResponse::class, [
             'id' => '123',
-            'title' => 'testing title'
+            'title' => 'testing title',
         ]);
 
         return $this->serialize(new SearchResponse([
             $blog,
             $blog,
-            $blog
+            $blog,
         ]), 1);
     }
 

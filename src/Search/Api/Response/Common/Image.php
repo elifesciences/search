@@ -2,7 +2,6 @@
 
 namespace eLife\Search\Api\Response\Common;
 
-
 use JMS\Serializer\Annotation\Type;
 
 trait Image
