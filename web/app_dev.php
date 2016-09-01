@@ -4,11 +4,14 @@ require_once __DIR__.'/bootstrap.php';
 
 use eLife\Search\Kernel;
 
-$app = Kernel::create([
-    'debug' => true,
-    'validate' => true,
-    'ttl' => 0,
+$kernel = new Kernel([
+  'debug' => true,
+  'validate' => true,
+  'ttl' => 0,
 ]);
-$app['debug'] = true;
 
-$app->run();
+$kernel->withApp(function($app) {
+  $app['debug'] = true;
+});
+
+$kernel->run();

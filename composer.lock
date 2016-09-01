@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1aa4934f77147533c3f14287f7a0c220",
+    "hash": "3b9a0a8519bef20b048e71ebeb8693a4",
     "content-hash": "ee2b0169972f77a7bc2c9c28b57047cb",
     "packages": [
         {
@@ -248,12 +248,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "d04d067084da0676043c93ec05f61a302557d12b"
+                "reference": "5c16e629de5566f474bbab0303a95f9ec649ecc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/d04d067084da0676043c93ec05f61a302557d12b",
-                "reference": "d04d067084da0676043c93ec05f61a302557d12b",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/5c16e629de5566f474bbab0303a95f9ec649ecc9",
+                "reference": "5c16e629de5566f474bbab0303a95f9ec649ecc9",
                 "shasum": ""
             },
             "require": {
@@ -265,7 +265,7 @@
                 "GPL-3.0+"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2016-08-24 09:04:07"
+            "time": "2016-09-01 09:14:25"
         },
         {
             "name": "elife/api-validator",
@@ -3272,16 +3272,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "5.5.2",
+            "version": "5.5.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "46ec2d1522ae8c9a12aca6b7650e0be78bbb0502"
+                "reference": "3e6e88e56c912133de6e99b87728cca7ed70c5f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/46ec2d1522ae8c9a12aca6b7650e0be78bbb0502",
-                "reference": "46ec2d1522ae8c9a12aca6b7650e0be78bbb0502",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3e6e88e56c912133de6e99b87728cca7ed70c5f5",
+                "reference": "3e6e88e56c912133de6e99b87728cca7ed70c5f5",
                 "shasum": ""
             },
             "require": {
@@ -3346,20 +3346,20 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-08-18 11:10:44"
+            "time": "2016-08-26 07:11:44"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "3.2.4",
+            "version": "3.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "4e83390f64e7ce04fcaec2ce95cd72823b431d19"
+                "reference": "46b249b43fd2ed8e127aa0fdb3cbcf56e9bc0e49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/4e83390f64e7ce04fcaec2ce95cd72823b431d19",
-                "reference": "4e83390f64e7ce04fcaec2ce95cd72823b431d19",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/46b249b43fd2ed8e127aa0fdb3cbcf56e9bc0e49",
+                "reference": "46b249b43fd2ed8e127aa0fdb3cbcf56e9bc0e49",
                 "shasum": ""
             },
             "require": {
@@ -3405,7 +3405,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2016-08-17 09:33:51"
+            "time": "2016-08-26 05:51:59"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
