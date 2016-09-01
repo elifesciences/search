@@ -2,7 +2,6 @@
 
 namespace eLife\Search\Api\Response;
 
-
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
@@ -36,7 +35,7 @@ class SearchResponse implements HasHeaders
     public function getHeaders($version = 1) : array
     {
         return [
-            'Content-Type' => "application/vnd.elife.search+json;version=$version"
+            'Content-Type' => "application/vnd.elife.search+json;version=$version",
         ];
     }
 }

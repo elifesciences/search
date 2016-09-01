@@ -146,8 +146,7 @@ final class TypesResponse
         $interview = 0,
         $labsExperiment = 0,
         $podcastEpisode = 0
-    )
-    {
+    ) {
         $this->correction = $correction;
         $this->editorial = $editorial;
         $this->feature = $feature;
@@ -173,12 +172,13 @@ final class TypesResponse
         Assert::allIsInstanceOf($list, SearchResult::class);
 
         $type_totals = array_count_values(
-            array_map("strtolower",
+            array_map('strtolower',
                 array_map(function (SearchResult $result) {
                     return $result->getType();
                 }, $list)
             )
         );
+
         return new static (
             $type_totals['correction'] ?? 0,
             $type_totals['editorial'] ?? 0,

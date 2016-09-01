@@ -9,7 +9,6 @@ use JMS\Serializer\Annotation\VirtualProperty;
 
 class PoaArticle implements ArticleResponse
 {
-
     /**
      * @Type("string")
      * @Since(version="1")

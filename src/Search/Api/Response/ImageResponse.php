@@ -3,7 +3,6 @@
 namespace eLife\Search\Api\Response;
 
 use Assert\Assertion;
-use eLife\Search\Model\Image;
 use JMS\Serializer\Annotation\Type;
 
 final class ImageResponse
@@ -20,7 +19,7 @@ final class ImageResponse
 
     public function __construct(string $alt, array $images)
     {
-        Assertion::allKeyExists($images, [ 900, 1800, 250, 500, 70, 140 ]);
+        Assertion::allKeyExists($images, [900, 1800, 250, 500, 70, 140]);
 
         $this->alt = $alt;
         $this->sizes = [

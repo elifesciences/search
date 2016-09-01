@@ -120,9 +120,9 @@ final class Image
             ');
         }
         if ($this->scaled) {
-            return 'https://' . $this->domain . '/max/' . $this->width . '/' . $this->path;
+            return 'https://'.$this->domain.'/max/'.$this->width.'/'.$this->path;
         }
 
-        return 'https://' . $this->domain . '/fit/c/' . $this->width . '/' . $this->height . '/' . $this->path;
+        return 'https://'.$this->domain.'/fit/c/'.$this->width.'/'.$this->height.'/'.$this->path;
     }
 }

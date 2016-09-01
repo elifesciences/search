@@ -5,7 +5,6 @@ namespace eLife\Search;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
-use eLife\Search\Api\Response\AsJson;
 use eLife\Search\Api\SearchController;
 use JMS\Serializer\SerializerBuilder;
 use Silex\Application;
@@ -16,10 +15,10 @@ use Webmozart\Json\JsonDecoder;
 
 class Kernel implements MinimalKernel
 {
-    const ROOT = __DIR__ . '/../..';
+    const ROOT = __DIR__.'/../..';
 
-    static $routes = [
-        '/' => 'indexAction'
+    public static $routes = [
+        '/' => 'indexAction',
     ];
 
     private $app;
@@ -34,7 +33,7 @@ class Kernel implements MinimalKernel
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation', self::ROOT . '/vendor/jms/serializer/src'
+            'JMS\Serializer\Annotation', self::ROOT.'/vendor/jms/serializer/src'
         );
         // DI.
         $this->dependencies($app);
@@ -47,12 +46,13 @@ class Kernel implements MinimalKernel
         // Serializer.
         $app['serializer'] = function () {
             return SerializerBuilder::create()
-                ->setCacheDir(self::ROOT . '/cache')
+                ->setCacheDir(self::ROOT.'/cache')
                 ->build();
         };
         // Puli.
         $app['puli.factory'] = function () {
             $factoryClass = PULI_FACTORY_CLASS;
+
             return new $factoryClass();
         };
         // Puli repo.
@@ -70,7 +70,7 @@ class Kernel implements MinimalKernel
                 new JsonDecoder()
             );
         };
-        $app['default_controller'] = function(Application $app) {
+        $app['default_controller'] = function (Application $app) {
             return new SearchController($app['serializer']);
         };
     }
@@ -108,12 +108,13 @@ class Kernel implements MinimalKernel
 
     public function indexAction()
     {
-        return "> Search API";
+        return '> Search API';
     }
 
     public function withApp(callable $fn)
     {
         $fn($this->app);
+
         return $this;
     }
 
@@ -124,14 +125,12 @@ class Kernel implements MinimalKernel
 
     public function validate(Request $request, Response $response)
     {
-//        $this->app['puli.validator']->validate(
+        //        $this->app['puli.validator']->validate(
 //            $this->app['psr7.bridge']->createResponse($response)
 //        );
     }
 
     public function cache(Request $request, Response $response)
     {
-
     }
-
 }
