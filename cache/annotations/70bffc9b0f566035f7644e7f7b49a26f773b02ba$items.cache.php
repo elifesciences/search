@@ -1,1 +1,0 @@
-<?php return unserialize('a:2:{i:0;O:30:"JMS\\Serializer\\Annotation\\Type":1:{s:4:"name";s:45:"array<eLife\\Search\\Api\\Response\\SearchResult>";}i:1;O:31:"JMS\\Serializer\\Annotation\\Since":1:{s:7:"version";s:1:"1";}}');
