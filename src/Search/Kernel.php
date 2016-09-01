@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Api\SearchController;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use Silex\Application;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
@@ -19,6 +20,7 @@ class Kernel implements MinimalKernel
 
     public static $routes = [
         '/' => 'indexAction',
+        '/blog-article' => 'blogArticleAction',
     ];
 
     private $app;
@@ -49,6 +51,9 @@ class Kernel implements MinimalKernel
                 ->setCacheDir(self::ROOT.'/cache')
                 ->build();
         };
+        $app['serializer.context'] = function () {
+            return SerializationContext::create();
+        };
         // Puli.
         $app['puli.factory'] = function () {
             $factoryClass = PULI_FACTORY_CLASS;
@@ -71,7 +76,7 @@ class Kernel implements MinimalKernel
             );
         };
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer']);
+            return new SearchController($app['serializer'], $app['serializer.context']);
         };
     }
 
