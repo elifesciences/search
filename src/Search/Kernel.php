@@ -5,21 +5,27 @@ namespace eLife\Search;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
+use eLife\Search\Api\Response\AsJson;
+use eLife\Search\Api\SearchController;
 use JMS\Serializer\SerializerBuilder;
 use Silex\Application;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 use Webmozart\Json\JsonDecoder;
 
-class Kernel
+class Kernel implements MinimalKernel
 {
-    const ROOT = __DIR__.'/../..';
+    const ROOT = __DIR__ . '/../..';
 
-    public static function create(array $config = []) : Application
+    static $routes = [
+        '/' => 'indexAction'
+    ];
+
+    private $app;
+
+    public function __construct($config = [])
     {
-        // Create application.
         $app = new Application();
         // Load config
         $app['config'] = array_merge([
@@ -28,55 +34,25 @@ class Kernel
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation', self::ROOT.'/vendor/jms/serializer/src'
+            'JMS\Serializer\Annotation', self::ROOT . '/vendor/jms/serializer/src'
         );
-
-        $app->get('/search', function () {
-            return '> Search API';
-        });
-
         // DI.
-        self::dependencies($app);
-        // Routes
-        self::routes($app);
-        // Validate.
-        $app->after(function (Request $request, Response $response) use ($app) {
-            // Validation.
-            if ($app['config']['validate']) {
-                self::validate($app, $request, $response);
-            }
-        }, 2);
-
-        // Cache.
-        $app->after(function (Request $request, Response $response) use ($app) {
-            // cache.
-            if ($app['config']['ttl'] > 0) {
-                self::cache($app, $request, $response);
-            }
-        }, 3);
-
-        // Error handling.
-        $app->error(function (Throwable $e) use ($app) {
-            if ($app['debug']) {
-                return null;
-            }
-
-            return self::handleException($e, $app);
-        });
-
-        return $app;
+        $this->dependencies($app);
+        // Add to class once set up.
+        $this->app = $this->applicationFlow($app);
     }
 
-    private static function dependencies($app)
+    public function dependencies(Application $app)
     {
         // Serializer.
         $app['serializer'] = function () {
-            return SerializerBuilder::create()->setCacheDir(self::ROOT.'/cache')->build();
+            return SerializerBuilder::create()
+                ->setCacheDir(self::ROOT . '/cache')
+                ->build();
         };
         // Puli.
         $app['puli.factory'] = function () {
             $factoryClass = PULI_FACTORY_CLASS;
-
             return new $factoryClass();
         };
         // Puli repo.
@@ -90,25 +66,72 @@ class Kernel
         // Validator.
         $app['puli.validator'] = function (Application $app) {
             return new JsonMessageValidator(
-              new PuliSchemaFinder($app['puli.repository']),
-              new JsonDecoder()
+                new PuliSchemaFinder($app['puli.repository']),
+                new JsonDecoder()
             );
+        };
+        $app['default_controller'] = function(Application $app) {
+            return new SearchController($app['serializer']);
         };
     }
 
-    private static function routes($app)
+    public function applicationFlow(Application $app) : Application
+    {
+        // Routes
+        $this->routes($app);
+        // Validate.
+        if ($app['config']['validate']) {
+            $app->after([$this, 'validate'], 2);
+        }
+        // Cache.
+        if ($app['config']['ttl'] > 0) {
+            $app->after([$this, 'cache'], 3);
+        }
+        // Error handling.
+        if (!$app['config']['debug']) {
+            $app->error([$this, 'handleException']);
+        }
+        // Return
+        return $app;
+    }
+
+    public function routes(Application $app)
+    {
+        foreach (self::$routes as $route => $action) {
+            $app->get($route, [$app['default_controller'], $action]);
+        }
+    }
+
+    public function handleException($e) : Response
     {
     }
 
-    private static function handleException($e, $app)
+    public function indexAction()
     {
+        return "> Search API";
     }
 
-    private static function cache($app, $request, $response)
+    public function withApp(callable $fn)
     {
+        $fn($this->app);
+        return $this;
     }
 
-    private static function validate($app, $request, $response)
+    public function run()
     {
+        return $this->app->run();
     }
+
+    public function validate(Request $request, Response $response)
+    {
+//        $this->app['puli.validator']->validate(
+//            $this->app['psr7.bridge']->createResponse($response)
+//        );
+    }
+
+    public function cache(Request $request, Response $response)
+    {
+
+    }
+
 }
