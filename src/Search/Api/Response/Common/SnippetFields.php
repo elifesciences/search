@@ -30,13 +30,6 @@ trait SnippetFields
      */
     public $impactStatement;
 
-    /**
-     * @Type("array<string>")
-     * @Since(version="1")
-     * @Groups({"snippet", "full"})
-     */
-    public $subjects;
-
     public function getType() : string
     {
         if (!isset($this->type)) {

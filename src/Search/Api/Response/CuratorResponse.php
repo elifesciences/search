@@ -3,6 +3,6 @@
 namespace eLife\Search\Api\Response;
 
 // @todo
-class CuratorResponse
+class CuratorResponse /* extends PersonResponse */
 {
 }
