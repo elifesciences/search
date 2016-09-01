@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Stephen
- * Date: 01/09/16
- * Time: 16:46.
- */
 
 namespace eLife\Search\Api\Response\Common;
 
