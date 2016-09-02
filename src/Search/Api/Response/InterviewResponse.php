@@ -5,7 +5,6 @@ namespace eLife\Search\Api\Response;
 use eLife\Search\Api\Response\Common\Published;
 use eLife\Search\Api\Response\Common\SnippetFields;
 use JMS\Serializer\Annotation\Accessor;
-use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
@@ -17,7 +16,6 @@ class InterviewResponse implements SearchResult
     /**
      * @Type("string")
      * @Since(version="1")
-     * @Groups({"snippet"})
      * @Accessor(getter="getType")
      */
     public $type = 'interview';
