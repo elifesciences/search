@@ -19,7 +19,7 @@ class Kernel implements MinimalKernel
     const ROOT = __DIR__.'/../..';
 
     public static $routes = [
-        '/' => 'indexAction',
+        '/search' => 'indexAction',
         '/blog-article' => 'blogArticleAction',
     ];
 
