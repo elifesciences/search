@@ -10,7 +10,7 @@ $kernel = new Kernel([
     'ttl' => 0,
 ]);
 
-$kernel->withApp(function($app) {
+$kernel->withApp(function ($app) {
     $app['debug'] = true;
 });
 

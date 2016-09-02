@@ -3,9 +3,9 @@
 namespace eLife\Search\Api\Response\Block;
 
 use eLife\Search\Api\Response\Block;
+use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Annotation\VirtualProperty;
 
 class NoSection implements Block
 {
@@ -24,12 +24,10 @@ class NoSection implements Block
     /**
      * @Type("string")
      * @Since(version="1")
+     * @Accessor(getter="getType")
      */
     public $type = 'section';
 
-    /**
-     * @VirtualProperty()
-     */
     public function getType() : string
     {
         return $this->type;
