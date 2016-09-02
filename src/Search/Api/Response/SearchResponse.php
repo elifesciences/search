@@ -20,7 +20,7 @@ class SearchResponse implements HasHeaders
     public $items = [];
 
     /**
-     * @Type("eLife\Search\Api\Response\TypesResponse")
+     * @Type(TypesResponse::class)
      * @Since(version="1")
      */
     public $types;

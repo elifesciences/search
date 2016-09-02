@@ -20,8 +20,8 @@ class InterviewResponse implements SearchResult
      */
     public $type = 'interview';
 
-    /*
-     * @todo
-     */
-    // public $interviewee;
+     /**
+      * @Type(PersonResponse::class)
+      */
+     public $interviewee;
 }

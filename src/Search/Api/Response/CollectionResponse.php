@@ -23,7 +23,7 @@ class CollectionResponse implements SearchResult
     public $updated;
 
     /**
-     * @Type(eLife\Search\Api\Response\SelectedCuratorResponse::class)
+     * @Type(SelectedCuratorResponse::class)
      * @Since(version="1")
      * @SerializedName("selectedCurator")
      */
