@@ -1,0 +1,17 @@
+version: '2'
+services:
+  nginx:
+    build: ./docker/nginx
+    ports:
+      - 8080:80
+    volumes_from:
+      - search_api
+    links:
+      - search_api
+  search_api:
+    build: .
+    container_name: elife_search_api
+    ports:
+      - 9080:9080
+    volumes:
+      - /searchapi
