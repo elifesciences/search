@@ -3,6 +3,10 @@
 namespace tests\eLife\Search;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use eLife\Search\Api\Response\SearchResponse;
+use eLife\Search\Api\Response\SearchResult;
+use eLife\Search\Api\SearchResultDiscriminator;
+use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use PHPUnit_Framework_TestCase;
@@ -34,6 +38,9 @@ abstract class SerializerTest extends PHPUnit_Framework_TestCase
         );
         // Serializer.
         $this->serializer = SerializerBuilder::create()
+            ->configureListeners(function(EventDispatcher $dispatcher) {
+                $dispatcher->addSubscriber(new SearchResultDiscriminator());
+            })
             ->build();
         $this->context = SerializationContext::create();
 
