@@ -3,10 +3,8 @@
 namespace eLife\Search\Api\Response\ArticleResponse;
 
 use eLife\Search\Api\Response\ArticleResponse;
-use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
-use JMS\Serializer\Annotation\VirtualProperty;
 
 class PoaArticle implements ArticleResponse
 {
@@ -17,5 +15,4 @@ class PoaArticle implements ArticleResponse
      * @Since(version="1")
      */
     public $status = 'poa';
-
 }

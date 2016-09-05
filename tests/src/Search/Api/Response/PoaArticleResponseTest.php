@@ -2,13 +2,11 @@
 
 namespace tests\eLife\Search\Api\Response;
 
-
 use eLife\Search\Api\Response\ArticleResponse\PoaArticle;
 use tests\eLife\Search\SerializerTest;
 
 class PoaArticleResponseTest extends SerializerTest
 {
-
     public function getResponseClass() : string
     {
         return PoaArticle::class;
@@ -16,7 +14,6 @@ class PoaArticleResponseTest extends SerializerTest
 
     public function jsonProvider() : array
     {
-
         $minimum = '
         {
             "status": "poa",
@@ -111,10 +108,10 @@ class PoaArticleResponseTest extends SerializerTest
 
         return [
             [
-                $minimum, $minimum_expected
+                $minimum, $minimum_expected,
             ],
             [
-                $complete, $complete_expected
+                $complete, $complete_expected,
             ],
         ];
     }

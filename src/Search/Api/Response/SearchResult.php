@@ -2,9 +2,9 @@
 
 namespace eLife\Search\Api\Response;
 
-use JMS\Serializer\Annotation\Discriminator;
 use eLife\Search\Api\Response\ArticleResponse\PoaArticle;
 use eLife\Search\Api\Response\ArticleResponse\VorArticle;
+use JMS\Serializer\Annotation\Discriminator;
 
 /**
  * @Discriminator(field = "internal_type", map = {

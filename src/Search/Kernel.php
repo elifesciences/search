@@ -51,7 +51,7 @@ class Kernel implements MinimalKernel
         // Serializer.
         $app['serializer'] = function () {
             return SerializerBuilder::create()
-                ->configureListeners(function(EventDispatcher $dispatcher) {
+                ->configureListeners(function (EventDispatcher $dispatcher) {
                     $dispatcher->addSubscriber(new SearchResultDiscriminator());
                 })
                 ->setCacheDir(self::ROOT.'/cache')

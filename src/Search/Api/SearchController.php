@@ -48,7 +48,8 @@ class SearchController
 
         $data = $query->getQuery()->execute();
 
-        $result = $this->responseFromArray(SearchResponse::class, ['items' => $data ]);
+        $result = $this->responseFromArray(SearchResponse::class, ['items' => $data]);
+
         return $this->serialize($result);
     }
 

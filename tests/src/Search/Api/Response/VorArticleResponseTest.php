@@ -2,13 +2,11 @@
 
 namespace tests\eLife\Search\Api\Response;
 
-
 use eLife\Search\Api\Response\ArticleResponse\VorArticle;
 use tests\eLife\Search\SerializerTest;
 
 class VorArticleResponseTest extends SerializerTest
 {
-
     public function getResponseClass() : string
     {
         return VorArticle::class;
@@ -338,7 +336,7 @@ class VorArticleResponseTest extends SerializerTest
 
 JSON;
 
-        $complete_expected = <<<JSON
+        $complete_expected = <<<'JSON'
         {
             "status": "vor",
             "id": "09560",
@@ -377,11 +375,11 @@ JSON;
 
         return [
             [
-                $minimum, $minimum_expected
+                $minimum, $minimum_expected,
             ],
             [
-                $complete, $complete_expected
-            ]
+                $complete, $complete_expected,
+            ],
         ];
     }
 }
