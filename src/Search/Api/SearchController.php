@@ -2,11 +2,13 @@
 
 namespace eLife\Search\Api;
 
+use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Response\ArticleResponse\PoaArticle;
 use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Api\Response\SearchResponse;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SearchController
@@ -17,6 +19,40 @@ class SearchController
     {
         $this->serializer = $serializer;
         $this->context = $context;
+    }
+
+    public function searchTestAction(Request $request) {
+        $for = $request->query->get('for');
+        $order = $request->query->get('order', 'desc');
+        $page = $request->query->get('page', 1);
+        $perPage = $request->query->get('per-page', 10);
+        // $sort = $request->query->get('sort');
+        $subjects = $request->query->get('subject');
+        $types = $request->query->get('type');
+
+
+        $query = new MockQueryBuilder();
+
+        $query = $query
+            ->searchFor($for)
+            ->paginate($page, $perPage)
+            ->order($order)
+        ;
+
+        if ($subjects) {
+            $query->whereSubjects($subjects);
+        }
+        if ($subjects) {
+            $query->whereType($types);
+        }
+
+        $data = $query->getQuery()->execute();
+
+        $titles = array_column($data, 'title');
+
+        array_unshift($titles, '<h1>Search results: ' . sizeof($titles) . '</h1>');
+
+        return implode('<br/>', $titles);
     }
 
     public function indexAction()

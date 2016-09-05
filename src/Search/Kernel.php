@@ -21,6 +21,7 @@ class Kernel implements MinimalKernel
     public static $routes = [
         '/search' => 'indexAction',
         '/blog-article' => 'blogArticleAction',
+        '/test-search' => 'searchTestAction',
     ];
 
     private $app;
