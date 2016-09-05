@@ -2,7 +2,6 @@
 
 namespace eLife\Search\Api\Query;
 
-
 class MockQueryBuilder implements QueryBuilder
 {
     const NAME = 'can\'t believe its not google';
@@ -13,7 +12,7 @@ class MockQueryBuilder implements QueryBuilder
 
     public function __construct(array $data = null, $clever = false)
     {
-        $this->data = $data === null ? json_decode(file_get_contents(__DIR__ . '/data/search.json'), true) : $data;
+        $this->data = $data === null ? json_decode(file_get_contents(__DIR__.'/data/search.json'), true) : $data;
         $this->clever = $clever;
     }
 
@@ -22,7 +21,7 @@ class MockQueryBuilder implements QueryBuilder
         if (!$this->clever) {
             return new static(
                 $this->data = array_filter($this->data, function ($item) use ($string) {
-                    return (strpos(json_encode($item), $string) !== false);
+                    return strpos(json_encode($item), $string) !== false;
                 }),
                 $this->clever
             );
@@ -38,7 +37,7 @@ class MockQueryBuilder implements QueryBuilder
                     'body' => [],
                     'researchOrganisms' => [],
                     'decisionLetter' => [],
-                    'chapters' => []
+                    'chapters' => [],
                 ], $item);
 
                 $searchable_key = json_encode([
@@ -49,7 +48,8 @@ class MockQueryBuilder implements QueryBuilder
                     $searchable['body'],
                     $searchable['chapters'],
                 ]);
-                return (strpos($searchable_key, $string) !== false);
+
+                return strpos($searchable_key, $string) !== false;
             }),
             $this->clever
         );
@@ -63,6 +63,7 @@ class MockQueryBuilder implements QueryBuilder
                 $this->clever
             );
         }
+
         return $this;
     }
 
@@ -89,6 +90,7 @@ class MockQueryBuilder implements QueryBuilder
         return new static(
             $this->data = array_filter($this->data, function ($item) use ($subjects) {
                 $check = $item['subjects'] ?? [];
+
                 return !array_diff($subjects, $check);
             }),
             $this->clever
@@ -100,6 +102,7 @@ class MockQueryBuilder implements QueryBuilder
         return new static(
             $this->data = array_filter($this->data, function ($item) use ($types) {
                 $check = $item['type'] ?? [];
+
                 return !array_diff($types, $check);
             }),
             $this->clever
@@ -108,8 +111,7 @@ class MockQueryBuilder implements QueryBuilder
 
     public function getQuery() : QueryExecutor
     {
-        return new class($this->data) implements QueryExecutor
-        {
+        return new class($this->data) implements QueryExecutor {
             public $data;
 
             public function __construct($data)

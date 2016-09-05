@@ -21,7 +21,8 @@ class SearchController
         $this->context = $context;
     }
 
-    public function searchTestAction(Request $request) {
+    public function searchTestAction(Request $request)
+    {
         $for = $request->query->get('for');
         $order = $request->query->get('order', 'desc');
         $page = $request->query->get('page', 1);
@@ -29,7 +30,6 @@ class SearchController
         // $sort = $request->query->get('sort');
         $subjects = $request->query->get('subject');
         $types = $request->query->get('type');
-
 
         $query = new MockQueryBuilder();
 
@@ -50,7 +50,7 @@ class SearchController
 
         $titles = array_column($data, 'title');
 
-        array_unshift($titles, '<h1>Search results: ' . sizeof($titles) . '</h1>');
+        array_unshift($titles, '<h1>Search results: '.sizeof($titles).'</h1>');
 
         return implode('<br/>', $titles);
     }
