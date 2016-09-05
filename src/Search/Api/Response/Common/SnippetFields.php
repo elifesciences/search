@@ -2,7 +2,7 @@
 
 namespace eLife\Search\Api\Response\Common;
 
-use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 use LogicException;
@@ -12,30 +12,21 @@ trait SnippetFields
     /**
      * @Type("string")
      * @Since(version="1")
-     * @Groups({"snippet", "full"})
      */
     public $id;
 
     /**
      * @Type("string")
      * @Since(version="1")
-     * @Groups({"snippet", "full"})
      */
     public $title;
 
     /**
      * @Type("string")
      * @Since(version="1")
-     * @Groups({"snippet", "full"})
+     * @SerializedName("impactStatement")
      */
     public $impactStatement;
-
-    /**
-     * @Type("array<string>")
-     * @Since(version="1")
-     * @Groups({"snippet", "full"})
-     */
-    public $subjects;
 
     public function getType() : string
     {

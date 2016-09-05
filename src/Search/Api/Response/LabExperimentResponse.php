@@ -2,29 +2,29 @@
 
 namespace eLife\Search\Api\Response;
 
+use eLife\Search\Api\Response\Common\Image;
+use eLife\Search\Api\Response\Common\Published;
 use eLife\Search\Api\Response\Common\SnippetFields;
-use eLife\Search\Api\Response\Common\Subjects;
 use JMS\Serializer\Annotation\Accessor;
-use JMS\Serializer\Annotation\ReadOnly;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-class BlogArticleResponse implements SearchResult
+class LabExperimentResponse implements SearchResult
 {
     use SnippetFields;
-    use Subjects;
+    use Image;
+    use Published;
 
     /**
-     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @Type("integer")
      * @Since(version="1")
      */
-    public $published;
+    public $number;
 
     /**
      * @Type("string")
      * @Since(version="1")
      * @Accessor(getter="getType")
-     * @ReadOnly
      */
-    public $type = 'blog-article';
+    public $type = 'labs-experiment';
 }

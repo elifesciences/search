@@ -3,17 +3,20 @@
 namespace eLife\Search\Api\Response;
 
 use Assert\Assertion;
+use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
 final class ImageResponse
 {
     /**
      * @Type("string")
+     * @Since(version="1")
      */
     public $alt;
 
     /**
      * @Type("array<string, array<integer,string>>")
+     * @Since(version="1")
      */
     public $sizes;
 

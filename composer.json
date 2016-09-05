@@ -17,7 +17,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "tests\\eLife\\Search\\": "./tests/src"
+            "tests\\eLife\\": "./tests/src"
         }
     },
     "scripts": {

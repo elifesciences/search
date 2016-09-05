@@ -5,11 +5,11 @@ namespace eLife\Search\Api\Response\Common;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-trait Image
+trait Subjects
 {
     /**
-     * @Type(eLife\Search\Api\Response\ImageResponse::class)
+     * @Type("array<string>")
      * @Since(version="1")
      */
-    public $image;
+    public $subjects;
 }

@@ -2,14 +2,16 @@
 
 namespace eLife\Search\Api\Response\Common;
 
+use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-trait Image
+trait Published
 {
     /**
-     * @Type(eLife\Search\Api\Response\ImageResponse::class)
+     * @Type("DateTime<'c'>")
      * @Since(version="1")
+     * @Groups({"snippet", "full"})
      */
-    public $image;
+    public $published;
 }

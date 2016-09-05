@@ -40,16 +40,16 @@ final class VersionResolver
         if (strtolower($acceptType) === 'application/json') {
             if (null === $this->default) {
                 // 406 exception if no default set.
-        throw new NotAcceptableHttpException('Not acceptable response');
+                throw new NotAcceptableHttpException('Not acceptable response');
             }
-      // Is generic application/json return default type.
-      $resolver = $this->default;
+            // Is generic application/json return default type.
+            $resolver = $this->default;
         } elseif (isset($this->version[$acceptType])) {
             // If a version exists.
-      $resolver = $this->version[$acceptType];
+            $resolver = $this->version[$acceptType];
         } else {
             // 406 exception if not valid.
-      throw new NotAcceptableHttpException('Not acceptable response');
+            throw new NotAcceptableHttpException('Not acceptable response');
         }
 
         return $resolver(...$args);
