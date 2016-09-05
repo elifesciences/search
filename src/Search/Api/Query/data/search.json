@@ -355,6 +355,7 @@
   },
   {
     "id": "1",
+    "type": "blog-article",
     "title": "Media coverage: Slime can see",
     "impactStatement": "In their research paper – Cyanobacteria use micro-optics to sense light direction – Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world’s oldest and smallest camera eye, allowing them to ‘see’.",
     "published": "2016-07-08T08:33:25+00:00",
@@ -434,6 +435,7 @@
   },
   {
     "id": "2",
+    "type": "blog-article",
     "title": "More eLife authors are linking submissions to their ORCID iDs",
     "impactStatement": "eLife sees positive results of requiring corresponding authors to register and link their profiles to their ORCID iDs",
     "published": "2016-06-09T15:15:10+00:00",
@@ -448,6 +450,7 @@
     "id": "1",
     "title": "Tropical disease",
     "subTitle": "A selection of papers",
+    "type": "collection",
     "impactStatement": "eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness. The articles below have been selected by eLife editors to give a flavour of the breadth of research on tropical diseases published by the journal.",
     "updated": "2015-09-16T11:19:26+00:00",
     "image": {
@@ -598,6 +601,7 @@
   {
     "id": "1",
     "title": "Tropical disease",
+    "type": "collection",
     "updated": "2015-09-16T11:19:26+00:00",
     "image": {
       "alt": "",
@@ -651,6 +655,7 @@
   {
     "id": "1",
     "title": "Changing peer review in cancer research: a seminar at Fred Hutch",
+    "type": "event",
     "impactStatement": "How eLife is influencing the culture of peer review",
     "starts": "2016-04-22T20:00:00+00:00",
     "ends": "2016-04-22T21:00:00+00:00",
@@ -713,6 +718,7 @@
   },
   {
     "id": "2",
+    "type": "event",
     "title": "eLife Continuum webinar",
     "starts": "2016-08-04T15:00:00+00:00",
     "ends": "2016-08-04T16:00:00+00:00",
@@ -742,6 +748,7 @@
       ]
     },
     "title": "Controlling traffic",
+    "type": "interview",
     "impactStatement": "Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.",
     "published": "2016-01-29T16:22:28+00:00",
     "content": [
@@ -783,6 +790,7 @@
         "index": "Rosello, Alicia"
       }
     },
+    "type": "interview",
     "title": "Infection, statistics and public health",
     "published": "2015-11-03T11:00:53+00:00",
     "content": [
@@ -801,6 +809,7 @@
   {
     "number": 1,
     "title": "Experimental eLife Lens search page",
+    "type": "labs-experiment",
     "impactStatement": "Today on eLife Labs we are launching a small demo of a search interface that brings together some elements of eLife Lens and some of the native power of a technology called elasticsearch. Head over to the demo to try it out now.",
     "published": "2015-04-01T11:32:47+00:00",
     "image": {
