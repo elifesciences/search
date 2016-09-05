@@ -2,6 +2,8 @@
 
 namespace eLife\Search\Api\Response;
 
+use eLife\Search\Api\HasHeaders;
+use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
@@ -16,6 +18,7 @@ class SearchResponse implements HasHeaders
     /**
      * @Type("array<eLife\Search\Api\Response\SearchResult>")
      * @Since(version="1")
+     * @Accessor(setter="setItems")
      */
     public $items = [];
 
@@ -27,9 +30,14 @@ class SearchResponse implements HasHeaders
 
     public function __construct(array $items = [])
     {
+        $this->setItems($items);
+    }
+
+    public function setItems($items)
+    {
         $this->total = count($items);
         $this->items = $items;
-        $this->types = TypesResponse::fromList($items);
+        $this->types = TypesResponse::fromList($this->items);
     }
 
     public function getHeaders($version = 1) : array

@@ -9,8 +9,19 @@ use PHPUnit_Framework_TestCase;
 
 abstract class SerializerTest extends PHPUnit_Framework_TestCase
 {
-    abstract public function testSerialization();
-    abstract public function testDeserialization();
+    abstract public function getResponseClass() : string;
+
+    abstract public function jsonProvider() : array;
+
+    /**
+     * @dataProvider jsonProvider
+     */
+    public function testSerialization($actual_json, $expected)
+    {
+        $event = $this->serializer->deserialize($actual_json, $this->getResponseClass(), 'json');
+        $actual = $this->serialize($event, 1);
+        $this->assertJsonStringEqualsJsonString($expected, $actual);
+    }
 
     private $serializer;
     private $context;

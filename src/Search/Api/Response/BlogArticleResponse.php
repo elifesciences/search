@@ -15,7 +15,7 @@ class BlogArticleResponse implements SearchResult
     use Subjects;
 
     /**
-     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @Type("DateTime<'Y-m-d\TH:i:sP'>")
      * @Since(version="1")
      */
     public $published;
