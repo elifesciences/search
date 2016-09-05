@@ -4,7 +4,6 @@ namespace eLife\Search\Api;
 
 use eLife\Search\Api\Response\ArticleResponse\PoaArticle;
 use eLife\Search\Api\Response\BlogArticleResponse;
-use eLife\Search\Api\Response\HasHeaders;
 use eLife\Search\Api\Response\SearchResponse;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;

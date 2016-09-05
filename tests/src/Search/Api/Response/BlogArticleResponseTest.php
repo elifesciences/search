@@ -26,27 +26,35 @@ class BlogArticleResponseTest extends SerializerTest
         $this->assertEquals('2016-06-09T15:15:10+00:00', $article->published->format('c'));
     }
 
-    /**
-     * @test
-     */
-    public function testSerialization()
+    public function getResponseClass() : string
     {
-        $article = $this->responseFromArray(BlogArticleResponse::class, [
-            'id' => '12456',
-            'title' => 'some blog article',
-            'impactStatement' => 'Something impacting in a statement like fashion.',
-            'published' => '2016-06-09T15:15:10+00:00',
-        ]);
+        return BlogArticleResponse::class;
+    }
 
-        $json = $this->serialize($article, 1);
-        $this->assertJsonStringEqualsJsonString('
+    public function jsonProvider() : array
+    {
+        $actual = '
+            {
+                "id": "12456",
+                "impactStatement": "Something impacting in a statement like fashion.",
+                "title": "some blog article",
+                "published": "2016-06-09T15:15:10+00:00"
+            }
+        ';
+        $expected = '
             {
                 "id": "12456",
                 "type": "blog-article",
                 "impactStatement": "Something impacting in a statement like fashion.",
                 "title": "some blog article",
-                "published": "2016-06-09T15:15:10+0000"
-             }
-         ', $json);
+                "published": "2016-06-09T15:15:10+00:00"
+            }
+        ';
+
+        return [
+            [
+                $actual, $expected,
+            ],
+        ];
     }
 }

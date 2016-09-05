@@ -17,7 +17,7 @@ class CollectionResponse implements SearchResult
     use Image;
 
     /**
-     * @Type("DateTime<'Y-m-d\TH:i:sO'>")
+     * @Type("DateTime<'Y-m-d\TH:i:sP'>")
      * @Since(version="1")
      */
     public $updated;

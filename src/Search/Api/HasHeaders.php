@@ -1,6 +1,6 @@
 <?php
 
-namespace eLife\Search\Api\Response;
+namespace eLife\Search\Api;
 
 interface HasHeaders
 {

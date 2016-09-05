@@ -4,6 +4,7 @@ namespace eLife\Search\Api\Response;
 
 use eLife\Search\Api\Response\Common\SnippetFields;
 use JMS\Serializer\Annotation\Accessor;
+use JMS\Serializer\Annotation\ReadOnly;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
@@ -12,13 +13,15 @@ class EventResponse implements SearchResult
     use SnippetFields;
 
     /**
-     * @Type("DateTime<'c'>")
+     * @see https://github.com/schmittjoh/JMSSerializerBundle/issues/459
+     * @Type("DateTime<'Y-m-d\TH:i:sP'>")
      * @Since(version="1")
      */
     public $starts;
 
     /**
-     * @Type("DateTime<'c'>")
+     * @see https://github.com/schmittjoh/JMSSerializerBundle/issues/459
+     * @Type("DateTime<'Y-m-d\TH:i:sP'>")
      * @Since(version="1")
      */
     public $ends;
@@ -33,6 +36,7 @@ class EventResponse implements SearchResult
      * @Type("string")
      * @Since(version="1")
      * @Accessor(getter="getType")
+     * @ReadOnly
      */
     public $type = 'event';
 }

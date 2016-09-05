@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation\Type;
 trait Published
 {
     /**
-     * @Type("DateTime<'c'>")
+     * @Type("DateTime<'Y-m-d\TH:i:sP'>")
      * @Since(version="1")
      * @Groups({"snippet", "full"})
      */

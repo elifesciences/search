@@ -111,11 +111,6 @@ class Kernel implements MinimalKernel
     {
     }
 
-    public function indexAction()
-    {
-        return '> Search API';
-    }
-
     public function withApp(callable $fn)
     {
         $fn($this->app);
