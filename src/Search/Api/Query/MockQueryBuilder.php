@@ -2,7 +2,7 @@
 
 namespace eLife\Search\Api\Query;
 
-class MockQueryBuilder implements QueryBuilder
+final class MockQueryBuilder implements QueryBuilder
 {
     const NAME = 'can\'t believe its not google';
     const VERSION = '1.0.0';

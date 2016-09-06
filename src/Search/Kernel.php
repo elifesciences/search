@@ -15,8 +15,9 @@ use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Webmozart\Json\JsonDecoder;
+use Closure;
 
-class Kernel implements MinimalKernel
+final class Kernel implements MinimalKernel
 {
     const ROOT = __DIR__.'/../..';
 
@@ -119,8 +120,8 @@ class Kernel implements MinimalKernel
 
     public function withApp(callable $fn)
     {
-        $fn($this->app);
-
+        $boundFn = Closure::bind($fn, $this);
+        $boundFn($this->app);
         return $this;
     }
 

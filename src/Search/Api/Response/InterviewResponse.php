@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-class InterviewResponse implements SearchResult
+final class InterviewResponse implements SearchResult
 {
     use SnippetFields;
     use Published;

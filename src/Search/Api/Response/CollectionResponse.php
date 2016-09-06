@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-class CollectionResponse implements SearchResult
+final class CollectionResponse implements SearchResult
 {
     use SnippetFields;
     use Subjects;

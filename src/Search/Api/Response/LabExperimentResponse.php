@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-class LabExperimentResponse implements SearchResult
+final class LabExperimentResponse implements SearchResult
 {
     use SnippetFields;
     use Image;

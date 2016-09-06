@@ -9,7 +9,7 @@ use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreDeserializeEvent;
 use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 
-class SearchResultDiscriminator implements EventSubscriberInterface
+final class SearchResultDiscriminator implements EventSubscriberInterface
 {
     public static function getSubscribedEvents()
     {
@@ -31,9 +31,6 @@ class SearchResultDiscriminator implements EventSubscriberInterface
         }
     }
 
-    /**
-     * @param PreSerializeEvent $event
-     */
     public function onPreSerialize(PreSerializeEvent $event)
     {
         $object = $event->getObject();
