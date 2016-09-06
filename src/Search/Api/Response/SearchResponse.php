@@ -7,7 +7,7 @@ use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-class SearchResponse implements HasHeaders
+final class SearchResponse implements HasHeaders
 {
     /**
      * @Type("integer")

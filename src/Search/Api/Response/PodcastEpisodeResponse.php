@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-class PodcastEpisodeResponse implements SearchResult
+final class PodcastEpisodeResponse implements SearchResult
 {
     use SnippetFields;
     use Subjects;

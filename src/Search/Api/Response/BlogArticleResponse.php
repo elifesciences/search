@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation\ReadOnly;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-class BlogArticleResponse implements SearchResult
+final class BlogArticleResponse implements SearchResult
 {
     use SnippetFields;
     use Subjects;

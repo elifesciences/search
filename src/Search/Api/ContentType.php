@@ -2,6 +2,6 @@
 
 namespace eLife\Search\Api;
 
-class ContentType
+final class ContentType
 {
 }

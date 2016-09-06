@@ -2,7 +2,7 @@
 
 namespace eLife\Search\Api\Query;
 
-class MockQueryBuilder implements QueryBuilder
+final class MockQueryBuilder implements QueryBuilder
 {
     const NAME = 'can\'t believe its not google';
     const VERSION = '1.0.0';
@@ -18,6 +18,9 @@ class MockQueryBuilder implements QueryBuilder
 
     public function searchFor(string $string) : QueryBuilder
     {
+        if ($string === '') {
+            return $this;
+        }
         if (!$this->clever) {
             return new static(
                 $this->data = array_filter($this->data, function ($item) use ($string) {

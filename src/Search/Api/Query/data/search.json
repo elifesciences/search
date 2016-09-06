@@ -918,6 +918,7 @@
   {
     "number": 1,
     "title": "Experimental eLife Lens search page",
+    "type": "lab-experiments",
     "published": "2015-04-01T11:32:47+00:00",
     "image": {
       "alt": "",
@@ -946,6 +947,7 @@
   {
     "number": 30,
     "title": "July 2016",
+    "type": "labs-experiment",
     "impactStatement": "In this episode of the eLife podcast we hear about drug production, early career researchers, honeybees, human migrations and pain.",
     "published": "2016-07-01T08:30:15+00:00",
     "image": {

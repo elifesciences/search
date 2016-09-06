@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation\ReadOnly;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-class EventResponse implements SearchResult
+final class EventResponse implements SearchResult
 {
     use SnippetFields;
 
