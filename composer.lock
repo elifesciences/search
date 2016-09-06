@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1d605512df9cb23adc67c15b97852f1d",
-    "content-hash": "c460f15338559d2bb230c1e6958efc62",
+    "hash": "ce743f7002d2a756f599462b848b48d8",
+    "content-hash": "f761d11490c30f4fc2581c888b1dd388",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -145,6 +145,60 @@
                 "validation"
             ],
             "time": "2016-07-28 19:35:30"
+        },
+        {
+            "name": "crell/api-problem",
+            "version": "2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Crell/ApiProblem.git",
+                "reference": "1e8dc70f9bf4363571087dc9d95f09bc8ba7d314"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Crell/ApiProblem/zipball/1e8dc70f9bf4363571087dc9d95f09bc8ba7d314",
+                "reference": "1e8dc70f9bf4363571087dc9d95f09bc8ba7d314",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5 || ^7.0"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Crell\\ApiProblem\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Larry Garfield",
+                    "email": "larry@garfieldtech.com",
+                    "homepage": "http://www.garfieldtech.com/"
+                }
+            ],
+            "description": "PHP wrapper for the api-problem IETF specification",
+            "homepage": "https://github.com/Crell/ApiProblem",
+            "keywords": [
+                "api-problem",
+                "http",
+                "json",
+                "rest",
+                "xml"
+            ],
+            "time": "2016-07-24 18:53:45"
         },
         {
             "name": "doctrine/annotations",
@@ -469,6 +523,106 @@
             ],
             "description": "eLife Sciences API specification",
             "time": "2016-09-01 09:14:25"
+        },
+        {
+            "name": "elife/api-client",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elifesciences/api-client-php.git",
+                "reference": "f0fb1a94375a455c942abeedd2e373142486faba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/f0fb1a94375a455c942abeedd2e373142486faba",
+                "reference": "f0fb1a94375a455c942abeedd2e373142486faba",
+                "shasum": ""
+            },
+            "require": {
+                "beberlei/assert": "^2.0",
+                "crell/api-problem": "^2.0",
+                "guzzlehttp/promises": "^1.0",
+                "guzzlehttp/psr7": "^1.0",
+                "php": "^7.0",
+                "psr/http-message": "^1.0"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^6.0",
+                "mtdowling/jmespath.php": "^2.0",
+                "phpspec/phpspec": "^2.4",
+                "phpspec/prophecy": "^1.5",
+                "phpunit/phpunit": "^5.2",
+                "psr/log": "^1.0"
+            },
+            "suggest": {
+                "guzzlehttp/guzzle": "^6.0, to use the Guzzle6HttpClient adapter",
+                "mtdowling/jmespath.php": "^2.0, to use the Result::search() method",
+                "psr/log": "^1.0, to use the WarningCheckingHttpClient adapter"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "eLife\\ApiClient\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "description": "eLife Sciences API client",
+            "time": "2016-09-02 16:01:11"
+        },
+        {
+            "name": "elife/api-sdk",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elifesciences/api-sdk-php.git",
+                "reference": "48763e530a1fdc65b2095292532eb27c35eff0ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/48763e530a1fdc65b2095292532eb27c35eff0ce",
+                "reference": "48763e530a1fdc65b2095292532eb27c35eff0ce",
+                "shasum": ""
+            },
+            "require": {
+                "elife/api-client": "^1.0@dev",
+                "guzzlehttp/promises": "^1.0",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "elife/api": "dev-master",
+                "elife/api-validator": "^1.0@dev",
+                "guzzlehttp/guzzle": "^6.0",
+                "phpunit/phpunit": "^5.2",
+                "psr/http-message": "^1.0",
+                "puli/composer-plugin": "^1.0-beta9",
+                "puli/repository": "^1.0-beta9",
+                "webmozart/json": "^1.3@dev"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "eLife\\ApiSdk\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "eLife Sciences API SDK",
+            "time": "2016-09-06 07:13:38"
         },
         {
             "name": "elife/api-validator",
@@ -4522,7 +4676,8 @@
         "doctrine/cache": 20,
         "symfony/event-dispatcher": 20,
         "monolog/monolog": 20,
-        "aws/aws-sdk-php": 20
+        "aws/aws-sdk-php": 20,
+        "elife/api-sdk": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

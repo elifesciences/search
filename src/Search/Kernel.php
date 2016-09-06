@@ -25,6 +25,7 @@ final class Kernel implements MinimalKernel
         '/search' => 'indexAction',
         '/blog-article' => 'blogArticleAction',
         '/test-search' => 'searchTestAction',
+        '/blog-api' => 'blogApiAction',
     ];
 
     private $app;

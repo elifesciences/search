@@ -2,10 +2,17 @@
 
 namespace eLife\Search\Api;
 
+use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
+use eLife\ApiSdk\Client\BlogArticles;
+use eLife\ApiSdk\Client\Subjects;
+use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Response\ArticleResponse\PoaArticle;
 use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Api\Response\SearchResponse;
+use GuzzleHttp\Client;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +26,38 @@ class SearchController
     {
         $this->serializer = $serializer;
         $this->context = $context;
+    }
+
+    public function blogApiAction()
+    {
+        // To test locally change the variables below.
+        $localApiUrl = 'http://192.168.187.56:1242';
+        // Create article thing.
+        $articles = new BlogArticles(
+            new BlogClient(
+                new Guzzle6HttpClient(
+                    new Client(['base_uri' => $localApiUrl])
+                )
+            ),
+            new Subjects(
+                new SubjectsClient(
+                    new Guzzle6HttpClient(
+                        new Client(['base_uri' => $localApiUrl])
+                    )
+                )
+            )
+        );
+        // Loop
+        foreach ($articles as $article) {
+            // Prompt some PStorm auto-complete
+            if ($article instanceof BlogArticle) {
+                // Get the title
+                echo $article->getTitle().'<br/>';
+                // var_dump($article->getContent()->toArray());
+            }
+        }
+
+        return '';
     }
 
     public function searchTestAction(Request $request)

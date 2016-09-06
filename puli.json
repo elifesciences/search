@@ -13,6 +13,10 @@
             "install-path": "vendor/beberlei/assert",
             "installer": "composer"
         },
+        "crell/api-problem": {
+            "install-path": "vendor/crell/api-problem",
+            "installer": "composer"
+        },
         "doctrine/annotations": {
             "install-path": "vendor/doctrine/annotations",
             "installer": "composer"
@@ -35,6 +39,14 @@
         },
         "elife/api": {
             "install-path": "vendor/elife/api",
+            "installer": "composer"
+        },
+        "elife/api-client": {
+            "install-path": "vendor/elife/api-client",
+            "installer": "composer"
+        },
+        "elife/api-sdk": {
+            "install-path": "vendor/elife/api-sdk",
             "installer": "composer"
         },
         "elife/api-validator": {
