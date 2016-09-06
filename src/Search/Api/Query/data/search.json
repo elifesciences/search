@@ -947,7 +947,7 @@
   {
     "number": 30,
     "title": "July 2016",
-    "type": "labs-experiment",
+    "type": "podcast-episode",
     "impactStatement": "In this episode of the eLife podcast we hear about drug production, early career researchers, honeybees, human migrations and pain.",
     "published": "2016-07-01T08:30:15+00:00",
     "image": {
@@ -1089,6 +1089,7 @@
   {
     "number": 30,
     "title": "June 2016",
+    "type": "podcast-episode",
     "published": "2016-07-01T08:30:15+00:00",
     "image": {
       "alt": "",
