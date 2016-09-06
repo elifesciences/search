@@ -2,6 +2,7 @@
 
 namespace eLife\Search;
 
+use Closure;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
@@ -15,7 +16,6 @@ use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Webmozart\Json\JsonDecoder;
-use Closure;
 
 final class Kernel implements MinimalKernel
 {
@@ -122,6 +122,7 @@ final class Kernel implements MinimalKernel
     {
         $boundFn = Closure::bind($fn, $this);
         $boundFn($this->app);
+
         return $this;
     }
 
