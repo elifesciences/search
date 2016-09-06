@@ -5,7 +5,7 @@ namespace eLife\Search\Api\Query;
 final class MockQueryBuilder implements QueryBuilder
 {
     const NAME = 'can\'t believe its not google';
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.1';
     private $clever = false;
 
     private $data;
@@ -24,7 +24,7 @@ final class MockQueryBuilder implements QueryBuilder
         if (!$this->clever) {
             return new static(
                 $this->data = array_filter($this->data, function ($item) use ($string) {
-                    return strpos(json_encode($item), $string) !== false;
+                    return strpos(strtolower(json_encode($item)), strtolower($string)) !== false;
                 }),
                 $this->clever
             );
