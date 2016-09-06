@@ -5,6 +5,10 @@
         "bootstrap-file": "vendor/autoload.php"
     },
     "packages": {
+        "aws/aws-sdk-php": {
+            "install-path": "vendor/aws/aws-sdk-php",
+            "installer": "composer"
+        },
         "beberlei/assert": {
             "install-path": "vendor/beberlei/assert",
             "installer": "composer"
@@ -13,12 +17,20 @@
             "install-path": "vendor/doctrine/annotations",
             "installer": "composer"
         },
+        "doctrine/cache": {
+            "install-path": "vendor/doctrine/cache",
+            "installer": "composer"
+        },
         "doctrine/instantiator": {
             "install-path": "vendor/doctrine/instantiator",
             "installer": "composer"
         },
         "doctrine/lexer": {
             "install-path": "vendor/doctrine/lexer",
+            "installer": "composer"
+        },
+        "elasticsearch/elasticsearch": {
+            "install-path": "vendor/elasticsearch/elasticsearch",
             "installer": "composer"
         },
         "elife/api": {
@@ -39,6 +51,14 @@
         },
         "guzzlehttp/psr7": {
             "install-path": "vendor/guzzlehttp/psr7",
+            "installer": "composer"
+        },
+        "guzzlehttp/ringphp": {
+            "install-path": "vendor/guzzlehttp/ringphp",
+            "installer": "composer"
+        },
+        "guzzlehttp/streams": {
+            "install-path": "vendor/guzzlehttp/streams",
             "installer": "composer"
         },
         "hamcrest/hamcrest-php": {
@@ -66,6 +86,14 @@
             "install-path": "vendor/mockery/mockery",
             "installer": "composer",
             "env": "dev"
+        },
+        "monolog/monolog": {
+            "install-path": "vendor/monolog/monolog",
+            "installer": "composer"
+        },
+        "mtdowling/jmespath.php": {
+            "install-path": "vendor/mtdowling/jmespath.php",
+            "installer": "composer"
         },
         "myclabs/deep-copy": {
             "install-path": "vendor/myclabs/deep-copy",
@@ -173,6 +201,10 @@
         },
         "ramsey/uuid": {
             "install-path": "vendor/ramsey/uuid",
+            "installer": "composer"
+        },
+        "react/promise": {
+            "install-path": "vendor/react/promise",
             "installer": "composer"
         },
         "sebastian/code-unit-reverse-lookup": {
