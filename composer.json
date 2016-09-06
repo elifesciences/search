@@ -13,7 +13,8 @@
         "symfony/event-dispatcher": "dev-master",
         "monolog/monolog": "dev-master",
         "aws/aws-sdk-php": "dev-master",
-        "elasticsearch/elasticsearch": "~2.0"
+        "elasticsearch/elasticsearch": "~2.0",
+        "elife/api-sdk": "^1.0@dev"
     },
     "autoload": {
         "psr-4": {

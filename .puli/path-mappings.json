@@ -1,7 +1,0 @@
-{
-    "/elife/api/model": "vendor/elife/api/dist/model",
-    "/elife/api/api.raml": "vendor/elife/api/dist/api.raml",
-    "/elife/api": null,
-    "/elife": null,
-    "/": null
-}
