@@ -48,11 +48,9 @@ class SearchController
 
         $data = $query->getQuery()->execute();
 
-        $titles = array_column($data, 'title');
+        $result = $this->responseFromArray(SearchResponse::class, ['items' => $data]);
 
-        array_unshift($titles, '<h1>Search results: '.sizeof($titles).'</h1>');
-
-        return implode('<br/>', $titles);
+        return $this->serialize($result);
     }
 
     public function indexAction()

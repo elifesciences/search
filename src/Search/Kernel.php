@@ -6,6 +6,8 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Api\SearchController;
+use eLife\Search\Api\SearchResultDiscriminator;
+use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use Silex\Application;
@@ -49,6 +51,9 @@ class Kernel implements MinimalKernel
         // Serializer.
         $app['serializer'] = function () {
             return SerializerBuilder::create()
+                ->configureListeners(function (EventDispatcher $dispatcher) {
+                    $dispatcher->addSubscriber(new SearchResultDiscriminator());
+                })
                 ->setCacheDir(self::ROOT.'/cache')
                 ->build();
         };
