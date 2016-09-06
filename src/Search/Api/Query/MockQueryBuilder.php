@@ -18,6 +18,9 @@ final class MockQueryBuilder implements QueryBuilder
 
     public function searchFor(string $string) : QueryBuilder
     {
+        if ($string === '') {
+            return $this;
+        }
         if (!$this->clever) {
             return new static(
                 $this->data = array_filter($this->data, function ($item) use ($string) {

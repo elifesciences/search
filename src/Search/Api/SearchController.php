@@ -23,7 +23,7 @@ class SearchController
 
     public function searchTestAction(Request $request)
     {
-        $for = $request->query->get('for');
+        $for = $request->query->get('for', '');
         $order = $request->query->get('order', 'desc');
         $page = $request->query->get('page', 1);
         $perPage = $request->query->get('per-page', 10);
