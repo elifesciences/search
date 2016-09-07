@@ -15,36 +15,38 @@ $worker = new GearmanWorker();
 $worker->addServer('elife_gearman_1');
 
 // Middleware to allow transporting of more complex objects.
-function normalize(callable $fn) : callable {
-    return function(GearmanJob $job) use ($fn) {
+function normalize(callable $fn) : callable
+{
+    return function (GearmanJob $job) use ($fn) {
         $data = unserialize($job->workload());
         $value = $fn($data, $job);
         return serialize($value);
     };
 }
 
+// To test locally change the variables below.
+$localApiUrl = 'http://192.168.187.56:1242';
+// Guzzle.
+$guzzle = new Guzzle6HttpClient(
+    new Client(['base_uri' => $localApiUrl])
+);
+// Blog client.
+$blogClient = new BlogClient($guzzle);
+// Subject client.
+$subjectClient = new SubjectsClient($guzzle);
+
 // Articles.
-$worker->addFunction('get_blog_posts', normalize(function($data, GearmanJob $job) {
-    // To test locally change the variables below.
-    $localApiUrl = 'http://192.168.187.56:1242';
+$worker->addFunction('get_blog_posts', normalize(function ($data) use ($blogClient, $subjectClient) {
     // Articles
     $articles = new BlogArticles(
-        new BlogClient(
-            new Guzzle6HttpClient(
-                new Client(['base_uri' => $localApiUrl])
-            )
-        ),
+        $blogClient,
         new Subjects(
-            new SubjectsClient(
-                new Guzzle6HttpClient(
-                    new Client(['base_uri' => $localApiUrl])
-                )
-            )
+            $subjectClient
         )
     );
     $subset = $articles->slice($data['page'], $data['per-page']);
 
-    return $subset->map(function(BlogArticle $item) {
+    return $subset->map(function (BlogArticle $item) {
         return $item->getTitle();
     })->toArray()[0];
 }));
@@ -55,5 +57,5 @@ $worker->addFunction("reverse", normalize(function ($data, GearmanJob $job) {
 }));
 
 print 'Worked started' . PHP_EOL;
-while ($worker->work());
+while ($worker->work()) ;
 

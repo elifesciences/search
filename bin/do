@@ -97,7 +97,7 @@ $set->addSaga(function () {
 //    while ($page = yield getNextArticle()) {
 //        $data = yield mapArticle($page);
 //        $data = yield addIndexes($data);
-//        $ok = yield addToElasicSearch($data);
+//        $ok = yield addToElasticSearch($data);
 //        if (!$ok) {
 //            yield recoverFromArticle($data);
 //        }
