@@ -1,0 +1,59 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
+use eLife\ApiSdk\Client\BlogArticles;
+use eLife\ApiSdk\Client\Subjects;
+use eLife\ApiSdk\Model\BlogArticle;
+
+use GuzzleHttp\Client;
+
+$worker = new GearmanWorker();
+$worker->addServer('elife_gearman_1');
+
+// Middleware to allow transporting of more complex objects.
+function normalize(callable $fn) : callable {
+    return function(GearmanJob $job) use ($fn) {
+        $data = unserialize($job->workload());
+        $value = $fn($data, $job);
+        return serialize($value);
+    };
+}
+
+// Articles.
+$worker->addFunction('get_blog_posts', normalize(function($data, GearmanJob $job) {
+    // To test locally change the variables below.
+    $localApiUrl = 'http://192.168.187.56:1242';
+    // Articles
+    $articles = new BlogArticles(
+        new BlogClient(
+            new Guzzle6HttpClient(
+                new Client(['base_uri' => $localApiUrl])
+            )
+        ),
+        new Subjects(
+            new SubjectsClient(
+                new Guzzle6HttpClient(
+                    new Client(['base_uri' => $localApiUrl])
+                )
+            )
+        )
+    );
+    $subset = $articles->slice($data['page'], $data['per-page']);
+
+    return $subset->map(function(BlogArticle $item) {
+        return $item->getTitle();
+    })->toArray()[0];
+}));
+
+// For testing.
+$worker->addFunction("reverse", normalize(function ($data, GearmanJob $job) {
+    return strrev($data);
+}));
+
+print 'Worked started' . PHP_EOL;
+while ($worker->work());
+
