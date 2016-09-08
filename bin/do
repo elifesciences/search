@@ -27,7 +27,8 @@ function getBlogPost($page = 0, $perPage = 1)
     ];
 }
 
-function reverse($data) {
+function reverse($data)
+{
     return [
         'reverse',
         $data
@@ -39,7 +40,15 @@ $set->addSaga(function () {
         // Grab the blog post.
         $data = yield getBlogPost($i);
         // Print the result.
-        print '>>>>>>> ' . $i . ') ' . $data . PHP_EOL;
+        print '>>>>>>> ' . $i . ') ' . $data[0] . PHP_EOL;
+    }
+    $next = true;
+    $d = 0;
+    while ($next) {
+        $data = yield ['get_single_blog_post', ['offset' => $d]];
+        print '>>>>>>>>>>>>>' . $data['item'] . PHP_EOL;
+        $d++;
+        $next = $data['next'];
     }
 });
 

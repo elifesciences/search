@@ -2,27 +2,14 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
-use eLife\ApiSdk\Client\BlogArticles;
-use eLife\ApiSdk\Client\Subjects;
-use eLife\ApiSdk\Model\BlogArticle;
-
+use eLife\Search\Annotation\GearmanTaskDriver;
+use eLife\Search\Annotation\Register;
+use eLife\Search\Workflow\BlogArticleWorkflow;
 use GuzzleHttp\Client;
-
-$worker = new GearmanWorker();
-$worker->addServer('elife_gearman_1');
-
-// Middleware to allow transporting of more complex objects.
-function normalize(callable $fn) : callable
-{
-    return function (GearmanJob $job) use ($fn) {
-        $data = unserialize($job->workload());
-        $value = $fn($data, $job);
-        return serialize($value);
-    };
-}
 
 // To test locally change the variables below.
 $localApiUrl = 'http://192.168.187.56:1242';
@@ -35,27 +22,10 @@ $blogClient = new BlogClient($guzzle);
 // Subject client.
 $subjectClient = new SubjectsClient($guzzle);
 
-// Articles.
-$worker->addFunction('get_blog_posts', normalize(function ($data) use ($blogClient, $subjectClient) {
-    // Articles
-    $articles = new BlogArticles(
-        $blogClient,
-        new Subjects(
-            $subjectClient
-        )
-    );
-    $subset = $articles->slice($data['page'], $data['per-page']);
+Register::registerLoader();
+$worker = new GearmanWorker();
+$worker->addServer('elife_gearman_1');
 
-    return $subset->map(function (BlogArticle $item) {
-        return $item->getTitle();
-    })->toArray()[0];
-}));
-
-// For testing.
-$worker->addFunction("reverse", normalize(function ($data, GearmanJob $job) {
-    return strrev($data);
-}));
-
-print 'Worked started' . PHP_EOL;
-while ($worker->work()) ;
-
+$driver = new GearmanTaskDriver(new AnnotationReader(), $worker);
+$driver->registerWorkflow(new BlogArticleWorkflow($blogClient, $subjectClient));
+$driver->work();

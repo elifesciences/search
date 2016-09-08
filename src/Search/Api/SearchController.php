@@ -2,6 +2,7 @@
 
 namespace eLife\Search\Api;
 
+use Doctrine\Common\Annotations\Reader;
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
@@ -22,10 +23,14 @@ class SearchController
 {
     private $serializer;
 
-    public function __construct(Serializer $serializer, SerializationContext $context)
-    {
+    public function __construct(
+        Serializer $serializer,
+        SerializationContext $context,
+        Reader $reader
+    ) {
         $this->serializer = $serializer;
         $this->context = $context;
+        $this->reader = $reader;
     }
 
     public function blogApiAction()
