@@ -4,7 +4,7 @@ namespace eLife\Search\Annotation;
 
 use eLife\Search\Workflow\Workflow;
 
-class GearmanTaskInstance
+final class GearmanTaskInstance
 {
     public $instance;
     public $method;

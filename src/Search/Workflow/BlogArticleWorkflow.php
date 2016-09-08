@@ -9,19 +9,22 @@ use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Annotation\GearmanTask;
 
-class BlogArticleWorkflow implements Workflow
+final class BlogArticleWorkflow implements Workflow
 {
     private $blogClient;
-    private $subjectClient;
-    /**
-     * @var SubjectsClient
-     */
     private $subjectsClient;
+    private $articles;
 
     public function __construct(BlogClient $blogClient, SubjectsClient $subjectsClient)
     {
         $this->blogClient = $blogClient;
         $this->subjectsClient = $subjectsClient;
+        $this->articles = new BlogArticles(
+            $this->blogClient,
+            new Subjects(
+                $this->subjectsClient
+            )
+        );
     }
 
     /**
@@ -32,14 +35,7 @@ class BlogArticleWorkflow implements Workflow
      */
     public function getSingleBlogArticle($offset)
     {
-        // Articles
-        $articles = new BlogArticles(
-            $this->blogClient,
-            new Subjects(
-                $this->subjectsClient
-            )
-        );
-        $subset = $articles->slice($offset, 2);
+        $subset = $this->articles->slice($offset, 2);
         $single = $subset->map(function (BlogArticle $item) {
             return $item->getTitle();
         })->toArray();
@@ -58,14 +54,7 @@ class BlogArticleWorkflow implements Workflow
      */
     public function getBlogArticles($page, $perPage)
     {
-        // Articles
-        $articles = new BlogArticles(
-            $this->blogClient,
-            new Subjects(
-                $this->subjectsClient
-            )
-        );
-        $subset = $articles->slice($page, $perPage);
+        $subset = $this->articles->slice($page, $perPage);
 
         return $subset->map(function (BlogArticle $item) {
             return $item->getTitle();

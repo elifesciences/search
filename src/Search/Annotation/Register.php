@@ -4,7 +4,7 @@ namespace eLife\Search\Annotation;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
-class Register
+final class Register
 {
     public static function registerLoader()
     {

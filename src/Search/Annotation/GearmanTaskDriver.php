@@ -9,7 +9,7 @@ use GearmanJob;
 use GearmanWorker;
 use ReflectionClass;
 
-class GearmanTaskDriver
+final class GearmanTaskDriver
 {
     public $tasks = [];
     private $reader;

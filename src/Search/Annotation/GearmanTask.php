@@ -5,7 +5,7 @@ namespace eLife\Search\Annotation;
 /**
  * @Annotation
  */
-class GearmanTask
+final class GearmanTask
 {
     public $parameters = [];
     public $name;
