@@ -1,0 +1,116 @@
+#!/usr/bin/env php
+<?php require_once __DIR__ . '/../vendor/autoload.php';
+
+use eLife\Search\Gearman\GearmanSaga;
+
+// Reverse Client Code
+$client = new GearmanClient();
+$client->addServer('elife_gearman_1');
+
+$set = new GearmanSaga($client);
+
+function normalize($fn)
+{
+    return function (GearmanTask $data) use ($fn) {
+        return $fn(unserialize($data->data()), $data);
+    };
+}
+
+function getBlogPost($page = 0, $perPage = 1)
+{
+    return [
+        'get_blog_posts',
+        [
+            'page' => $page,
+            'per-page' => $perPage
+        ]
+    ];
+}
+
+function reverse($data)
+{
+    return [
+        'reverse',
+        $data
+    ];
+}
+
+$set->addSaga(function () {
+    for ($i = 0; $i < 3; $i++) {
+        // Grab the blog post.
+        $data = yield getBlogPost($i);
+        // Print the result.
+        print '>>>>>>> ' . $i . ') ' . $data[0] . PHP_EOL;
+    }
+    $next = true;
+    $d = 0;
+    while ($next) {
+        $data = yield ['get_single_blog_post', ['offset' => $d]];
+        print '>>>>>>>>>>>>>' . $data['item'] . PHP_EOL;
+        $d++;
+        $next = $data['next'];
+    }
+});
+
+// Example non-saga (same as above):
+//
+//  for ($i = 0; $i < 3; $i++) {
+//    $set->addTask('get_blog_posts', ['page' => $i, 'per-page' => 1])
+//        ->then(normalize(
+//            function ($data) {
+//                print '>>>>>>>' . $data . PHP_EOL;
+//            }
+//        ));
+// }
+
+// Example: Composing sagas with batch:
+//
+// $set->addTask('reverse', 'my string')->then(function(GearmanTask $job) use ($set) {
+//    for ($x = 0; $x < 10; $x++) {
+//        $set->addSaga(function () {
+//             yield new GearmanBatch([
+//                ['reverse', '1 ajndihbagosuyfihdjnf'],
+//                ['reverse', '2 akjnidlhbausjdlna'],
+//                ['reverse', '33333']
+//            ]);
+//
+//            $data = yield ['reverse', 'testing'];
+//            $data = yield ['reverse', $data];
+//            yield ['reverse', $data];
+//        });
+//    }
+//    $set->run();
+// });
+
+// Example of what the final blog job may look like:
+//
+// $set->addTask('get_blog_posts', [ 0, 100 ])->then(function(GearmanTask $job) use ($set) {
+//    $posts = json_decode($job->data());
+//    $stack = new SplDoublyLinkedList();
+//    foreach ($posts as $item) {
+//        $stack->push($item);
+//    }
+//    while ($post = $stack->pop()) {
+//        $set->addSaga(function () use ($post) {
+//            $data = yield ['map_to_object', $post];
+//            $data = yield ['add_index', $data];
+//            yield ['add_to_elastic_search', $data];
+//        });
+//    }
+//    $set->run();
+// });
+
+// Or even something like this:
+//
+// $set->addSaga(function() {
+//    while ($page = yield getNextArticle()) {
+//        $data = yield mapArticle($page);
+//        $data = yield addIndexes($data);
+//        $ok = yield addToElasticSearch($data);
+//        if (!$ok) {
+//            yield recoverFromArticle($data);
+//        }
+//    }
+// });
+
+$set->run();

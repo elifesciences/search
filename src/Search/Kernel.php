@@ -3,7 +3,10 @@
 namespace eLife\Search;
 
 use Closure;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\FilesystemCache;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Api\SearchController;
@@ -71,6 +74,18 @@ final class Kernel implements MinimalKernel
         // Puli repo.
         $app['puli.repository'] = function (Application $app) {
             return $app['puli.factory']->createRepository();
+        };
+        // General cache.
+        $app['cache'] = function () {
+            return new FilesystemCache(self::ROOT.'/cache');
+        };
+        // Annotation reader.
+        $app['annotations.reader'] = function (Application $app) {
+            return new CachedReader(
+                new AnnotationReader(),
+                $app['cache'],
+                $app['config']['debug']
+            );
         };
         // PSR-7 Bridge
         $app['psr7.bridge'] = function () {

@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Doctrine\Common\Annotations\AnnotationReader;
+use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\SubjectsClient;
+use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
+use eLife\Search\Annotation\GearmanTaskDriver;
+use eLife\Search\Annotation\Register;
+use eLife\Search\Workflow\BlogArticleWorkflow;
+use GuzzleHttp\Client;
+
+// To test locally change the variables below.
+$localApiUrl = 'http://192.168.187.56:1242';
+// Guzzle.
+$guzzle = new Guzzle6HttpClient(
+    new Client(['base_uri' => $localApiUrl])
+);
+// Blog client.
+$blogClient = new BlogClient($guzzle);
+// Subject client.
+$subjectClient = new SubjectsClient($guzzle);
+
+Register::registerLoader();
+$worker = new GearmanWorker();
+$worker->addServer('elife_gearman_1');
+
+$driver = new GearmanTaskDriver(new AnnotationReader(), $worker);
+$driver->registerWorkflow(new BlogArticleWorkflow($blogClient, $subjectClient));
+$driver->work();

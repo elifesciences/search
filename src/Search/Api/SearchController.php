@@ -22,8 +22,10 @@ class SearchController
 {
     private $serializer;
 
-    public function __construct(Serializer $serializer, SerializationContext $context)
-    {
+    public function __construct(
+        Serializer $serializer,
+        SerializationContext $context
+    ) {
         $this->serializer = $serializer;
         $this->context = $context;
     }
