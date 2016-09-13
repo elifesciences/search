@@ -35,7 +35,7 @@ final class GearmanClientMock extends GearmanClient
         $this->tasks[] = $task;
     }
 
-    public function runTasks()
+    public function runTasks($data = [])
     {
         $fn = $this->callback;
         while (!empty($this->tasks)) {
