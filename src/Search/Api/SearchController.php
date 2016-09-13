@@ -7,7 +7,6 @@ use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Api\Query\MockQueryBuilder;
-use eLife\Search\Api\Response\ArticleResponse\PoaArticle;
 use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Api\Response\SearchResponse;
 use GuzzleHttp\Client;
@@ -88,10 +87,7 @@ class SearchController
 
     public function indexAction()
     {
-        return $this->serialize(new SearchResponse([
-            new PoaArticle(),
-            new PoaArticle(),
-        ]), 1);
+        return $this->serialize(new SearchResponse([]), 1);
     }
 
     private function serialize($data, int $version = null, $group = null)
