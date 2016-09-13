@@ -99,7 +99,7 @@ final class Kernel implements MinimalKernel
             );
         };
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['serializer.context'], $app['annotations.reader']);
+            return new SearchController($app['serializer'], $app['serializer.context']);
         };
     }
 

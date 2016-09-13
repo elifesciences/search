@@ -15,9 +15,11 @@ final class GearmanSaga
     public $tasks = [];
     private $client;
     private $promises = [];
+    private $cli = true;
 
-    public function __construct(GearmanClient $client)
+    public function __construct(GearmanClient $client, $cli = true)
     {
+        $this->cli = $cli;
         $this->client = $client;
         $tasks = &$this->tasks;
         $promises = &$this->promises;
@@ -44,7 +46,9 @@ final class GearmanSaga
                 );
             $this->client->runTasks();
         } else {
-            exit('fin.'.PHP_EOL);
+            if ($this->cli) {
+                exit('fin.'.PHP_EOL);
+            }
         }
     }
 
@@ -98,6 +102,18 @@ final class GearmanSaga
         );
     }
 
+    public function addTask($task, $data) : Promise
+    {
+        $deferred = new Deferred();
+        $id = uniqid('task_');
+        $promise = $deferred->promise();
+        $this->tasks[$id] = $deferred;
+        $this->promises[$id] = $promise;
+        $this->client->addTask($task, serialize($data), $task, $id);
+
+        return $promise;
+    }
+
     public function stepThrough(string $task, $data, Generator &$current)
     {
         $t = $this->addTask($task, $data);
@@ -114,17 +130,5 @@ final class GearmanSaga
                 $this
             )
         );
-    }
-
-    public function addTask($task, $data) : Promise
-    {
-        $deferred = new Deferred();
-        $id = uniqid('task_');
-        $promise = $deferred->promise();
-        $this->tasks[$id] = $deferred;
-        $this->promises[$id] = $promise;
-        $this->client->addTask($task, serialize($data), $task, $id);
-
-        return $promise;
     }
 }
