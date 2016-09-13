@@ -74,6 +74,18 @@ final class GearmanSaga
         }
     }
 
+    public function addTask($task, $data) : Promise
+    {
+        $deferred = new Deferred();
+        $id = uniqid('task_');
+        $promise = $deferred->promise();
+        $this->tasks[$id] = $deferred;
+        $this->promises[$id] = $promise;
+        $this->client->addTask($task, serialize($data), $task, $id);
+
+        return $promise;
+    }
+
     public function stepThroughAll(GearmanBatch $jobs, Generator &$next)
     {
         $items = [];
@@ -83,7 +95,7 @@ final class GearmanSaga
             $items[] = $this->addTask($task, $data);
         }
         all($items)->then(Closure::bind(
-            function (...$data) use (&$next) {
+            function ($data) use (&$next) {
                 if ($next->valid()) {
                     $next->send(
                         array_map(
@@ -100,18 +112,6 @@ final class GearmanSaga
             },
             $this)
         );
-    }
-
-    public function addTask($task, $data) : Promise
-    {
-        $deferred = new Deferred();
-        $id = uniqid('task_');
-        $promise = $deferred->promise();
-        $this->tasks[$id] = $deferred;
-        $this->promises[$id] = $promise;
-        $this->client->addTask($task, serialize($data), $task, $id);
-
-        return $promise;
     }
 
     public function stepThrough(string $task, $data, Generator &$current)

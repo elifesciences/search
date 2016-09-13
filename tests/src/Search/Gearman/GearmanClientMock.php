@@ -10,7 +10,7 @@ final class GearmanClientMock extends GearmanClient
 {
     private $callback;
     private $tasks = [];
-    private $jobs = [];
+    public $jobs = [];
 
     public function addJob(string $name, callable $fn)
     {
