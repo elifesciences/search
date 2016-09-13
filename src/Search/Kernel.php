@@ -40,6 +40,7 @@ final class Kernel implements MinimalKernel
         $app['config'] = array_merge([
             'debug' => false,
             'validate' => false,
+            'annotation_cache' => true,
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
@@ -81,6 +82,10 @@ final class Kernel implements MinimalKernel
         };
         // Annotation reader.
         $app['annotations.reader'] = function (Application $app) {
+            if ($app['config']['annotation_cache'] === false) {
+                return new AnnotationReader();
+            }
+
             return new CachedReader(
                 new AnnotationReader(),
                 $app['cache'],
@@ -99,7 +104,7 @@ final class Kernel implements MinimalKernel
             );
         };
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['serializer.context']);
+            return new SearchController($app['serializer'], $app['serializer.context'], $app['config']['api_url']);
         };
     }
 
@@ -149,9 +154,9 @@ final class Kernel implements MinimalKernel
 
     public function validate(Request $request, Response $response)
     {
-        //        $this->app['puli.validator']->validate(
-//            $this->app['psr7.bridge']->createResponse($response)
-//        );
+        $this->app['puli.validator']->validate(
+            $this->app['psr7.bridge']->createResponse($response)
+        );
     }
 
     public function cache(Request $request, Response $response)

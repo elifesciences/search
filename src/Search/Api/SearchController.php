@@ -3,10 +3,8 @@
 namespace eLife\Search\Api;
 
 use eLife\ApiClient\ApiClient\BlogClient;
-use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiSdk\Client\BlogArticles;
-use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Response\ArticleResponse\PoaArticle;
@@ -21,45 +19,38 @@ use Symfony\Component\HttpFoundation\Response;
 class SearchController
 {
     private $serializer;
+    private $apiUrl;
 
     public function __construct(
         Serializer $serializer,
-        SerializationContext $context
+        SerializationContext $context,
+        string $apiUrl
     ) {
         $this->serializer = $serializer;
         $this->context = $context;
+        $this->apiUrl = $apiUrl;
     }
 
     public function blogApiAction()
     {
-        // To test locally change the variables below.
-        $localApiUrl = 'http://192.168.187.56:1242';
-        // Create article thing.
-        $articles = new BlogArticles(
-            new BlogClient(
-                new Guzzle6HttpClient(
-                    new Client(['base_uri' => $localApiUrl])
-                )
-            ),
-            new Subjects(
-                new SubjectsClient(
-                    new Guzzle6HttpClient(
-                        new Client(['base_uri' => $localApiUrl])
-                    )
-                )
-            )
-        );
-        // Loop
-        foreach ($articles as $article) {
-            // Prompt some PStorm auto-complete
-            if ($article instanceof BlogArticle) {
-                // Get the title
-                echo $article->getTitle().'<br/>';
-                // var_dump($article->getContent()->toArray());
-            }
-        }
-
-        return '';
+        //        // Create article thing.
+//        $articles = new BlogArticles(
+//            new BlogClient(
+//                new Guzzle6HttpClient(
+//                    new Client(['base_uri' => $this->apiUrl])
+//                )
+//            )
+//        );
+//        // Loop
+//        foreach ($articles as $article) {
+//            // Prompt some PStorm auto-complete
+//            if ($article instanceof BlogArticle) {
+//                // Get the title
+//                echo $article->getTitle().'<br/>';
+//                // var_dump($article->getContent()->toArray());
+//            }
+//        }
+        return 'not working for now';
     }
 
     public function searchTestAction(Request $request)
@@ -74,18 +65,19 @@ class SearchController
 
         $query = new MockQueryBuilder();
 
-        $query = $query
-            ->searchFor($for)
-            ->paginate($page, $perPage)
-            ->order($order)
-        ;
+        $query = $query->searchFor($for);
 
         if ($subjects) {
             $query->whereSubjects($subjects);
         }
-        if ($subjects) {
+        if ($types) {
             $query->whereType($types);
         }
+
+        $query = $query
+            ->paginate($page, $perPage)
+            ->order($order)
+        ;
 
         $data = $query->getQuery()->execute();
 

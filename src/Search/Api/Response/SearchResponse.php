@@ -28,6 +28,18 @@ final class SearchResponse implements HasHeaders
      */
     public $types;
 
+    /**
+     * @Type("array")
+     * @Since(version="1")
+     */
+    public $subjects = [
+        [
+            'id' => 'biophysics-structural-biology',
+            'name' => 'Biophysics and Structural Biology',
+            'results' => 1,
+        ],
+    ];
+
     public function __construct(array $items = [])
     {
         $this->setItems($items);
