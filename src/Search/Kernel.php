@@ -156,7 +156,7 @@ final class Kernel implements MinimalKernel
 
     public function validate(Request $request, Response $response)
     {
-//        $this->app['puli.validator']->validate(
+        //        $this->app['puli.validator']->validate(
 //            $this->app['psr7.bridge']->createResponse($response)
 //        );
     }
