@@ -52,6 +52,13 @@ trait Article
     /**
      * @Type("string")
      * @Since(version="1")
+     * @SerializedName("authorLine")
+     */
+    public $authorLine;
+
+    /**
+     * @Type("string")
+     * @Since(version="1")
      */
     public $pdf;
 

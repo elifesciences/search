@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ce743f7002d2a756f599462b848b48d8",
-    "content-hash": "f761d11490c30f4fc2581c888b1dd388",
+    "hash": "2c9c765d155cd78ec8b36874d34745a7",
+    "content-hash": "246b964923bd639fa10aaab891c70918",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "f67bc37fa4b76d85423052eae2a9577aab99adc1"
+                "reference": "34060bf0db260031697b17dbb37fa1bbec92f1c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f67bc37fa4b76d85423052eae2a9577aab99adc1",
-                "reference": "f67bc37fa4b76d85423052eae2a9577aab99adc1",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/34060bf0db260031697b17dbb37fa1bbec92f1c4",
+                "reference": "34060bf0db260031697b17dbb37fa1bbec92f1c4",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-09-01 21:37:32"
+            "time": "2016-09-08 20:27:15"
         },
         {
             "name": "beberlei/assert",
@@ -505,12 +505,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "5c16e629de5566f474bbab0303a95f9ec649ecc9"
+                "reference": "7ced2dc82d961ad6122c40a4d6546c2bc07327a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/5c16e629de5566f474bbab0303a95f9ec649ecc9",
-                "reference": "5c16e629de5566f474bbab0303a95f9ec649ecc9",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/7ced2dc82d961ad6122c40a4d6546c2bc07327a0",
+                "reference": "7ced2dc82d961ad6122c40a4d6546c2bc07327a0",
                 "shasum": ""
             },
             "require": {
@@ -522,7 +522,7 @@
                 "GPL-3.0+"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2016-09-01 09:14:25"
+            "time": "2016-09-12 07:07:51"
         },
         {
             "name": "elife/api-client",
@@ -530,12 +530,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "f0fb1a94375a455c942abeedd2e373142486faba"
+                "reference": "00490b7216cc8e277f69f452b08046f2e5e63662"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/f0fb1a94375a455c942abeedd2e373142486faba",
-                "reference": "f0fb1a94375a455c942abeedd2e373142486faba",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/00490b7216cc8e277f69f452b08046f2e5e63662",
+                "reference": "00490b7216cc8e277f69f452b08046f2e5e63662",
                 "shasum": ""
             },
             "require": {
@@ -575,7 +575,7 @@
                 "GPL-3.0+"
             ],
             "description": "eLife Sciences API client",
-            "time": "2016-09-02 16:01:11"
+            "time": "2016-09-08 13:38:17"
         },
         {
             "name": "elife/api-sdk",
@@ -583,18 +583,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "48763e530a1fdc65b2095292532eb27c35eff0ce"
+                "reference": "e4794ac61d30e6357f72bb04d93ec636aa9025d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/48763e530a1fdc65b2095292532eb27c35eff0ce",
-                "reference": "48763e530a1fdc65b2095292532eb27c35eff0ce",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/e4794ac61d30e6357f72bb04d93ec636aa9025d3",
+                "reference": "e4794ac61d30e6357f72bb04d93ec636aa9025d3",
                 "shasum": ""
             },
             "require": {
                 "elife/api-client": "^1.0@dev",
                 "guzzlehttp/promises": "^1.0",
-                "php": "^7.0"
+                "php": "^7.0",
+                "symfony/serializer": "^3.1"
             },
             "require-dev": {
                 "elife/api": "dev-master",
@@ -622,7 +623,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2016-09-06 07:13:38"
+            "time": "2016-09-09 12:14:48"
         },
         {
             "name": "elife/api-validator",
@@ -630,12 +631,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-validator-php.git",
-                "reference": "ebdf79e236f3862fe7264fc7bc7aedfa0437b80f"
+                "reference": "18ba36fa07b830596c78b740d6e9d6ef90e65bd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/ebdf79e236f3862fe7264fc7bc7aedfa0437b80f",
-                "reference": "ebdf79e236f3862fe7264fc7bc7aedfa0437b80f",
+                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/18ba36fa07b830596c78b740d6e9d6ef90e65bd3",
+                "reference": "18ba36fa07b830596c78b740d6e9d6ef90e65bd3",
                 "shasum": ""
             },
             "require": {
@@ -669,7 +670,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API validator",
-            "time": "2016-08-22 14:52:17"
+            "time": "2016-09-13 08:27:27"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1106,25 +1107,25 @@
         },
         {
             "name": "justinrainbow/json-schema",
-            "version": "1.6.1",
+            "version": "2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/justinrainbow/json-schema.git",
-                "reference": "cc84765fb7317f6b07bd8ac78364747f95b86341"
+                "reference": "6b2a33e6a768f96bdc2ead5600af0822eed17d67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/cc84765fb7317f6b07bd8ac78364747f95b86341",
-                "reference": "cc84765fb7317f6b07bd8ac78364747f95b86341",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/6b2a33e6a768f96bdc2ead5600af0822eed17d67",
+                "reference": "6b2a33e6a768f96bdc2ead5600af0822eed17d67",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.29"
+                "php": ">=5.3.3"
             },
             "require-dev": {
-                "json-schema/json-schema-test-suite": "1.1.0",
+                "json-schema/json-schema-test-suite": "1.2.0",
                 "phpdocumentor/phpdocumentor": "~2",
-                "phpunit/phpunit": "~3.7"
+                "phpunit/phpunit": "^4.8.22"
             },
             "bin": [
                 "bin/validate-json"
@@ -1132,7 +1133,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -1142,7 +1143,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3-Clause"
+                "MIT"
             ],
             "authors": [
                 {
@@ -1168,7 +1169,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2016-01-25 15:43:01"
+            "time": "2016-06-02 10:59:52"
         },
         {
             "name": "monolog/monolog",
@@ -2121,7 +2122,7 @@
         },
         {
             "name": "symfony/config",
-            "version": "v2.8.10",
+            "version": "v2.8.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
@@ -2174,16 +2175,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.8.10",
+            "version": "v2.8.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "bac1eb5869c1848a173852aee61df960e3a49197"
+                "reference": "3d3e4fa5f0614c8e45220e5de80332322e33bd90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/bac1eb5869c1848a173852aee61df960e3a49197",
-                "reference": "bac1eb5869c1848a173852aee61df960e3a49197",
+                "url": "https://api.github.com/repos/symfony/console/zipball/3d3e4fa5f0614c8e45220e5de80332322e33bd90",
+                "reference": "3d3e4fa5f0614c8e45220e5de80332322e33bd90",
                 "shasum": ""
             },
             "require": {
@@ -2230,7 +2231,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-08-19 06:48:01"
+            "time": "2016-09-06 10:55:00"
         },
         {
             "name": "symfony/debug",
@@ -2295,12 +2296,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "5382f4c882e73c267c80b8edcd482a76ef62bbe2"
+                "reference": "20dc18ee3f12a956681dc91f126c2f39b3054dd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/5382f4c882e73c267c80b8edcd482a76ef62bbe2",
-                "reference": "5382f4c882e73c267c80b8edcd482a76ef62bbe2",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/20dc18ee3f12a956681dc91f126c2f39b3054dd9",
+                "reference": "20dc18ee3f12a956681dc91f126c2f39b3054dd9",
                 "shasum": ""
             },
             "require": {
@@ -2347,20 +2348,20 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-19 10:47:02"
+            "time": "2016-09-06 23:13:31"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.8.10",
+            "version": "v2.8.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "ab4c3f085c8f5a56536845bf985c4cef30bf75fd"
+                "reference": "44b499521defddf2eae17a18c811bbdae4f98bdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/ab4c3f085c8f5a56536845bf985c4cef30bf75fd",
-                "reference": "ab4c3f085c8f5a56536845bf985c4cef30bf75fd",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/44b499521defddf2eae17a18c811bbdae4f98bdf",
+                "reference": "44b499521defddf2eae17a18c811bbdae4f98bdf",
                 "shasum": ""
             },
             "require": {
@@ -2396,11 +2397,11 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-20 05:41:28"
+            "time": "2016-09-06 10:55:00"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.8.10",
+            "version": "v2.8.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
@@ -2820,6 +2821,79 @@
             "time": "2016-08-16 14:58:24"
         },
         {
+            "name": "symfony/serializer",
+            "version": "v3.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/serializer.git",
+                "reference": "81674b4a42507b6f3ba3a0661b35bfad8d25f841"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/81674b4a42507b6f3ba3a0661b35bfad8d25f841",
+                "reference": "81674b4a42507b6f3ba3a0661b35bfad8d25f841",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "conflict": {
+                "symfony/property-access": ">=3.0,<3.0.4|>=2.8,<2.8.4"
+            },
+            "require-dev": {
+                "doctrine/annotations": "~1.0",
+                "doctrine/cache": "~1.0",
+                "phpdocumentor/reflection-docblock": "~3.0",
+                "symfony/cache": "~3.1",
+                "symfony/config": "~2.8|~3.0",
+                "symfony/http-foundation": "~2.8|~3.0",
+                "symfony/property-access": "~2.8|~3.0",
+                "symfony/property-info": "~3.1",
+                "symfony/yaml": "~2.8|~3.0"
+            },
+            "suggest": {
+                "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
+                "doctrine/cache": "For using the default cached annotation reader and metadata cache.",
+                "psr/cache-implementation": "For using the metadata cache.",
+                "symfony/config": "For using the XML mapping loader.",
+                "symfony/http-foundation": "To use the DataUriNormalizer.",
+                "symfony/property-access": "For using the ObjectNormalizer.",
+                "symfony/property-info": "To deserialize relations.",
+                "symfony/yaml": "For using the default YAML mapping loader."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Serializer\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Serializer Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-08-19 15:12:52"
+        },
+        {
             "name": "symfony/translation",
             "version": "v3.0.9",
             "source": {
@@ -2885,16 +2959,16 @@
         },
         {
             "name": "symfony/validator",
-            "version": "v2.8.10",
+            "version": "v2.8.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
-                "reference": "f0df329d5afa403657074bf9bfe58cdc80d5f644"
+                "reference": "53b1b1d3f7550e4b1e365dbad39a0b6c60bfcf85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/f0df329d5afa403657074bf9bfe58cdc80d5f644",
-                "reference": "f0df329d5afa403657074bf9bfe58cdc80d5f644",
+                "url": "https://api.github.com/repos/symfony/validator/zipball/53b1b1d3f7550e4b1e365dbad39a0b6c60bfcf85",
+                "reference": "53b1b1d3f7550e4b1e365dbad39a0b6c60bfcf85",
                 "shasum": ""
             },
             "require": {
@@ -2954,11 +3028,11 @@
             ],
             "description": "Symfony Validator Component",
             "homepage": "https://symfony.com",
-            "time": "2016-08-26 11:57:43"
+            "time": "2016-09-06 10:55:00"
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.10",
+            "version": "v2.8.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
@@ -3155,22 +3229,23 @@
         },
         {
             "name": "webmozart/json",
-            "version": "1.2.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozart/json.git",
-                "reference": "a1fb3da904b8364e3db47eed68f76bfb6cd0031a"
+                "reference": "d823428254474fc26aa499aebbda1315e2fedf3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/json/zipball/a1fb3da904b8364e3db47eed68f76bfb6cd0031a",
-                "reference": "a1fb3da904b8364e3db47eed68f76bfb6cd0031a",
+                "url": "https://api.github.com/repos/webmozart/json/zipball/d823428254474fc26aa499aebbda1315e2fedf3a",
+                "reference": "d823428254474fc26aa499aebbda1315e2fedf3a",
                 "shasum": ""
             },
             "require": {
-                "justinrainbow/json-schema": "^1.6",
+                "justinrainbow/json-schema": "^2.0",
                 "php": "^5.3.3|^7.0",
                 "seld/jsonlint": "^1.0",
+                "webmozart/assert": "^1.0",
                 "webmozart/path-util": "^2.3"
             },
             "require-dev": {
@@ -3181,7 +3256,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2-dev"
+                    "dev-master": "1.3-dev"
                 }
             },
             "autoload": {
@@ -3200,7 +3275,7 @@
                 }
             ],
             "description": "A robust JSON decoder/encoder with support for schema validation.",
-            "time": "2016-01-14 12:11:46"
+            "time": "2016-08-15 15:12:59"
         },
         {
             "name": "webmozart/path-util",
@@ -3250,16 +3325,16 @@
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "1.3.5",
+            "version": "1.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "b1d59735b672865dbeb930805029c24f226e3e77"
+                "reference": "a60da179c37f2c4e44ef734d0b92824a58943f7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/b1d59735b672865dbeb930805029c24f226e3e77",
-                "reference": "b1d59735b672865dbeb930805029c24f226e3e77",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/a60da179c37f2c4e44ef734d0b92824a58943f7f",
+                "reference": "a60da179c37f2c4e44ef734d0b92824a58943f7f",
                 "shasum": ""
             },
             "require": {
@@ -3270,7 +3345,7 @@
                 "psr/http-message-implementation": "~1.0.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.6",
+                "phpunit/phpunit": "^4.6 || ^5.5",
                 "squizlabs/php_codesniffer": "^2.3.1"
             },
             "type": "library",
@@ -3296,7 +3371,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2016-03-17 18:02:05"
+            "time": "2016-09-07 17:57:29"
         }
     ],
     "packages-dev": [
@@ -3412,16 +3487,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.5.1",
+            "version": "1.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "a8773992b362b58498eed24bf85005f363c34771"
+                "reference": "94e5ca3e90aa5b34663780393e10914f7438f991"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/a8773992b362b58498eed24bf85005f363c34771",
-                "reference": "a8773992b362b58498eed24bf85005f363c34771",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/94e5ca3e90aa5b34663780393e10914f7438f991",
+                "reference": "94e5ca3e90aa5b34663780393e10914f7438f991",
                 "shasum": ""
             },
             "require": {
@@ -3450,7 +3525,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2015-11-20 12:04:31"
+            "time": "2016-09-07 15:34:10"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -3984,16 +4059,16 @@
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "3.2.6",
+            "version": "3.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "46b249b43fd2ed8e127aa0fdb3cbcf56e9bc0e49"
+                "reference": "546898a2c0c356ef2891b39dd7d07f5d82c8ed0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/46b249b43fd2ed8e127aa0fdb3cbcf56e9bc0e49",
-                "reference": "46b249b43fd2ed8e127aa0fdb3cbcf56e9bc0e49",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/546898a2c0c356ef2891b39dd7d07f5d82c8ed0a",
+                "reference": "546898a2c0c356ef2891b39dd7d07f5d82c8ed0a",
                 "shasum": ""
             },
             "require": {
@@ -4039,7 +4114,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2016-08-26 05:51:59"
+            "time": "2016-09-06 16:07:45"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -4677,7 +4752,8 @@
         "symfony/event-dispatcher": 20,
         "monolog/monolog": 20,
         "aws/aws-sdk-php": 20,
-        "elife/api-sdk": 20
+        "elife/api-sdk": 20,
+        "webmozart/json": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

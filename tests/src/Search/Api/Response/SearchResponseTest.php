@@ -336,6 +336,7 @@ class SearchResponseTest extends SerializerTest
               "published": "2016-01-29T16:22:28+00:00"
             }
           ],
+          "subjects": [{"id":"biophysics-structural-biology","name":"Biophysics and Structural Biology","results":1}],
           "types": {
             "correction": 0,
             "editorial": 0,

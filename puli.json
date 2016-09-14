@@ -335,6 +335,10 @@
             "install-path": "vendor/symfony/routing",
             "installer": "composer"
         },
+        "symfony/serializer": {
+            "install-path": "vendor/symfony/serializer",
+            "installer": "composer"
+        },
         "symfony/translation": {
             "install-path": "vendor/symfony/translation",
             "installer": "composer"
