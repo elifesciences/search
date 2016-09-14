@@ -105,8 +105,6 @@ final class MockQueryBuilder implements QueryBuilder
         return new static(
             $this->data = array_filter($this->data, function ($item) use ($types) {
                 $check = $item['type'] ?? [];
-                var_dump($check);
-//                var_dump($types);
 
                 return in_array($check, $types);
             }),

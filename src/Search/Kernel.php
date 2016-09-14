@@ -41,8 +41,8 @@ final class Kernel implements MinimalKernel
             'debug' => false,
             'validate' => false,
             'annotation_cache' => true,
-            'api_url' => null,
-            'elastic_url' => null,
+            'api_url' => '',
+            'elastic_url' => '',
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
