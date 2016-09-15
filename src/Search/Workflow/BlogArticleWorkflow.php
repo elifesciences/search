@@ -4,8 +4,6 @@ namespace eLife\Search\Workflow;
 
 use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
-use eLife\ApiSdk\Client\BlogArticles;
-use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Annotation\GearmanTask;
 
@@ -19,12 +17,6 @@ final class BlogArticleWorkflow implements Workflow
     {
         $this->blogClient = $blogClient;
         $this->subjectsClient = $subjectsClient;
-        $this->articles = new BlogArticles(
-            $this->blogClient,
-            new Subjects(
-                $this->subjectsClient
-            )
-        );
     }
 
     /**
