@@ -2,13 +2,14 @@
 
 namespace eLife\Search\Api;
 
-use eLife\ApiClient\ApiClient\BlogClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Api\Response\SearchResponse;
+use eLife\Search\Workflow\ApiWorkflow;
 use GuzzleHttp\Client;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
@@ -32,24 +33,43 @@ class SearchController
 
     public function blogApiAction()
     {
-        //        // Create article thing.
-//        $articles = new BlogArticles(
-//            new BlogClient(
-//                new Guzzle6HttpClient(
-//                    new Client(['base_uri' => $this->apiUrl])
-//                )
-//            )
-//        );
-//        // Loop
-//        foreach ($articles as $article) {
-//            // Prompt some PStorm auto-complete
-//            if ($article instanceof BlogArticle) {
-//                // Get the title
-//                echo $article->getTitle().'<br/>';
-//                // var_dump($article->getContent()->toArray());
-//            }
-//        }
-        return 'not working for now';
+        $sdk = new ApiSdk(
+            new Guzzle6HttpClient(
+                new Client(['base_uri' => $this->apiUrl])
+            )
+        );
+        $workflow = new ApiWorkflow(
+           $sdk
+        );
+
+        $workflow->initialize();
+        $workflow->fetch('blog-articles');
+        $article = $workflow->getNext();
+        $snippet = $sdk->getSerializer()->normalize($article);
+        var_dump($snippet);
+        $article = $workflow->getNext();
+        $snippet = $sdk->getSerializer()->normalize($article);
+        var_dump($snippet);
+        $article = $workflow->getNext();
+        $snippet = $sdk->getSerializer()->normalize($article);
+        var_dump($snippet);
+        $article = $workflow->getNext();
+        $snippet = $sdk->getSerializer()->normalize($article);
+        var_dump($snippet);
+        exit;
+        // Create article thing.
+        $articles = $sdk->blogArticles();
+        // Loop
+        foreach ($articles as $article) {
+            // Prompt some PStorm auto-complete
+            if ($article instanceof BlogArticle) {
+                // Get the title
+                $snippet = $sdk->getSerializer()->normalize($article);
+                var_dump($snippet);
+            }
+        }
+
+        return '';
     }
 
     public function searchTestAction(Request $request)
@@ -75,8 +95,7 @@ class SearchController
 
         $query = $query
             ->paginate($page, $perPage)
-            ->order($order)
-        ;
+            ->order($order);
 
         $data = $query->getQuery()->execute();
 
@@ -85,9 +104,9 @@ class SearchController
         return $this->serialize($result);
     }
 
-    public function indexAction()
+    private function responseFromArray($className, $data)
     {
-        return $this->serialize(new SearchResponse([]), 1);
+        return $this->serializer->deserialize(json_encode($data), $className, 'json');
     }
 
     private function serialize($data, int $version = null, $group = null)
@@ -108,6 +127,11 @@ class SearchController
         return new Response($json, 200, $headers);
     }
 
+    public function indexAction()
+    {
+        return $this->serialize(new SearchResponse([]), 1);
+    }
+
     public function blogArticleAction()
     {
         $blog = $this->responseFromArray(BlogArticleResponse::class, [
@@ -120,10 +144,5 @@ class SearchController
             $blog,
             $blog,
         ]), 1);
-    }
-
-    private function responseFromArray($className, $data)
-    {
-        return $this->serializer->deserialize(json_encode($data), $className, 'json');
     }
 }

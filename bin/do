@@ -35,22 +35,62 @@ function reverse($data)
     ];
 }
 
+function useContext($type)
+{
+    return ['api_use_context', [$type]];
+}
+
 $set->addSaga(function () {
-    for ($i = 0; $i < 3; $i++) {
-        // Grab the blog post.
-        $data = yield getBlogPost($i);
-        // Print the result.
-        print '>>>>>>> ' . $i . ') ' . $data[0] . PHP_EOL;
+    yield ['api_init'];
+    $results = yield useContext('blog-articles');
+
+    $expected_results = $results['count'];
+    $actual_results = 0;
+    while ($post = yield ['api_get_next']) {
+        $actual_results++;
+        $is_valid = yield ['api_validate', [$post]];
+        if (!$is_valid) {
+            // Log?
+            $actual_results--;
+            continue;
+        }
+        $index = yield ['index_from_blog_article', [$post]];
+        if ($index === false) {
+            // Log?
+            $actual_results--;
+            continue;
+        }
+        $status = yield ['elastic_upsert', ['blog-article', $post, $index]];
+        if ($status === false) {
+            // Log?
+            // Forward recovery.
+            $actual_results--;
+            continue;
+        }
     }
-    $next = true;
-    $d = 0;
-    while ($next) {
-        $data = yield ['get_single_blog_post', ['offset' => $d]];
-        print '>>>>>>>>>>>>>' . $data['item'] . PHP_EOL;
-        $d++;
-        $next = $data['next'];
+    if ($actual_results < $expected_results) {
+        // Log?
+        // Forward recovery?
     }
+    yield ['api_close'];
 });
+
+//$set->addSaga(function () {
+//    for ($i = 0; $i < 3; $i++) {
+//        // Grab the blog post.
+//        $data = yield getBlogPost($i);
+//        // Print the result.
+//        print '>>>>>>> ' . $i . ') ' . $data[0] . PHP_EOL;
+//    }
+//    $next = true;
+//    $d = 0;
+//    while ($next) {
+//        $data = yield ['get_single_blog_post', ['offset' => $d]];
+//        print '>>>>>>>>>>>>>' . $data['item'] . PHP_EOL;
+//        $d++;
+//        $next = $data['next'];
+//    }
+//});
 
 // Example non-saga (same as above):
 //

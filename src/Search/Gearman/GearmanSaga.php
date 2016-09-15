@@ -41,6 +41,7 @@ final class GearmanSaga
             all($this->promises)
                 ->then(
                     Closure::bind(function () {
+                        // Change to enqueue.
                         $this->run();
                     }, $this)
                 );
@@ -105,6 +106,7 @@ final class GearmanSaga
                             $data
                         )
                     );
+                    // Change to enqueue.
                     $this->runSaga($next);
                 }
 
@@ -122,6 +124,7 @@ final class GearmanSaga
                 function (GearmanTask $data) use (&$current) {
                     if ($current->valid()) {
                         $current->send(unserialize($data->data()));
+                        // Change to enqueue.
                         $this->runSaga($current);
                     }
 
