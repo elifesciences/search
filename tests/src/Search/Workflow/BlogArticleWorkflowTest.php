@@ -72,7 +72,9 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
      */
     public function testIndexOfBlogArticle(BlogArticle $blogArticle)
     {
-        list($article, $index) = $this->workflow->index($blogArticle);
+        $return = $this->workflow->index($blogArticle);
+        $article = $return['json'];
+        $index = $return['index'];
         $this->assertJson($article, 'Article is not valid JSON');
         $this->assertNotNull($index, 'An index is required.');
     }

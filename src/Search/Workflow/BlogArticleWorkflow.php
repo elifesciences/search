@@ -15,15 +15,19 @@ final class BlogArticleWorkflow implements Workflow
      * @var Serializer
      */
     private $serializer;
+    private $log;
 
-    public function __construct(Serializer $serializer)
+    public function __construct(Serializer $serializer, $log = false)
     {
         $this->serializer = $serializer;
+        $this->log = $log;
     }
 
     public function log(string ...$log)
     {
-        echo 'WORKER: '.implode(' ', $log).PHP_EOL;
+        if ($this->log) {
+            echo 'WORKER: '.implode(' ', $log).PHP_EOL;
+        }
     }
 
     /**

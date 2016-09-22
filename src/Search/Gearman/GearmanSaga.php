@@ -28,7 +28,6 @@ final class GearmanSaga
         $tasks = &$this->tasks;
         $promises = &$this->promises;
         $client->setCompleteCallback(Closure::bind(function (GearmanTask $e) use (&$tasks, &$promises) {
-            echo 'job done: '.$e->unique().PHP_EOL;
             $deferred = $tasks[$e->unique()];
             unset($promises[$e->unique()]);
             unset($tasks[$e->unique()]);
@@ -49,10 +48,6 @@ final class GearmanSaga
             }
             // Run.
             $this->client->runTasks();
-            while (!$status = $this->client->returnCode()) {
-                var_dump($status);
-                sleep(1);
-            }
         } while (!empty($this->queue));
     }
 
@@ -85,7 +80,7 @@ final class GearmanSaga
         $promise = $deferred->promise();
         $this->tasks[$id] = $deferred;
         $this->promises[$id] = $promise;
-        $this->client->addTaskBackground($task, serialize($data), $task, $id);
+        $this->client->addTask($task, serialize($data), $task, $id);
 
         return $promise;
     }
