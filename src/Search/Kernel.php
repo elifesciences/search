@@ -7,10 +7,14 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\FilesystemCache;
+use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
+use eLife\Search\Api\SubjectStore;
+use GuzzleHttp\Client;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
@@ -105,8 +109,21 @@ final class Kernel implements MinimalKernel
                 new JsonDecoder()
             );
         };
+
+        $app['api.sdk'] = function (Application $app) {
+            return new ApiSdk(
+                new Guzzle6HttpClient(
+                    new Client(['base_uri' => $app['config']['api_url']])
+                )
+            );
+        };
+
+        $app['api.subjects'] = function (Application $app) {
+            return new SubjectStore($app['api.sdk'], $app['cache'], 3600);
+        };
+
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['serializer.context'], $app['config']['api_url']);
+            return new SearchController($app['serializer'], $app['serializer.context'], $app['cache'], $app['config']['api_url'], $app['api.subjects']);
         };
     }
 
