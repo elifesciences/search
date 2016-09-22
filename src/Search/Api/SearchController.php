@@ -2,10 +2,12 @@
 
 namespace eLife\Search\Api;
 
+use Doctrine\Common\Cache\Cache;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Client\BlogArticles;
 use eLife\ApiSdk\Model\BlogArticle;
+use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Api\Response\SearchResponse;
@@ -24,35 +26,46 @@ class SearchController
     public function __construct(
         Serializer $serializer,
         SerializationContext $context,
-        string $apiUrl
+        Cache $cache,
+        string $apiUrl,
+        SubjectStore $subjects
     ) {
         $this->serializer = $serializer;
         $this->context = $context;
+        $this->cache = $cache;
         $this->apiUrl = $apiUrl;
+        $this->subjects = $subjects;
     }
 
     public function blogApiAction()
     {
-        $sdk = new ApiSdk(
-            new Guzzle6HttpClient(
-                new Client(['base_uri' => $this->apiUrl])
-            )
-        );
-        $workflow = new ApiWorkflow(
-           $sdk,
-            $this->serializer
-        );
-
-        $workflow->initialize();
-        $workflow->useContext('blog-articles');
-
-        while ($article = $workflow->getNext()) {
-            $snippet = $sdk->getSerializer()->normalize($article);
+        foreach ($this->subjects->getSubjects() as $subject) {
+            if ($subject instanceof Subject) {
+                echo($subject->getName()).'<br/>';
+            }
         }
 
-        $workflow->tearDown();
-
         return '';
+//        $sdk = new ApiSdk(
+//            new Guzzle6HttpClient(
+//                new Client(['base_uri' => $this->apiUrl])
+//            )
+//        );
+//        $workflow = new ApiWorkflow(
+//           $sdk,
+//            $this->serializer
+//        );
+
+//        $workflow->initialize();
+//        $workflow->useContext('blog-articles');
+
+//        while ($article = $workflow->getNext()) {
+//            $snippet = $sdk->getSerializer()->normalize($article);
+//        }
+
+//        $workflow->tearDown();
+
+//        return '';
 //        // Create article thing.
 //        $articles = $sdk->blogArticles();
 //        // Loop
