@@ -9,10 +9,6 @@ use eLife\ApiSdk\Model\BlogArticle;
 // Reverse Client Code
 $client = new GearmanClient();
 $client->addServer('elife_gearman_1');
-
-
-
-
 // To test locally change the variables below.
 $localApiUrl = 'http://192.168.187.56:1242';
 // Guzzle.
@@ -28,12 +24,22 @@ $articles = $sdk->blogArticles();
 foreach ($articles as $article) {
     if ($article instanceof BlogArticle) {
         $normalized = $sdk->getSerializer()->serialize($article, 'json');
-        $new_article = $sdk->getSerializer()->deserialize($normalized, BlogArticle::class, 'json');
-        $normalized_new = $sdk->getSerializer()->serialize($new_article, 'json');
+        print 'Starting... ' . $article->getTitle() . PHP_EOL;
+        $client->doLow('blog_article_validate', $normalized);
+    }
+}
 
-        var_dump($normalized);
-        var_dump($normalized == $normalized_new);
-        exit;
+
+// --------------------------------------------------
+// © The National History Museum of Gearman Failures
+// --------------------------------------------------
+
+//        $new_article = $sdk->getSerializer()->deserialize($normalized, BlogArticle::class, 'json');
+//        $normalized_new = $sdk->getSerializer()->serialize($new_article, 'json');
+//
+//        var_dump($normalized);
+//        var_dump($normalized == $normalized_new);
+//        exit;
 
 //        $normalized = $sdk->getSerializer()->deserialize($normalized, BlogArticle::class, 'json');
 //
@@ -43,10 +49,10 @@ foreach ($articles as $article) {
 //        // Transport
 //        $unserialized = unserialize($serialized);
 //        $original = $sdk->getSerializer()->denormalize($unserialized, BlogArticle::class);
-    }
+//    }
 //    var_dump($article);
-    exit;
-}
+//    exit;
+//}
 
 
 

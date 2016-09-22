@@ -10,12 +10,49 @@ final class GearmanTaskInstance
     public $method;
     public $name;
     public $parameters;
+    public $serialize;
+    public $deserialize;
+    public $next;
 
-    public function __construct(Workflow $instance, string $method, string $name, array $parameters)
-    {
+    public function __construct(
+        Workflow $instance,
+        string $method,
+        string $name,
+        array $parameters = [],
+        callable $serialize = null,
+        callable $deserialize = null,
+        string $next = null
+    ) {
         $this->instance = $instance;
         $this->method = $method;
         $this->name = $name;
         $this->parameters = $parameters;
+        $this->serialize = $serialize;
+        $this->deserialize = $deserialize;
+        $this->next = $next;
+    }
+
+    public function serialize($data)
+    {
+        $serialize = $this->serialize;
+        if ($serialize === null) {
+            $serialize = function ($data) {
+                return serialize($data);
+            };
+        }
+
+        return $serialize($data);
+    }
+
+    public function deserialize($data)
+    {
+        $deserialize = $this->deserialize;
+        if ($deserialize === null) {
+            $deserialize = function ($data) {
+                return unserialize($data);
+            };
+        }
+
+        return $deserialize($data);
     }
 }

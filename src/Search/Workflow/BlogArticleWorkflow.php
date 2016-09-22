@@ -21,16 +21,23 @@ final class BlogArticleWorkflow implements Workflow
         $this->serializer = $serializer;
     }
 
+    public function log(string ...$log)
+    {
+        echo 'WORKER: '.implode(' ', $log).PHP_EOL;
+    }
+
     /**
      * @GearmanTask(
      *     name="blog_article_validate",
-     *     next="blog_article_insert",
+     *     next="blog_article_index",
      *     deserialize="deserializeArticle",
      *     serialize="serializeArticle"
      * )
      */
     public function validate(BlogArticle $blogArticle) : BlogArticle
     {
+        $this->log('validating', $blogArticle->getTitle());
+
         return $blogArticle;
     }
 
@@ -43,16 +50,20 @@ final class BlogArticleWorkflow implements Workflow
      */
     public function index(BlogArticle $blogArticle) : array
     {
-        $index = [];
+        $this->log('indexing', $blogArticle->getTitle());
+        $index = ['testing' => 'cheese'];
 
-        return [$this->serializeArticle($blogArticle), $index];
+        return ['json' => $this->serializeArticle($blogArticle), 'index' => $index];
     }
 
     /**
-     * @GearmanTask(name="blog_article_insert")
+     * @GearmanTask(name="blog_article_insert", parameters={"json", "index"})
      */
     public function insert(string $json, array $index)
     {
+        $this->log('inserting', $json);
+        $this->log('==========================================================================');
+
         return self::WORKFLOW_SUCCESS;
     }
 
