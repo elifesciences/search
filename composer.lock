@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2c9c765d155cd78ec8b36874d34745a7",
-    "content-hash": "246b964923bd639fa10aaab891c70918",
+    "hash": "a0d55bb14fbb657ebe9aa8bd258d4dc4",
+    "content-hash": "7e491da41b38fe86f6b2fb9690470482",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -17,7 +17,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/34060bf0db260031697b17dbb37fa1bbec92f1c4",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ae827ed88bf457772adf4e2147fa6903d6aa1a31",
                 "reference": "34060bf0db260031697b17dbb37fa1bbec92f1c4",
                 "shasum": ""
             },
@@ -145,6 +145,54 @@
                 "validation"
             ],
             "time": "2016-07-28 19:35:30"
+        },
+        {
+            "name": "clue/block-react",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/clue/php-block-react.git",
+                "reference": "ed70f8d497dd265e30bc7dd19cf86b2e149b1ecf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/clue/php-block-react/zipball/ed70f8d497dd265e30bc7dd19cf86b2e149b1ecf",
+                "reference": "ed70f8d497dd265e30bc7dd19cf86b2e149b1ecf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "react/event-loop": "0.4.*|0.3.*",
+                "react/promise": "~2.1|~1.2",
+                "react/promise-timer": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Lück",
+                    "email": "christian@lueck.tv"
+                }
+            ],
+            "description": "Integrate async React PHP components into your blocking environment",
+            "homepage": "https://github.com/clue/php-block-react",
+            "keywords": [
+                "async",
+                "blocking",
+                "event loop",
+                "promise",
+                "reactphp",
+                "synchronous"
+            ],
+            "time": "2016-03-09 15:10:22"
         },
         {
             "name": "crell/api-problem",
@@ -509,7 +557,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/7ced2dc82d961ad6122c40a4d6546c2bc07327a0",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/fe895093f1881000ce86508c2f7e741501f79e83",
                 "reference": "7ced2dc82d961ad6122c40a4d6546c2bc07327a0",
                 "shasum": ""
             },
@@ -534,7 +582,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/00490b7216cc8e277f69f452b08046f2e5e63662",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/b706c4ef54ac2d336af6730c7f75ed83ae56f16b",
                 "reference": "00490b7216cc8e277f69f452b08046f2e5e63662",
                 "shasum": ""
             },
@@ -587,7 +635,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/e4794ac61d30e6357f72bb04d93ec636aa9025d3",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/9bf47487d0698361c61621c6811f7efa9ccd9304",
                 "reference": "e4794ac61d30e6357f72bb04d93ec636aa9025d3",
                 "shasum": ""
             },
@@ -635,7 +683,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/18ba36fa07b830596c78b740d6e9d6ef90e65bd3",
+                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/6dc70d71f5212588c3851b3b26e50474839bcffd",
                 "reference": "18ba36fa07b830596c78b740d6e9d6ef90e65bd3",
                 "shasum": ""
             },
@@ -1181,7 +1229,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/07b6c1c4171a030787f2bc961272b1887032304e",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/d3c8c9bea1e4073e86e6ead8ba81597a04e09723",
                 "reference": "07b6c1c4171a030787f2bc961272b1887032304e",
                 "shasum": ""
             },
@@ -1946,6 +1994,50 @@
             "time": "2016-03-22 18:20:19"
         },
         {
+            "name": "react/event-loop",
+            "version": "v0.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reactphp/event-loop.git",
+                "reference": "164799f73175e1c80bba92a220ea35df6ca371dd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reactphp/event-loop/zipball/164799f73175e1c80bba92a220ea35df6ca371dd",
+                "reference": "164799f73175e1c80bba92a220ea35df6ca371dd",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "suggest": {
+                "ext-event": "~1.0",
+                "ext-libev": "*",
+                "ext-libevent": ">=0.1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.5-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "React\\EventLoop\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Event loop abstraction layer that libraries can use for evented I/O.",
+            "keywords": [
+                "asynchronous",
+                "event-loop"
+            ],
+            "time": "2016-03-08 02:09:32"
+        },
+        {
             "name": "react/promise",
             "version": "v2.4.1",
             "source": {
@@ -1988,6 +2080,56 @@
             ],
             "description": "A lightweight implementation of CommonJS Promises/A for PHP",
             "time": "2016-05-03 17:50:52"
+        },
+        {
+            "name": "react/promise-timer",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reactphp/promise-timer.git",
+                "reference": "6a46050d801688e08d1a550b97b1f3735505c62a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reactphp/promise-timer/zipball/6a46050d801688e08d1a550b97b1f3735505c62a",
+                "reference": "6a46050d801688e08d1a550b97b1f3735505c62a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "react/event-loop": "~0.4.0|~0.3.0",
+                "react/promise": "~2.1|~1.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "React\\Promise\\Timer\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Lück",
+                    "email": "christian@lueck.tv"
+                }
+            ],
+            "description": "Trivial timeout implementation for Promises",
+            "homepage": "https://github.com/react/promise-timer",
+            "keywords": [
+                "async",
+                "event-loop",
+                "promise",
+                "reactphp",
+                "timeout",
+                "timer"
+            ],
+            "time": "2016-02-29 19:03:45"
         },
         {
             "name": "seld/jsonlint",
@@ -2300,7 +2442,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/20dc18ee3f12a956681dc91f126c2f39b3054dd9",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/9558911a4071ace3523c70ba4d0c6315b567f460",
                 "reference": "20dc18ee3f12a956681dc91f126c2f39b3054dd9",
                 "shasum": ""
             },

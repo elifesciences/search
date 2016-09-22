@@ -13,6 +13,10 @@
             "install-path": "vendor/beberlei/assert",
             "installer": "composer"
         },
+        "clue/block-react": {
+            "install-path": "vendor/clue/block-react",
+            "installer": "composer"
+        },
         "crell/api-problem": {
             "install-path": "vendor/crell/api-problem",
             "installer": "composer"
@@ -215,8 +219,16 @@
             "install-path": "vendor/ramsey/uuid",
             "installer": "composer"
         },
+        "react/event-loop": {
+            "install-path": "vendor/react/event-loop",
+            "installer": "composer"
+        },
         "react/promise": {
             "install-path": "vendor/react/promise",
+            "installer": "composer"
+        },
+        "react/promise-timer": {
+            "install-path": "vendor/react/promise-timer",
             "installer": "composer"
         },
         "sebastian/code-unit-reverse-lookup": {

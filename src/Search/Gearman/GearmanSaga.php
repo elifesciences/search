@@ -6,6 +6,7 @@ use Closure;
 use GearmanClient;
 use GearmanTask;
 use Generator;
+use React\EventLoop\Factory;
 use React\Promise\Deferred;
 use React\Promise\Promise;
 use function React\Promise\all;
@@ -16,14 +17,18 @@ final class GearmanSaga
     private $client;
     private $promises = [];
     private $cli = true;
+    private $queue = [];
+    private $loop;
 
     public function __construct(GearmanClient $client, $cli = true)
     {
+        $this->loop = Factory::create();
         $this->cli = $cli;
         $this->client = $client;
         $tasks = &$this->tasks;
         $promises = &$this->promises;
         $client->setCompleteCallback(Closure::bind(function (GearmanTask $e) use (&$tasks, &$promises) {
+            echo 'job done: '.$e->unique().PHP_EOL;
             $deferred = $tasks[$e->unique()];
             unset($promises[$e->unique()]);
             unset($tasks[$e->unique()]);
@@ -37,20 +42,18 @@ final class GearmanSaga
 
     public function run()
     {
-        if (!empty($this->promises)) {
-            all($this->promises)
-                ->then(
-                    Closure::bind(function () {
-                        // Change to enqueue.
-                        $this->run();
-                    }, $this)
-                );
-            $this->client->runTasks();
-        } else {
-            if ($this->cli) {
-                exit('fin.'.PHP_EOL);
+        do {
+            // Do Do Do Do.
+            while ($generator = array_shift($this->queue)) {
+                $this->runSaga($generator);
             }
-        }
+            // Run.
+            $this->client->runTasks();
+            while (!$status = $this->client->returnCode()) {
+                var_dump($status);
+                sleep(1);
+            }
+        } while (!empty($this->queue));
     }
 
     public function addSaga($saga, $data = null)
@@ -82,7 +85,7 @@ final class GearmanSaga
         $promise = $deferred->promise();
         $this->tasks[$id] = $deferred;
         $this->promises[$id] = $promise;
-        $this->client->addTask($task, serialize($data), $task, $id);
+        $this->client->addTaskBackground($task, serialize($data), $task, $id);
 
         return $promise;
     }
@@ -106,14 +109,18 @@ final class GearmanSaga
                             $data
                         )
                     );
-                    // Change to enqueue.
-                    $this->runSaga($next);
+                    $this->enqueue($next);
                 }
 
                 return $data;
             },
             $this)
         );
+    }
+
+    public function enqueue($saga)
+    {
+        $this->queue[] = $saga;
     }
 
     public function stepThrough(string $task, $data, Generator &$current)
@@ -124,8 +131,7 @@ final class GearmanSaga
                 function (GearmanTask $data) use (&$current) {
                     if ($current->valid()) {
                         $current->send(unserialize($data->data()));
-                        // Change to enqueue.
-                        $this->runSaga($current);
+                        $this->enqueue($current);
                     }
 
                     return $data;

@@ -1,79 +1,260 @@
 #!/usr/bin/env php
 <?php require_once __DIR__ . '/../vendor/autoload.php';
 
-use eLife\Search\Gearman\GearmanSaga;
+use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
+use eLife\ApiSdk\ApiSdk;
+use GuzzleHttp\Client;
+use eLife\ApiSdk\Model\BlogArticle;
 
 // Reverse Client Code
 $client = new GearmanClient();
 $client->addServer('elife_gearman_1');
 
-$set = new GearmanSaga($client);
 
-function normalize($fn)
-{
-    return function (GearmanTask $data) use ($fn) {
-        return $fn(unserialize($data->data()), $data);
-    };
-}
 
-function getBlogPost($page = 0, $perPage = 1)
-{
-    return [
-        'get_blog_posts',
-        [
-            'page' => $page,
-            'per-page' => $perPage
-        ]
-    ];
-}
 
-function reverse($data)
-{
-    return [
-        'reverse',
-        $data
-    ];
-}
+// To test locally change the variables below.
+$localApiUrl = 'http://192.168.187.56:1242';
+// Guzzle.
+$guzzle = new Guzzle6HttpClient(
+    new Client(['base_uri' => $localApiUrl])
+);
+// Sdk.
+$sdk = new ApiSdk($guzzle);
 
-function useContext($type)
-{
-    return ['api_use_context', [$type]];
-}
 
-$set->addSaga(function () {
-    yield ['api_init'];
-    $results = yield useContext('blog-articles');
+$articles = $sdk->blogArticles();
 
-    $expected_results = $results['count'];
-    $actual_results = 0;
-    while ($post = yield ['api_get_next']) {
-        $actual_results++;
-        $is_valid = yield ['api_validate', [$post]];
-        if (!$is_valid) {
-            // Log?
-            $actual_results--;
-            continue;
-        }
-        $index = yield ['index_from_blog_article', [$post]];
-        if ($index === false) {
-            // Log?
-            $actual_results--;
-            continue;
-        }
-        $status = yield ['elastic_upsert', ['blog-article', $post, $index]];
-        if ($status === false) {
-            // Log?
-            // Forward recovery.
-            $actual_results--;
-            continue;
-        }
+foreach ($articles as $article) {
+    if ($article instanceof BlogArticle) {
+        $normalized = $sdk->getSerializer()->serialize($article, 'json');
+        $new_article = $sdk->getSerializer()->deserialize($normalized, BlogArticle::class, 'json');
+        $normalized_new = $sdk->getSerializer()->serialize($new_article, 'json');
+
+        var_dump($normalized);
+        var_dump($normalized == $normalized_new);
+        exit;
+
+//        $normalized = $sdk->getSerializer()->deserialize($normalized, BlogArticle::class, 'json');
+//
+//        var_dump($normalized);
+//        $original = $sdk->getSerializer()->denormalize($normalized, BlogArticle::class);
+//        $serialized = serialize($normalized);
+//        // Transport
+//        $unserialized = unserialize($serialized);
+//        $original = $sdk->getSerializer()->denormalize($unserialized, BlogArticle::class);
     }
-    if ($actual_results < $expected_results) {
-        // Log?
-        // Forward recovery?
-    }
-    yield ['api_close'];
-});
+//    var_dump($article);
+    exit;
+}
+
+
+
+
+
+
+//$tasks = [];
+//
+//class GearmanPromise {
+//
+//    private $tasks;
+//    private $promises;
+//    private $jobs;
+//
+//    public function __construct(GearmanClient $client)
+//    {
+//        $this->client = $client;
+//    }
+//
+//    public function addTask($task, $data) {
+//        $deferred = new Deferred();
+//        $id = uniqid('task_');
+//        $promise = $deferred->promise();
+//        $this->tasks[$id] = $deferred;
+//        $this->promises[$id] = $promise;
+//        $this->jobs[$id] = $this->client->doBackground($task, $data, $id);
+//    }
+//
+//
+//    public function run() {
+//        while (!empty($this->jobs)) {
+//            foreach ($this->jobs as $unique => $job_handle) {
+////                var_dump($job_handle);
+//                $stat = $this->client->jobStatus($job_handle);
+//                if (!$stat[0]) {
+//                    var_dump($stat);
+////                    $promise = $this->tasks[$unique];
+//////                    $promise->resolve();
+//////                    unset($this->jobs[$unique]);
+//                }
+//            }
+//            sleep(1);
+//        }
+//    }
+//}
+//
+//$prom = new GearmanPromise($client);
+//
+//$prom->addTask('reverse', 'testing )1');
+//$prom->addTask('reverse', 'testing )2');
+//$prom->addTask('reverse', 'testing )3');
+//$prom->addTask('reverse', 'testing )4');
+//$prom->addTask('reverse', 'testing )5');
+//$prom->addTask('reverse', 'testing )6');
+//$prom->addTask('reverse', 'testing )7');
+//$prom->addTask('reverse', 'testing )8');
+//$prom->addTask('reverse', 'testing )9');
+//
+//$prom->run();
+//
+//
+//
+//
+//
+//
+//
+//
+//exit;
+
+//print 'doing...' . PHP_EOL;
+
+//while (true) {
+//    $client->doLow('chaining_test', serialize('test'));
+//}
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//$client->doLow('chaining_test', serialize('test'));
+//print 'running...' . PHP_EOL;
+////$client->runTasks();
+//print 'done...' . PHP_EOL;
+
+//$set = new GearmanSaga($client);
+//$cursor = [];
+//foreach ($cursor as $article) {
+//    // Optional batches of like 100.
+//    $client->addTaskHigh('add_to_redis', serialize([$redis_key, $article]));
+//}
+//foreach ($cursor as $article) {
+//    // Optional batches of like 100.
+//    $client->addTask('validate', serialize($redis_key));
+//}
+//foreach ($cursor as $article) {
+//    // Optional batches of like 100.
+//    $client->addTaskLow('insert', serialize($redis_key));
+//}
+
+//$set = new GearmanSaga($client);
+// Would be passed in.
+//$context = 'articles';
+//
+//$i = [[0], [1, 2]];
+//foreach ($i as $x => $n) {
+//    $set->addSaga(function () use ($n, $x) {
+//        print 'start saga (' . $x . ')' . PHP_EOL;
+//        foreach ($n as $p) {
+//            $data = yield ['api_get_nth', $p];
+//            print 'done Task (' . $x . ')' . PHP_EOL;
+//        }
+//        print 'end saga (' . $x . ')' . PHP_EOL;
+//    });
+//}
+
+//for ($x = 0; $x < 1000; $x++) {
+//    $set->addSaga(function () {
+//        for ($x = 0; $x < 100; $x++) {
+//            $data = yield ['test_reverse', $x];
+//            var_dump(memory_get_usage(true));
+//        }
+//    });
+//}
+
+//$set->run();
+
+//$set->run();
+
+//$set->run();
+
+//function normalize($fn)
+//{
+//    return function (GearmanTask $data) use ($fn) {
+//        return $fn(unserialize($data->data()), $data);
+//    };
+//}
+//
+//function getBlogPost($page = 0, $perPage = 1)
+//{
+//    return [
+//        'get_blog_posts',
+//        [
+//            'page' => $page,
+//            'per-page' => $perPage
+//        ]
+//    ];
+//}
+//
+//function reverse($data)
+//{
+//    return [
+//        'reverse',
+//        $data
+//    ];
+//}
+//
+//function useContext($type)
+//{
+//    return ['api_use_context', [$type]];
+//}
+//
+//class GearmanMap {}
+//
+//$set->addSaga(function () {
+//    yield ['api_init'];
+//    $results = yield useContext('blog-articles');
+//
+//    $expected_results = $results['count'];
+//    $actual_results = 0;
+//
+//    while ($post = yield ['api_get_next']) {
+//        $actual_results++;
+//        $is_valid = yield ['api_validate', [$post]];
+//        if (!$is_valid) {
+//            // Log?
+//            $actual_results--;
+//            continue;
+//        }
+//        $index = yield ['index_from_blog_article', [$post]];
+//        if ($index === false) {
+//            // Log?
+//            $actual_results--;
+//            continue;
+//        }
+//        $status = yield ['elastic_upsert', ['blog-article', $post, $index]];
+//        if ($status === false) {
+//            // Log?
+//            // Forward recovery.
+//            $actual_results--;
+//            continue;
+//        }
+//    }
+//    if ($actual_results < $expected_results) {
+//        // Log?
+//        // Forward recovery?
+//    }
+//    yield ['api_close'];
+//});
 
 //$set->addSaga(function () {
 //    for ($i = 0; $i < 3; $i++) {
@@ -152,5 +333,3 @@ $set->addSaga(function () {
 //        }
 //    }
 // });
-
-$set->run();

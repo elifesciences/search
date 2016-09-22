@@ -9,4 +9,7 @@ final class GearmanTask
 {
     public $parameters = [];
     public $name;
+    public $next;
+    public $serialize;
+    public $deserialize;
 }
