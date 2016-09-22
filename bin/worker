@@ -40,7 +40,7 @@ $worker->addServer('elife_gearman_1');
 $client = new GearmanClient();
 $client->addServer('elife_gearman_1');
 
-$driver = new GearmanTaskDriver(new AnnotationReader(), $worker);
-//$driver->registerWorkflow(new BlogArticleWorkflow($blogClient, $subjectClient));
-$driver->registerWorkflow(new ApiWorkflow('test', $sdk, $serial ,$client));
+$driver = new GearmanTaskDriver(new AnnotationReader(), $worker, $client);
+$driver->registerWorkflow(new BlogArticleWorkflow($sdk->getSerializer()));
+//$driver->registerWorkflow(new ApiWorkflow('test', $sdk, $serial ,$client));
 $driver->work();
