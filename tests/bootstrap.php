@@ -4,7 +4,6 @@
  *
  * This contains SHIMs for certain classes.
  */
-
 namespace {
     require_once __DIR__.'/../vendor/autoload.php';
 
