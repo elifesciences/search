@@ -15,7 +15,8 @@
         "aws/aws-sdk-php": "dev-master",
         "elasticsearch/elasticsearch": "~2.0",
         "elife/api-sdk": "^1.0@dev",
-        "webmozart/json": "^1.3@dev"
+        "webmozart/json": "^1.3@dev",
+        "clue/block-react": "^1.1"
     },
     "autoload": {
         "psr-4": {

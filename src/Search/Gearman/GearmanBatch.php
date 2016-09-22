@@ -6,7 +6,7 @@ final class GearmanBatch
 {
     private $commands;
 
-    public function __construct(array $commands)
+    public function __construct($commands)
     {
         $this->commands = $commands;
     }

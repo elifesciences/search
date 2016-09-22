@@ -31,6 +31,9 @@ final class GearmanTaskDriver
                 }
             }
         }
+        foreach ($workflow->getTasks() as $name => $task) {
+            $this->tasks[] = new GearmanTaskInstance($workflow, $task, $name, []);
+        }
     }
 
     public function addTasksToWorker(GearmanWorker $worker)
@@ -56,7 +59,9 @@ final class GearmanTaskDriver
                 $value = $object->{$method}($data);
             }
 
-            return serialize($value);
+            $job->sendStatus(10, 10);
+
+            return GEARMAN_SUCCESS;
         }, $this));
     }
 

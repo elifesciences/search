@@ -9,9 +9,12 @@ use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Annotation\Register;
+use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Workflow\ApiWorkflow;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use GuzzleHttp\Client;
+use JMS\Serializer\EventDispatcher\EventDispatcher;
+use JMS\Serializer\SerializerBuilder;
 
 // To test locally change the variables below.
 $localApiUrl = 'http://192.168.187.56:1242';
@@ -21,12 +24,23 @@ $guzzle = new Guzzle6HttpClient(
 );
 // Sdk.
 $sdk = new ApiSdk($guzzle);
+// Serial
+$serial = SerializerBuilder::create()
+    ->configureListeners(function (EventDispatcher $dispatcher) {
+        $dispatcher->addSubscriber(new SearchResultDiscriminator());
+    })
+    ->setCacheDir(__DIR__.'/../cache')
+    ->build();
 
 Register::registerLoader();
 $worker = new GearmanWorker();
 $worker->addServer('elife_gearman_1');
 
+// Reverse Client Code
+$client = new GearmanClient();
+$client->addServer('elife_gearman_1');
+
 $driver = new GearmanTaskDriver(new AnnotationReader(), $worker);
 //$driver->registerWorkflow(new BlogArticleWorkflow($blogClient, $subjectClient));
-$driver->registerWorkflow(new ApiWorkflow($sdk));
+$driver->registerWorkflow(new ApiWorkflow('test', $sdk, $serial ,$client));
 $driver->work();

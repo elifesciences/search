@@ -2,64 +2,67 @@
 
 namespace eLife\Search\Workflow;
 
-use eLife\ApiClient\ApiClient\BlogClient;
-use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Annotation\GearmanTask;
+use Symfony\Component\Serializer\Serializer;
 
 final class BlogArticleWorkflow implements Workflow
 {
-    private $blogClient;
-    private $subjectsClient;
-    private $articles;
+    const WORKFLOW_SUCCESS = 1;
+    const WORKFLOW_FAILURE = -1;
 
-    public function __construct(BlogClient $blogClient, SubjectsClient $subjectsClient)
+    /**
+     * @var Serializer
+     */
+    private $serializer;
+
+    public function __construct(Serializer $serializer)
     {
-        $this->blogClient = $blogClient;
-        $this->subjectsClient = $subjectsClient;
+        $this->serializer = $serializer;
     }
 
     /**
      * @GearmanTask(
-     *     name="get_single_blog_post",
-     *     parameters={"offset"}
+     *     name="blog_article_validate",
+     *     next="blog_article_insert",
+     *     deserialize="deserializeArticle",
+     *     serialize="serializeArticle"
      * )
      */
-    public function getSingleBlogArticle($offset)
+    public function validate(BlogArticle $blogArticle) : BlogArticle
     {
-        $subset = $this->articles->slice($offset, 2);
-        $single = $subset->map(function (BlogArticle $item) {
-            return $item->getTitle();
-        })->toArray();
-
-        return [
-            'item' => $single[0],
-            'next' => isset($single[1]),
-        ];
+        return $blogArticle;
     }
 
     /**
      * @GearmanTask(
-     *     name="get_blog_posts",
-     *     parameters={"page", "per-page"}
+     *     name="blog_article_index",
+     *     next="blog_article_insert",
+     *     deserialize="deserializeArticle"
      * )
      */
-    public function getBlogArticles($page, $perPage)
+    public function index(BlogArticle $blogArticle) : array
     {
-        $subset = $this->articles->slice($page, $perPage);
+        $index = [];
 
-        return $subset->map(function (BlogArticle $item) {
-            return $item->getTitle();
-        })->toArray();
+        return [$this->serializeArticle($blogArticle), $index];
     }
 
     /**
-     * @GearmanTask(
-     *     name="reverse"
-     * )
+     * @GearmanTask(name="blog_article_insert")
      */
-    public function reverse($data)
+    public function insert(string $json, array $index)
     {
-        return strrev($data);
+        return self::WORKFLOW_SUCCESS;
+    }
+
+    public function deserializeArticle(string $json) : BlogArticle
+    {
+        return $this->serializer->deserialize($json, BlogArticle::class, 'json');
+    }
+
+    public function serializeArticle(BlogArticle $blogArticle) : string
+    {
+        return $this->serializer->serialize($blogArticle, 'json');
     }
 }

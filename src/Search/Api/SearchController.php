@@ -39,37 +39,33 @@ class SearchController
             )
         );
         $workflow = new ApiWorkflow(
-           $sdk
+           $sdk,
+            $this->serializer
         );
 
         $workflow->initialize();
-        $workflow->fetch('blog-articles');
-        $article = $workflow->getNext();
-        $snippet = $sdk->getSerializer()->normalize($article);
-        var_dump($snippet);
-        $article = $workflow->getNext();
-        $snippet = $sdk->getSerializer()->normalize($article);
-        var_dump($snippet);
-        $article = $workflow->getNext();
-        $snippet = $sdk->getSerializer()->normalize($article);
-        var_dump($snippet);
-        $article = $workflow->getNext();
-        $snippet = $sdk->getSerializer()->normalize($article);
-        var_dump($snippet);
-        exit;
-        // Create article thing.
-        $articles = $sdk->blogArticles();
-        // Loop
-        foreach ($articles as $article) {
-            // Prompt some PStorm auto-complete
-            if ($article instanceof BlogArticle) {
-                // Get the title
-                $snippet = $sdk->getSerializer()->normalize($article);
-                var_dump($snippet);
-            }
+        $workflow->useContext('blog-articles');
+
+        while ($article = $workflow->getNext()) {
+            $snippet = $sdk->getSerializer()->normalize($article);
         }
 
+        $workflow->tearDown();
+
         return '';
+//        // Create article thing.
+//        $articles = $sdk->blogArticles();
+//        // Loop
+//        foreach ($articles as $article) {
+//            // Prompt some PStorm auto-complete
+//            if ($article instanceof BlogArticle) {
+//                // Get the title
+//                $snippet = $sdk->getSerializer()->normalize($article);
+//                var_dump($snippet);
+//            }
+//        }
+
+//        return '';
     }
 
     public function searchTestAction(Request $request)
