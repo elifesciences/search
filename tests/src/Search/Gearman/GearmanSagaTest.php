@@ -9,7 +9,7 @@ use Exception;
 use Mockery;
 use PHPUnit_Framework_TestCase;
 
-abstract class GearmanSagaTest extends PHPUnit_Framework_TestCase
+class GearmanSagaTest extends PHPUnit_Framework_TestCase
 {
     /** @var GearmanClientMock */
     private $mock_client;
