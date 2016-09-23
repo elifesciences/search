@@ -14,4 +14,6 @@ interface QueryResponse extends Iterator, Serializable
     public function getSubjects() : array;
 
     public function toArray() : array;
+
+    public function map(callable $fn) : array;
 }

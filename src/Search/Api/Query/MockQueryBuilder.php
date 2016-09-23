@@ -122,9 +122,11 @@ final class MockQueryBuilder implements QueryBuilder
                 $this->data = $data;
             }
 
-            public function execute() : array
+            public function execute() : QueryResponse
             {
-                return $this->data;
+                return new MockQueryResponse(array_map(function ($item) {
+                    return json_encode($item, true);
+                }, $this->data));
             }
         };
     }

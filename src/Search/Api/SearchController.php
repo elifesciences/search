@@ -5,8 +5,11 @@ namespace eLife\Search\Api;
 use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Query\MockQueryBuilder;
+use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Api\Response\SearchResponse;
+use eLife\Search\Api\Response\SearchResult;
+use eLife\Search\Api\Response\TypesResponse;
 use eLife\Search\Workflow\ApiWorkflow;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
@@ -103,9 +106,23 @@ class SearchController
 
         $data = $query->getQuery()->execute();
 
-        $result = $this->responseFromArray(SearchResponse::class, ['items' => $data]);
+        if ($data instanceof QueryResponse) {
+            $result = new SearchResponse(
+                $data->map([$this, 'responseFromJson']),
+                $data->getTotalResults(),
+                $data->getSubjects(),
+                TypesResponse::fromArray($data->getTypeTotals())
+            );
+        } else {
+            //            $result = $this->responseFromArray(SearchResponse::class, ['items' => $data]);
+        }
 
         return $this->serialize($result);
+    }
+
+    public function responseFromJson($json)
+    {
+        return $this->serializer->deserialize($json, SearchResult::class, 'json');
     }
 
     /**
