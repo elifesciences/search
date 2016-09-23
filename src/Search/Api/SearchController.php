@@ -3,16 +3,11 @@
 namespace eLife\Search\Api;
 
 use Doctrine\Common\Cache\Cache;
-use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
-use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Client\BlogArticles;
-use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Api\Response\SearchResponse;
 use eLife\Search\Workflow\ApiWorkflow;
-use GuzzleHttp\Client;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
@@ -113,6 +108,9 @@ class SearchController
         return $this->serialize($result);
     }
 
+    /**
+     * @internal
+     */
     private function responseFromArray($className, $data)
     {
         return $this->serializer->deserialize(json_encode($data), $className, 'json');

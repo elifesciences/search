@@ -45,7 +45,7 @@ final class SubjectStore
         $subjects = [];
         foreach ($this->sdk->subjects() as $subject) {
             if ($subject instanceof Subject) {
-                $subjects[] = $this->sdk->getSerializer()->serialize($subject, 'json');
+                $subjects[] = $this->serializer->serialize($subject, 'json');
             }
         }
 
