@@ -12,13 +12,11 @@ use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use PHPUnit_Framework_TestCase;
 use tests\eLife\Search\AsyncAssert;
-use tests\eLife\Search\HttpClient;
 use tests\eLife\Search\HttpMocks;
 
 class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
 {
     use AsyncAssert;
-    use HttpClient;
     use HttpMocks;
     use GetSerializer;
 
@@ -44,12 +42,12 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
         // Check A to B
         $serialized = $this->workflow->serializeArticle($blogArticle);
         $deserialized = $this->workflow->deserializeArticle($serialized);
-        $this->asyncAssertEqual($blogArticle->getContent(), $deserialized->getContent());
-        $this->asyncAssertEqual($blogArticle->getId(), $deserialized->getId());
-        $this->asyncAssertEqual($blogArticle->getImpactStatement(), $deserialized->getImpactStatement());
-        $this->asyncAssertEqual($blogArticle->getPublishedDate(), $deserialized->getPublishedDate());
-        $this->asyncAssertEqual($blogArticle->getSubjects(), $deserialized->getSubjects());
-        $this->asyncAssertEqual($blogArticle->getTitle(), $deserialized->getContent());
+        $this->asyncAssertEquals($blogArticle->getContent(), $deserialized->getContent());
+        $this->asyncAssertEquals($blogArticle->getId(), $deserialized->getId());
+        $this->asyncAssertEquals($blogArticle->getImpactStatement(), $deserialized->getImpactStatement());
+        $this->asyncAssertEquals($blogArticle->getPublishedDate(), $deserialized->getPublishedDate());
+        $this->asyncAssertEquals($blogArticle->getSubjects(), $deserialized->getSubjects());
+        $this->asyncAssertEquals($blogArticle->getTitle(), $deserialized->getContent());
 
         // Check B to A
         $final_serialized = $this->workflow->serializeArticle($deserialized);

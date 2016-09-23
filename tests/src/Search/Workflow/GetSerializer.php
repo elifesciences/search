@@ -9,20 +9,18 @@ use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
-use LogicException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 use tests\eLife\Search\HttpClient;
 
 trait GetSerializer
 {
+    use HttpClient;
+
     private $serializer;
 
     public function getSerializer()
     {
-        if (!method_exists($this, 'getHttpClient')) {
-            throw new LogicException('You need to include the HttpClient to initialize the serializer');
-        }
         if ($this->serializer !== null) {
             return $this->serializer;
         }
