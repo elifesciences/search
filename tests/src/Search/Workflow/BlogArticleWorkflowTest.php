@@ -42,12 +42,13 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
         // Check A to B
         $serialized = $this->workflow->serializeArticle($blogArticle);
         $deserialized = $this->workflow->deserializeArticle($serialized);
-        $this->asyncAssertEquals($blogArticle->getContent(), $deserialized->getContent());
-        $this->asyncAssertEquals($blogArticle->getId(), $deserialized->getId());
-        $this->asyncAssertEquals($blogArticle->getImpactStatement(), $deserialized->getImpactStatement());
-        $this->asyncAssertEquals($blogArticle->getPublishedDate(), $deserialized->getPublishedDate());
-        $this->asyncAssertEquals($blogArticle->getSubjects(), $deserialized->getSubjects());
-        $this->asyncAssertEquals($blogArticle->getTitle(), $deserialized->getContent());
+
+        $this->asyncAssertEquals($blogArticle->getContent(), $deserialized->getContent(), 'Content matches after serializing');
+        $this->asyncAssertEquals($blogArticle->getId(), $deserialized->getId(), 'Id matches after serializing');
+        $this->asyncAssertEquals($blogArticle->getImpactStatement(), $deserialized->getImpactStatement(), 'Impact statement matches after serializing');
+        $this->asyncAssertEquals($blogArticle->getPublishedDate(), $deserialized->getPublishedDate(), 'Published date matches after serializing');
+        $this->asyncAssertEquals($blogArticle->getSubjects(), $deserialized->getSubjects(), 'Subjects matches after serializing');
+        $this->asyncAssertEquals($blogArticle->getTitle(), $deserialized->getTitle(), 'Title matches after serializing');
 
         // Check B to A
         $final_serialized = $this->workflow->serializeArticle($deserialized);
