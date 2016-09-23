@@ -40,9 +40,12 @@ final class SearchResponse implements HasHeaders
         ],
     ];
 
-    public function __construct(array $items = [])
+    public function __construct(array $items, $total, $subjects, TypesResponse $types)
     {
-        $this->setItems($items);
+        $this->items = $items;
+        $this->total = $total;
+        $this->types = $types;
+        $this->subjects = $subjects;
     }
 
     public function setItems($items)
