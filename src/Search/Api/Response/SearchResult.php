@@ -17,6 +17,9 @@ use JMS\Serializer\Annotation\Discriminator;
  *    "research-article--vor": VorArticle::class,
  *    "collection": CollectionResponse::class
  * })
+ *
+ * @property $internal_type
+ * @property $status
  */
 interface SearchResult
 {

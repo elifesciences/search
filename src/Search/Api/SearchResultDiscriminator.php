@@ -35,8 +35,10 @@ final class SearchResultDiscriminator implements EventSubscriberInterface
     {
         $object = $event->getObject();
         if (is_object($object) && $object instanceof SearchResult) {
+            /* @noinspection PhpUndefinedFieldInspection */
             $object->internal_type = $object->getType();
             if ($object instanceof ArticleResponse) {
+                /* @noinspection PhpUndefinedFieldInspection */
                 $object->internal_type .= '--'.$object->status;
             }
         }
