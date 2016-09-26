@@ -118,7 +118,6 @@ trait AsyncAssert
                         $this->messages[] = $e->getMessage();
                     }
                 }, $this));
-
             } else {
                 throw new BadMethodCallException('Async assert method not found', get_class($this), $fn);
             }
@@ -129,7 +128,7 @@ trait AsyncAssert
     {
         if (method_exists($this, 'fail')) {
             foreach ($this->messages as $message) {
-                $this->fail($message . '(1 of ' . count($this->messages) . ' failures)');
+                $this->fail($message.'(1 of '.count($this->messages).' failures)');
             }
         }
         if (method_exists($this, 'asyncTearDown')) {

@@ -6,7 +6,6 @@ use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Query\QueryResponse;
-use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Api\Response\SearchResponse;
 use eLife\Search\Api\Response\SearchResult;
 use eLife\Search\Api\Response\TypesResponse;
@@ -113,6 +112,15 @@ class SearchController
                 $data->getSubjects(),
                 TypesResponse::fromArray($data->getTypeTotals())
             );
+            // The new code.
+            if (null) {
+                $result = new SearchResponse(
+                    $data->toArray(),
+                    $data->getTotalResults(),
+                    $data->getSubjects(),
+                    TypesResponse::fromArray($data->getTypeTotals())
+                );
+            }
         } else {
             //            $result = $this->responseFromArray(SearchResponse::class, ['items' => $data]);
         }
@@ -154,19 +162,5 @@ class SearchController
     public function indexAction()
     {
         return $this->serialize(new SearchResponse([]), 1);
-    }
-
-    public function blogArticleAction()
-    {
-        $blog = $this->responseFromArray(BlogArticleResponse::class, [
-            'id' => '123',
-            'title' => 'testing title',
-        ]);
-
-        return $this->serialize(new SearchResponse([
-            $blog,
-            $blog,
-            $blog,
-        ]), 1);
     }
 }
