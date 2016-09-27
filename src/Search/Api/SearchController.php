@@ -161,6 +161,6 @@ class SearchController
 
     public function indexAction()
     {
-        return $this->serialize(new SearchResponse([]), 1);
+        return $this->serialize(new SearchResponse([], 0, [], TypesResponse::fromArray([])), 1);
     }
 }
