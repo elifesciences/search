@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\ImageSize;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use PHPUnit_Framework_TestCase;
+use Psr\Log\NullLogger;
 use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\HttpMocks;
 
@@ -27,7 +28,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->workflow = new BlogArticleWorkflow($this->getSerializer());
+        $this->workflow = new BlogArticleWorkflow($this->getSerializer(), new NullLogger());
     }
 
     /**

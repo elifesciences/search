@@ -4,6 +4,7 @@ namespace eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Annotation\GearmanTask;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
 final class BlogArticleWorkflow implements Workflow
@@ -15,19 +16,12 @@ final class BlogArticleWorkflow implements Workflow
      * @var Serializer
      */
     private $serializer;
-    private $log;
+    private $logger;
 
-    public function __construct(Serializer $serializer, $log = false)
+    public function __construct(Serializer $serializer, LoggerInterface $logger)
     {
         $this->serializer = $serializer;
-        $this->log = $log;
-    }
-
-    public function log(string ...$log)
-    {
-        if ($this->log) {
-            echo 'WORKER: '.implode(' ', $log).PHP_EOL;
-        }
+        $this->logger = $logger;
     }
 
     /**
@@ -40,7 +34,7 @@ final class BlogArticleWorkflow implements Workflow
      */
     public function validate(BlogArticle $blogArticle) : BlogArticle
     {
-        $this->log('validating', $blogArticle->getTitle());
+        $this->logger->debug('validating '.$blogArticle->getTitle());
 
         return $blogArticle;
     }
@@ -54,7 +48,7 @@ final class BlogArticleWorkflow implements Workflow
      */
     public function index(BlogArticle $blogArticle) : array
     {
-        $this->log('indexing', $blogArticle->getTitle());
+        $this->logger->debug('indexing '.$blogArticle->getTitle());
         $index = ['testing' => 'cheese'];
 
         return ['json' => $this->serializeArticle($blogArticle), 'index' => $index];
@@ -65,8 +59,8 @@ final class BlogArticleWorkflow implements Workflow
      */
     public function insert(string $json, array $index)
     {
-        $this->log('inserting', $json);
-        $this->log('==========================================================================');
+        $this->logger->debug('inserting '.$json);
+        $this->logger->debug('==========================================================================');
 
         return self::WORKFLOW_SUCCESS;
     }
