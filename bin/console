@@ -2,11 +2,14 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 set_time_limit(0);
+use eLife\Search\Kernel;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
+use eLife\Search\Console;
 
 $input = new ArgvInput();
-$env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'dev');
-//$app = require __DIR__ . '/../src/app.php';
-//require __DIR__ . '/../config/' . $env . '.php';
-$console = require __DIR__ . '/../src/Search/Console.php';
+$env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'local');
+$config = require __DIR__ . '/../config/' . $env . '.php';
+$app = new Kernel($config);
+$console = new Console(new Application("eLife Sciences Search API"), $app);
 $console->run();
