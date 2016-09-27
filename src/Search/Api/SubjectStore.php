@@ -2,57 +2,34 @@
 
 namespace eLife\Search\Api;
 
-use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Model\Subject;
+use Traversable;
 
 final class SubjectStore
 {
-    private $serializer;
-    private $cache;
-    private $timeout;
+    private $subjects;
 
-    public function __construct(ApiSdk $sdk, Cache $cache, int $timeout = 3600)
+    public function __construct(ApiSdk $sdk)
     {
-        $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
-        $this->cache = $cache;
-        $this->timeout = $timeout;
     }
 
-    protected function saveSubjects(array $subjects) : bool
+    protected function saveSubjects(Traversable $subjects)
     {
-        return $this->cache->save('search.subjects', $subjects, $this->timeout);
+        $this->subjects = $subjects;
     }
 
-    protected function mapSubjects($subject) : Subject
+    protected function getSubjectsFromCache()
     {
-        return $this->serializer->deserialize($subject, Subject::class, 'json');
+        return $this->subjects;
     }
 
-    protected function getSubjectsFromCache() : array
+    protected function getSubjectsFromApi() : Traversable
     {
-        $subjects = $this->cache->fetch('search.subjects');
-        if ($subjects) {
-            return array_map([$this, 'mapSubjects'], $subjects);
-        }
-
-        return null;
+        return $this->sdk->subjects();
     }
 
-    protected function getSubjectsFromApi() : array
-    {
-        $subjects = [];
-        foreach ($this->sdk->subjects() as $subject) {
-            if ($subject instanceof Subject) {
-                $subjects[] = $this->serializer->serialize($subject, 'json');
-            }
-        }
-
-        return $subjects;
-    }
-
-    public function getSubjects() : array
+    public function getSubjects() : Traversable
     {
         if ($subjects = $this->getSubjectsFromCache()) {
             return $subjects;

@@ -141,7 +141,11 @@ final class MockQueryResponse implements QueryResponse
     public function getSubjects() : array
     {
         return [
-            'biophysics-structural-biology' => 1,
+            [
+                'id' => 'biophysics-structural-biology',
+                'name' => 'Biology',
+                'results' => 1,
+            ],
         ];
     }
 

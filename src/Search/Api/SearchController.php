@@ -9,7 +9,6 @@ use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResponse;
 use eLife\Search\Api\Response\SearchResult;
 use eLife\Search\Api\Response\TypesResponse;
-use eLife\Search\Workflow\ApiWorkflow;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,46 +35,14 @@ class SearchController
 
     public function blogApiAction()
     {
+        $tpl = '';
         foreach ($this->subjects->getSubjects() as $subject) {
             if ($subject instanceof Subject) {
-                echo($subject->getName()).'<br/>';
+                $tpl .= ($subject->getName()).' '.'('.$subject->getId().')'.'<br/>';
             }
         }
 
-        return '';
-//        $sdk = new ApiSdk(
-//            new Guzzle6HttpClient(
-//                new Client(['base_uri' => $this->apiUrl])
-//            )
-//        );
-//        $workflow = new ApiWorkflow(
-//           $sdk,
-//            $this->serializer
-//        );
-
-//        $workflow->initialize();
-//        $workflow->useContext('blog-articles');
-
-//        while ($article = $workflow->getNext()) {
-//            $snippet = $sdk->getSerializer()->normalize($article);
-//        }
-
-//        $workflow->tearDown();
-
-//        return '';
-//        // Create article thing.
-//        $articles = $sdk->blogArticles();
-//        // Loop
-//        foreach ($articles as $article) {
-//            // Prompt some PStorm auto-complete
-//            if ($article instanceof BlogArticle) {
-//                // Get the title
-//                $snippet = $sdk->getSerializer()->normalize($article);
-//                var_dump($snippet);
-//            }
-//        }
-
-//        return '';
+        return $tpl;
     }
 
     public function searchTestAction(Request $request)
@@ -121,11 +88,11 @@ class SearchController
                     TypesResponse::fromArray($data->getTypeTotals())
                 );
             }
-        } else {
-            //            $result = $this->responseFromArray(SearchResponse::class, ['items' => $data]);
+
+            return $this->serialize($result);
         }
 
-        return $this->serialize($result);
+        return '404';
     }
 
     public function responseFromJson($json)

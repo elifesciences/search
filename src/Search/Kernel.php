@@ -34,7 +34,6 @@ final class Kernel implements MinimalKernel
 
     public static $routes = [
         '/search' => 'indexAction',
-        '/blog-article' => 'blogArticleAction',
         '/test-search' => 'searchTestAction',
         '/blog-api' => 'blogApiAction',
     ];
@@ -143,7 +142,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['api.subjects'] = function (Application $app) {
-            return new SubjectStore($app['api.sdk'], $app['cache'], 3600);
+            return new SubjectStore($app['api.sdk']);
         };
 
         $app['default_controller'] = function (Application $app) {
@@ -197,9 +196,9 @@ final class Kernel implements MinimalKernel
 
     public function validate(Request $request, Response $response)
     {
-        //        $this->app['puli.validator']->validate(
-//            $this->app['psr7.bridge']->createResponse($response)
-//        );
+        $this->app['puli.validator']->validate(
+            $this->app['psr7.bridge']->createResponse($response)
+        );
     }
 
     public function cache(Request $request, Response $response)
