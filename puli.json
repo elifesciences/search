@@ -98,6 +98,10 @@
             "install-path": "vendor/justinrainbow/json-schema",
             "installer": "composer"
         },
+        "kevinrob/guzzle-cache-middleware": {
+            "install-path": "vendor/kevinrob/guzzle-cache-middleware",
+            "installer": "composer"
+        },
         "mockery/mockery": {
             "install-path": "vendor/mockery/mockery",
             "installer": "composer",

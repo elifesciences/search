@@ -15,9 +15,13 @@ use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Api\SubjectStore;
 use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
+use Kevinrob\GuzzleCache\CacheMiddleware;
+use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
+use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
 use Silex\Application;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -110,10 +114,30 @@ final class Kernel implements MinimalKernel
             );
         };
 
+        $app['guzzle'] = function (Application $app) {
+            // Create default HandlerStack
+            $stack = HandlerStack::create();
+            $stack->push(
+                new CacheMiddleware(
+                    new PublicCacheStrategy(
+                        new DoctrineCacheStorage(
+                            $app['cache']
+                        )
+                    )
+                ),
+                'cache'
+            );
+
+            return new Client([
+                'base_uri' => $app['config']['api_url'],
+                'handler' => $stack,
+            ]);
+        };
+
         $app['api.sdk'] = function (Application $app) {
             return new ApiSdk(
                 new Guzzle6HttpClient(
-                    new Client(['base_uri' => $app['config']['api_url']])
+                    $app['guzzle']
                 )
             );
         };
