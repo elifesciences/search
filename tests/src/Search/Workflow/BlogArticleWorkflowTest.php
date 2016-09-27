@@ -19,6 +19,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
     use AsyncAssert;
     use HttpMocks;
     use GetSerializer;
+    use BlackholeLogger;
 
     /**
      * @var BlogArticleWorkflow
@@ -27,7 +28,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->workflow = new BlogArticleWorkflow($this->getSerializer());
+        $this->workflow = new BlogArticleWorkflow($this->getSerializer(), $this->getLogger());
     }
 
     /**
