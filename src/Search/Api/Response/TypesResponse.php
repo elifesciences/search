@@ -203,25 +203,6 @@ final class TypesResponse
             )
         );
 
-        return new static (
-            $type_totals['correction'] ?? 0,
-            $type_totals['editorial'] ?? 0,
-            $type_totals['feature'] ?? 0,
-            $type_totals['insight'] ?? 0,
-            $type_totals['research-advance'] ?? 0,
-            $type_totals['research-article'] ?? 0,
-            $type_totals['research-exchange'] ?? 0,
-            $type_totals['retraction'] ?? 0,
-            $type_totals['registered-report'] ?? 0,
-            $type_totals['replication-study'] ?? 0,
-            $type_totals['short-report'] ?? 0,
-            $type_totals['tools-resources'] ?? 0,
-            $type_totals['blog-article'] ?? 0,
-            $type_totals['collection'] ?? 0,
-            $type_totals['event'] ?? 0,
-            $type_totals['interview'] ?? 0,
-            $type_totals['labs-experiment'] ?? 0,
-            $type_totals['podcast-episode'] ?? 0
-        );
+        return self::fromArray($type_totals);
     }
 }
