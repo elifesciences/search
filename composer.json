@@ -16,7 +16,8 @@
         "elasticsearch/elasticsearch": "~2.0",
         "elife/api-sdk": "^1.0@dev",
         "webmozart/json": "^1.3@dev",
-        "clue/block-react": "^1.1"
+        "clue/block-react": "^1.1",
+        "kevinrob/guzzle-cache-middleware": "^1.4"
     },
     "autoload": {
         "psr-4": {
