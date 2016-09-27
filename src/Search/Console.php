@@ -2,7 +2,9 @@
 
 namespace eLife\Search;
 
+use eLife\Search\Workflow\CliLogger;
 use LogicException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,22 +34,23 @@ class Console
         $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', 'dev'));
     }
 
-    public function echoCommand(InputInterface $input, OutputInterface $output)
+    public function echoCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)
     {
-        $question = new Question('Are we there yet? ');
+        $question = new Question('<question>Are we there yet?</question> ');
         $helper = new QuestionHelper();
         while (true) {
             $name = $helper->ask($input, $output, $question);
             if ($name === 'yes') {
                 break;
             }
-            $output->writeln($name);
+            $logger->error($name);
         }
     }
 
-    public function helloCommand(InputInterface $input, OutputInterface $output)
+    public function helloCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)
     {
-        $output->writeln('Hello from the outside (of the global scope)');
+        $logger->info('Hello from the outside (of the global scope)');
+        $logger->debug('This is working');
     }
 
     public function run()
@@ -60,7 +63,10 @@ class Console
             $this->console
                 ->register($name)
                 ->setDescription($cmd['description'] ?? $name.' command')
-                ->setCode([$this, $name.'Command']);
+                ->setCode(\Closure::bind(function (InputInterface $input, OutputInterface $output) use ($name) {
+                    $logger = new CliLogger($input, $output);
+                    $this->{$name.'Command'}($input, $output, $logger);
+                }, $this));
         }
         $this->console->run();
     }
