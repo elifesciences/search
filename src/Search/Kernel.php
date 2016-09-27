@@ -45,6 +45,7 @@ final class Kernel implements MinimalKernel
         $app = new Application();
         // Load config
         $app['config'] = array_merge([
+            'cli' => false,
             'debug' => false,
             'validate' => false,
             'annotation_cache' => true,
