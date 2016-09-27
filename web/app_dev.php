@@ -4,14 +4,12 @@ require_once __DIR__.'/bootstrap.php';
 
 use eLife\Search\Kernel;
 
-$kernel = new Kernel([
-  'debug' => true,
-  'validate' => true,
-  'ttl' => 0,
-]);
+$config = include __DIR__.'/../config/dev.php';
 
-$kernel->withApp(function ($app) {
-    $app['debug'] = true;
+$kernel = new Kernel($config);
+
+$kernel->withApp(function ($app) use ($config) {
+    $app['debug'] = $config['debug'] ?? false;
 });
 
 $kernel->run();

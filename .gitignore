@@ -2,4 +2,4 @@
 /vendor/
 /cache/
 .puli
-/web/app_local.php
+/config/local.php

@@ -50,6 +50,7 @@ final class Kernel implements MinimalKernel
             'validate' => false,
             'annotation_cache' => true,
             'api_url' => '',
+            'ttl' => 3600,
             'elastic_url' => '',
         ], $config);
         // Annotations.
