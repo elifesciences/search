@@ -13,6 +13,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use eLife\Search\Api\Elasticsearch\ElasticSearchResponse;
 
 class SearchController
 {
@@ -25,7 +26,8 @@ class SearchController
         Cache $cache,
         string $apiUrl,
         SubjectStore $subjects
-    ) {
+    )
+    {
         $this->serializer = $serializer;
         $this->context = $context;
         $this->cache = $cache;
@@ -35,14 +37,50 @@ class SearchController
 
     public function blogApiAction()
     {
-        $tpl = '';
-        foreach ($this->subjects->getSubjects() as $subject) {
-            if ($subject instanceof Subject) {
-                $tpl .= ($subject->getName()).' '.'('.$subject->getId().')'.'<br/>';
-            }
-        }
+        $es = [
+            'took' => 1,
+            'timed_out' => false,
+            '_shards' => [
+                'total' => 5,
+                'successful' => 5,
+                'failed' => 0,
+            ],
+            'hits' => [
+                'total' => 1,
+                'max_score' => 0.30685282,
+                'hits' => [
+                    [
+                        '_source' => [
+                            'id' => '12456',
+                            'type' => 'blog-article',
+                            'title' => 'some blog article',
+                            'impactStatement' => 'Something impacting in a statement like fashion.',
+                            'published' => '2016-06-09T15:15:10+00:00',
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $data = $this->serializer->deserialize(json_encode($es), ElasticSearchResponse::class, 'json');
 
-        return $tpl;
+        $result = new SearchResponse(
+            $data->toArray(),
+            $data->getTotalResults(),
+            $data->getSubjects(),
+            TypesResponse::fromArray($data->getTypeTotals())
+        );
+
+        return $this->serialize($result);
+//
+//        return '';
+//        $tpl = '';
+//        foreach ($this->subjects->getSubjects() as $subject) {
+//            if ($subject instanceof Subject) {
+//                $tpl .= ($subject->getName()) . ' ' . '(' . $subject->getId() . ')' . '<br/>';
+//            }
+//        }
+//
+//        return $tpl;
     }
 
     public function searchTestAction(Request $request)
