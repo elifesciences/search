@@ -7,7 +7,7 @@ use eLife\Search\Kernel;
 $doc = <<<'HTML'
         <!DOCTYPE html>
         <body style="font-family: sans-serif; ">
-            <div style="margin: 45px auto; max-width: 550px; background-color: #EEE; padding: 50px">
+            <div style="margin: 45px auto; max-width: 650px; background-color: #EEE; padding: 50px">
             <img src="https://avatars0.githubusercontent.com/u/1777367?v=3&s=100" height="45" style="float:left; margin: 0 10px"/>
             <h1 style="line-height: 45px; float:left; margin-top: 0">
                 eLife Search API
@@ -65,11 +65,11 @@ HTML;
         // Clean output buffer to hide warnings.
         ob_clean();
 
-        $content = '<p>'.$t->getMessage().'</p>'.($content ? '<h3>Warnings:</h3>'.'<p>'.$content.'</p>' : '');
+        $output = '<p>'.$t->getMessage().'</p>'.($content ? '<h3>Warnings:</h3>'.'<p>'.$content.'</p>' : '');
 
-        $content .= $t->getTraceAsString();
+        $output .= '<h4>Stack Trace</h4>'.$t->getTraceAsString();
         // Print error page.
-        echo sprintf($doc, '<p>'.$t->getMessage().'</p>'.($content ? '<h3>Warnings:</h3>'.'<p>'.$content.'</p>' : ''));
+        echo sprintf($doc, $output);
         // Flush back to user.
         ob_flush();
     }
