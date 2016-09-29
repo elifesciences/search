@@ -6,6 +6,7 @@
     "type": "research-article",
     "doi": "10.7554/eLife.14107",
     "title": "Molecular basis for multimerization in the activation of the epidermal growth factor",
+    "authorLine": "Yongjian Huang et al",
     "published": "2016-03-28T00:00:00Z",
     "volume": 5,
     "issue": 1,
@@ -42,6 +43,7 @@
     "version": 1,
     "type": "research-article",
     "doi": "10.7554/eLife.14107",
+    "authorLine": "Yongjian Huang et al",
     "title": "Molecular basis for multimerization in the activation of the epidermal growth factor",
     "published": "2016-03-28T00:00:00Z",
     "volume": 5,
@@ -60,6 +62,7 @@
     "doi": "10.7554/eLife.09560",
     "title": "<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa",
     "published": "2015-09-10T00:00:00Z",
+    "authorLine": "Yongjian Huang et al",
     "volume": 4,
     "issue": 3,
     "elocationId": "e09560",
@@ -335,6 +338,7 @@
     "published": "2015-09-10T00:00:00Z",
     "volume": 4,
     "elocationId": "e09560",
+    "authorLine": "Yongjian Huang et al",
     "copyright": {
       "license": "CC-BY-4.0",
       "holder": "Berger et al",
@@ -918,7 +922,7 @@
   {
     "number": 1,
     "title": "Experimental eLife Lens search page",
-    "type": "lab-experiments",
+    "type": "labs-experiment",
     "published": "2015-04-01T11:32:47+00:00",
     "image": {
       "alt": "",
@@ -951,7 +955,7 @@
     "impactStatement": "In this episode of the eLife podcast we hear about drug production, early career researchers, honeybees, human migrations and pain.",
     "published": "2016-07-01T08:30:15+00:00",
     "image": {
-      "alt": "",
+      "alt": "testing",
       "sizes": {
         "2:1": {
           "900": "https://placehold.it/900x450",
@@ -967,10 +971,15 @@
         }
       }
     },
-    "mp3": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.06.mp3",
     "subjects": [
       "biochemistry",
       "ecology"
+    ],
+    "sources": [
+      {
+        "mediaType": "audio/mpeg",
+        "uri": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3"
+      }
     ],
     "chapters": [
       {
@@ -1108,7 +1117,12 @@
         }
       }
     },
-    "mp3": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.06.mp3",
+    "sources": [
+      {
+        "mediaType": "audio/mpeg",
+        "uri": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3"
+      }
+    ],
     "chapters": [
       {
         "number": 1,

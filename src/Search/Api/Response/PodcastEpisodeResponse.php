@@ -24,10 +24,10 @@ final class PodcastEpisodeResponse implements SearchResult
     public $number;
 
     /**
-     * @Type("string")
+     * @Type("array<eLife\Search\Api\Response\SourcesResponse>")
      * @Since(version="1")
      */
-    public $mp3;
+    public $sources;
 
     /**
      * @Type("string")

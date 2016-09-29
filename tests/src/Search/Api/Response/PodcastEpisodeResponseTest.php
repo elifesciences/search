@@ -36,7 +36,12 @@ class PodcastEpisodeResponseTest extends SerializerTest
                     }
                 }
             },
-            "mp3": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.06.mp3",
+            "sources": [
+                {
+                    "mediaType": "audio/mpeg",
+                    "uri": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3"
+                }
+            ],
             "chapters": [
                 {
                     "number": 1,
@@ -82,7 +87,12 @@ class PodcastEpisodeResponseTest extends SerializerTest
                     }
                 }
             },
-            "mp3": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.06.mp3"
+            "sources": [
+                {
+                    "mediaType": "audio/mpeg",
+                    "uri": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3"
+                }
+            ]
         }
         ';
         $complete = '
@@ -108,7 +118,12 @@ class PodcastEpisodeResponseTest extends SerializerTest
                     }
                 }
             },
-            "mp3": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.06.mp3",
+            "sources": [
+                {
+                    "mediaType": "audio/mpeg",
+                    "uri": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3"
+                }
+            ],
             "subjects": [
                 "biochemistry",
                 "ecology"
@@ -253,7 +268,12 @@ class PodcastEpisodeResponseTest extends SerializerTest
                     }
                 }
             },
-            "mp3": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.06.mp3",
+            "sources": [
+                {
+                    "mediaType": "audio/mpeg",
+                    "uri": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3"
+                }
+            ],
             "subjects": [
                 "biochemistry",
                 "ecology"

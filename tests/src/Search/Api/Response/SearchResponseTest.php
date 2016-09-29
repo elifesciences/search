@@ -116,7 +116,12 @@ class SearchResponseTest extends SerializerTest
                             }
                         }
                     },
-                    "mp3": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3"
+                    "sources": [
+                        {
+                            "mediaType": "audio/mpeg",
+                            "uri": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3"
+                        }
+                    ]
                 },
                 {
                     "type": "event",
@@ -259,7 +264,12 @@ class SearchResponseTest extends SerializerTest
             },
             {
               "number": 29,
-              "mp3": "https:\/\/nakeddiscovery.com\/scripts\/mp3s\/audio\/eLife_Podcast_16.05.mp3",
+              "sources": [
+                {
+                  "mediaType": "audio/mpeg",
+                  "uri": "https://nakeddiscovery.com/scripts/mp3s/audio/eLife_Podcast_16.05.mp3"
+                }
+              ],
               "type": "podcast-episode",
               "title": "April\/May 2016",
               "published": "2016-05-27T13:19:42+00:00",
