@@ -15,7 +15,10 @@ class ElasticSearchResponse implements QueryResponse
 
     public function getResults() : array
     {
-        if ($this->_results !== null) return $this->_results;
+        if ($this->_results !== null) {
+            return $this->_results;
+        }
+
         return $this->_results = array_map(function (HitItem $i) {
             return $i->unwrap();
         }, $this->getHits()->getHitItem());
@@ -24,6 +27,7 @@ class ElasticSearchResponse implements QueryResponse
     public function current()
     {
         $results = $this->getTotalResults();
+
         return $results[$this->cursor];
     }
 
@@ -40,6 +44,7 @@ class ElasticSearchResponse implements QueryResponse
     public function valid()
     {
         $results = $this->getTotalResults();
+
         return isset($results[$this->cursor]);
     }
 

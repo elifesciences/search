@@ -2,14 +2,11 @@
 
 namespace eLife\Search\Api\Elasticsearch\ResponsePartials;
 
-
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
-use eLife\Search\Api\Elasticsearch\ResponsePartials\Hits;
 
 trait ResponseHits
 {
-
     /**
      * @Type("integer")
      */
@@ -28,6 +25,7 @@ trait ResponseHits
 
     /**
      * @Type("eLife\Search\Api\Elasticsearch\ResponsePartials\Hits")
+     *
      * @var Hits
      */
     public $hits;
@@ -36,7 +34,6 @@ trait ResponseHits
     {
         return $this->hits;
     }
-
 
     public function getTotal() : int
     {
@@ -47,6 +44,4 @@ trait ResponseHits
     {
         return $this->_shards->success ?? 0;
     }
-
-
 }

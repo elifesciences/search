@@ -4,6 +4,7 @@ namespace eLife\Search\Api;
 
 use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
+use eLife\Search\Api\Elasticsearch\ElasticSearchResponse;
 use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResponse;
@@ -13,7 +14,6 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use eLife\Search\Api\Elasticsearch\ElasticSearchResponse;
 
 class SearchController
 {
@@ -26,8 +26,7 @@ class SearchController
         Cache $cache,
         string $apiUrl,
         SubjectStore $subjects
-    )
-    {
+    ) {
         $this->serializer = $serializer;
         $this->context = $context;
         $this->cache = $cache;
@@ -56,10 +55,10 @@ class SearchController
                             'title' => 'some blog article',
                             'impactStatement' => 'Something impacting in a statement like fashion.',
                             'published' => '2016-06-09T15:15:10+00:00',
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ];
         $data = $this->serializer->deserialize(json_encode($es), ElasticSearchResponse::class, 'json');
 
@@ -71,7 +70,7 @@ class SearchController
         );
 
         return $this->serialize($result);
-//
+
 //        return '';
 //        $tpl = '';
 //        foreach ($this->subjects->getSubjects() as $subject) {
@@ -79,7 +78,7 @@ class SearchController
 //                $tpl .= ($subject->getName()) . ' ' . '(' . $subject->getId() . ')' . '<br/>';
 //            }
 //        }
-//
+
 //        return $tpl;
     }
 

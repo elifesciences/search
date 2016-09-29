@@ -2,13 +2,11 @@
 
 namespace eLife\Search\Api\Elasticsearch\ResponsePartials;
 
-
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
 class Hits
 {
-
     /**
      * @Type("integer")
      */
@@ -29,5 +27,4 @@ class Hits
     {
         return $this->hits;
     }
-
 }

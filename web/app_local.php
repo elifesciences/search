@@ -1,4 +1,6 @@
-<?php require_once __DIR__ . '/bootstrap.php';
+<?php
+
+require_once __DIR__.'/bootstrap.php';
 
 use eLife\Search\Kernel;
 
@@ -48,7 +50,6 @@ HTML;
     ob_start();
     // Wrap kernel.
     try {
-
         $kernel = new Kernel($config);
 
         $kernel->withApp(function ($app) use ($config) {
@@ -64,11 +65,11 @@ HTML;
         // Clean output buffer to hide warnings.
         ob_clean();
 
-        $content = '<p>' . $t->getMessage() . '</p>' . ($content ? '<h3>Warnings:</h3>' . '<p>' . $content . '</p>' : '');
+        $content = '<p>'.$t->getMessage().'</p>'.($content ? '<h3>Warnings:</h3>'.'<p>'.$content.'</p>' : '');
 
         $content .= $t->getTraceAsString();
         // Print error page.
-        echo sprintf($doc, '<p>' . $t->getMessage() . '</p>' . ($content ? '<h3>Warnings:</h3>' . '<p>' . $content . '</p>' : ''));
+        echo sprintf($doc, '<p>'.$t->getMessage().'</p>'.($content ? '<h3>Warnings:</h3>'.'<p>'.$content.'</p>' : ''));
         // Flush back to user.
         ob_flush();
     }

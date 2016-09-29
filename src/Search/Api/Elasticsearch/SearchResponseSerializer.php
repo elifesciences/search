@@ -4,7 +4,6 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Serializers\SerializerInterface;
 use eLife\Search\Api\Response\SearchResponse;
-use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Serializer;
 
 class SearchResponseSerializer implements SerializerInterface
