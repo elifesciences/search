@@ -62,6 +62,12 @@ class SearchController
         ];
         $data = $this->serializer->deserialize(json_encode($es), ElasticSearchResponse::class, 'json');
 
+//        return  $this->serializer->serialize($data, 'json');
+
+//        echo "<pre>";
+//        echo $d;
+//        exit;
+
         $result = new SearchResponse(
             $data->toArray(),
             $data->getTotalResults(),

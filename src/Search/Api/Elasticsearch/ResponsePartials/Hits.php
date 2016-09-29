@@ -5,7 +5,7 @@ namespace eLife\Search\Api\Elasticsearch\ResponsePartials;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
-class Hits
+final class Hits
 {
     /**
      * @Type("integer")

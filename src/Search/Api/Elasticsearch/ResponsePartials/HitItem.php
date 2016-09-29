@@ -6,7 +6,7 @@ use eLife\Search\Api\Response\SearchResult;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
-class HitItem
+final class HitItem
 {
     /**
      * @Type(SearchResult::class)
