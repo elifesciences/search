@@ -12,7 +12,7 @@ final class MockQueryBuilder implements QueryBuilder
 
     public function __construct(array $data = null, $clever = false)
     {
-        $this->data = $data === null ? json_decode(file_get_contents(__DIR__.'/data/search-no-articles.json'), true) : $data;
+        $this->data = $data === null ? json_decode(file_get_contents(__DIR__.'/data/search.json'), true) : $data;
         $this->clever = $clever;
     }
 
