@@ -6,7 +6,7 @@ use Elasticsearch\Serializers\SerializerInterface;
 use eLife\Search\Api\Response\SearchResponse;
 use JMS\Serializer\Serializer;
 
-class SearchResponseSerializer implements SerializerInterface
+final class SearchResponseSerializer implements SerializerInterface
 {
     private $serializer;
 

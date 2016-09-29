@@ -13,96 +13,36 @@ final class MockQueryResponse implements QueryResponse
         $this->items = array_values($items);
     }
 
-    /**
-     * Return the current element.
-     *
-     * @link http://php.net/manual/en/iterator.current.php
-     *
-     * @return mixed Can return any type
-     *
-     * @since 5.0.0
-     */
     public function current()
     {
         return $this->items[$this->cursor];
     }
 
-    /**
-     * Move forward to next element.
-     *
-     * @link http://php.net/manual/en/iterator.next.php
-     * @since 5.0.0
-     */
     public function next()
     {
         ++$this->cursor;
     }
 
-    /**
-     * Return the key of the current element.
-     *
-     * @link http://php.net/manual/en/iterator.key.php
-     *
-     * @return mixed scalar on success, or null on failure
-     *
-     * @since 5.0.0
-     */
     public function key()
     {
         return $this->cursor;
     }
 
-    /**
-     * Checks if current position is valid.
-     *
-     * @link http://php.net/manual/en/iterator.valid.php
-     *
-     * @return bool The return value will be casted to boolean and then evaluated.
-     *              Returns true on success or false on failure
-     *
-     * @since 5.0.0
-     */
     public function valid()
     {
         return isset($this->items[$this->cursor]);
     }
 
-    /**
-     * Rewind the Iterator to the first element.
-     *
-     * @link http://php.net/manual/en/iterator.rewind.php
-     * @since 5.0.0
-     */
     public function rewind()
     {
         $this->cursor = 0;
     }
 
-    /**
-     * String representation of object.
-     *
-     * @link http://php.net/manual/en/serializable.serialize.php
-     *
-     * @return string the string representation of the object or null
-     *
-     * @since 5.1.0
-     */
     public function serialize()
     {
         return serialize($this->items);
     }
 
-    /**
-     * Constructs the object.
-     *
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     *
-     * @param string $serialized <p>
-     *                           The string representation of the object.
-     *                           </p>
-     *
-     * @since 5.1.0
-     */
     public function unserialize($serialized)
     {
         $this->__construct(unserialize($serialized));
