@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
 
-class Console
+final class Console
 {
     /**
      * These commands map to [name]Command so when the command "hello" is configured

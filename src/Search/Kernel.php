@@ -34,7 +34,7 @@ use Webmozart\Json\JsonDecoder;
 
 final class Kernel implements MinimalKernel
 {
-    const ROOT = __DIR__.'/../..';
+    const ROOT = __DIR__ . '/../..';
 
     public static $routes = [
         '/search' => 'indexAction',
@@ -59,7 +59,7 @@ final class Kernel implements MinimalKernel
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation', self::ROOT.'/vendor/jms/serializer/src'
+            'JMS\Serializer\Annotation', self::ROOT . '/vendor/jms/serializer/src'
         );
         // DI.
         $this->dependencies($app);
@@ -75,7 +75,7 @@ final class Kernel implements MinimalKernel
                 ->configureListeners(function (EventDispatcher $dispatcher) {
                     $dispatcher->addSubscriber(new SearchResultDiscriminator());
                 })
-                ->setCacheDir(self::ROOT.'/cache')
+                ->setCacheDir(self::ROOT . '/cache')
                 ->build();
         };
         $app['serializer.context'] = function () {
@@ -93,7 +93,7 @@ final class Kernel implements MinimalKernel
         };
         // General cache.
         $app['cache'] = function () {
-            return new FilesystemCache(self::ROOT.'/cache');
+            return new FilesystemCache(self::ROOT . '/cache');
         };
         // Annotation reader.
         $app['annotations.reader'] = function (Application $app) {
@@ -183,8 +183,6 @@ final class Kernel implements MinimalKernel
 
         $app['console.gearman.worker'] = function (Application $app) {
             return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver']);
-        };
-        $app['commands'] = function () {
         };
     }
 
