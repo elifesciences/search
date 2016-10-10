@@ -15,6 +15,7 @@ use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Api\SubjectStore;
+use eLife\Search\Gearman\Command\ApiSdkCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
 use GearmanClient;
 use GearmanWorker;
@@ -183,6 +184,10 @@ final class Kernel implements MinimalKernel
 
         $app['console.gearman.worker'] = function (Application $app) {
             return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver']);
+        };
+
+        $app['console.gearman.client'] = function (Application $app) {
+            return new ApiSdkCommand($app['api.sdk'], $app['gearman.client']);
         };
     }
 

@@ -54,6 +54,7 @@ final class Console
         // Add commands from the DI container. (for more complex commands.)
         $this->console->addCommands([
             $app->get('console.gearman.worker'),
+            $app->get('console.gearman.client'),
         ]);
     }
 
