@@ -11,9 +11,13 @@ use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
+use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Api\SubjectStore;
+use eLife\Search\Gearman\Command\WorkerCommand;
+use GearmanClient;
+use GearmanWorker;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
@@ -150,6 +154,38 @@ final class Kernel implements MinimalKernel
         $app['default_controller'] = function (Application $app) {
             return new SearchController($app['serializer'], $app['serializer.context'], $app['cache'], $app['config']['api_url'], $app['api.subjects']);
         };
+
+        //#####################################################
+        // ------------------ Console DI ----------------------
+        //#####################################################
+
+        $app['gearman.client'] = function (Application $app) {
+            $worker = new GearmanClient();
+            foreach ($app['config']['gearman_servers'] as $server) {
+                $worker->addServer($server);
+            }
+
+            return $worker;
+        };
+
+        $app['gearman.worker'] = function (Application $app) {
+            $worker = new GearmanWorker();
+            foreach ($app['config']['gearman_servers'] as $server) {
+                $worker->addServer($server);
+            }
+
+            return $worker;
+        };
+
+        $app['console.gearman.task_driver'] = function (Application $app) {
+            return new GearmanTaskDriver($app['annotations.reader'], $app['gearman.worker'], $app['gearman.client']);
+        };
+
+        $app['console.gearman.worker'] = function (Application $app) {
+            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver']);
+        };
+        $app['commands'] = function () {
+        };
     }
 
     public function applicationFlow(Application $app) : Application
@@ -194,6 +230,11 @@ final class Kernel implements MinimalKernel
     public function run()
     {
         return $this->app->run();
+    }
+
+    public function get($d)
+    {
+        return $this->app[$d];
     }
 
     public function validate(Request $request, Response $response)

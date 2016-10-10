@@ -3,6 +3,7 @@
 
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiSdk\ApiSdk;
+use Error;
 use GuzzleHttp\Client;
 use eLife\ApiSdk\Model\BlogArticle;
 
@@ -23,9 +24,13 @@ $articles = $sdk->blogArticles();
 
 foreach ($articles as $article) {
     if ($article instanceof BlogArticle) {
-        $normalized = $sdk->getSerializer()->serialize($article, 'json');
-        print 'Starting... ' . $article->getTitle() . PHP_EOL;
-        $client->doLow('blog_article_validate', $normalized);
+        try {
+            $normalized = $sdk->getSerializer()->serialize($article, 'json');
+            print 'Starting... ' . $article->getTitle() . PHP_EOL;
+            $client->doLow('blog_article_validate', $normalized);
+        } catch (Error $e) {
+            print $e->getMessage() . PHP_EOL;
+        }
     }
 }
 

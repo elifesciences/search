@@ -8,6 +8,7 @@ use eLife\Search\Workflow\Workflow;
 use GearmanClient;
 use GearmanJob;
 use GearmanWorker;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 
 final class GearmanTaskDriver
@@ -82,9 +83,12 @@ final class GearmanTaskDriver
         }, $this));
     }
 
-    public function work()
+    public function work(LoggerInterface $logger = null)
     {
-        echo 'Worked started V3: '.PHP_EOL;
+        if ($logger) {
+            $logger->warning('Worker started.');
+            $logger->warning('===============');
+        }
         $this->addTasksToWorker($this->worker);
         while ($this->worker->work());
     }
