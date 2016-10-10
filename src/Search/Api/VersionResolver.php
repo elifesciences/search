@@ -20,6 +20,8 @@ use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
  * Then in the controller:
  *
  * return $versions->resolve($acceptHeader)($articles);
+ *
+ * @deprecated Please use serializer configuration for different content types and versions.
  */
 final class VersionResolver
 {

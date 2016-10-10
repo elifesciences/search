@@ -2,11 +2,12 @@
 
 namespace eLife\Search\Api\Response;
 
+use eLife\Search\Api\Response\Common\NamedResponse;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-final class SelectedCuratorResponse extends PersonResponse
+final class SelectedCuratorResponse extends NamedResponse
 {
     /**
      * @Type("boolean")
