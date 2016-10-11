@@ -10,18 +10,21 @@ use GearmanJob;
 use GearmanWorker;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
+use Throwable;
 
 final class GearmanTaskDriver
 {
     public $tasks = [];
     private $reader;
     private $worker;
+    private $autoRestart;
 
-    public function __construct(Reader $reader, GearmanWorker $worker = null, GearmanClient $client)
+    public function __construct(Reader $reader, GearmanWorker $worker = null, GearmanClient $client, bool $autoRestart)
     {
         $this->reader = $reader;
         $this->worker = $worker;
         $this->client = $client;
+        $this->autoRestart = $autoRestart;
     }
 
     public function registerWorkflow(Workflow $workflow)
@@ -53,16 +56,16 @@ final class GearmanTaskDriver
         }
     }
 
-    public function addTasksToWorker(GearmanWorker $worker)
+    public function addTasksToWorker(GearmanWorker $worker, LoggerInterface $logger)
     {
         foreach ($this->tasks as $task) {
-            $this->addTaskToWorker($task, $worker);
+            $this->addTaskToWorker($task, $worker, $logger);
         }
     }
 
-    public function addTaskToWorker(GearmanTaskInstance $task, GearmanWorker $worker)
+    public function addTaskToWorker(GearmanTaskInstance $task, GearmanWorker $worker, LoggerInterface $logger)
     {
-        $worker->addFunction($task->name, Closure::bind(function (GearmanJob $job) use ($task) {
+        $worker->addFunction($task->name, Closure::bind(function (GearmanJob $job) use ($task, $logger) {
             $data = $task->deserialize($job->workload());
             $object = $task->instance;
             $method = $task->method;
@@ -83,14 +86,24 @@ final class GearmanTaskDriver
         }, $this));
     }
 
-    public function work(LoggerInterface $logger = null)
+    public function work(LoggerInterface $logger = null, bool $restart = false)
     {
-        if ($logger) {
+        if ($logger && $restart === false) {
             $logger->warning('Worker started.');
             $logger->warning('===============');
         }
-        $this->addTasksToWorker($this->worker);
-        while ($this->worker->work());
+        $this->addTasksToWorker($this->worker, $logger);
+        try {
+            while ($this->worker->work());
+        } catch (Throwable $e) {
+            $logger->critical($e->getMessage());
+            if ($this->autoRestart) {
+                $logger->warning('====================================');
+                $logger->warning('Restarting worker to avoid downtime.');
+                $logger->warning('====================================');
+                $this->work($logger, true);
+            }
+        }
     }
 
     public function map(callable $fn)

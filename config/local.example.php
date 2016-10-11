@@ -11,4 +11,5 @@ return [
     'annotation_cache' => false,
     'ttl' => 0,
     'gearman_servers' => ['elife_gearman_1'],
+    'gearman_auto_restart' => true,
 ];

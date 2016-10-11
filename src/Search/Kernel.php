@@ -58,6 +58,7 @@ final class Kernel implements MinimalKernel
             'api_url' => '',
             'ttl' => 3600,
             'elastic_url' => '',
+            'gearman_auto_restart' => true,
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
@@ -164,7 +165,10 @@ final class Kernel implements MinimalKernel
         $app['gearman.client'] = function (Application $app) {
             $worker = new GearmanClient();
             foreach ($app['config']['gearman_servers'] as $server) {
-                $worker->addServer($server);
+                try {
+                    $worker->addServer($server);
+                } catch (Throwable $e) {
+                }
             }
 
             return $worker;
@@ -173,14 +177,17 @@ final class Kernel implements MinimalKernel
         $app['gearman.worker'] = function (Application $app) {
             $worker = new GearmanWorker();
             foreach ($app['config']['gearman_servers'] as $server) {
-                $worker->addServer($server);
+                try {
+                    $worker->addServer($server);
+                } catch (Throwable $e) {
+                }
             }
 
             return $worker;
         };
 
         $app['console.gearman.task_driver'] = function (Application $app) {
-            return new GearmanTaskDriver($app['annotations.reader'], $app['gearman.worker'], $app['gearman.client']);
+            return new GearmanTaskDriver($app['annotations.reader'], $app['gearman.worker'], $app['gearman.client'], $app['config']['gearman_auto_restart']);
         };
 
         $app['console.gearman.worker'] = function (Application $app) {
