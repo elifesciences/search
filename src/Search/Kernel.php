@@ -31,6 +31,7 @@ use Silex\Application;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 use Webmozart\Json\JsonDecoder;
 
 final class Kernel implements MinimalKernel
@@ -242,9 +243,15 @@ final class Kernel implements MinimalKernel
 
     public function validate(Request $request, Response $response)
     {
-        $this->app['puli.validator']->validate(
-            $this->app['psr7.bridge']->createResponse($response)
-        );
+        try {
+            $this->app['puli.validator']->validate(
+                $this->app['psr7.bridge']->createResponse($response)
+            );
+        } catch (Throwable $e) {
+            if ($this->app['config']['debug']) {
+                throw $e;
+            }
+        }
     }
 
     public function cache(Request $request, Response $response)
