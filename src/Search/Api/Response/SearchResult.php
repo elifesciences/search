@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation\Discriminator;
 /**
  * @Discriminator(field = "internal_type", map = {
  *    "blog-article": BlogArticleResponse::class,
- *    "labs-experiment": LabExperimentResponse::class,
+ *    "labs-experiment": LabsExperimentResponse::class,
  *    "podcast-episode": PodcastEpisodeResponse::class,
  *    "interview": InterviewResponse::class,
  *    "event": EventResponse::class,

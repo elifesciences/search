@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__.'/bootstrap.php';
-
-use eLife\Search\Kernel;
-
 $doc = <<<'HTML'
         <!DOCTYPE html>
         <body style="font-family: sans-serif; ">
@@ -17,6 +13,14 @@ $doc = <<<'HTML'
             </div>
         </body>
 HTML;
+
+if (!file_exists(__DIR__.'/../vendor/autoload.php')) {
+    echo sprintf($doc, '<p style="color: red">You must run composer install first before trying to install this.</p>');
+    exit;
+}
+
+require_once __DIR__.'/bootstrap.php';
+use eLife\Search\Kernel;
 
 if (!file_exists(__DIR__.'/../config/local.php')) {
     $body = <<<'HTML'
@@ -57,8 +61,7 @@ HTML;
         });
 
         $kernel->run();
-    }
-    // Catch anything we can.
+    } // Catch anything we can.
     catch (Throwable $t) {
         // Grab any printed warnings
         $content = ob_get_contents();

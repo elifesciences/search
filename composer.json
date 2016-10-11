@@ -30,7 +30,7 @@
         }
     },
     "scripts": {
-        "server": "php -S 0.0.0.0:8088 -t web web/app_dev.php",
+        "server": "php -S 0.0.0.0:8088 -t web web/app_local.php",
         "server:prod": "php -S 0.0.0.0:8088 -t web web/app_prod.php"
     },
     "minimum-stability": "dev",

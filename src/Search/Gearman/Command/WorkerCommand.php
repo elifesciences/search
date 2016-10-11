@@ -6,6 +6,11 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use eLife\Search\Workflow\CliLogger;
+use eLife\Search\Workflow\CollectionWorkflow;
+use eLife\Search\Workflow\EventWorkflow;
+use eLife\Search\Workflow\InterviewWorkflow;
+use eLife\Search\Workflow\PodcastEpisodeWorkflow;
+use eLife\Search\Workflow\ResearchArticleWorkflow;
 use JMS\Serializer\Serializer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,6 +45,11 @@ final class WorkerCommand extends Command
     {
         $logger = new CliLogger($input, $output);
         $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $logger));
+        $this->gearman->registerWorkflow(new CollectionWorkflow($this->sdk->getSerializer(), $logger));
+        $this->gearman->registerWorkflow(new EventWorkflow($this->sdk->getSerializer(), $logger));
+        $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $logger));
+        $this->gearman->registerWorkflow(new PodcastEpisodeWorkflow($this->sdk->getSerializer(), $logger));
+        $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $logger));
         $this->gearman->work($logger);
     }
 }

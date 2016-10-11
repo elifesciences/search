@@ -62,12 +62,6 @@ final class SearchController
         ];
         $data = $this->serializer->deserialize(json_encode($es), ElasticSearchResponse::class, 'json');
 
-//        return  $this->serializer->serialize($data, 'json');
-
-//        echo "<pre>";
-//        echo $d;
-//        exit;
-
         $result = new SearchResponse(
             $data->toArray(),
             $data->getTotalResults(),
@@ -76,16 +70,6 @@ final class SearchController
         );
 
         return $this->serialize($result);
-
-//        return '';
-//        $tpl = '';
-//        foreach ($this->subjects->getSubjects() as $subject) {
-//            if ($subject instanceof Subject) {
-//                $tpl .= ($subject->getName()) . ' ' . '(' . $subject->getId() . ')' . '<br/>';
-//            }
-//        }
-
-//        return $tpl;
     }
 
     public function searchTestAction(Request $request)
