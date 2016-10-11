@@ -52,10 +52,12 @@ final class Console
         $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', 'dev'));
 
         // Add commands from the DI container. (for more complex commands.)
-        $this->console->addCommands([
-            $app->get('console.gearman.worker'),
-            $app->get('console.gearman.client'),
-        ]);
+        if (GEARMAN_INSTALLED) {
+            $this->console->addCommands([
+                $app->get('console.gearman.worker'),
+                $app->get('console.gearman.client'),
+            ]);
+        }
     }
 
     private function path($path = '')
