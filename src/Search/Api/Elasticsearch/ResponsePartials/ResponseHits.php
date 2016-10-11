@@ -37,11 +37,11 @@ trait ResponseHits
 
     public function getTotal() : int
     {
-        return $this->_shards['total'] ?? 0;
+        return $this->hits->total ?? 0;
     }
 
     public function getTotalResults() : int
     {
-        return $this->_shards['successful'] ?? 0;
+        return $this->hits->total ?? 0;
     }
 }
