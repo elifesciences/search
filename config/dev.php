@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'/extra/gearman-shim.php';
+require_once __DIR__.'/extra/gearman_shim.php';
 
 return [
     'debug' => true,
