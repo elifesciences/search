@@ -19,6 +19,13 @@ trait Article
     use SnippetFields;
 
     /**
+     * @Type("DateTime<'Y-m-d\TH:i:sP'>")
+     * @Since(version="1")
+     * @SerializedName("statusDate")
+     */
+    public $statusDate;
+
+    /**
      * @Type("integer")
      * @Since(version="1")
      */
@@ -35,6 +42,13 @@ trait Article
      * @Since(version="1")
      */
     public $issue;
+
+    /**
+     * @Type("string")
+     * @Since(version="1")
+     * @SerializedName("titlePrefix")
+     */
+    public $titlePrefix;
 
     /**
      * @Type("string")

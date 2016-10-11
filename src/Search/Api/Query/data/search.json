@@ -1,6 +1,8 @@
 [
   {
     "status": "poa",
+    "titlePrefix": "Title prefix",
+    "statusDate": "2016-07-01T08:30:15+00:00",
     "id": "14107",
     "version": 1,
     "type": "research-article",
@@ -39,9 +41,11 @@
   },
   {
     "status": "poa",
+    "titlePrefix": "Title prefix",
     "id": "14107",
     "version": 1,
     "type": "research-article",
+    "statusDate": "2016-07-01T08:30:15+00:00",
     "doi": "10.7554/eLife.14107",
     "authorLine": "Yongjian Huang et al",
     "title": "Molecular basis for multimerization in the activation of the epidermal growth factor",
@@ -56,9 +60,11 @@
   },
   {
     "status": "vor",
+    "titlePrefix": "Title prefix",
     "id": "09560",
     "version": 1,
     "type": "research-article",
+    "statusDate": "2016-07-01T08:30:15+00:00",
     "doi": "10.7554/eLife.09560",
     "title": "<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa",
     "published": "2015-09-10T00:00:00Z",
@@ -330,9 +336,11 @@
   },
   {
     "status": "vor",
+    "titlePrefix": "Title prefix",
     "id": "09560",
     "version": 1,
     "type": "research-article",
+    "statusDate": "2016-07-01T08:30:15+00:00",
     "doi": "10.7554/eLife.09560",
     "title": "<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa",
     "published": "2015-09-10T00:00:00Z",
@@ -508,7 +516,9 @@
     "content": [
       {
         "type": "research-article",
+        "statusDate": "2016-07-01T08:30:15+00:00",
         "status": "vor",
+        "titlePrefix": "Title prefix",
         "id": "09560",
         "version": 1,
         "doi": "10.7554/eLife.09560",
@@ -566,7 +576,9 @@
     "relatedContent": [
       {
         "type": "research-article",
+        "statusDate": "2016-07-01T08:30:15+00:00",
         "status": "poa",
+        "titlePrefix": "Title prefix",
         "id": "14107",
         "version": 1,
         "doi": "10.7554/eLife.14107",
@@ -645,7 +657,9 @@
     "content": [
       {
         "type": "research-article",
+        "statusDate": "2016-07-01T08:30:15+00:00",
         "status": "poa",
+        "titlePrefix": "Title prefix",
         "id": "14107",
         "version": 1,
         "doi": "10.7554/eLife.14107",
@@ -990,7 +1004,9 @@
         "content": [
           {
             "type": "research-article",
+            "statusDate": "2016-07-01T08:30:15+00:00",
             "status": "vor",
+            "titlePrefix": "Title prefix",
             "id": "13664",
             "version": 1,
             "doi": "10.7554/eLife.13664",
@@ -1033,6 +1049,7 @@
           {
             "type": "feature",
             "status": "vor",
+            "titlePrefix": "Title prefix",
             "id": "17393",
             "version": 1,
             "doi": "10.7554/eLife.17393",
@@ -1131,7 +1148,9 @@
         "content": [
           {
             "type": "research-article",
+            "statusDate": "2016-07-01T08:30:15+00:00",
             "status": "vor",
+            "titlePrefix": "Title prefix",
             "id": "13664",
             "version": 1,
             "doi": "10.7554/eLife.13664",
