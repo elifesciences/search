@@ -12,10 +12,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Traversable;
 
 final class ApiSdkCommand extends Command
 {
-    private static $supports = ['BlogArticles'];
+    private static $supports = ['BlogArticles', 'Events', 'Interviews', 'LabsExperiments', 'PodcastEpisodes', 'Collections', 'ResearchArticles'];
 
     private $client;
     private $sdk;
@@ -37,8 +38,7 @@ final class ApiSdkCommand extends Command
             ->setName('gearman:import')
             ->setDescription('Import items from API.')
             ->setHelp('Creates new Gearman client and imports entities from API')
-            ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>')
-        ;
+            ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -57,6 +57,42 @@ final class ApiSdkCommand extends Command
         $logger->notice('All entities queued.');
     }
 
+    public function importPodcastEpisodes(LoggerInterface $logger)
+    {
+        // Waiting for API SDK models.
+        $logger->error('You cannot currently import PodcastEpisodes');
+    }
+
+    public function importCollections(LoggerInterface $logger)
+    {
+        // Waiting for API SDK models.
+        $logger->error('You cannot currently import Collections');
+    }
+
+    public function importLabsExperiments(LoggerInterface $logger)
+    {
+        $events = $this->sdk->labsExperiments();
+        $this->iterateSerializeTask($events, $logger, 'labs_experiment_validate');
+    }
+
+    public function importResearchArticles(LoggerInterface $logger)
+    {
+        $events = $this->sdk->articles();
+        $this->iterateSerializeTask($events, $logger, 'research_article_validate');
+    }
+
+    public function importInterviews(LoggerInterface $logger)
+    {
+        $events = $this->sdk->interviews();
+        $this->iterateSerializeTask($events, $logger, 'interview_validate');
+    }
+
+    public function importEvents(LoggerInterface $logger)
+    {
+        $events = $this->sdk->events();
+        $this->iterateSerializeTask($events, $logger, 'event_validate');
+    }
+
     public function importBlogArticles(LoggerInterface $logger)
     {
         $articles = $this->sdk->blogArticles();
@@ -71,6 +107,20 @@ final class ApiSdkCommand extends Command
                 } catch (Error $e) {
                     $logger->critical($e->getMessage());
                 }
+            }
+        }
+    }
+
+    private function iterateSerializeTask(Traversable $items, LoggerInterface $logger, string $task)
+    {
+        foreach ($items as $item) {
+            try {
+                $normalized = $this->serializer->serialize($item, 'json');
+                $title = method_exists($item, 'getTitle') ? $item->getTitle() : ' a new '.get_class($item);
+                $logger->info('Starting... '.$title);
+                $this->task($task, $normalized);
+            } catch (Error $e) {
+                $logger->critical($e->getMessage());
             }
         }
     }

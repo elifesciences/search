@@ -2,14 +2,14 @@
 
 namespace tests\eLife\Search\Api\Response;
 
-use eLife\Search\Api\Response\LabExperimentResponse;
+use eLife\Search\Api\Response\LabsExperimentResponse;
 use tests\eLife\Search\SerializerTest;
 
 class LabExperimentResponseTest extends SerializerTest
 {
     public function getResponseClass() : string
     {
-        return LabExperimentResponse::class;
+        return LabsExperimentResponse::class;
     }
 
     public function jsonProvider() : array
