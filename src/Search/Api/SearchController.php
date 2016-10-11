@@ -15,7 +15,7 @@ use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SearchController
+final class SearchController
 {
     private $serializer;
     private $apiUrl;
