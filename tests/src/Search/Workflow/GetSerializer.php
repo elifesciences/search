@@ -4,10 +4,23 @@ namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Client\Subjects;
+use eLife\ApiSdk\Serializer\AddressNormalizer;
+use eLife\ApiSdk\Serializer\AnnualReportNormalizer;
+use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
+use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
+use eLife\ApiSdk\Serializer\EventNormalizer;
+use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
+use eLife\ApiSdk\Serializer\InterviewNormalizer;
+use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
+use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
+use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
+use eLife\ApiSdk\Serializer\PersonNormalizer;
+use eLife\ApiSdk\Serializer\PlaceNormalizer;
+use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Serializer;
@@ -25,16 +38,54 @@ trait GetSerializer
             return $this->serializer;
         }
         $this->serializer = new Serializer([
+            new AddressNormalizer(),
+            new AnnualReportNormalizer(),
+            $articlePoANormalizer = new ArticlePoANormalizer(),
+            $articleVoRNormalizer = new ArticleVoRNormalizer(),
             $blogArticleNormalizer = new BlogArticleNormalizer(),
+            new EventNormalizer(),
+            new GroupAuthorNormalizer(),
             new ImageNormalizer(),
+            new InterviewNormalizer(),
+            new LabsExperimentNormalizer(),
             new MediumArticleNormalizer(),
+            new OnBehalfOfAuthorNormalizer(),
+            new PersonAuthorNormalizer(),
+            new PersonNormalizer(),
+            new PlaceNormalizer(),
             new SubjectNormalizer(),
+            new Block\BoxNormalizer(),
+            new Block\FileNormalizer(),
             new Block\ImageNormalizer(),
+            new Block\ListingNormalizer(),
+            new Block\MathMLNormalizer(),
             new Block\ParagraphNormalizer(),
+            new Block\QuestionNormalizer(),
+            new Block\QuoteNormalizer(),
+            new Block\SectionNormalizer(),
+            new Block\TableNormalizer(),
+            new Block\VideoNormalizer(),
             new Block\YouTubeNormalizer(),
+            new Reference\BookReferenceNormalizer(),
+            new Reference\BookChapterReferenceNormalizer(),
+            new Reference\ClinicalTrialReferenceNormalizer(),
+            new Reference\ConferenceProceedingReferenceNormalizer(),
+            new Reference\DataReferenceNormalizer(),
+            new Reference\JournalReferenceNormalizer(),
+            new Reference\PatentReferenceNormalizer(),
+            new Reference\PeriodicalReferenceNormalizer(),
+            new Reference\PreprintReferenceNormalizer(),
+            new Reference\ReferencePagesNormalizer(),
+            new Reference\ReportReferenceNormalizer(),
+            new Reference\SoftwareReferenceNormalizer(),
+            new Reference\ThesisReferenceNormalizer(),
+            new Reference\WebReferenceNormalizer(),
         ], [new JsonEncoder()]);
-
-        $blogArticleNormalizer->setSubjects(new Subjects(new SubjectsClient($this->getHttpClient()), $this->serializer));
+        // Add subjects client mock.
+        $subjectsClient = new Subjects(new SubjectsClient($this->getHttpClient()), $this->serializer);
+        $articlePoANormalizer->setSubjects($subjectsClient);
+        $articleVoRNormalizer->setSubjects($subjectsClient);
+        $blogArticleNormalizer->setSubjects($subjectsClient);
 
         return $this->serializer;
     }

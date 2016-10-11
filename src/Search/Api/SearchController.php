@@ -14,6 +14,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 final class SearchController
 {
@@ -119,7 +120,7 @@ final class SearchController
             return $this->serialize($result);
         }
 
-        return '404';
+        throw new ServiceUnavailableHttpException(10);
     }
 
     public function responseFromJson($json)

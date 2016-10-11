@@ -7,4 +7,5 @@ return [
     'validate' => true,
     'ttl' => 0,
     'gearman_servers' => ['localhost'],
+    'gearman_auto_restart' => false,
 ];
