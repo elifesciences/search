@@ -106,7 +106,7 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function getQuery() : QueryExecutor
     {
-//        if ($this->run) {
+        //        if ($this->run) {
 //            throw new LogicException('You cannot run the same query twice.');
 //        }
         $exec = clone $this->exec;

@@ -81,11 +81,12 @@ final class Console
         return $this->app->get('serializer')->deserialize(json_encode($data), $className, 'json');
     }
 
-    public function debugSearchRandomCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger) {
+    public function debugSearchRandomCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)
+    {
         $elastic = $this->getElasticClient();
 
         $blog = $this->responseFromArray(BlogArticleResponse::class, [
-            'id' => '12456' . rand(0, 10000),
+            'id' => '12456'.rand(0, 10000),
             'title' => 'some blog article',
             'impactStatement' => 'Something impacting in a statement like fashion.',
             'published' => '2016-06-09T15:15:10+00:00',

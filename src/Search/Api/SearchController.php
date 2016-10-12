@@ -119,8 +119,6 @@ final class SearchController
 
         $data = $query->getQuery()->execute();
 
-
-
         if ($data instanceof QueryResponse) {
             $result = new SearchResponse(
                 $data->toArray(),
