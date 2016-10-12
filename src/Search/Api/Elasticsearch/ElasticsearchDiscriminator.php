@@ -35,32 +35,38 @@ class ElasticsearchDiscriminator implements EventSubscriberInterface
 
         switch (true) {
             // Nope out early to avoid errors.
+            case
+                isset($data['_index']) === false &&
+                isset($data['_shards']) === false &&
+                isset($data['error']) === false:
             case is_string($data):
                 return;
 
             // We have an elastic search response (with search results).
             case isset($data['hits']):
-                $data['internal_type'] = 'hits';
+                $data['internal_search_type'] = 'search';
                 break;
 
             // We have a single individual result.
-            // @todo Move to wrapper around single result. (only if its used much!)
             case isset($data['_source']):
-                $data = $data['_source'];
+                $data['internal_search_type'] = 'document';
                 break;
 
             // We have hit an error.
             // @todo maybe some normalization here?
             case isset($data['error']):
-                $data['internal_type'] = 'error';
+                $data['internal_search_type'] = 'error';
                 break;
 
             // We have an acknowledged message (success)
-            // @todo look into non successful versions of these
-            default:
             case isset($data['acknowledged']) && $data['acknowledged'] === true:
-                $data['internal_type'] = 'success';
+            case isset($data['created']) && $data['created'] === true:
+            case isset($data['found']) && $data['found'] === true:
+                $data['internal_search_type'] = 'success';
                 break;
+
+            default:
+                $data['internal_search_type'] = 'unknown';
         }
 
         $event->setData($data);

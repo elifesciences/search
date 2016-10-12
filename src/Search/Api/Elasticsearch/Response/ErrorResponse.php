@@ -1,13 +1,13 @@
 <?php
 
-namespace eLife\Search\Api\Elasticsearch;
+namespace eLife\Search\Api\Elasticsearch\Response;
 
-use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\Type;
 
 class ErrorResponse implements NonContentResponse
 {
     /**
-     * @Serializer\Type("array")
+     * @Type("array")
      */
     public $error;
 

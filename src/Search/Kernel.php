@@ -47,7 +47,6 @@ final class Kernel implements MinimalKernel
     public static $routes = [
         '/search' => 'indexAction',
         '/test-search' => 'searchTestAction',
-        '/blog-api' => 'blogApiAction',
     ];
 
     private $app;
@@ -63,7 +62,8 @@ final class Kernel implements MinimalKernel
             'annotation_cache' => true,
             'api_url' => '',
             'ttl' => 3600,
-            'elastic_url' => '',
+            'elastic_servers' => ['http://localhost:9200'],
+            'elastic_index' => 'elife_search',
             'gearman_auto_restart' => true,
         ], $config);
         // Annotations.
@@ -188,7 +188,9 @@ final class Kernel implements MinimalKernel
         };
 
         $app['elastic.elasticsearch'] = function (Application $app) {
-            $client = ClientBuilder::create([$app['config']['elastic_url']]);
+            $client = ClientBuilder::create();
+            // Set hosts.
+            $client->setHosts($app['config']['elastic_servers']);
             // @todo change
             if ($app['config']['debug']) {
                 $client->setLogger($app['elastic.logger']);
@@ -199,7 +201,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['elastic.client'] = function (Application $app) {
-            return new ElasticsearchClient($app['elastic.elasticsearch']);
+            return new ElasticsearchClient($app['elastic.elasticsearch'], $app['config']['elastic_index']);
         };
 
         //#####################################################

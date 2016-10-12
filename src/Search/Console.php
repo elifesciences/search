@@ -5,7 +5,8 @@ namespace eLife\Search;
 use Closure;
 use eLife\Search\Annotation\Register;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\SuccessResponse;
+use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Workflow\CliLogger;
 use Exception;
@@ -83,9 +84,11 @@ final class Console
     {
         $elastic = $this->getElasticClient();
 
-        $insert = $elastic->createIndex('testing');
-        if ($insert instanceof SuccessResponse) {
-            $logger->info('Index `testing` created');
+        $insert = $elastic->createIndex();
+        if ($insert['payload'] instanceof SuccessResponse) {
+            $logger->info('Index created');
+        } else {
+            $logger->info('Index was no created');
         }
 
         $blog = $this->responseFromArray(BlogArticleResponse::class, [
@@ -94,24 +97,19 @@ final class Console
             'impactStatement' => 'Something impacting in a statement like fashion.',
             'published' => '2016-06-09T15:15:10+00:00',
         ]);
-        $inserting = $elastic->indexDocument('testing', 'test', 1, $blog);
-        if ($inserting instanceof SuccessResponse) {
+        $inserting = $elastic->indexDocument('test', 1, $blog);
+        if ($inserting['payload'] instanceof SuccessResponse) {
             $logger->info('Document inserted!');
         }
 
-        $doc = $elastic->getDocumentById('testing', 'test', 1);
-        if ($doc instanceof BlogArticleResponse) {
+        $doc = $elastic->getDocumentById('test', 1);
+        if ($doc['payload'] instanceof DocumentResponse) {
             $logger->info('Document was requested!');
         }
 
-        $del = $elastic->deleteDocument('testing', 'test', 1);
-        if ($del instanceof SuccessResponse) {
+        $del = $elastic->deleteDocument('test', 1);
+        if ($del['payload'] instanceof SuccessResponse) {
             $logger->info('Document was deleted!');
-        }
-
-        $delete = $elastic->deleteIndexByName('testing');
-        if ($delete instanceof SuccessResponse) {
-            $logger->info('Index `testing` deleted');
         }
     }
 

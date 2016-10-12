@@ -4,7 +4,6 @@ namespace eLife\Search\Api;
 
 use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
-use eLife\Search\Api\Elasticsearch\ElasticSearchResponse;
 use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResponse;
@@ -33,44 +32,6 @@ final class SearchController
         $this->cache = $cache;
         $this->apiUrl = $apiUrl;
         $this->subjects = $subjects;
-    }
-
-    public function blogApiAction()
-    {
-        $es = [
-            'took' => 1,
-            'timed_out' => false,
-            '_shards' => [
-                'total' => 5,
-                'successful' => 5,
-                'failed' => 0,
-            ],
-            'hits' => [
-                'total' => 1,
-                'max_score' => 0.30685282,
-                'hits' => [
-                    [
-                        '_source' => [
-                            'id' => '12456',
-                            'type' => 'blog-article',
-                            'title' => 'some blog article',
-                            'impactStatement' => 'Something impacting in a statement like fashion.',
-                            'published' => '2016-06-09T15:15:10+00:00',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $data = $this->serializer->deserialize(json_encode($es), ElasticSearchResponse::class, 'json');
-
-        $result = new SearchResponse(
-            $data->toArray(),
-            $data->getTotalResults(),
-            $data->getSubjects(),
-            TypesResponse::fromArray($data->getTypeTotals())
-        );
-
-        return $this->serialize($result);
     }
 
     public function searchTestAction(Request $request)
@@ -126,14 +87,6 @@ final class SearchController
     public function responseFromJson($json)
     {
         return $this->serializer->deserialize($json, SearchResult::class, 'json');
-    }
-
-    /**
-     * @internal
-     */
-    private function responseFromArray($className, $data)
-    {
-        return $this->serializer->deserialize(json_encode($data), $className, 'json');
     }
 
     private function serialize($data, int $version = null, $group = null)

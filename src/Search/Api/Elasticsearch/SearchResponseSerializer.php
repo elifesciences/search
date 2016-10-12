@@ -3,7 +3,8 @@
 namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Serializers\SerializerInterface;
-use eLife\Search\Api\Response\SearchResult;
+use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
+use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
 use JMS\Serializer\Serializer;
 
 final class SearchResponseSerializer implements SerializerInterface
@@ -39,6 +40,14 @@ final class SearchResponseSerializer implements SerializerInterface
      */
     public function deserialize($json, $headers)
     {
-        return $this->serializer->deserialize($json, SearchResult::class, 'json');
+        $response = $this->serializer->deserialize($json, ElasticResponse::class, 'json');
+        $return = [
+            'payload' => $response,
+        ];
+        if ($response instanceof ErrorResponse) {
+            $return['error'] = $response->error;
+        }
+
+        return $return;
     }
 }
