@@ -85,7 +85,7 @@ final class Console
         $elastic = $this->getElasticClient();
 
         $insert = $elastic->createIndex();
-        if ($insert['payload'] instanceof SuccessResponse) {
+        if ($insert instanceof SuccessResponse) {
             $logger->info('Index created');
         } else {
             $logger->info('Index was no created');
@@ -98,17 +98,18 @@ final class Console
             'published' => '2016-06-09T15:15:10+00:00',
         ]);
         $inserting = $elastic->indexDocument('test', 1, $blog);
-        if ($inserting['payload'] instanceof SuccessResponse) {
+        if ($inserting instanceof SuccessResponse) {
             $logger->info('Document inserted!');
         }
 
         $doc = $elastic->getDocumentById('test', 1);
-        if ($doc['payload'] instanceof DocumentResponse) {
-            $logger->info('Document was requested!');
+        if ($doc instanceof DocumentResponse) {
+            $document = $doc->unwrap();
+            $logger->info('Document `'.$document->title.'` was requested!');
         }
 
         $del = $elastic->deleteDocument('test', 1);
-        if ($del['payload'] instanceof SuccessResponse) {
+        if ($del instanceof SuccessResponse) {
             $logger->info('Document was deleted!');
         }
     }

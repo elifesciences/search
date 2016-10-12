@@ -2,6 +2,6 @@
 
 namespace eLife\Search\Api\Elasticsearch\Response;
 
-class UnknownResponse implements NonContentResponse
+final class UnknownResponse implements NonContentResponse
 {
 }

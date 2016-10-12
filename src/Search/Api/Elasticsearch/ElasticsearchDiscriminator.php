@@ -6,7 +6,7 @@ use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreDeserializeEvent;
 
-class ElasticsearchDiscriminator implements EventSubscriberInterface
+final class ElasticsearchDiscriminator implements EventSubscriberInterface
 {
     /**
      * Returns the events to which this class has subscribed.

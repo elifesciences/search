@@ -3,9 +3,10 @@
 namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
+use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResult;
 
-class ElasticsearchClient
+final class ElasticsearchClient
 {
     private $connection;
 
@@ -46,7 +47,7 @@ class ElasticsearchClient
             'body' => $body,
         ];
 
-        return $this->connection->index($params);
+        return $this->connection->index($params)['payload'] ?? null;
     }
 
     public function updateDocument()
@@ -62,18 +63,17 @@ class ElasticsearchClient
             'client' => ['ignore' => [400, 404]],
         ];
 
-        return $this->connection->delete($params);
+        return $this->connection->delete($params)['payload'] ?? null;
     }
 
-    public function searchDocuments($type, $body)
+    public function searchDocuments($body) : QueryResponse
     {
         $params = [
             'index' => $this->index,
-            'type' => $type,
             'body' => $body,
         ];
 
-        return $this->connection->search($params);
+        return $this->connection->search($params)['payload'] ?? null;
     }
 
     public function getDocumentById($type, $id)
@@ -84,6 +84,6 @@ class ElasticsearchClient
             'id' => $id,
         ];
 
-        return $this->connection->get($params);
+        return $this->connection->get($params)['payload'] ?? null;
     }
 }

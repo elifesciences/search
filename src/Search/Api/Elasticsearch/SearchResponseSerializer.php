@@ -41,6 +41,7 @@ final class SearchResponseSerializer implements SerializerInterface
     public function deserialize($json, $headers)
     {
         $response = $this->serializer->deserialize($json, ElasticResponse::class, 'json');
+        // This had to be added because of ES's "array-only" error handling.
         $return = [
             'payload' => $response,
         ];

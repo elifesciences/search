@@ -4,7 +4,7 @@ namespace eLife\Search\Api\Elasticsearch\Response;
 
 use JMS\Serializer\Annotation\Type;
 
-class ErrorResponse implements NonContentResponse
+final class ErrorResponse implements NonContentResponse
 {
     /**
      * @Type("array")

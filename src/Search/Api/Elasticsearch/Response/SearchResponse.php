@@ -6,7 +6,7 @@ use eLife\Search\Api\Elasticsearch\ResponsePartials\HitItem;
 use eLife\Search\Api\Elasticsearch\ResponsePartials\ResponseHits;
 use eLife\Search\Api\Query\QueryResponse;
 
-class SearchResponse implements ElasticResponse, QueryResponse
+final class SearchResponse implements ElasticResponse, QueryResponse
 {
     use ResponseHits;
 

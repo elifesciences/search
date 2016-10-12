@@ -4,7 +4,7 @@ namespace eLife\Search\Api\Elasticsearch\Response;
 
 use JMS\Serializer\Annotation\Type;
 
-class SuccessResponse implements NonContentResponse
+final class SuccessResponse implements NonContentResponse
 {
     /**
      * @Type("boolean")
