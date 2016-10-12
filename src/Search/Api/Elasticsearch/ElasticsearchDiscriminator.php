@@ -35,7 +35,6 @@ class ElasticsearchDiscriminator implements EventSubscriberInterface
 
         switch (true) {
             // Nope out early to avoid errors.
-            default:
             case is_string($data):
                 return;
 
@@ -58,6 +57,7 @@ class ElasticsearchDiscriminator implements EventSubscriberInterface
 
             // We have an acknowledged message (success)
             // @todo look into non successful versions of these
+            default:
             case isset($data['acknowledged']) && $data['acknowledged'] === true:
                 $data['internal_type'] = 'success';
                 break;
