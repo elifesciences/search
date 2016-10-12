@@ -35,6 +35,7 @@ final class Console
         'cache:clear' => ['description' => 'Clears cache'],
         'debug:params' => ['description' => 'Lists current parameters'],
         'debug:search' => ['description' => 'Test command for debugging elasticsearch'],
+        'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
         'spawn' => [
             'description' => 'WARNING: Experimental, may create child processes.',
             'args' => [
@@ -78,6 +79,21 @@ final class Console
     protected function responseFromArray($className, $data)
     {
         return $this->app->get('serializer')->deserialize(json_encode($data), $className, 'json');
+    }
+
+    public function debugSearchRandomCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger) {
+        $elastic = $this->getElasticClient();
+
+        $blog = $this->responseFromArray(BlogArticleResponse::class, [
+            'id' => '12456' . rand(0, 10000),
+            'title' => 'some blog article',
+            'impactStatement' => 'Something impacting in a statement like fashion.',
+            'published' => '2016-06-09T15:15:10+00:00',
+        ]);
+        $inserting = $elastic->indexDocument('test', rand(0, 10000), $blog);
+        if ($inserting instanceof SuccessResponse) {
+            $logger->info('Document inserted!');
+        }
     }
 
     public function debugSearchCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)

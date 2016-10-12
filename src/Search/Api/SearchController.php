@@ -4,6 +4,8 @@ namespace eLife\Search\Api;
 
 use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
+use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
+use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
 use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResponse;
@@ -19,14 +21,20 @@ final class SearchController
 {
     private $serializer;
     private $apiUrl;
+    private $elastic;
+    private $context;
+    private $cache;
+    private $subjects;
 
     public function __construct(
         Serializer $serializer,
         SerializationContext $context,
+        ElasticQueryExecutor $elastic,
         Cache $cache,
         string $apiUrl,
         SubjectStore $subjects
     ) {
+        $this->elastic = $elastic;
         $this->serializer = $serializer;
         $this->context = $context;
         $this->cache = $cache;
@@ -77,6 +85,49 @@ final class SearchController
                     TypesResponse::fromArray($data->getTypeTotals())
                 );
             }
+
+            return $this->serialize($result);
+        }
+
+        throw new ServiceUnavailableHttpException(10);
+    }
+
+    public function elasticTestAction(Request $request)
+    {
+        $for = $request->query->get('for', '');
+        $order = $request->query->get('order', 'desc');
+        $page = $request->query->get('page', 1);
+        $perPage = $request->query->get('per-page', 10);
+        // $sort = $request->query->get('sort');
+        $subjects = $request->query->get('subject');
+        $types = $request->query->get('type');
+
+        $query = new ElasticQueryBuilder('elife_search', $this->elastic);
+
+        $query = $query->searchFor($for);
+
+        if ($subjects) {
+            $query->whereSubjects($subjects);
+        }
+        if ($types) {
+            $query->whereType($types);
+        }
+
+        $query = $query
+            ->paginate($page, $perPage)
+            ->order($order);
+
+        $data = $query->getQuery()->execute();
+
+
+
+        if ($data instanceof QueryResponse) {
+            $result = new SearchResponse(
+                $data->toArray(),
+                $data->getTotalResults(),
+                $data->getSubjects(),
+                TypesResponse::fromArray($data->getTypeTotals())
+            );
 
             return $this->serialize($result);
         }

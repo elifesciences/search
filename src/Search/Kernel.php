@@ -13,6 +13,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Annotation\GearmanTaskDriver;
+use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
 use eLife\Search\Api\Elasticsearch\SearchResponseSerializer;
@@ -47,6 +48,7 @@ final class Kernel implements MinimalKernel
     public static $routes = [
         '/search' => 'indexAction',
         '/test-search' => 'searchTestAction',
+        '/test-elastic' => 'elasticTestAction',
     ];
 
     private $app;
@@ -171,7 +173,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['serializer.context'], $app['cache'], $app['config']['api_url'], $app['api.subjects']);
+            return new SearchController($app['serializer'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['api.subjects']);
         };
 
         //#####################################################
@@ -202,6 +204,10 @@ final class Kernel implements MinimalKernel
 
         $app['elastic.client'] = function (Application $app) {
             return new ElasticsearchClient($app['elastic.elasticsearch'], $app['config']['elastic_index']);
+        };
+
+        $app['elastic.executor'] = function (Application $app) {
+            return new ElasticQueryExecutor($app['elastic.client']);
         };
 
         //#####################################################

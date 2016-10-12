@@ -66,14 +66,9 @@ final class ElasticsearchClient
         return $this->connection->delete($params)['payload'] ?? null;
     }
 
-    public function searchDocuments($body) : QueryResponse
+    public function searchDocuments($query) : QueryResponse
     {
-        $params = [
-            'index' => $this->index,
-            'body' => $body,
-        ];
-
-        return $this->connection->search($params)['payload'] ?? null;
+        return $this->connection->search($query)['payload'] ?? null;
     }
 
     public function getDocumentById($type, $id)

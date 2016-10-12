@@ -33,6 +33,7 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
     {
         $data = $event->getData();
 
+
         switch (true) {
             // Nope out early to avoid errors.
             case
