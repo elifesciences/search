@@ -5,7 +5,6 @@ namespace eLife\Search\Api\Elasticsearch;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreDeserializeEvent;
-use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 
 class ElasticsearchDiscriminator implements EventSubscriberInterface
 {
@@ -26,7 +25,6 @@ class ElasticsearchDiscriminator implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-//            ['event' => Events::PRE_SERIALIZE, 'method' => 'onPreSerialize'],
             ['event' => Events::PRE_DESERIALIZE, 'method' => 'onPreDeserialize'],
         ];
     }
@@ -34,45 +32,37 @@ class ElasticsearchDiscriminator implements EventSubscriberInterface
     public function onPreDeserialize(PreDeserializeEvent $event)
     {
         $data = $event->getData();
-        if (is_string($data)) {
-            return;
+
+        switch (true) {
+            // Nope out early to avoid errors.
+            default:
+            case is_string($data):
+                return;
+
+            // We have an elastic search response (with search results).
+            case isset($data['hits']):
+                $data['internal_type'] = 'hits';
+                break;
+
+            // We have a single individual result.
+            // @todo Move to wrapper around single result. (only if its used much!)
+            case isset($data['_source']):
+                $data = $data['_source'];
+                break;
+
+            // We have hit an error.
+            // @todo maybe some normalization here?
+            case isset($data['error']):
+                $data['internal_type'] = 'error';
+                break;
+
+            // We have an acknowledged message (success)
+            // @todo look into non successful versions of these
+            case isset($data['acknowledged']) && $data['acknowledged'] === true:
+                $data['internal_type'] = 'success';
+                break;
         }
 
-        if (isset($data['_source'])) {
-            $event->setData($data['_source']);
-
-            return;
-        }
-
-        if (isset($data['error'])) {
-            $data['internal_type'] = 'error';
-            $event->setData($data);
-
-            return;
-        }
-        if (isset($data['acknowledged']) && $data['acknowledged'] === true) {
-            $data['internal_type'] = 'success';
-            $event->setData($data);
-
-            return;
-        }
-
-        if (!isset($data['internal_type'])) {
-            $data['internal_type'] = 'success';
-            $event->setData($data);
-        }
-    }
-
-    public function onPreSerialize(PreSerializeEvent $event)
-    {
-        $object = $event->getObject();
-        if (is_object($object) && $object instanceof SearchResult) {
-            /* @noinspection PhpUndefinedFieldInspection */
-            $object->internal_type = $object->getType();
-            if ($object instanceof ArticleResponse) {
-                /* @noinspection PhpUndefinedFieldInspection */
-                $object->internal_type .= '--'.$object->status;
-            }
-        }
+        $event->setData($data);
     }
 }
