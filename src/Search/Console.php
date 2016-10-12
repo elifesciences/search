@@ -4,6 +4,9 @@ namespace eLife\Search;
 
 use Closure;
 use eLife\Search\Annotation\Register;
+use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\SuccessResponse;
+use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Workflow\CliLogger;
 use Exception;
 use LogicException;
@@ -30,6 +33,7 @@ final class Console
         'echo' => ['description' => 'Example of asking a question'],
         'cache:clear' => ['description' => 'Clears cache'],
         'debug:params' => ['description' => 'Lists current parameters'],
+        'debug:search' => ['description' => 'Test command for debugging elasticsearch'],
         'spawn' => [
             'description' => 'WARNING: Experimental, may create child processes.',
             'args' => [
@@ -63,6 +67,52 @@ final class Console
     private function path($path = '')
     {
         return $this->root.$path;
+    }
+
+    public function getElasticClient() : ElasticsearchClient
+    {
+        return $this->app->get('elastic.client');
+    }
+
+    protected function responseFromArray($className, $data)
+    {
+        return $this->app->get('serializer')->deserialize(json_encode($data), $className, 'json');
+    }
+
+    public function debugSearchCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)
+    {
+        $elastic = $this->getElasticClient();
+
+        $insert = $elastic->createIndex('testing');
+        if ($insert instanceof SuccessResponse) {
+            $logger->info('Index `testing` created');
+        }
+
+        $blog = $this->responseFromArray(BlogArticleResponse::class, [
+            'id' => '12456',
+            'title' => 'some blog article',
+            'impactStatement' => 'Something impacting in a statement like fashion.',
+            'published' => '2016-06-09T15:15:10+00:00',
+        ]);
+        $inserting = $elastic->indexDocument('testing', 'test', 1, $blog);
+        if ($inserting instanceof SuccessResponse) {
+            $logger->info('Document inserted!');
+        }
+
+        $doc = $elastic->getDocumentById('testing', 'test', 1);
+        if ($doc instanceof BlogArticleResponse) {
+            $logger->info('Document was requested!');
+        }
+
+        $del = $elastic->deleteDocument('testing', 'test', 1);
+        if ($del instanceof SuccessResponse) {
+            $logger->info('Document was deleted!');
+        }
+
+        $delete = $elastic->deleteIndexByName('testing');
+        if ($delete instanceof SuccessResponse) {
+            $logger->info('Index `testing` deleted');
+        }
     }
 
     public function spawnCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)

@@ -7,11 +7,15 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\FilesystemCache;
+use Elasticsearch\ClientBuilder;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Annotation\GearmanTaskDriver;
+use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
+use eLife\Search\Api\Elasticsearch\SearchResponseSerializer;
 use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Api\SubjectStore;
@@ -27,6 +31,8 @@ use JMS\Serializer\SerializerBuilder;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
+use Monolog\Logger;
+use Psr\Log\NullLogger;
 use Silex\Application;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,10 +78,16 @@ final class Kernel implements MinimalKernel
 
     public function dependencies(Application $app)
     {
+
+        //#####################################################
+        // -------------------- Basics -----------------------
+        //#####################################################
+
         // Serializer.
         $app['serializer'] = function () {
             return SerializerBuilder::create()
                 ->configureListeners(function (EventDispatcher $dispatcher) {
+                    $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
                     $dispatcher->addSubscriber(new SearchResultDiscriminator());
                 })
                 ->setCacheDir(self::ROOT.'/cache')
@@ -122,6 +134,10 @@ final class Kernel implements MinimalKernel
             );
         };
 
+        //#####################################################
+        // ------------------ Networking ---------------------
+        //#####################################################
+
         $app['guzzle'] = function (Application $app) {
             // Create default HandlerStack
             $stack = HandlerStack::create();
@@ -156,6 +172,34 @@ final class Kernel implements MinimalKernel
 
         $app['default_controller'] = function (Application $app) {
             return new SearchController($app['serializer'], $app['serializer.context'], $app['cache'], $app['config']['api_url'], $app['api.subjects']);
+        };
+
+        //#####################################################
+        // --------------------- Elastic ---------------------
+        //#####################################################
+
+        // @todo give us some options.
+        $app['elastic.logger'] = function () {
+            return new NullLogger();
+        };
+
+        $app['elastic.serializer'] = function (Application $app) {
+            return new SearchResponseSerializer($app['serializer']);
+        };
+
+        $app['elastic.elasticsearch'] = function (Application $app) {
+            $client = ClientBuilder::create([$app['config']['elastic_url']]);
+            // @todo change
+            if ($app['config']['debug']) {
+                $client->setLogger($app['elastic.logger']);
+            }
+            $client->setSerializer($app['elastic.serializer']);
+
+            return $client->build();
+        };
+
+        $app['elastic.client'] = function (Application $app) {
+            return new ElasticsearchClient($app['elastic.elasticsearch']);
         };
 
         //#####################################################
