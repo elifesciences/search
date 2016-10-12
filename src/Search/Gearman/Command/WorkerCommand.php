@@ -13,6 +13,7 @@ use eLife\Search\Workflow\PodcastEpisodeWorkflow;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
 use JMS\Serializer\Serializer;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -38,7 +39,8 @@ final class WorkerCommand extends Command
         $this
             ->setName('gearman:worker')
             ->setDescription('Creates new Gearman workers.')
-            ->setHelp('This command will spin up a new gearman worker based on the options you provide. By default this will be with all jobs available');
+            ->setHelp('This command will spin up a new gearman worker based on the options you provide. By default this will be with all jobs available')
+            ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
