@@ -48,7 +48,6 @@ final class Kernel implements MinimalKernel
     public static $routes = [
         '/search' => 'indexAction',
         '/test-search' => 'searchTestAction',
-        '/test-elastic' => 'elasticTestAction',
     ];
 
     private $app;

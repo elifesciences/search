@@ -92,7 +92,7 @@ final class SearchController
         throw new ServiceUnavailableHttpException(10);
     }
 
-    public function elasticTestAction(Request $request)
+    public function indexAction(Request $request)
     {
         $for = $request->query->get('for', '');
         $order = $request->query->get('order', 'desc');
@@ -154,10 +154,5 @@ final class SearchController
         }
 
         return new Response($json, 200, $headers);
-    }
-
-    public function indexAction()
-    {
-        return $this->serialize(new SearchResponse([], 0, [], TypesResponse::fromArray([])), 1);
     }
 }
