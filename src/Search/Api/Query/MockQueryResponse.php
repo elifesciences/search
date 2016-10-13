@@ -83,7 +83,7 @@ final class MockQueryResponse implements QueryResponse
         return [
             [
                 'id' => 'biophysics-structural-biology',
-                'name' => 'Biology',
+                'name' => 'THIS IS MOCKED DATA.',
                 'results' => 1,
             ],
         ];

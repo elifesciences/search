@@ -25,7 +25,8 @@ final class SearchResultDiscriminator implements EventSubscriberInterface
         if (isset($data['type'])) {
             $data['internal_type'] = $data['type'];
             if (isset($data['status'])) {
-                $data['internal_type'] .= '--'.$data['status'];
+                $data['type'] = 'research-article';
+                $data['internal_type'] = 'research-article--'.$data['status'];
             }
             $event->setData($data);
         }

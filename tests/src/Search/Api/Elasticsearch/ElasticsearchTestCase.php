@@ -3,7 +3,10 @@
 namespace tests\eLife\Search\Api\Elasticsearch;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use eLife\Search\Api\Elasticsearch\ElasticSearchResponse;
+use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
+use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
+use eLife\Search\Api\Elasticsearch\Response\SearchResponse;
+use eLife\Search\Api\Response\SearchResult;
 use eLife\Search\Api\SearchResultDiscriminator;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\Serializer;
@@ -41,27 +44,31 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
         // Serializer.
         $this->serializer = SerializerBuilder::create()
             ->configureListeners(function (EventDispatcher $dispatcher) {
+                $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
                 $dispatcher->addSubscriber(new SearchResultDiscriminator());
             })
             ->build();
     }
 
-    protected function assertValidSearchResults(ElasticSearchResponse $model, $expected_count = 1)
+    protected function assertValidSearchResults(SearchResponse $model, $expected_count = 1)
     {
         // Make sure total is correct.
         $this->assertEquals($expected_count, $model->getTotalResults());
+        $i = 0;
         // Make sure we can iterate through.
         foreach ($model as $item) {
+            ++$i;
             $this->assertInstanceOf(SearchResult::class, $item);
         }
+        $this->assertFalse($i === 0, 'Result set must be iterable.');
         // Make sure we didn't just iterate
         $this->assertNotEmpty($model->getResults());
     }
 
-    protected function deserialize($json) : ElasticSearchResponse
+    protected function deserialize($json) : ElasticResponse
     {
-        $model = $this->serializer->deserialize($json, ElasticSearchResponse::class, 'json');
-        $this->assertInstanceOf(ElasticSearchResponse::class, $model);
+        $model = $this->serializer->deserialize($json, ElasticResponse::class, 'json');
+        $this->assertInstanceOf(ElasticResponse::class, $model);
 
         return $model;
     }

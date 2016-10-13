@@ -1,12 +1,12 @@
 <?php
 
-namespace eLife\Search\Api\Elasticsearch;
+namespace eLife\Search\Api\Elasticsearch\Response;
 
 use eLife\Search\Api\Elasticsearch\ResponsePartials\HitItem;
 use eLife\Search\Api\Elasticsearch\ResponsePartials\ResponseHits;
 use eLife\Search\Api\Query\QueryResponse;
 
-final class ElasticSearchResponse implements QueryResponse
+final class SearchResponse implements ElasticResponse, QueryResponse
 {
     use ResponseHits;
 
@@ -26,7 +26,7 @@ final class ElasticSearchResponse implements QueryResponse
 
     public function current()
     {
-        $results = $this->getTotalResults();
+        $results = $this->getResults();
 
         return $results[$this->cursor];
     }
@@ -43,7 +43,7 @@ final class ElasticSearchResponse implements QueryResponse
 
     public function valid()
     {
-        $results = $this->getTotalResults();
+        $results = $this->getResults();
 
         return isset($results[$this->cursor]);
     }

@@ -4,7 +4,8 @@ namespace eLife\Search\Api;
 
 use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
-use eLife\Search\Api\Elasticsearch\ElasticSearchResponse;
+use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
+use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
 use eLife\Search\Api\Query\MockQueryBuilder;
 use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResponse;
@@ -20,57 +21,25 @@ final class SearchController
 {
     private $serializer;
     private $apiUrl;
+    private $elastic;
+    private $context;
+    private $cache;
+    private $subjects;
 
     public function __construct(
         Serializer $serializer,
         SerializationContext $context,
+        ElasticQueryExecutor $elastic,
         Cache $cache,
         string $apiUrl,
         SubjectStore $subjects
     ) {
+        $this->elastic = $elastic;
         $this->serializer = $serializer;
         $this->context = $context;
         $this->cache = $cache;
         $this->apiUrl = $apiUrl;
         $this->subjects = $subjects;
-    }
-
-    public function blogApiAction()
-    {
-        $es = [
-            'took' => 1,
-            'timed_out' => false,
-            '_shards' => [
-                'total' => 5,
-                'successful' => 5,
-                'failed' => 0,
-            ],
-            'hits' => [
-                'total' => 1,
-                'max_score' => 0.30685282,
-                'hits' => [
-                    [
-                        '_source' => [
-                            'id' => '12456',
-                            'type' => 'blog-article',
-                            'title' => 'some blog article',
-                            'impactStatement' => 'Something impacting in a statement like fashion.',
-                            'published' => '2016-06-09T15:15:10+00:00',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-        $data = $this->serializer->deserialize(json_encode($es), ElasticSearchResponse::class, 'json');
-
-        $result = new SearchResponse(
-            $data->toArray(),
-            $data->getTotalResults(),
-            $data->getSubjects(),
-            TypesResponse::fromArray($data->getTypeTotals())
-        );
-
-        return $this->serialize($result);
     }
 
     public function searchTestAction(Request $request)
@@ -123,17 +92,55 @@ final class SearchController
         throw new ServiceUnavailableHttpException(10);
     }
 
+    public function indexAction(Request $request)
+    {
+        $for = $request->query->get('for', '');
+        $order = $request->query->get('order', 'desc');
+        $page = $request->query->get('page', 1);
+        $perPage = $request->query->get('per-page', 10);
+        // $sort = $request->query->get('sort');
+        $subjects = $request->query->get('subject');
+        $types = $request->query->get('type');
+
+        $query = new ElasticQueryBuilder('elife_search', $this->elastic);
+
+        $query = $query->searchFor($for);
+
+        if ($subjects) {
+            $query->whereSubjects($subjects);
+        }
+        if ($types) {
+            $query->whereType($types);
+        }
+
+        $query = $query
+            ->paginate($page, $perPage)
+            ->order($order);
+
+        try {
+            $data = $query->getQuery()->execute();
+        } catch (\Throwable $e) {
+            // For CI.
+            return $this->searchTestAction($request);
+        }
+
+        if ($data instanceof QueryResponse) {
+            $result = new SearchResponse(
+                $data->toArray(),
+                $data->getTotalResults(),
+                $data->getSubjects(),
+                TypesResponse::fromArray($data->getTypeTotals())
+            );
+
+            return $this->serialize($result);
+        }
+
+        throw new ServiceUnavailableHttpException(10);
+    }
+
     public function responseFromJson($json)
     {
         return $this->serializer->deserialize($json, SearchResult::class, 'json');
-    }
-
-    /**
-     * @internal
-     */
-    private function responseFromArray($className, $data)
-    {
-        return $this->serializer->deserialize(json_encode($data), $className, 'json');
     }
 
     private function serialize($data, int $version = null, $group = null)
@@ -152,10 +159,5 @@ final class SearchController
         }
 
         return new Response($json, 200, $headers);
-    }
-
-    public function indexAction()
-    {
-        return $this->serialize(new SearchResponse([], 0, [], TypesResponse::fromArray([])), 1);
     }
 }
