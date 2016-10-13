@@ -4,6 +4,7 @@ namespace eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\Event;
 use eLife\Search\Annotation\GearmanTask;
+use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -17,11 +18,16 @@ final class EventWorkflow implements Workflow
      */
     private $serializer;
     private $logger;
+    private $client;
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger)
-    {
+    public function __construct(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        ElasticsearchClient $client
+    ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->client = $client;
     }
 
     /**
@@ -49,18 +55,22 @@ final class EventWorkflow implements Workflow
     public function index(Event $event) : array
     {
         $this->logger->debug('indexing '.$event->getTitle());
-        $index = ['testing' => 'cheese'];
 
-        return ['json' => $this->serializeEvent($event), 'index' => $index];
+        return [
+            'json' => $this->serializeEvent($event),
+            'type' => 'event',
+            'id' => $event->getId(),
+        ];
     }
 
     /**
-     * @GearmanTask(name="event_insert", parameters={"json", "index"})
+     * @GearmanTask(name="event_insert", parameters={"json", "type", "id"})
      */
-    public function insert(string $json, array $index)
+    public function insert(string $json, string $type, string $id)
     {
         $this->logger->debug('inserting '.$json);
-        $this->logger->debug('with index '.json_encode($index));
+        $this->logger->debug('with type: `'.$type.'` and id: `'.$id.'`');
+        $this->client->indexJsonDocument($type, $id, $json);
         $this->logger->debug('==========================================================================');
 
         return self::WORKFLOW_SUCCESS;

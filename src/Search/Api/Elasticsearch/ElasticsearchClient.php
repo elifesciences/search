@@ -38,7 +38,7 @@ final class ElasticsearchClient
         return $this->connection->indices()->create($params);
     }
 
-    public function indexDocument($type, $id, SearchResult $body)
+    public function indexJsonDocument($type, $id, $body)
     {
         $params = [
             'index' => $this->index,
@@ -48,6 +48,11 @@ final class ElasticsearchClient
         ];
 
         return $this->connection->index($params)['payload'] ?? null;
+    }
+
+    public function indexDocument($type, $id, SearchResult $body)
+    {
+        return $this->indexJsonDocument($type, $id, $body);
     }
 
     public function updateDocument()
