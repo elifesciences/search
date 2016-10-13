@@ -6,7 +6,7 @@ use Elasticsearch\Client;
 use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResult;
 
-final class ElasticsearchClient
+class ElasticsearchClient
 {
     private $connection;
 
