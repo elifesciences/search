@@ -4,6 +4,7 @@ namespace eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\Search\Annotation\GearmanTask;
+use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -17,11 +18,14 @@ final class ResearchArticleWorkflow implements Workflow
      */
     private $serializer;
     private $logger;
+    private $client;
+    private $cache;
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger)
+    public function __construct(Serializer $serializer, LoggerInterface $logger, ElasticsearchClient $client)
     {
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->client = $client;
     }
 
     /**
@@ -36,6 +40,8 @@ final class ResearchArticleWorkflow implements Workflow
     {
         $this->logger->debug('validating '.$article->getTitle());
 
+        $json = $this->serializeArticle($article);
+
         return $article;
     }
 
@@ -49,18 +55,22 @@ final class ResearchArticleWorkflow implements Workflow
     public function index(ArticleVersion $article) : array
     {
         $this->logger->debug('indexing '.$article->getTitle());
-        $index = ['testing' => 'cheese'];
 
-        return ['json' => $this->serializeArticle($article), 'index' => $index];
+        return [
+            'json' => $this->serializeArticle($article),
+            'type' => 'research-article',
+            'id' => $article->getId(),
+        ];
     }
 
     /**
-     * @GearmanTask(name="research_article_insert", parameters={"json", "index"})
+     * @GearmanTask(name="research_article_insert", parameters={"json", "type", "id"})
      */
-    public function insert(string $json, array $index)
+    public function insert(string $json, string $type, string $id)
     {
         $this->logger->debug('inserting '.$json);
-        $this->logger->debug('with index '.json_encode($index));
+        $this->logger->debug('with type: `'.$type.'` and id: `'.$id.'`');
+        $this->client->indexJsonDocument($type, $id, $json);
         $this->logger->debug('==========================================================================');
 
         return self::WORKFLOW_SUCCESS;
@@ -68,12 +78,21 @@ final class ResearchArticleWorkflow implements Workflow
 
     public function deserializeArticle(string $json) : ArticleVersion
     {
-        // This probably won't work.
-        return $this->serializer->deserialize($json, ArticleVersion::class, 'json');
+        $key = sha1($json);
+        if (!isset($this->cache[$key])) {
+            $this->cache[$key] = $this->serializer->deserialize($json, ArticleVersion::class, 'json');
+        }
+
+        return $this->cache[$key];
     }
 
     public function serializeArticle(ArticleVersion $article) : string
     {
-        return $this->serializer->serialize($article, 'json');
+        $key = spl_object_hash($article);
+        if (!isset($this->cache[$key])) {
+            $this->cache[$key] = $this->serializer->serialize($article, 'json');
+        }
+
+        return $this->cache[$key];
     }
 }

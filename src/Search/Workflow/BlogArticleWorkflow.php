@@ -4,6 +4,7 @@ namespace eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Annotation\GearmanTask;
+use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -17,11 +18,14 @@ final class BlogArticleWorkflow implements Workflow
      */
     private $serializer;
     private $logger;
+    private $client;
+    private $cache;
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger)
+    public function __construct(Serializer $serializer, LoggerInterface $logger, ElasticsearchClient $client)
     {
         $this->serializer = $serializer;
         $this->logger = $logger;
+        $this->client = $client;
     }
 
     /**
@@ -49,17 +53,22 @@ final class BlogArticleWorkflow implements Workflow
     public function index(BlogArticle $blogArticle) : array
     {
         $this->logger->debug('indexing '.$blogArticle->getTitle());
-        $index = ['testing' => 'cheese'];
 
-        return ['json' => $this->serializeArticle($blogArticle), 'index' => $index];
+        return [
+            'json' => $this->serializeArticle($blogArticle),
+            'type' => 'blog-article',
+            'id' => $blogArticle->getId(),
+        ];
     }
 
     /**
-     * @GearmanTask(name="blog_article_insert", parameters={"json", "index"})
+     * @GearmanTask(name="blog_article_insert", parameters={"json", "type", "id"})
      */
-    public function insert(string $json, array $index)
+    public function insert(string $json, string $type, string $id)
     {
         $this->logger->debug('inserting '.$json);
+        $this->logger->debug('with type: `'.$type.'` and id: `'.$id.'`');
+        $this->client->indexJsonDocument($type, $id, $json);
         $this->logger->debug('==========================================================================');
 
         return self::WORKFLOW_SUCCESS;
@@ -67,11 +76,21 @@ final class BlogArticleWorkflow implements Workflow
 
     public function deserializeArticle(string $json) : BlogArticle
     {
-        return $this->serializer->deserialize($json, BlogArticle::class, 'json');
+        $key = sha1($json);
+        if (!isset($this->cache[$key])) {
+            $this->cache[$key] = $this->serializer->deserialize($json, BlogArticle::class, 'json');
+        }
+
+        return $this->cache[$key];
     }
 
-    public function serializeArticle(BlogArticle $blogArticle) : string
+    public function serializeArticle(BlogArticle $article) : string
     {
-        return $this->serializer->serialize($blogArticle, 'json');
+        $key = spl_object_hash($article);
+        if (!isset($this->cache[$key])) {
+            $this->cache[$key] = $this->serializer->serialize($article, 'json');
+        }
+
+        return $this->cache[$key];
     }
 }

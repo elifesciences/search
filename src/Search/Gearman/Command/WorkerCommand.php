@@ -48,12 +48,14 @@ final class WorkerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $logger = new CliLogger($input, $output);
-        $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $logger));
-        $this->gearman->registerWorkflow(new CollectionWorkflow($this->sdk->getSerializer(), $logger));
+        // Working..
+        $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client));
         $this->gearman->registerWorkflow(new EventWorkflow($this->sdk->getSerializer(), $logger, $this->client));
         $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $logger, $this->client));
-        $this->gearman->registerWorkflow(new PodcastEpisodeWorkflow($this->sdk->getSerializer(), $logger));
-        $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $logger));
+        $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client));
+        // Not working..
+        $this->gearman->registerWorkflow(new CollectionWorkflow($this->sdk->getSerializer(), $logger, $this->client));
+        $this->gearman->registerWorkflow(new PodcastEpisodeWorkflow($this->sdk->getSerializer(), $logger, $this->client));
         $this->gearman->work($logger);
     }
 }
