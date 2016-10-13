@@ -4,6 +4,7 @@ namespace eLife\Search\Annotation;
 
 use Closure;
 use Doctrine\Common\Annotations\Reader;
+use eLife\Search\Gearman\InvalidWorkflowException;
 use eLife\Search\Workflow\Workflow;
 use GearmanClient;
 use GearmanJob;
@@ -95,6 +96,10 @@ final class GearmanTaskDriver
         $this->addTasksToWorker($this->worker, $logger);
         try {
             while ($this->worker->work());
+        } catch (InvalidWorkflowException $e) {
+            $logger->error($e->getMessage());
+            $logger->warning('Recoverable error...');
+            $this->work($logger, true);
         } catch (Throwable $e) {
             $logger->critical($e->getMessage());
             if ($this->autoRestart) {
