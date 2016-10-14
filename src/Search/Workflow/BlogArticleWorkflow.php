@@ -44,6 +44,7 @@ final class BlogArticleWorkflow implements Workflow
      *     deserialize="deserializeArticle",
      *     serialize="serializeArticle"
      * )
+     * @SuppressWarnings(ForbiddenDateTime)
      */
     public function validate(BlogArticle $blogArticle) : BlogArticle
     {
@@ -52,7 +53,6 @@ final class BlogArticleWorkflow implements Workflow
         $searchBlogArticle->id = $blogArticle->getId();
         $searchBlogArticle->title = $blogArticle->getTitle();
         $searchBlogArticle->impactStatement = $blogArticle->getImpactStatement();
-        /*  @SuppressWarnings(ForbiddenDateTime) */
         $searchBlogArticle->published = DateTime::createFromFormat(DATE_RFC2822, $blogArticle->getPublishedDate()->format(DATE_RFC2822));
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchBlogArticle);
