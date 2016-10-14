@@ -33,6 +33,7 @@ final class Console
         'hello' => ['description' => 'This is a quick hello world command'],
         'echo' => ['description' => 'Example of asking a question'],
         'cache:clear' => ['description' => 'Clears cache'],
+        'search:setup' => ['description' => 'Search initial setup'],
         'debug:params' => ['description' => 'Lists current parameters'],
         'debug:search' => ['description' => 'Test command for debugging elasticsearch'],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
@@ -74,6 +75,16 @@ final class Console
     public function getElasticClient() : ElasticsearchClient
     {
         return $this->app->get('elastic.client');
+    }
+
+    public function searchSetupCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger) {
+      $elastic = $this->getElasticClient();
+      $insert = $elastic->createIndex();
+      if ($insert instanceof SuccessResponse) {
+          $logger->info('Index created');
+      } else {
+          $logger->info('Index was no created');
+      }
     }
 
     protected function responseFromArray($className, $data)
