@@ -13,6 +13,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Annotation\GearmanTaskDriver;
+use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
@@ -135,6 +136,10 @@ final class Kernel implements MinimalKernel
             );
         };
 
+        $app['validator'] = function (Application $app) {
+            return new ApiValidator($app['serializer'], $app['serializer.context'], $app['puli.validator'], $app['psr7.bridge']);
+        };
+
         //#####################################################
         // ------------------ Networking ---------------------
         //#####################################################
@@ -242,7 +247,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.gearman.worker'] = function (Application $app) {
-            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client']);
+            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator']);
         };
 
         $app['console.gearman.client'] = function (Application $app) {

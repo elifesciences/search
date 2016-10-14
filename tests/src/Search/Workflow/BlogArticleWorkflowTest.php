@@ -18,7 +18,7 @@ use Psr\Log\NullLogger;
 use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\HttpMocks;
 
-class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
+abstract class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
 {
     use AsyncAssert;
     use HttpMocks;
