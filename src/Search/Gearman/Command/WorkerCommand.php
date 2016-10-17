@@ -4,6 +4,7 @@ namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiSdk\ApiSdk;
 use eLife\Search\Annotation\GearmanTaskDriver;
+use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use eLife\Search\Workflow\CliLogger;
@@ -24,17 +25,20 @@ final class WorkerCommand extends Command
     private $serializer;
     private $gearman;
     private $client;
+    private $validator;
 
     public function __construct(
         ApiSdk $sdk,
         Serializer $serializer,
         GearmanTaskDriver $gearman,
-        ElasticsearchClient $client
+        ElasticsearchClient $client,
+        ApiValidator $validator
     ) {
         $this->sdk = $sdk;
         $this->serializer = $serializer;
         $this->gearman = $gearman;
         $this->client = $client;
+        $this->validator = $validator;
         parent::__construct(null);
     }
 
@@ -51,7 +55,7 @@ final class WorkerCommand extends Command
     {
         $logger = new CliLogger($input, $output);
         // Working..
-        $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client));
+        $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new EventWorkflow($this->sdk->getSerializer(), $logger, $this->client));
         $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $logger, $this->client));
         $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client));
