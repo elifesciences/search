@@ -34,6 +34,7 @@ final class ImageResponse
                 $size = str_replace('http:/', 'https:', $size);
             }
         }
+
         return $urls;
     }
 

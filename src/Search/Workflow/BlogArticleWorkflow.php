@@ -3,7 +3,6 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
-use DateTime;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
@@ -13,11 +12,14 @@ use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
+use Throwable;
 
 final class BlogArticleWorkflow implements Workflow
 {
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
+
+    use JsonSerializeTransport;
 
     /**
      * @var Serializer
@@ -25,7 +27,6 @@ final class BlogArticleWorkflow implements Workflow
     private $serializer;
     private $logger;
     private $client;
-    private $cache;
     private $validator;
 
     public function __construct(Serializer $serializer, LoggerInterface $logger, ElasticsearchClient $client, ApiValidator $validator)
@@ -40,19 +41,15 @@ final class BlogArticleWorkflow implements Workflow
      * @GearmanTask(
      *     name="blog_article_validate",
      *     next="blog_article_index",
-     *     deserialize="deserializeArticle",
-     *     serialize="serializeArticle"
+     *     deserialize="deserialize",
+     *     serialize="serialize"
      * )
      * @SuppressWarnings(ForbiddenDateTime)
      */
     public function validate(BlogArticle $blogArticle) : BlogArticle
     {
         // Create response to validate.
-        $searchBlogArticle = new BlogArticleResponse();
-        $searchBlogArticle->id = $blogArticle->getId();
-        $searchBlogArticle->title = $blogArticle->getTitle();
-        $searchBlogArticle->impactStatement = $blogArticle->getImpactStatement();
-        $searchBlogArticle->published = DateTime::createFromFormat(DATE_RFC2822, $blogArticle->getPublishedDate()->format(DATE_RFC2822));
+        $searchBlogArticle = $this->validator->deserialize($this->serialize($blogArticle), BlogArticleResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchBlogArticle);
         if ($isValid === false) {
@@ -61,7 +58,7 @@ final class BlogArticleWorkflow implements Workflow
         }
         // Log results.
         $this->logger->info('BlogArticle<'.$blogArticle->getId().'> validated against current schema.');
-
+        // Pass it on.
         return $blogArticle;
     }
 
@@ -69,7 +66,7 @@ final class BlogArticleWorkflow implements Workflow
      * @GearmanTask(
      *     name="blog_article_index",
      *     next="blog_article_insert",
-     *     deserialize="deserializeArticle"
+     *     deserialize="deserialize"
      * )
      */
     public function index(BlogArticle $blogArticle) : array
@@ -78,57 +75,57 @@ final class BlogArticleWorkflow implements Workflow
         $this->logger->debug('BlogArticle<'.$blogArticle->getId().'> Indexing '.$blogArticle->getTitle());
         // Return.
         return [
-            'json' => $this->serializeArticle($blogArticle),
+            'json' => $this->serialize($blogArticle),
             'type' => 'blog-article',
             'id' => $blogArticle->getId(),
         ];
     }
 
     /**
-     * @GearmanTask(name="blog_article_insert", parameters={"json", "type", "id"})
+     * @GearmanTask(name="blog_article_insert", next="blog_article_post_validate", parameters={"json", "type", "id"})
      */
-    public function insert(string $json, string $type, string $id)
+    public function insert(string $json, string $type, string $id) : array
     {
         // Insert the document.
         $this->logger->debug('BlogArticle<'.$id.'> importing into Elasticsearch.');
         $this->client->indexJsonDocument($type, $id, $json);
-        // Post-validation, we got a document.
-        $document = $this->client->getDocumentById($type, $id);
-        Assertion::isInstanceOf($document, DocumentResponse::class);
-        $result = $document->unwrap();
-        // That document contains a blog article.
-        Assertion::isInstanceOf($result, BlogArticleResponse::class);
-        // That blog article is valid JSON.
-        $isValid = $this->validator->validateSearchResult($result);
-        if ($isValid === false) {
+
+        return [
+            'type' => $type,
+            'id' => $id,
+        ];
+    }
+
+    /**
+     * @GearmanTask(name="blog_article_post_validate", parameters={"type", "id"})
+     */
+    public function postValidate(string $type, string $id) : int
+    {
+        try {
+            // Post-validation, we got a document.
+            $document = $this->client->getDocumentById($type, $id);
+            Assertion::isInstanceOf($document, DocumentResponse::class);
+            $result = $document->unwrap();
+            // That document contains a blog article.
+            Assertion::isInstanceOf($result, BlogArticleResponse::class);
+            // That blog article is valid JSON.
+            $isValid = $this->validator->validateSearchResult($result);
+            if ($isValid === false) {
+                throw new InvalidWorkflow('BlogArticle<'.$id.'> invalid after inserting into Elasticsearch');
+            }
+        } catch (InvalidWorkflow $w) {
             $this->logger->alert($this->validator->getLastError()->getMessage());
+        } catch (Throwable $e) {
+            $this->logger->alert('BlogArticle<'.$id.'> rolling back');
             $this->client->deleteDocument($type, $id);
-            throw new InvalidWorkflow('BlogArticle<'.$id.'> invalid after inserting into Elasticsearch, rolling back.');
-        } else {
-            $this->logger->info('BlogArticle<'.$id.'> successfully imported.');
-            $this->logger->debug('==========================================================================');
         }
+        $this->logger->info('BlogArticle<'.$id.'> successfully imported.');
 
         return self::WORKFLOW_SUCCESS;
     }
 
-    public function deserializeArticle(string $json) : BlogArticle
+    public function getSdkClass() : string
     {
-        $key = sha1($json);
-        if (!isset($this->cache[$key])) {
-            $this->cache[$key] = $this->serializer->deserialize($json, BlogArticle::class, 'json');
-        }
-
-        return $this->cache[$key];
-    }
-
-    public function serializeArticle(BlogArticle $article) : string
-    {
-        $key = spl_object_hash($article);
-        if (!isset($this->cache[$key])) {
-            $this->cache[$key] = $this->serializer->serialize($article, 'json');
-        }
-
-        return $this->cache[$key];
+        return BlogArticle::class;
     }
 }
