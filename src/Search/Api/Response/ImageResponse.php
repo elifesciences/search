@@ -8,6 +8,7 @@ use JMS\Serializer\Annotation\Type;
 
 final class ImageResponse
 {
+
     /**
      * @Type("string")
      * @Since(version="1")
@@ -22,25 +23,28 @@ final class ImageResponse
 
     public function https()
     {
+        $sizes = $this->makeHttps($this->sizes);
         return new static(
-            $this->alt, $this->sizes ? $this->makeHttps($this->sizes) : []
+            $this->alt, $sizes
         );
     }
 
     private function makeHttps($urls)
     {
-        foreach ($urls as &$url) {
-            foreach ($url as &$size) {
-                $size = str_replace('http:/', 'https:', $size);
+        $sizes = [];
+        foreach ($urls as $url) {
+            foreach ($url as $k => $size) {
+//                $sizes[$k] = str_replace(['http:/', 'internal_elife_dummy_api'], ['https:/', 'internal_elife_dummy_api.com'], $size);
+                $sizes[$k] = 'https://www.wat.com/image/' . $k . '.jpg';
             }
         }
 
-        return $urls;
+        return $sizes;
     }
 
     public function __construct(string $alt, array $images)
     {
-        Assertion::allKeyExists($images, [900, 1800, 250, 500, 70, 140]);
+        Assertion::allInArray(array_flip($images), [900, 1800, 250, 500, 70, 140], 'You need to provide all available sizes for this image');
 
         $this->alt = $alt;
         $this->sizes = [

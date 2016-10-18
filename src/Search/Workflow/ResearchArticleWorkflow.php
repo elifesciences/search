@@ -51,46 +51,8 @@ final class ResearchArticleWorkflow implements Workflow
      */
     public function validate(ArticleVersion $article) : ArticleVersion
     {
-        //        if ($article instanceof ArticleVoR) {
-//            $articleResponse = new VorArticle();
-//        } else {
-//            $articleResponse = new PoaArticle();
-//        }
-//        if (method_exists($article, 'getStatusDate')) {
-//            $articleResponse->statusDate;
-//        }
-//        $articleResponse->id = $article->getId();
-//        $articleResponse->title = $article->getTitle();
-//        if (method_exists($article, 'getImpactStatement')) {
-//            $articleResponse->impactStatement = $article->getImpactStatement();
-//        }
-//        $articleResponse->type = $article->getType();
-//        if (method_exists($article, 'getImage')) {
-//            $image = $article->getImage();
-//            if ($image) {
-//                $images = [];
-//                foreach ($image->getSizes() as $imageSize) {
-//                    foreach ($imageSize->getImages() as $k => $m) {
-//                        $images[$k] = $m;
-//                    }
-//                }
-//                $articleResponse->image = new ImageResponse($image->getAltText(), $images);
-//            }
-//        }
-//        $articleResponse->volume = $article->getVolume();
-//        $articleResponse->version = $article->getVersion();
-//        $articleResponse->issue = $article->getIssue();
-//        if (method_exists($article, 'getTitlePrefix')) {
-//            $articleResponse->titlePrefix = $article->getTitlePrefix();
-//        }
-//        $articleResponse->elocationId = $article->getElocationId();
-//        $articleResponse->doi = $article->getDoi();
-//        $articleResponse->authorLine = $article->getAuthorLine();
-//        $articleResponse->pdf = $article->getPdf();
-//        $articleResponse->type = 'research-article';
-//        $articleResponse->published = DateTime::createFromFormat(DATE_RFC2822, $article->getPublishedDate()->format(DATE_RFC2822));
-
         $articleSearchResponse = $this->validator->deserialize($this->serializeArticle($article), SearchResult::class);
+        // @todo remove hack at some point.
         if ($articleSearchResponse->image) {
             $articleSearchResponse->image = $articleSearchResponse->image->https();
         }
@@ -100,7 +62,6 @@ final class ResearchArticleWorkflow implements Workflow
             $this->logger->alert($this->validator->getLastError()->getMessage());
             throw new InvalidWorkflow('ResearchArticle<'.$article->getId().'> Invalid item tried to be imported.');
         }
-
         $this->logger->debug('validating '.$article->getTitle());
 
         return $article;

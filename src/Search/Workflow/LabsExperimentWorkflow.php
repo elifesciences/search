@@ -7,7 +7,7 @@ use eLife\Search\Annotation\GearmanTask;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
-class LabsExperimentWorkflow
+final class LabsExperimentWorkflow
 {
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
