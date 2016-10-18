@@ -40,6 +40,7 @@ final class ResearchArticleWorkflow implements Workflow
     /**
      * @GearmanTask(
      *     name="research_article_validate",
+     *     next="research_article_index",
      *     deserialize="deserializeArticle",
      *     serialize="serializeArticle"
      * )
@@ -85,7 +86,6 @@ final class ResearchArticleWorkflow implements Workflow
      */
     public function insert(string $json, string $type, string $id)
     {
-        $this->logger->debug('inserting '.$json);
         $this->logger->debug('with type: `'.$type.'` and id: `'.$id.'`');
         $this->client->indexJsonDocument($type, $id, $json);
         $this->logger->debug('==========================================================================');
