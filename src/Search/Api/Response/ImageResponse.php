@@ -20,6 +20,34 @@ final class ImageResponse
      */
     public $sizes;
 
+    public function https()
+    {
+        return new static(
+            $this->alt, $this->sizes ? $this->makeHttps($this->sizes) : []
+        );
+    }
+
+    private function makeHttps($urls)
+    {
+        foreach ($urls as &$url) {
+            foreach ($url as &$size) {
+                $size = str_replace('http:/', 'https:', $size);
+            }
+        }
+
+        return $urls;
+
+//        $b = [];
+//        foreach ($urls as $s => $p) {
+//            $r = [];
+//            foreach ($p as $k => $u) {
+//                $r[$k] = str_replace('http:/', 'https:', $u);
+//            }
+//            $b[$s] = $r;
+//        }
+//        return $b;
+    }
+
     public function __construct(string $alt, array $images)
     {
         Assertion::allKeyExists($images, [900, 1800, 250, 500, 70, 140]);

@@ -11,6 +11,21 @@ use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 
 final class SearchResultDiscriminator implements EventSubscriberInterface
 {
+    public static $articleTypes = [
+        'correction',
+        'editorial',
+        'feature',
+        'insight',
+        'research-advance',
+        'research-article',
+        'research-exchange',
+        'retraction',
+        'registered-report',
+        'replication-study',
+        'short-report',
+        'tools-resources',
+    ];
+
     public static function getSubscribedEvents()
     {
         return [
@@ -23,9 +38,13 @@ final class SearchResultDiscriminator implements EventSubscriberInterface
     {
         $data = $event->getData();
         if (isset($data['type'])) {
+            // Set the internal type as the defined type as per normal.
             $data['internal_type'] = $data['type'];
-            if (isset($data['status'])) {
+            // If its one of the research articles..
+            if (in_array($data['type'], self::$articleTypes)) {
+                // @todo change this thing!
                 $data['type'] = 'research-article';
+                // Do the right thing.
                 $data['internal_type'] = 'research-article--'.$data['status'];
             }
             $event->setData($data);

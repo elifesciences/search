@@ -10,6 +10,7 @@ use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Api\Response\BlogArticleResponse;
+use eLife\Search\Gearman\InvalidWorkflow;
 use eLife\Search\Gearman\InvalidWorkflowException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -58,7 +59,7 @@ final class BlogArticleWorkflow implements Workflow
         $isValid = $this->validator->validateSearchResult($searchBlogArticle);
         if ($isValid === false) {
             $this->logger->alert($this->validator->getLastError()->getMessage());
-            throw new InvalidWorkflowException('BlogArticle<'.$blogArticle->getId().'> Invalid item tried to be imported.');
+            throw new InvalidWorkflow('BlogArticle<'.$blogArticle->getId().'> Invalid item tried to be imported.');
         }
         // Log results.
         $this->logger->info('BlogArticle<'.$blogArticle->getId().'> validated against current schema.');

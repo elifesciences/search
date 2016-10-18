@@ -77,14 +77,15 @@ final class Console
         return $this->app->get('elastic.client');
     }
 
-    public function searchSetupCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger) {
-      $elastic = $this->getElasticClient();
-      $insert = $elastic->createIndex();
-      if ($insert instanceof SuccessResponse) {
-          $logger->info('Index created');
-      } else {
-          $logger->info('Index was no created');
-      }
+    public function searchSetupCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)
+    {
+        $elastic = $this->getElasticClient();
+        $insert = $elastic->createIndex();
+        if ($insert instanceof SuccessResponse) {
+            $logger->info('Index created');
+        } else {
+            $logger->info('Index was no created');
+        }
     }
 
     protected function responseFromArray($className, $data)
