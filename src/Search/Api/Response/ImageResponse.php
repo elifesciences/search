@@ -34,18 +34,7 @@ final class ImageResponse
                 $size = str_replace('http:/', 'https:', $size);
             }
         }
-
         return $urls;
-
-//        $b = [];
-//        foreach ($urls as $s => $p) {
-//            $r = [];
-//            foreach ($p as $k => $u) {
-//                $r[$k] = str_replace('http:/', 'https:', $u);
-//            }
-//            $b[$s] = $r;
-//        }
-//        return $b;
     }
 
     public function __construct(string $alt, array $images)
