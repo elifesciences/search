@@ -35,7 +35,7 @@ final class ApiValidator
         return $this->serializer->deserialize($item, $classname, 'json');
     }
 
-    public function validateSearchResult(SearchResult $result) : bool
+    public function validateSearchResult(SearchResult $result, $strict = false) : bool
     {
         $searchResponse = new SearchResponse([$result], 1, [
             [
@@ -45,7 +45,12 @@ final class ApiValidator
             ],
         ], TypesResponse::fromArray([]));
 
-        return $this->validateSearchResponse($searchResponse);
+        $isValid = $this->validateSearchResponse($searchResponse);
+        if ($strict && !$isValid) {
+            throw $this->getLastError();
+        }
+
+        return $isValid;
     }
 
     public function validateSearchResponse($data, int $version = null, $group = null) : bool
@@ -82,7 +87,7 @@ final class ApiValidator
         return $pass;
     }
 
-    public function getLastError() : Throwable
+    public function getLastError()
     {
         return $this->last_error;
     }

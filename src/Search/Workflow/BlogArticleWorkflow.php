@@ -109,16 +109,15 @@ final class BlogArticleWorkflow implements Workflow
             // That document contains a blog article.
             Assertion::isInstanceOf($result, BlogArticleResponse::class);
             // That blog article is valid JSON.
-            $isValid = $this->validator->validateSearchResult($result);
-            if ($isValid === false) {
-                throw new InvalidWorkflow('BlogArticle<'.$id.'> invalid after inserting into Elasticsearch');
-            }
-        } catch (InvalidWorkflow $w) {
-            $this->logger->alert($this->validator->getLastError()->getMessage());
+            $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
+            $this->logger->alert($e->getMessage());
             $this->logger->alert('BlogArticle<'.$id.'> rolling back');
             $this->client->deleteDocument($type, $id);
+            // We failed.
+            return self::WORKFLOW_FAILURE;
         }
+
         $this->logger->info('BlogArticle<'.$id.'> successfully imported.');
 
         return self::WORKFLOW_SUCCESS;
