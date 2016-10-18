@@ -2,15 +2,10 @@
 
 namespace eLife\Search\Workflow;
 
-use DateTime;
 use eLife\ApiSdk\Model\ArticleVersion;
-use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
-use eLife\Search\Api\Response\ArticleResponse\PoaArticle;
-use eLife\Search\Api\Response\ArticleResponse\VorArticle;
-use eLife\Search\Api\Response\ImageResponse;
 use eLife\Search\Api\Response\SearchResult;
 use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;

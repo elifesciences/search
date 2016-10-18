@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation\Type;
 
 final class ImageResponse
 {
-
     /**
      * @Type("string")
      * @Since(version="1")
@@ -24,6 +23,7 @@ final class ImageResponse
     public function https()
     {
         $sizes = $this->makeHttps($this->sizes);
+
         return new static(
             $this->alt, $sizes
         );
@@ -34,8 +34,8 @@ final class ImageResponse
         $sizes = [];
         foreach ($urls as $url) {
             foreach ($url as $k => $size) {
-//                $sizes[$k] = str_replace(['http:/', 'internal_elife_dummy_api'], ['https:/', 'internal_elife_dummy_api.com'], $size);
-                $sizes[$k] = 'https://www.wat.com/image/' . $k . '.jpg';
+                //                $sizes[$k] = str_replace(['http:/', 'internal_elife_dummy_api'], ['https:/', 'internal_elife_dummy_api.com'], $size);
+                $sizes[$k] = 'https://www.wat.com/image/'.$k.'.jpg';
             }
         }
 
