@@ -11,7 +11,6 @@ use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Gearman\InvalidWorkflow;
-use eLife\Search\Gearman\InvalidWorkflowException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -27,7 +26,6 @@ final class BlogArticleWorkflow implements Workflow
     private $logger;
     private $client;
     private $cache;
-    private $jms_serializer;
     private $validator;
 
     public function __construct(Serializer $serializer, LoggerInterface $logger, ElasticsearchClient $client, ApiValidator $validator)
@@ -105,7 +103,7 @@ final class BlogArticleWorkflow implements Workflow
         if ($isValid === false) {
             $this->logger->alert($this->validator->getLastError()->getMessage());
             $this->client->deleteDocument($type, $id);
-            throw new InvalidWorkflowException('BlogArticle<'.$id.'> invalid after inserting into Elasticsearch, rolling back.');
+            throw new InvalidWorkflow('BlogArticle<'.$id.'> invalid after inserting into Elasticsearch, rolling back.');
         } else {
             $this->logger->info('BlogArticle<'.$id.'> successfully imported.');
             $this->logger->debug('==========================================================================');
