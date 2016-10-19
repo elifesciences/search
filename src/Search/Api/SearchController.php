@@ -122,7 +122,7 @@ final class SearchController
         } catch (\Throwable $e) {
             throw $e;
             // For CI.
-//            return $this->searchTestAction($request);
+            return $this->searchTestAction($request);
         }
 
         if ($data instanceof QueryResponse) {
