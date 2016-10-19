@@ -10,9 +10,11 @@ elifePipeline {
     }
 
     elifeMainlineOnly {
-        stage 'Deploy on end2end'
-        builderDeployRevision 'search--end2end', commit
-        builderSmokeTests 'search--end2end', '/srv/search'
+        stage 'End2end tests'
+        elifeEnd2EndTest({
+            builderDeployRevision 'search--end2end', commit
+            builderSmokeTests 'search--end2end', '/srv/search
+        }, 'two')
 
         stage 'Approval'
         elifeGitMoveToBranch commit, 'approved'
