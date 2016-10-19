@@ -16,13 +16,14 @@ final class ResearchArticleWorkflow implements Workflow
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
 
+    use JsonSerializeTransport;
+
     /**
      * @var Serializer
      */
     private $serializer;
     private $logger;
     private $client;
-    private $cache;
     private $validator;
 
     public function __construct(
@@ -41,13 +42,13 @@ final class ResearchArticleWorkflow implements Workflow
      * @GearmanTask(
      *     name="research_article_validate",
      *     next="research_article_index",
-     *     deserialize="deserializeArticle",
-     *     serialize="serializeArticle"
+     *     deserialize="deserialize",
+     *     serialize="serialize"
      * )
      */
     public function validate(ArticleVersion $article) : ArticleVersion
     {
-        $articleSearchResponse = $this->validator->deserialize($this->serializeArticle($article), SearchResult::class);
+        $articleSearchResponse = $this->validator->deserialize($this->serialize($article), SearchResult::class);
         // @todo remove hack at some point.
         if ($articleSearchResponse->image) {
             $articleSearchResponse->image = $articleSearchResponse->image->https();
@@ -67,7 +68,7 @@ final class ResearchArticleWorkflow implements Workflow
      * @GearmanTask(
      *     name="research_article_index",
      *     next="research_article_insert",
-     *     deserialize="deserializeArticle"
+     *     deserialize="deserialize"
      * )
      */
     public function index(ArticleVersion $article) : array
@@ -75,7 +76,7 @@ final class ResearchArticleWorkflow implements Workflow
         $this->logger->debug('indexing '.$article->getTitle());
 
         return [
-            'json' => $this->serializeArticle($article),
+            'json' => $this->serialize($article),
             'type' => 'research-article',
             'id' => $article->getId(),
         ];
@@ -93,23 +94,8 @@ final class ResearchArticleWorkflow implements Workflow
         return self::WORKFLOW_SUCCESS;
     }
 
-    public function deserializeArticle(string $json) : ArticleVersion
+    public function getSdkClass() : string
     {
-        $key = sha1($json);
-        if (!isset($this->cache[$key])) {
-            $this->cache[$key] = $this->serializer->deserialize($json, ArticleVersion::class, 'json');
-        }
-
-        return $this->cache[$key];
-    }
-
-    public function serializeArticle(ArticleVersion $article) : string
-    {
-        $key = spl_object_hash($article);
-        if (!isset($this->cache[$key])) {
-            $this->cache[$key] = $this->serializer->serialize($article, 'json');
-        }
-
-        return $this->cache[$key];
+        return ArticleVersion::class;
     }
 }

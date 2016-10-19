@@ -28,11 +28,26 @@ class ElasticsearchClient
         return $this->connection->indices()->delete($params);
     }
 
+    public function deleteIndex()
+    {
+        return $this->deleteIndexByName($this->index);
+    }
+
     public function createIndex()
     {
         $params = [
             'index' => $this->index,
             'client' => ['ignore' => [400, 404]],
+            'body' => [
+                'mappings' => [
+                    '_default_' => [
+                        'properties' => [
+                            'subjects' => ['type' => 'string', 'index' => 'not_analyzed'],
+                            'type' => ['type' => 'string', 'index' => 'not_analyzed'],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         return $this->connection->indices()->create($params);

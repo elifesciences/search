@@ -11,6 +11,7 @@ use eLife\Search\Workflow\CliLogger;
 use eLife\Search\Workflow\CollectionWorkflow;
 use eLife\Search\Workflow\EventWorkflow;
 use eLife\Search\Workflow\InterviewWorkflow;
+use eLife\Search\Workflow\LabsExperimentWorkflow;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
 use JMS\Serializer\Serializer;
@@ -59,6 +60,7 @@ final class WorkerCommand extends Command
         $this->gearman->registerWorkflow(new EventWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $logger, $this->client));
         $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
+        $this->gearman->registerWorkflow(new LabsExperimentWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
         // Not working..
         $this->gearman->registerWorkflow(new CollectionWorkflow($this->sdk->getSerializer(), $logger, $this->client));
         $this->gearman->registerWorkflow(new PodcastEpisodeWorkflow($this->sdk->getSerializer(), $logger, $this->client));

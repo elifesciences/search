@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
+use Throwable;
 
 final class Console
 {
@@ -80,7 +81,24 @@ final class Console
     public function searchSetupCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)
     {
         $elastic = $this->getElasticClient();
-        $insert = $elastic->createIndex();
+        try {
+            $elastic->deleteIndex();
+        } catch (Throwable $e) {
+        }
+        try {
+            $insert = $elastic->createIndex();
+        } catch (Throwable $e) {
+        }
+        /*
+         "mappings" : {
+            "blog-article" : {
+                "properties" : {
+                    "field" : { "type": "string", "index" : "not_analyzed" }
+                }
+            }
+        }
+         */
+
         if ($insert instanceof SuccessResponse) {
             $logger->info('Index created');
         } else {

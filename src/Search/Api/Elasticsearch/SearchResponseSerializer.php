@@ -19,7 +19,7 @@ final class SearchResponseSerializer implements SerializerInterface
     /**
      * Serialize a complex data-structure into a json encoded string.
      *
-     * @param mixed   The data to encode
+     * @param mixed $data The data to encode
      *
      * @return string
      */
@@ -43,6 +43,7 @@ final class SearchResponseSerializer implements SerializerInterface
      */
     public function deserialize($json, $headers)
     {
+        //         var_dump(json_encode(json_decode($json), JSON_PRETTY_PRINT));
         $response = $this->serializer->deserialize($json, ElasticResponse::class, 'json');
         // This had to be added because of ES's "array-only" error handling.
         $return = [

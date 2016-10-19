@@ -13,6 +13,11 @@ trait ResponseHits
     public $took;
 
     /**
+     * @Type("array")
+     */
+    public $aggregations;
+
+    /**
      * @Type("boolean")
      */
     public $timed_out;

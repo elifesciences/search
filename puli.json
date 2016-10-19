@@ -293,6 +293,10 @@
             "install-path": "vendor/silex/silex",
             "installer": "composer"
         },
+        "silex/web-profiler": {
+            "install-path": "vendor/silex/web-profiler/Silex/Provider",
+            "installer": "composer"
+        },
         "symfony/browser-kit": {
             "install-path": "vendor/symfony/browser-kit",
             "installer": "composer",
@@ -355,16 +359,36 @@
             "install-path": "vendor/symfony/serializer",
             "installer": "composer"
         },
+        "symfony/stopwatch": {
+            "install-path": "vendor/symfony/stopwatch",
+            "installer": "composer"
+        },
         "symfony/translation": {
             "install-path": "vendor/symfony/translation",
+            "installer": "composer"
+        },
+        "symfony/twig-bridge": {
+            "install-path": "vendor/symfony/twig-bridge",
             "installer": "composer"
         },
         "symfony/validator": {
             "install-path": "vendor/symfony/validator",
             "installer": "composer"
         },
+        "symfony/var-dumper": {
+            "install-path": "vendor/symfony/var-dumper",
+            "installer": "composer"
+        },
+        "symfony/web-profiler-bundle": {
+            "install-path": "vendor/symfony/web-profiler-bundle",
+            "installer": "composer"
+        },
         "symfony/yaml": {
             "install-path": "vendor/symfony/yaml",
+            "installer": "composer"
+        },
+        "twig/twig": {
+            "install-path": "vendor/twig/twig",
             "installer": "composer"
         },
         "webmozart/assert": {
