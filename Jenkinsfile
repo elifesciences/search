@@ -13,7 +13,7 @@ elifePipeline {
         stage 'End2end tests'
         elifeEnd2EndTest({
             builderDeployRevision 'search--end2end', commit
-            builderSmokeTests 'search--end2end', '/srv/search
+            builderSmokeTests 'search--end2end', '/srv/search'
         }, 'two')
 
         stage 'Approval'
