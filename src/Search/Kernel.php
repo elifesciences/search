@@ -36,6 +36,8 @@ use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
 use Monolog\Logger;
 use Psr\Log\NullLogger;
 use Silex\Application;
+use Silex\Provider;
+use Silex\Provider\VarDumperServiceProvider;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,6 +74,16 @@ final class Kernel implements MinimalKernel
         AnnotationRegistry::registerAutoloadNamespace(
             'JMS\Serializer\Annotation', self::ROOT.'/vendor/jms/serializer/src'
         );
+        if ($app['config']['debug']) {
+            $app->register(new VarDumperServiceProvider());
+            $app->register(new Provider\HttpFragmentServiceProvider());
+            $app->register(new Provider\ServiceControllerServiceProvider());
+            $app->register(new Provider\TwigServiceProvider());
+            $app->register(new Provider\WebProfilerServiceProvider(), array(
+                'profiler.cache_dir' => self::ROOT.'/cache/profiler',
+                'profiler.mount_prefix' => '/_profiler', // this is the default
+            ));
+        }
         // DI.
         $this->dependencies($app);
         // Add to class once set up.
@@ -307,9 +319,11 @@ final class Kernel implements MinimalKernel
     public function validate(Request $request, Response $response)
     {
         try {
-            $this->app['puli.validator']->validate(
-                $this->app['psr7.bridge']->createResponse($response)
-            );
+            if (strpos($response->headers->get('Content-Type'), 'json')) {
+                $this->app['puli.validator']->validate(
+                    $this->app['psr7.bridge']->createResponse($response)
+                );
+            }
         } catch (Throwable $e) {
             if ($this->app['config']['debug']) {
                 throw $e;

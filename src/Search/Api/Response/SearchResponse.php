@@ -2,6 +2,7 @@
 
 namespace eLife\Search\Api\Response;
 
+use DateTime;
 use eLife\Search\Api\HasHeaders;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Since;
@@ -40,9 +41,21 @@ final class SearchResponse implements HasHeaders
         ],
     ];
 
+    /**
+     * @SuppressWarnings(ForbiddenDateTime)
+     */
     public function __construct(array $items, $total, $subjects, TypesResponse $types)
     {
         $this->items = $items;
+        // @todo remove this hack!
+        $this->items = array_map(function ($item) {
+            if ($item->image) {
+                $item->image = $item->image->https();
+            }
+            $item->statusDate = new DateTime();
+
+            return $item;
+        }, $items);
         $this->total = $total;
         $this->types = $types;
         $this->subjects = $subjects;

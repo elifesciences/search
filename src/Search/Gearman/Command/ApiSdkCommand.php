@@ -16,7 +16,7 @@ use Traversable;
 
 final class ApiSdkCommand extends Command
 {
-    private static $supports = ['BlogArticles', 'Events', 'Interviews', 'LabsExperiments', 'PodcastEpisodes', 'Collections', 'ResearchArticles'];
+    private static $supports = ['all', 'BlogArticles', 'Events', 'Interviews', 'LabsExperiments', 'PodcastEpisodes', 'Collections', 'ResearchArticles'];
 
     private $client;
     private $sdk;
@@ -51,8 +51,17 @@ final class ApiSdkCommand extends Command
 
             return;
         }
-        // Run the item.
-        $this->{'import'.$entity}($logger);
+        if ($entity === 'all') {
+            foreach (self::$supports as $e) {
+                if ($e !== 'all') {
+                    // Run the item.
+                    $this->{'import'.$e}($logger);
+                }
+            }
+        } else {
+            // Run the item.
+            $this->{'import'.$entity}($logger);
+        }
         // Reporting.
         $logger->notice('All entities queued.');
     }

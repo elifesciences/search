@@ -65,12 +65,32 @@ final class SearchResponse implements ElasticResponse, QueryResponse
 
     public function getTypeTotals() : array
     {
+        if (isset($this->aggregations['type_agg']['buckets'])) {
+            $types = [];
+            foreach ($this->aggregations['type_agg']['buckets'] as $bucket) {
+                $types[$bucket['key']] = $bucket['doc_count'];
+            }
+
+            return $types;
+        }
         // TODO: Implement getTypeTotals() method.
         return [];
     }
 
     public function getSubjects() : array
     {
+        if (isset($this->aggregations['subject_agg']['buckets'])) {
+            $types = [];
+            foreach ($this->aggregations['subject_agg']['buckets'] as $bucket) {
+                $types[] = [
+                    'id' => $bucket['key'],
+                    'name' => $bucket['key'],
+                    'results' => $bucket['doc_count'],
+                ];
+            }
+
+            return $types;
+        }
         // TODO: Implement REAL getSubjects() method.
         return [
             [

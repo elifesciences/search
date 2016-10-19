@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "fd39b7a41b6195bfad53fb9c17989961",
-    "content-hash": "4dcb052688facf0f5f3d8a5b80643744",
+    "hash": "0b75d852161299e8b969d73ff08dd81d",
+    "content-hash": "3277ad39c54af18ee82ec6f83d3d3f9a",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "57b0efed8fcf5d8c854bc1c26cf4a685af9108d9"
+                "reference": "089ce29c428ce330b8e9eba8bbe8f2bdbb8b8af5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/57b0efed8fcf5d8c854bc1c26cf4a685af9108d9",
-                "reference": "57b0efed8fcf5d8c854bc1c26cf4a685af9108d9",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/089ce29c428ce330b8e9eba8bbe8f2bdbb8b8af5",
+                "reference": "089ce29c428ce330b8e9eba8bbe8f2bdbb8b8af5",
                 "shasum": ""
             },
             "require": {
@@ -85,20 +85,20 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-10-06 21:17:44"
+            "time": "2016-10-18 20:29:12"
         },
         {
             "name": "beberlei/assert",
-            "version": "v2.6.4",
+            "version": "2.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/assert.git",
-                "reference": "ebab3d93e5f8f1ef95e016970ef149b4ad5ac024"
+                "reference": "fbadde44717ea3eb98fba35425d49731185bf418"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/assert/zipball/ebab3d93e5f8f1ef95e016970ef149b4ad5ac024",
-                "reference": "ebab3d93e5f8f1ef95e016970ef149b4ad5ac024",
+                "url": "https://api.github.com/repos/beberlei/assert/zipball/fbadde44717ea3eb98fba35425d49731185bf418",
+                "reference": "fbadde44717ea3eb98fba35425d49731185bf418",
                 "shasum": ""
             },
             "require": {
@@ -106,14 +106,10 @@
                 "php": ">=5.3"
             },
             "require-dev": {
+                "friendsofphp/php-cs-fixer": "2.0.0-alpha",
                 "phpunit/phpunit": "@stable"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.5-dev"
-                }
-            },
             "autoload": {
                 "psr-0": {
                     "Assert": "lib/"
@@ -144,7 +140,7 @@
                 "assertion",
                 "validation"
             ],
-            "time": "2016-10-03 10:58:03"
+            "time": "2016-10-11 17:13:28"
         },
         {
             "name": "clue/block-react",
@@ -495,16 +491,16 @@
         },
         {
             "name": "elasticsearch/elasticsearch",
-            "version": "v2.2.1",
+            "version": "v2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elastic/elasticsearch-php.git",
-                "reference": "7b34186a58730d0a8963741bd62fa5ab45658ada"
+                "reference": "2f54f5c5301075b993da5505e406d2a4d6113222"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/7b34186a58730d0a8963741bd62fa5ab45658ada",
-                "reference": "7b34186a58730d0a8963741bd62fa5ab45658ada",
+                "url": "https://api.github.com/repos/elastic/elasticsearch-php/zipball/2f54f5c5301075b993da5505e406d2a4d6113222",
+                "reference": "2f54f5c5301075b993da5505e406d2a4d6113222",
                 "shasum": ""
             },
             "require": {
@@ -545,7 +541,7 @@
                 "elasticsearch",
                 "search"
             ],
-            "time": "2016-07-14 14:13:40"
+            "time": "2016-10-17 19:43:19"
         },
         {
             "name": "elife/api",
@@ -553,12 +549,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "ca67fed2e2c0106155c603584b7ac1e07d43ccd2"
+                "reference": "5d9008248f06512c9c702741d6196b8b6adf1d59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/ca67fed2e2c0106155c603584b7ac1e07d43ccd2",
-                "reference": "ca67fed2e2c0106155c603584b7ac1e07d43ccd2",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/5d9008248f06512c9c702741d6196b8b6adf1d59",
+                "reference": "5d9008248f06512c9c702741d6196b8b6adf1d59",
                 "shasum": ""
             },
             "require": {
@@ -570,7 +566,7 @@
                 "GPL-3.0+"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2016-09-30 14:59:26"
+            "time": "2016-10-19 11:06:42"
         },
         {
             "name": "elife/api-client",
@@ -578,12 +574,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "1f83df30b24de7c957a3a750f4abeb3ebe9ec8e3"
+                "reference": "151240212e3d5d3dfd147f4485c487aaf5b307a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/1f83df30b24de7c957a3a750f4abeb3ebe9ec8e3",
-                "reference": "1f83df30b24de7c957a3a750f4abeb3ebe9ec8e3",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/151240212e3d5d3dfd147f4485c487aaf5b307a0",
+                "reference": "151240212e3d5d3dfd147f4485c487aaf5b307a0",
                 "shasum": ""
             },
             "require": {
@@ -604,6 +600,7 @@
             },
             "suggest": {
                 "guzzlehttp/guzzle": "^6.0, to use the Guzzle6HttpClient adapter",
+                "monolog/monolog": "^1.0, to use the HttpMessageProcessor log processor",
                 "mtdowling/jmespath.php": "^2.0, to use the Result::search() method",
                 "psr/log": "^1.0, to use the WarningCheckingHttpClient adapter"
             },
@@ -623,7 +620,7 @@
                 "GPL-3.0+"
             ],
             "description": "eLife Sciences API client",
-            "time": "2016-09-29 12:59:32"
+            "time": "2016-10-18 12:49:31"
         },
         {
             "name": "elife/api-sdk",
@@ -631,12 +628,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "15430a285b225b9dea9b65d01436e27eb67cad0e"
+                "reference": "723c20713fdd04666868a523f4905c3c4ed4aeaa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/15430a285b225b9dea9b65d01436e27eb67cad0e",
-                "reference": "15430a285b225b9dea9b65d01436e27eb67cad0e",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/723c20713fdd04666868a523f4905c3c4ed4aeaa",
+                "reference": "723c20713fdd04666868a523f4905c3c4ed4aeaa",
                 "shasum": ""
             },
             "require": {
@@ -671,7 +668,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2016-09-30 11:36:30"
+            "time": "2016-10-19 07:58:27"
         },
         {
             "name": "elife/api-validator",
@@ -1433,16 +1430,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "088c04e2f261c33bed6ca5245491cfca69195ccf"
+                "reference": "c0125896dbb151380ab47e96c621741e79623beb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/088c04e2f261c33bed6ca5245491cfca69195ccf",
-                "reference": "088c04e2f261c33bed6ca5245491cfca69195ccf",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c0125896dbb151380ab47e96c621741e79623beb",
+                "reference": "c0125896dbb151380ab47e96c621741e79623beb",
                 "shasum": ""
             },
             "require": {
@@ -1477,7 +1474,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-04-03 06:00:07"
+            "time": "2016-10-17 15:23:22"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -1740,16 +1737,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "5277094ed527a1c4477177d102fe4c53551953e0"
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/5277094ed527a1c4477177d102fe4c53551953e0",
-                "reference": "5277094ed527a1c4477177d102fe4c53551953e0",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
                 "shasum": ""
             },
             "require": {
@@ -1783,7 +1780,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-09-19 16:02:08"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "puli/composer-plugin",
@@ -2352,6 +2349,63 @@
             "time": "2016-08-22 17:50:21"
         },
         {
+            "name": "silex/web-profiler",
+            "version": "v2.0.3",
+            "target-dir": "Silex/Provider",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/silexphp/Silex-WebProfiler.git",
+                "reference": "690937ad788dfeb471afce9dd30bd3bcd61ea7ae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/silexphp/Silex-WebProfiler/zipball/690937ad788dfeb471afce9dd30bd3bcd61ea7ae",
+                "reference": "690937ad788dfeb471afce9dd30bd3bcd61ea7ae",
+                "shasum": ""
+            },
+            "require": {
+                "silex/silex": "^2.0",
+                "symfony/stopwatch": "^2.8|^3.0",
+                "symfony/twig-bridge": "^2.8|^3.0",
+                "symfony/web-profiler-bundle": "^2.8|^3.0"
+            },
+            "conflict": {
+                "symfony/web-profiler-bundle": "3.1.0"
+            },
+            "require-dev": {
+                "symfony/browser-kit": "^2.8|^3.0",
+                "symfony/css-selector": "^2.8|^3.0",
+                "symfony/debug-bundle": "^2.8|^3.0",
+                "symfony/security": "^2.8|^3.0",
+                "symfony/security-bundle": "^2.8|^3.0",
+                "symfony/translation": "^2.8|^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Silex\\Provider\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "A WebProfiler for Silex",
+            "homepage": "http://silex.sensiolabs.org/",
+            "time": "2016-09-30 00:42:55"
+        },
+        {
             "name": "symfony/config",
             "version": "v2.8.12",
             "source": {
@@ -2406,20 +2460,21 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.8.11",
+            "version": "v2.8.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "3d3e4fa5f0614c8e45220e5de80332322e33bd90"
+                "reference": "d7a5a88178f94dcc29531ea4028ea614e35452d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/3d3e4fa5f0614c8e45220e5de80332322e33bd90",
-                "reference": "3d3e4fa5f0614c8e45220e5de80332322e33bd90",
+                "url": "https://api.github.com/repos/symfony/console/zipball/d7a5a88178f94dcc29531ea4028ea614e35452d4",
+                "reference": "d7a5a88178f94dcc29531ea4028ea614e35452d4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.9",
+                "symfony/debug": "~2.7,>=2.7.2|~3.0.0",
                 "symfony/polyfill-mbstring": "~1.0"
             },
             "require-dev": {
@@ -2462,20 +2517,20 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-06 10:55:00"
+            "time": "2016-09-28 00:10:16"
         },
         {
             "name": "symfony/debug",
-            "version": "v3.1.5",
+            "version": "v3.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "e2b3f74a67fc928adc3c1b9027f73e1bc01190a8"
+                "reference": "697c527acd9ea1b2d3efac34d9806bf255278b0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/e2b3f74a67fc928adc3c1b9027f73e1bc01190a8",
-                "reference": "e2b3f74a67fc928adc3c1b9027f73e1bc01190a8",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/697c527acd9ea1b2d3efac34d9806bf255278b0a",
+                "reference": "697c527acd9ea1b2d3efac34d9806bf255278b0a",
                 "shasum": ""
             },
             "require": {
@@ -2492,7 +2547,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1-dev"
+                    "dev-master": "3.0-dev"
                 }
             },
             "autoload": {
@@ -2519,7 +2574,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-06 11:02:40"
+            "time": "2016-07-30 07:22:48"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -2527,12 +2582,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "f6118190787912bc15de082ee9664eb0876a5b8b"
+                "reference": "e8f47a327c2f0fd5aa04fa60af2b693006ed7283"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/f6118190787912bc15de082ee9664eb0876a5b8b",
-                "reference": "f6118190787912bc15de082ee9664eb0876a5b8b",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/e8f47a327c2f0fd5aa04fa60af2b693006ed7283",
+                "reference": "e8f47a327c2f0fd5aa04fa60af2b693006ed7283",
                 "shasum": ""
             },
             "require": {
@@ -2579,7 +2634,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-20 15:12:39"
+            "time": "2016-10-13 06:29:04"
         },
         {
             "name": "symfony/filesystem",
@@ -3125,6 +3180,55 @@
             "time": "2016-09-25 08:27:07"
         },
         {
+            "name": "symfony/stopwatch",
+            "version": "v3.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/stopwatch.git",
+                "reference": "bb42806b12c5f89db4ebf64af6741afe6d8457e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/bb42806b12c5f89db4ebf64af6741afe6d8457e1",
+                "reference": "bb42806b12c5f89db4ebf64af6741afe6d8457e1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Stopwatch\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Stopwatch Component",
+            "homepage": "https://symfony.com",
+            "time": "2016-06-29 05:41:56"
+        },
+        {
             "name": "symfony/translation",
             "version": "v3.0.9",
             "source": {
@@ -3187,6 +3291,87 @@
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
             "time": "2016-07-30 07:22:48"
+        },
+        {
+            "name": "symfony/twig-bridge",
+            "version": "v3.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/twig-bridge.git",
+                "reference": "64bebdd119e3626da1c53e44ee5dfb95ad0d7791"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/twig-bridge/zipball/64bebdd119e3626da1c53e44ee5dfb95ad0d7791",
+                "reference": "64bebdd119e3626da1c53e44ee5dfb95ad0d7791",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "twig/twig": "~1.26|~2.0"
+            },
+            "require-dev": {
+                "symfony/asset": "~2.8|~3.0",
+                "symfony/console": "~2.8|~3.0",
+                "symfony/expression-language": "~2.8|~3.0",
+                "symfony/finder": "~2.8|~3.0",
+                "symfony/form": "~3.0.4",
+                "symfony/http-kernel": "~2.8|~3.0",
+                "symfony/polyfill-intl-icu": "~1.0",
+                "symfony/routing": "~2.8|~3.0",
+                "symfony/security": "~2.8|~3.0",
+                "symfony/security-acl": "~2.8|~3.0",
+                "symfony/stopwatch": "~2.8|~3.0",
+                "symfony/templating": "~2.8|~3.0",
+                "symfony/translation": "~2.8|~3.0",
+                "symfony/var-dumper": "~2.8.9|~3.0.9|~3.1.3|~3.2",
+                "symfony/yaml": "~2.8|~3.0"
+            },
+            "suggest": {
+                "symfony/asset": "For using the AssetExtension",
+                "symfony/expression-language": "For using the ExpressionExtension",
+                "symfony/finder": "",
+                "symfony/form": "For using the FormExtension",
+                "symfony/http-kernel": "For using the HttpKernelExtension",
+                "symfony/routing": "For using the RoutingExtension",
+                "symfony/security": "For using the SecurityExtension",
+                "symfony/stopwatch": "For using the StopwatchExtension",
+                "symfony/templating": "For using the TwigEngine",
+                "symfony/translation": "For using the TranslationExtension",
+                "symfony/var-dumper": "For using the DumpExtension",
+                "symfony/yaml": "For using the YamlExtension"
+            },
+            "type": "symfony-bridge",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Bridge\\Twig\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Twig Bridge",
+            "homepage": "https://symfony.com",
+            "time": "2016-10-03 15:50:10"
         },
         {
             "name": "symfony/validator",
@@ -3262,6 +3447,127 @@
             "time": "2016-10-03 17:30:13"
         },
         {
+            "name": "symfony/var-dumper",
+            "version": "v3.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/var-dumper.git",
+                "reference": "70bfe927b86ba9999aeebd829715b0bb2cd39a10"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/70bfe927b86ba9999aeebd829715b0bb2cd39a10",
+                "reference": "70bfe927b86ba9999aeebd829715b0bb2cd39a10",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "require-dev": {
+                "twig/twig": "~1.20|~2.0"
+            },
+            "suggest": {
+                "ext-symfony_debug": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "Resources/functions/dump.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Component\\VarDumper\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony mechanism for exploring and dumping PHP variables",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "debug",
+                "dump"
+            ],
+            "time": "2016-09-29 14:13:09"
+        },
+        {
+            "name": "symfony/web-profiler-bundle",
+            "version": "v3.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/web-profiler-bundle.git",
+                "reference": "a13cdaa4821d681d029efc505bae86c918ca504f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/a13cdaa4821d681d029efc505bae86c918ca504f",
+                "reference": "a13cdaa4821d681d029efc505bae86c918ca504f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "symfony/http-kernel": "~3.1",
+                "symfony/routing": "~2.8|~3.0",
+                "symfony/twig-bridge": "~2.8|~3.0"
+            },
+            "require-dev": {
+                "symfony/config": "~2.8|~3.0",
+                "symfony/console": "~2.8|~3.0",
+                "symfony/dependency-injection": "~2.8|~3.0",
+                "symfony/stopwatch": "~2.8|~3.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Bundle\\WebProfilerBundle\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony WebProfilerBundle",
+            "homepage": "https://symfony.com",
+            "time": "2016-09-06 11:02:40"
+        },
+        {
             "name": "symfony/yaml",
             "version": "v2.8.12",
             "source": {
@@ -3309,6 +3615,67 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2016-09-02 01:57:56"
+        },
+        {
+            "name": "twig/twig",
+            "version": "v1.26.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twigphp/Twig.git",
+                "reference": "a09d8ee17ac1cfea29ed60c83960ad685c6a898d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/a09d8ee17ac1cfea29ed60c83960ad685c6a898d",
+                "reference": "a09d8ee17ac1cfea29ed60c83960ad685c6a898d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.7"
+            },
+            "require-dev": {
+                "symfony/debug": "~2.7",
+                "symfony/phpunit-bridge": "~2.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.26-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com",
+                    "role": "Project Founder"
+                },
+                {
+                    "name": "Twig Team",
+                    "homepage": "http://twig.sensiolabs.org/contributors",
+                    "role": "Contributors"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "http://twig.sensiolabs.org",
+            "keywords": [
+                "templating"
+            ],
+            "time": "2016-10-05 18:57:41"
         },
         {
             "name": "webmozart/assert",
@@ -3556,16 +3923,16 @@
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "1.3.6",
+            "version": "1.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "a60da179c37f2c4e44ef734d0b92824a58943f7f"
+                "reference": "969ff423d3f201da3ff718a5831bb999bb0669b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/a60da179c37f2c4e44ef734d0b92824a58943f7f",
-                "reference": "a60da179c37f2c4e44ef734d0b92824a58943f7f",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/969ff423d3f201da3ff718a5831bb999bb0669b0",
+                "reference": "969ff423d3f201da3ff718a5831bb999bb0669b0",
                 "shasum": ""
             },
             "require": {
@@ -3602,7 +3969,7 @@
                 "psr",
                 "psr-7"
             ],
-            "time": "2016-09-07 17:57:29"
+            "time": "2016-10-11 13:25:21"
         }
     ],
     "packages-dev": [

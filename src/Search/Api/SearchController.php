@@ -120,6 +120,7 @@ final class SearchController
         try {
             $data = $query->getQuery()->execute();
         } catch (\Throwable $e) {
+            //            throw $e;
             // For CI.
             return $this->searchTestAction($request);
         }
@@ -128,7 +129,7 @@ final class SearchController
             $result = new SearchResponse(
                 $data->toArray(),
                 $data->getTotalResults(),
-                $data->getSubjects(),
+                $this->subjects->titlesFromList($data->getSubjects()),
                 TypesResponse::fromArray($data->getTypeTotals())
             );
 

@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
+use Throwable;
 
 final class Console
 {
@@ -33,6 +34,7 @@ final class Console
         'hello' => ['description' => 'This is a quick hello world command'],
         'echo' => ['description' => 'Example of asking a question'],
         'cache:clear' => ['description' => 'Clears cache'],
+        'search:setup' => ['description' => 'Search initial setup'],
         'debug:params' => ['description' => 'Lists current parameters'],
         'debug:search' => ['description' => 'Test command for debugging elasticsearch'],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
@@ -74,6 +76,34 @@ final class Console
     public function getElasticClient() : ElasticsearchClient
     {
         return $this->app->get('elastic.client');
+    }
+
+    public function searchSetupCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)
+    {
+        $elastic = $this->getElasticClient();
+        try {
+            $elastic->deleteIndex();
+        } catch (Throwable $e) {
+        }
+        try {
+            $insert = $elastic->createIndex();
+        } catch (Throwable $e) {
+        }
+        /*
+         "mappings" : {
+            "blog-article" : {
+                "properties" : {
+                    "field" : { "type": "string", "index" : "not_analyzed" }
+                }
+            }
+        }
+         */
+
+        if ($insert instanceof SuccessResponse) {
+            $logger->info('Index created');
+        } else {
+            $logger->info('Index was no created');
+        }
     }
 
     protected function responseFromArray($className, $data)

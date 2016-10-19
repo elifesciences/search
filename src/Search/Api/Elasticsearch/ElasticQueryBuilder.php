@@ -15,6 +15,12 @@ final class ElasticQueryBuilder implements QueryBuilder
     public function __construct(string $index, ElasticQueryExecutor $exec)
     {
         $this->query['index'] = $index;
+        $this->query['body']['aggregations']['type_agg']['terms'] = [
+            'field' => '_type',
+        ];
+        $this->query['body']['aggregations']['subject_agg']['terms'] = [
+            'field' => 'subjects',
+        ];
         $this->exec = $exec;
     }
 
@@ -83,18 +89,18 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function whereSubjects(array $subjects = []) : QueryBuilder
     {
-        $this->query('terms', [
+        $this->query['body']['filter']['terms'] = [
             'subjects' => $subjects,
-        ]);
+        ];
 
         return $this;
     }
 
     public function whereType(array $types = []) : QueryBuilder
     {
-        $this->query('terms', [
-            'type' => $types,
-        ]);
+        $this->query['body']['filter']['terms'] = [
+            '_type' => $types,
+        ];
 
         return $this;
     }
