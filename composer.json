@@ -14,7 +14,7 @@
         "monolog/monolog": "dev-master",
         "aws/aws-sdk-php": "dev-master",
         "elasticsearch/elasticsearch": "~2.0",
-        "elife/api-sdk": "^1.0@dev",
+        "elife/api-sdk": "dev-master#277086560",
         "webmozart/json": "^1.3@dev",
         "clue/block-react": "^1.1",
         "kevinrob/guzzle-cache-middleware": "^1.4",

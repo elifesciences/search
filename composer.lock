@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0b75d852161299e8b969d73ff08dd81d",
-    "content-hash": "3277ad39c54af18ee82ec6f83d3d3f9a",
+    "hash": "26832aa135b254298d364e4a4346abe5",
+    "content-hash": "8c743296f5a0419ad420faef1a3fc96b",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -628,12 +628,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "723c20713fdd04666868a523f4905c3c4ed4aeaa"
+                "reference": "277086560"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/723c20713fdd04666868a523f4905c3c4ed4aeaa",
-                "reference": "723c20713fdd04666868a523f4905c3c4ed4aeaa",
+                "reference": "277086560",
                 "shasum": ""
             },
             "require": {
@@ -668,7 +668,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2016-10-19 07:58:27"
+            "time": "2016-10-18 12:33:56"
         },
         {
             "name": "elife/api-validator",

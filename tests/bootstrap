@@ -4,8 +4,21 @@
  *
  * This contains SHIMs for certain classes.
  */
+
+// @todo fix autoloading
 namespace {
-    require_once __DIR__.'/../vendor/autoload.php';
+    require_once __DIR__ . '/../vendor/autoload.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/TestCase.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/PuliAwareTestCase.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/ApiTestCase.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/ApiSdkTest.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/BlogArticleNormalizerTest.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/ArticlePoANormalizerTest.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/ArticleVoRNormalizerTest.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/EventNormalizerTest.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/InterviewNormalizerTest.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/LabsExperimentNormalizerTest.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/SubjectNormalizerTest.php';
 
     if (!class_exists('GearmanClient')) {
         class GearmanClient
@@ -31,7 +44,7 @@ namespace Csa\Bundle\GuzzleBundle\Cache {
         public function fetch(RequestInterface $request);
 
         /**
-         * @param RequestInterface  $request
+         * @param RequestInterface $request
          * @param ResponseInterface $response
          */
         public function save(RequestInterface $request, ResponseInterface $response);
