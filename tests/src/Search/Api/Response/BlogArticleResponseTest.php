@@ -36,7 +36,6 @@ class BlogArticleResponseTest extends SerializerTest
 
     public function jsonProvider() : array
     {
-
         return [
             [
                 $this->getFixture('blog-article/v1/minimum.json'), '
@@ -46,7 +45,7 @@ class BlogArticleResponseTest extends SerializerTest
                     "title": "More eLife authors are linking submissions to their ORCID iDs",
                     "published": "2016-06-09T15:15:10+00:00",
                     "impactStatement": "eLife sees positive results of requiring corresponding authors to register and link their profiles to their ORCID iDs"
-                }'
+                }',
             ],
             [
                 $this->getFixture('blog-article/v1/complete.json'), '
@@ -63,8 +62,8 @@ class BlogArticleResponseTest extends SerializerTest
                         }
                     ]
                 }
-                '
-            ]
+                ',
+            ],
         ];
     }
 }

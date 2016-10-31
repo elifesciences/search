@@ -51,7 +51,7 @@ final class ImageBannerResponse implements ImageVariant
             '2:1' => [
                 900 => $images[900],
                 1800 => $images[1800],
-            ]
+            ],
         ];
     }
 }

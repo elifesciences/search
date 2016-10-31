@@ -224,8 +224,8 @@ class SearchResponseTest extends SerializerTest
                             "results": 3
                         }
                     ]
-                }'
-            ]
+                }',
+            ],
         ];
     }
 }

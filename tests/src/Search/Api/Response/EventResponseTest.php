@@ -40,7 +40,7 @@ class EventResponseTest extends SerializerTest
                     "title": "eLife Continuum webinar",
                     "starts": "2016-08-04T15:00:00+00:00",
                     "ends": "2016-08-04T16:00:00+00:00"
-                }'
+                }',
             ],
             [
                 $this->getFixture('event/v1/complete.json'), '

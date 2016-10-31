@@ -106,8 +106,8 @@ class PodcastEpisodeResponseTest extends SerializerTest
                             }
                         }
                     }
-                }'
-            ]
+                }',
+            ],
         ];
     }
 }

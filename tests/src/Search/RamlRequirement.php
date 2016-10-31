@@ -2,17 +2,15 @@
 
 namespace tests\eLife\Search;
 
-
 use LogicException;
 
 trait RamlRequirement
 {
-
-    static $root = __DIR__ . '/../../raml/samples/';
+    public static $root = __DIR__.'/../../raml/samples/';
 
     public function getFixture(string $name) : string
     {
-        $file = self::$root . $name;
+        $file = self::$root.$name;
         if (file_exists($file)) {
             return file_get_contents($file);
         } else {
@@ -21,7 +19,7 @@ trait RamlRequirement
             }
             $this->markTestSkipped('RAML json not installed, skipping test.');
         }
+
         return null;
     }
-
 }

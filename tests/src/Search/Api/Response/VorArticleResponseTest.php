@@ -8,7 +8,6 @@ use tests\eLife\Search\SerializerTest;
 
 class VorArticleResponseTest extends SerializerTest
 {
-
     use RamlRequirement;
 
     public function getResponseClass() : string

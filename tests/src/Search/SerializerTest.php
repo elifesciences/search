@@ -24,7 +24,8 @@ abstract class SerializerTest extends PHPUnit_Framework_TestCase
         try {
             $event = $this->serializer->deserialize($actual_json, $this->getResponseClass(), 'json');
         } catch (Throwable $e) {
-            $this->fail('Serialization failed: ' . $e->getMessage());
+            $this->fail('Serialization failed: '.$e->getMessage());
+
             return null;
         }
         $actual = $this->serialize($event, 1);

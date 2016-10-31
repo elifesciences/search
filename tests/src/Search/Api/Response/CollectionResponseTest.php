@@ -8,7 +8,6 @@ use tests\eLife\Search\SerializerTest;
 
 class CollectionResponseTest extends SerializerTest
 {
-
     use RamlRequirement;
 
     public function testDeserialization()
@@ -26,7 +25,7 @@ class CollectionResponseTest extends SerializerTest
                             900 => 'https://placehold.it/900x450',
                             1800 => 'https://placehold.it/1800x900',
                         ],
-                    ]
+                    ],
                 ],
                 'thumbnail' => [
                     'alt' => '',
@@ -39,7 +38,7 @@ class CollectionResponseTest extends SerializerTest
                             70 => 'https://placehold.it/70x70',
                             140 => 'https://placehold.it/140x140',
                         ],
-                    ]
+                    ],
                 ],
             ],
             'selectedCurator' => [
@@ -57,10 +56,10 @@ class CollectionResponseTest extends SerializerTest
 
         $this->assertSame('1', $collection->id);
         $this->assertSame('Tropical disease', $collection->title);
-        $this->assertSame($data['image']['thumbnail'], (array)$collection->image->thumbnail);
-        $this->assertSame($data['image']['banner'], (array)$collection->image->banner);
+        $this->assertSame($data['image']['thumbnail'], (array) $collection->image->thumbnail);
+        $this->assertSame($data['image']['banner'], (array) $collection->image->banner);
         $this->assertSame('2015-09-16T11:19:26+00:00', $collection->updated->format('c'));
-        $this->assertSame($data['selectedCurator'], (array)$collection->selectedCurator);
+        $this->assertSame($data['selectedCurator'], (array) $collection->selectedCurator);
     }
 
     public function getResponseClass() : string
@@ -70,7 +69,6 @@ class CollectionResponseTest extends SerializerTest
 
     public function jsonProvider() : array
     {
-
         return [
             [
                 $this->getFixture('collection/v1/minimum.json'), '
@@ -112,7 +110,7 @@ class CollectionResponseTest extends SerializerTest
                             }
                         }
                     }
-                }'
+                }',
             ],
             [
                 $this->getFixture('collection/v1/complete.json'), '
@@ -165,8 +163,8 @@ class CollectionResponseTest extends SerializerTest
                             }
                         }
                     }
-                }'
-            ]
+                }',
+            ],
         ];
     }
 }

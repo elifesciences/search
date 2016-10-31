@@ -89,23 +89,23 @@ final class Console
 
     public function ramlProgressCallback($download_size, $downloaded_size, $upload_size, $uploaded_size)
     {
-        if ( $download_size == 0 ) {
+        if ($download_size == 0) {
             $progress = 0;
         } else {
             $progress = round($downloaded_size * 100 / $download_size);
         }
 
-        if ( $progress > $this->previousProgress)
-        {
+        if ($progress > $this->previousProgress) {
             $this->progress->advance();
             $this->previousProgress = $progress;
         }
     }
 
-    public function ramlCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger) {
-        $commit_ref = trim(file_get_contents(__DIR__ . '/../../.apiversion'));
-        $zip = __DIR__ . '/../../cache/raml--' . $commit_ref . '.zip';
-        $target = __DIR__ . '/../../tests/raml/';
+    public function ramlCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)
+    {
+        $commit_ref = trim(file_get_contents(__DIR__.'/../../.apiversion'));
+        $zip = __DIR__.'/../../cache/raml--'.$commit_ref.'.zip';
+        $target = __DIR__.'/../../tests/raml/';
 
         $this->progress = new ProgressBar($output, 100);
 
@@ -113,13 +113,13 @@ final class Console
             $logger->debug('Downloading...');
             $client = new Client([
                 'progress' => [$this, 'ramlProgressCallback'],
-                'save_to' => $zip
+                'save_to' => $zip,
             ]);
-            $response = $client->get('https://github.com/elifesciences/api-raml/archive/' . $commit_ref . '.zip');
+            $response = $client->get('https://github.com/elifesciences/api-raml/archive/'.$commit_ref.'.zip');
             $response->getBody()->getSize();
             $this->progress->finish();
             // Fix progress bug.
-            $logger->info(' - ' . $response->getBody()->getSize() . ' bytes downloaded.');
+            $logger->info(' - '.$response->getBody()->getSize().' bytes downloaded.');
         }
 
         $logger->debug('Extracting JSON files...');
@@ -128,23 +128,23 @@ final class Console
             // Grab folder name from first item in index.
             $folderName = $archive->getNameIndex(0);
             // Remove old target.
-            exec('rm -rf ' . $target);
+            exec('rm -rf '.$target);
             $progress = new ProgressBar($output, $archive->numFiles);
             $json = 0;
             // Loop through files in ZIP File.
-            for($i = 0; $i < $archive->numFiles; $i++) {
+            for ($i = 0; $i < $archive->numFiles; ++$i) {
                 $progress->advance();
                 $filename = $archive->getNameIndex($i);
                 // Only unzip json files from dist and put them in place.
                 if (strpos($filename, '.json') !== false && strpos($filename, '/dist/') !== false) {
-                    $json++;
+                    ++$json;
                     $archive->extractTo($target, array($archive->getNameIndex($i)));
                 }
             }
             // Fix progress bar bug.
-            $logger->info(' - copied ' . $json . ' files');
+            $logger->info(' - copied '.$json.' files');
             // Clean up folder structure.
-            exec('mv ' . $target . $folderName . 'dist/* ' . $target . ' && rm -rf ' . $target . $folderName);
+            exec('mv '.$target.$folderName.'dist/* '.$target.' && rm -rf '.$target.$folderName);
             $archive->close();
         } else {
             $logger->error('Something went wrong while unzipping file.');
