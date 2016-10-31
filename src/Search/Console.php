@@ -10,9 +10,11 @@ use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Workflow\CliLogger;
 use Exception;
+use GuzzleHttp\Client;
 use LogicException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -20,7 +22,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
 use Throwable;
+use ZipArchive;
 
+/**
+ * @property LoggerInterface temp_logger
+ * @property float|int previousProgress
+ * @property ProgressBar progress
+ */
 final class Console
 {
     /**
@@ -35,6 +43,7 @@ final class Console
         'echo' => ['description' => 'Example of asking a question'],
         'cache:clear' => ['description' => 'Clears cache'],
         'search:setup' => ['description' => 'Search initial setup'],
+        'raml' => ['description' => 'Updates RAML to version specified in `.apiversion` file'],
         'debug:params' => ['description' => 'Lists current parameters'],
         'debug:search' => ['description' => 'Test command for debugging elasticsearch'],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
@@ -78,8 +87,73 @@ final class Console
         return $this->app->get('elastic.client');
     }
 
+    public function ramlProgressCallback($download_size, $downloaded_size, $upload_size, $uploaded_size)
+    {
+        if ( $download_size == 0 ) {
+            $progress = 0;
+        } else {
+            $progress = round($downloaded_size * 100 / $download_size);
+        }
+
+        if ( $progress > $this->previousProgress)
+        {
+            $this->progress->advance();
+            $this->previousProgress = $progress;
+        }
+    }
+
+    public function ramlCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger) {
+        $commit_ref = trim(file_get_contents(__DIR__ . '/../../.apiversion'));
+        $zip = __DIR__ . '/../../cache/raml--' . $commit_ref . '.zip';
+        $target = __DIR__ . '/../../tests/raml/';
+
+        $this->progress = new ProgressBar($output, 100);
+
+        if (!file_exists($zip) && filesize($zip) > 0) {
+            $logger->debug('Downloading...');
+            $client = new Client([
+                'progress' => [$this, 'ramlProgressCallback'],
+                'save_to' => $zip
+            ]);
+            $response = $client->get('https://github.com/elifesciences/api-raml/archive/' . $commit_ref . '.zip');
+            $response->getBody()->getSize();
+            $this->progress->finish();
+            // Fix progress bug.
+            $logger->info(' - ' . $response->getBody()->getSize() . ' bytes downloaded.');
+        }
+
+        $logger->debug('Extracting JSON files...');
+        $archive = new ZipArchive();
+        if ($archive->open($zip) === true) {
+            // Grab folder name from first item in index.
+            $folderName = $archive->getNameIndex(0);
+            // Remove old target.
+            exec('rm -rf ' . $target);
+            $progress = new ProgressBar($output, $archive->numFiles);
+            $json = 0;
+            // Loop through files in ZIP File.
+            for($i = 0; $i < $archive->numFiles; $i++) {
+                $progress->advance();
+                $filename = $archive->getNameIndex($i);
+                // Only unzip json files from dist and put them in place.
+                if (strpos($filename, '.json') !== false && strpos($filename, '/dist/') !== false) {
+                    $json++;
+                    $archive->extractTo($target, array($archive->getNameIndex($i)));
+                }
+            }
+            // Fix progress bar bug.
+            $logger->info(' - copied ' . $json . ' files');
+            // Clean up folder structure.
+            exec('mv ' . $target . $folderName . 'dist/* ' . $target . ' && rm -rf ' . $target . $folderName);
+            $archive->close();
+        } else {
+            $logger->error('Something went wrong while unzipping file.');
+        }
+    }
+
     public function searchSetupCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)
     {
+        $insert = null;
         $elastic = $this->getElasticClient();
         try {
             $elastic->deleteIndex();

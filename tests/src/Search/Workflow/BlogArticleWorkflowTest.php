@@ -54,6 +54,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
      */
     public function testSerializationSmokeTest(BlogArticle $blogArticle, array $context = [], array $expected = [])
     {
+        $this->markTestIncomplete('Work in progress');
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();
 
@@ -119,6 +120,6 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
 
     public function blogArticleProvider() : array
     {
-        return (new BlogArticleNormalizerTest())->denormalizeProvider();
+        return (new BlogArticleNormalizerTest())->normalizeProvider();
     }
 }

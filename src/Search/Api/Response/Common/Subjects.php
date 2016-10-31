@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation\Type;
 trait Subjects
 {
     /**
-     * @Type("array<string>")
+     * @Type("array<eLife\Search\Api\Response\Common\SubjectResponse>")
      * @Since(version="1")
      */
     public $subjects;

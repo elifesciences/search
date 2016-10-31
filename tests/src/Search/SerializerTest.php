@@ -8,6 +8,7 @@ use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use PHPUnit_Framework_TestCase;
+use Throwable;
 
 abstract class SerializerTest extends PHPUnit_Framework_TestCase
 {
@@ -20,7 +21,12 @@ abstract class SerializerTest extends PHPUnit_Framework_TestCase
      */
     public function testSerialization($actual_json, $expected)
     {
-        $event = $this->serializer->deserialize($actual_json, $this->getResponseClass(), 'json');
+        try {
+            $event = $this->serializer->deserialize($actual_json, $this->getResponseClass(), 'json');
+        } catch (Throwable $e) {
+            $this->fail('Serialization failed: ' . $e->getMessage());
+            return null;
+        }
         $actual = $this->serialize($event, 1);
         $this->assertJsonStringEqualsJsonString($expected, $actual);
     }

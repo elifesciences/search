@@ -2,6 +2,12 @@
 
 namespace tests\eLife\Search\Workflow;
 
+use eLife\ApiClient\ApiClient\ArticlesClient;
+use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\EventsClient;
+use eLife\ApiClient\ApiClient\InterviewsClient;
+use eLife\ApiClient\ApiClient\LabsClient;
+use eLife\ApiClient\ApiClient\PeopleClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
@@ -40,20 +46,20 @@ trait GetSerializer
         $this->serializer = new Serializer([
             new AddressNormalizer(),
             new AnnualReportNormalizer(),
-            $articlePoANormalizer = new ArticlePoANormalizer(),
-            $articleVoRNormalizer = new ArticleVoRNormalizer(),
-            $blogArticleNormalizer = new BlogArticleNormalizer(),
-            new EventNormalizer(),
+            new ArticlePoANormalizer(new ArticlesClient($this->getHttpClient())),
+            new ArticleVoRNormalizer(new ArticlesClient($this->getHttpClient())),
+            new BlogArticleNormalizer(new BlogClient($this->getHttpClient())),
+            new EventNormalizer(new EventsClient($this->getHttpClient())),
             new GroupAuthorNormalizer(),
             new ImageNormalizer(),
-            new InterviewNormalizer(),
-            new LabsExperimentNormalizer(),
+            new InterviewNormalizer(new InterviewsClient($this->getHttpClient())),
+            new LabsExperimentNormalizer(new LabsClient($this->getHttpClient())),
             new MediumArticleNormalizer(),
             new OnBehalfOfAuthorNormalizer(),
             new PersonAuthorNormalizer(),
-            new PersonNormalizer(),
+            new PersonNormalizer(new PeopleClient($this->getHttpClient())),
             new PlaceNormalizer(),
-            new SubjectNormalizer(),
+            new SubjectNormalizer(new SubjectsClient($this->getHttpClient())),
             new Block\BoxNormalizer(),
             new Block\FileNormalizer(),
             new Block\ImageNormalizer(),
@@ -83,9 +89,9 @@ trait GetSerializer
         ], [new JsonEncoder()]);
         // Add subjects client mock.
         $subjectsClient = new Subjects(new SubjectsClient($this->getHttpClient()), $this->serializer);
-        $articlePoANormalizer->setSubjects($subjectsClient);
-        $articleVoRNormalizer->setSubjects($subjectsClient);
-        $blogArticleNormalizer->setSubjects($subjectsClient);
+//        $articlePoANormalizer->setSubjects($subjectsClient);
+//        $articleVoRNormalizer->setSubjects($subjectsClient);
+//        $blogArticleNormalizer->setSubjects($subjectsClient);
 
         return $this->serializer;
     }
