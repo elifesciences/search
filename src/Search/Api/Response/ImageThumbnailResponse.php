@@ -15,7 +15,7 @@ final class ImageThumbnailResponse implements ImageVariant
     public $alt;
 
     /**
-     * @Type("array<string, array<integer,string>>")
+     * @Type("array<string, array<string,string>>")
      * @Since(version="1")
      */
     public $sizes;

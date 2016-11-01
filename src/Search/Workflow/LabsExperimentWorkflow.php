@@ -2,12 +2,17 @@
 
 namespace eLife\Search\Workflow;
 
+use Assert\Assertion;
 use eLife\ApiSdk\Model\LabsExperiment;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Response\LabsExperimentResponse;
+use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
+use Throwable;
 
 final class LabsExperimentWorkflow implements Workflow
 {
@@ -42,8 +47,17 @@ final class LabsExperimentWorkflow implements Workflow
      */
     public function validate(LabsExperiment $labsExperiment) : LabsExperiment
     {
-        $this->logger->debug('validating '.$labsExperiment->getTitle());
-
+        // Create response to validate.
+        $searchLabsExperiment = $this->validator->deserialize($this->serialize($labsExperiment), LabsExperimentResponse::class);
+        // Validate that response.
+        $isValid = $this->validator->validateSearchResult($searchLabsExperiment);
+        if ($isValid === false) {
+            $this->logger->alert($this->validator->getLastError()->getMessage());
+            throw new InvalidWorkflow('LabsExperiment<'.$labsExperiment->getNumber().'> Invalid item tried to be imported.');
+        }
+        // Log results.
+        $this->logger->info('LabsExperiment<'.$labsExperiment->getNumber().'> validated against current schema.');
+        // Pass it on.
         return $labsExperiment;
     }
 
@@ -56,7 +70,8 @@ final class LabsExperimentWorkflow implements Workflow
      */
     public function index(LabsExperiment $labsExperiment) : array
     {
-        $this->logger->debug('indexing '.$labsExperiment->getTitle());
+        // This step is still not used very much.
+        $this->logger->debug('LabsExperiment<'.$labsExperiment->getNumber().'> Indexing '.$labsExperiment->getTitle());
 
         return [
             'json' => $this->serialize($labsExperiment),
@@ -66,11 +81,43 @@ final class LabsExperimentWorkflow implements Workflow
     }
 
     /**
-     * @GearmanTask(name="labs_experiment_insert", parameters={"json", "type", "id"})
+     * @GearmanTask(name="labs_experiment_insert", next="labs_experiment_post_validate", parameters={"json", "type", "id"})
      */
     public function insert(string $json, string $type, string  $id)
     {
+        // Insert the document.
+        $this->logger->debug('LabsExperiment<'.$id.'> importing into Elasticsearch.');
         $this->client->indexJsonDocument($type, $id, $json);
+
+        return [
+            'type' => $type,
+            'id' => $id,
+        ];
+    }
+
+    /**
+     * @GearmanTask(name="labs_experiment_post_validate", parameters={"type", "id"})
+     */
+    public function postValidate(string $type, string $id)
+    {
+        try {
+            // Post-validation, we got a document.
+            $document = $this->client->getDocumentById($type, $id);
+            Assertion::isInstanceOf($document, DocumentResponse::class);
+            $result = $document->unwrap();
+            // That document contains a blog article.
+            Assertion::isInstanceOf($result, LabsExperimentResponse::class);
+            // That blog article is valid JSON.
+            $this->validator->validateSearchResult($result, true);
+        } catch (Throwable $e) {
+            $this->logger->alert($e->getMessage());
+            $this->logger->alert('LabsExperiment<'.$id.'> rolling back');
+            $this->client->deleteDocument($type, $id);
+            // We failed.
+            return self::WORKFLOW_FAILURE;
+        }
+
+        $this->logger->info('LabsExperiment<'.$id.'> successfully imported.');
 
         return self::WORKFLOW_SUCCESS;
     }

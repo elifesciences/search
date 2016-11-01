@@ -23,5 +23,7 @@ final class ImageResponse
     {
         $this->banner = $this->banner ? $this->banner->https() : null;
         $this->thumbnail = $this->thumbnail ? $this->thumbnail->https() : null;
+
+        return $this;
     }
 }

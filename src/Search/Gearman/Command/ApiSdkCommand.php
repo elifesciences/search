@@ -86,8 +86,11 @@ final class ApiSdkCommand extends Command
 
     public function importResearchArticles(LoggerInterface $logger)
     {
-        $events = $this->sdk->articles();
-        $this->iterateSerializeTask($events, $logger, 'research_article_validate');
+        $logger->error('You cannot currently import Articles — Validation not implemented');
+        if (null) {
+            $events = $this->sdk->articles();
+            $this->iterateSerializeTask($events, $logger, 'research_article_validate');
+        }
     }
 
     public function importInterviews(LoggerInterface $logger)
