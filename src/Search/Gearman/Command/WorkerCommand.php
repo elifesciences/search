@@ -58,7 +58,7 @@ final class WorkerCommand extends Command
         // Working..
         $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new EventWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $logger, $this->client));
+        $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new LabsExperimentWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
         // Not working..
