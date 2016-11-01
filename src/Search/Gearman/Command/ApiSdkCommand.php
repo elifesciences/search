@@ -12,6 +12,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 use Traversable;
 
 final class ApiSdkCommand extends Command
@@ -86,8 +87,8 @@ final class ApiSdkCommand extends Command
 
     public function importResearchArticles(LoggerInterface $logger)
     {
-        $logger->error('You cannot currently import Articles — Validation not implemented');
-        if (null) {
+        $logger->warning('You cannot currently import Articles — Validation not implemented');
+        if (true) {
             $events = $this->sdk->articles();
             $this->iterateSerializeTask($events, $logger, 'research_article_validate');
         }
@@ -131,14 +132,18 @@ final class ApiSdkCommand extends Command
                 $title = method_exists($item, 'getTitle') ? $item->getTitle() : ' a new '.get_class($item);
                 $logger->info('Starting... '.$title);
                 $this->task($task, $normalized);
+            } catch (Throwable $e) {
+                $logger->alert($e->getMessage());
+                continue;
             } catch (Error $e) {
-                $logger->critical($e->getMessage());
+                $logger->error($e->getMessage());
+                continue;
             }
         }
     }
 
     private function task($item, ...$data)
     {
-        $this->client->doLow($item, ...$data);
+        $this->client->doLowBackground($item, ...$data);
     }
 }

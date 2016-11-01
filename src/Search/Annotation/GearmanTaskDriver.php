@@ -80,7 +80,19 @@ final class GearmanTaskDriver
                 $value = $object->{$method}($data);
             }
             if ($task->next) {
-                $this->client->doHighBackground($task->next, $task->serialize($value));
+                switch ($task->priority) {
+                    case 'low':
+                        $this->client->doLowBackground($task->next, $task->serialize($value));
+                        break;
+                    case 'medium':
+                        $this->client->doBackground($task->next, $task->serialize($value));
+                        break;
+                    default:
+                    case 'high':
+                        $this->client->doHighBackground($task->next, $task->serialize($value));
+                        break;
+                }
+                usleep(500);
             }
 
             return GEARMAN_SUCCESS;

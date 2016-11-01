@@ -12,4 +12,5 @@ final class GearmanTask
     public $next;
     public $serialize;
     public $deserialize;
+    public $priority;
 }

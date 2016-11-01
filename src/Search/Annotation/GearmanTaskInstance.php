@@ -13,6 +13,7 @@ final class GearmanTaskInstance
     public $serialize;
     public $deserialize;
     public $next;
+    public $priority;
 
     public function __construct(
         Workflow $instance,
@@ -21,7 +22,8 @@ final class GearmanTaskInstance
         array $parameters = [],
         callable $serialize = null,
         callable $deserialize = null,
-        string $next = null
+        string $next = null,
+        string $priority = null
     ) {
         $this->instance = $instance;
         $this->method = $method;
@@ -30,6 +32,7 @@ final class GearmanTaskInstance
         $this->serialize = $serialize;
         $this->deserialize = $deserialize;
         $this->next = $next;
+        $this->priority = $priority;
     }
 
     public function serialize($data)
