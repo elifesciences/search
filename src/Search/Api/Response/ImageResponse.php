@@ -18,4 +18,10 @@ final class ImageResponse
      * @Since(version="1")
      */
     public $thumbnail;
+
+    public function https()
+    {
+        $this->banner = $this->banner ? $this->banner->https() : null;
+        $this->thumbnail = $this->thumbnail ? $this->thumbnail->https() : null;
+    }
 }
