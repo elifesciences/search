@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "026760945b87fe644bdc033fc1b28819",
-    "content-hash": "5829c434d5a87be78c42584b55ba7059",
+    "hash": "258510d684b5a807f4bf471e7a097be0",
+    "content-hash": "558dd08724d3c5c17eaa96082a2ad429",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1301,12 +1301,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "58544af7ff9d0c54ef36bc0e4e79330cda751b0e"
+                "reference": "918922daee78884a1e10bdb597ee793fca9d5522"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/58544af7ff9d0c54ef36bc0e4e79330cda751b0e",
-                "reference": "58544af7ff9d0c54ef36bc0e4e79330cda751b0e",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/918922daee78884a1e10bdb597ee793fca9d5522",
+                "reference": "918922daee78884a1e10bdb597ee793fca9d5522",
                 "shasum": ""
             },
             "require": {
@@ -1372,7 +1372,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-10-04 08:02:32"
+            "time": "2016-10-31 14:20:07"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -4087,16 +4087,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.5.4",
+            "version": "1.5.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "ea74994a3dc7f8d2f65a06009348f2d63c81e61f"
+                "reference": "399c1f9781e222f6eb6cc238796f5200d1b7f108"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/ea74994a3dc7f8d2f65a06009348f2d63c81e61f",
-                "reference": "ea74994a3dc7f8d2f65a06009348f2d63c81e61f",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/399c1f9781e222f6eb6cc238796f5200d1b7f108",
+                "reference": "399c1f9781e222f6eb6cc238796f5200d1b7f108",
                 "shasum": ""
             },
             "require": {
@@ -4125,7 +4125,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2016-09-16 13:37:59"
+            "time": "2016-10-31 17:19:45"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -4337,16 +4337,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "4.0.1",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "5f3f7e736d6319d5f1fc402aff8b026da26709a3"
+                "reference": "6cba06ff75a1a63a71033e1a01b89056f3af1e8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/5f3f7e736d6319d5f1fc402aff8b026da26709a3",
-                "reference": "5f3f7e736d6319d5f1fc402aff8b026da26709a3",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/6cba06ff75a1a63a71033e1a01b89056f3af1e8d",
+                "reference": "6cba06ff75a1a63a71033e1a01b89056f3af1e8d",
                 "shasum": ""
             },
             "require": {
@@ -4396,7 +4396,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-07-26 14:39:29"
+            "time": "2016-11-01 05:06:24"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -5351,12 +5351,13 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "elife/api-validator": 20,
+        "elife/api-sdk": 20,
+        "elife/api": 20,
         "propel/propel": 15,
         "doctrine/cache": 20,
         "symfony/event-dispatcher": 20,
         "monolog/monolog": 20,
         "aws/aws-sdk-php": 20,
-        "elife/api-sdk": 20,
         "webmozart/json": 20
     },
     "prefer-stable": true,

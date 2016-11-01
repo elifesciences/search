@@ -43,7 +43,6 @@ final class Console
         'echo' => ['description' => 'Example of asking a question'],
         'cache:clear' => ['description' => 'Clears cache'],
         'search:setup' => ['description' => 'Search initial setup'],
-        'raml' => ['description' => 'Updates RAML to version specified in `.apiversion` file'],
         'debug:params' => ['description' => 'Lists current parameters'],
         'debug:search' => ['description' => 'Test command for debugging elasticsearch'],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
@@ -87,6 +86,9 @@ final class Console
         return $this->app->get('elastic.client');
     }
 
+    /**
+     * @deprecated
+     */
     public function ramlProgressCallback($download_size, $downloaded_size, $upload_size, $uploaded_size)
     {
         if ($download_size == 0) {
@@ -101,6 +103,9 @@ final class Console
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function ramlCommand(InputInterface $input, OutputInterface $output, LoggerInterface $logger)
     {
         $commit_ref = trim(file_get_contents(__DIR__.'/../../.apiversion'));

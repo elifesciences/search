@@ -6,7 +6,7 @@ use LogicException;
 
 trait RamlRequirement
 {
-    public static $root = __DIR__.'/../../raml/samples/';
+    public static $root = __DIR__.'/../../../vendor/elife/api/dist/samples/';
 
     public function getFixture(string $name) : string
     {
