@@ -5,13 +5,12 @@ namespace tests\eLife\Search\Workflow;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Workflow\BlogArticleWorkflow;
-use Exception;
 use Mockery;
 use Mockery\Mock;
 use PHPUnit_Framework_TestCase;
-use Psr\Log\NullLogger;
 use test\eLife\ApiSdk\Serializer\BlogArticleNormalizerTest;
 use tests\eLife\Search\AsyncAssert;
+use tests\eLife\Search\ExceptionNullLogger;
 use tests\eLife\Search\HttpMocks;
 
 class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
@@ -32,12 +31,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $this->elastic = Mockery::mock(ElasticsearchClient::class);
 
-        $logger = new class() extends NullLogger {
-            public function alert($message, array $context = [])
-            {
-                throw new Exception($message);
-            }
-        };
+        $logger = new ExceptionNullLogger();
         $this->validator = $this->getValidator();
         $this->workflow = new BlogArticleWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
     }
