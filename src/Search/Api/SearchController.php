@@ -120,7 +120,6 @@ final class SearchController
         try {
             $data = $query->getQuery()->execute();
         } catch (\Throwable $e) {
-            throw $e;
             // For CI.
             return $this->searchTestAction($request);
         }
