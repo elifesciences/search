@@ -119,6 +119,7 @@ final class SearchController
 
         try {
             $data = $query->getQuery()->execute();
+            throw new \Exception();
         } catch (\Throwable $e) {
             // For CI.
             return $this->searchTestAction($request);
