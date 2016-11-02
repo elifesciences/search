@@ -93,7 +93,6 @@ final class GearmanTaskDriver
                         $this->client->doHighBackground($task->next, $task->serialize($value));
                         break;
                 }
-                usleep(100000);
             }
 
             return GEARMAN_SUCCESS;
