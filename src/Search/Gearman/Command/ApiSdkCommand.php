@@ -3,15 +3,16 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Workflow\CliLogger;
 use Error;
 use GearmanClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 use Traversable;
 
 final class ApiSdkCommand extends Command
@@ -21,6 +22,7 @@ final class ApiSdkCommand extends Command
     private $client;
     private $sdk;
     private $serializer;
+    private $output;
 
     public function __construct(
         ApiSdk $sdk,
@@ -44,6 +46,7 @@ final class ApiSdkCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $logger = new CliLogger($input, $output);
+        $this->output = $output;
         $entity = $input->getArgument('entity');
         // Only the configured.
         if (!in_array($entity, self::$supports)) {
@@ -63,75 +66,81 @@ final class ApiSdkCommand extends Command
             $this->{'import'.$entity}($logger);
         }
         // Reporting.
-        $logger->notice('All entities queued.');
+        $logger->info("\nAll entities queued.");
     }
 
     public function importPodcastEpisodes(LoggerInterface $logger)
     {
         // Waiting for API SDK models.
-        $logger->error('You cannot currently import PodcastEpisodes');
+        // $logger->error('You cannot currently import PodcastEpisodes');
     }
 
     public function importCollections(LoggerInterface $logger)
     {
         // Waiting for API SDK models.
-        $logger->error('You cannot currently import Collections');
+        // $logger->error('You cannot currently import Collections');
     }
 
     public function importLabsExperiments(LoggerInterface $logger)
     {
+        $logger->info('Importing Labs Experiments');
         $events = $this->sdk->labsExperiments();
-        $this->iterateSerializeTask($events, $logger, 'labs_experiment_validate');
+        $this->iterateSerializeTask($events, $logger, 'labs_experiment_validate', $events->count());
     }
 
     public function importResearchArticles(LoggerInterface $logger)
     {
+        $logger->info('Importing Research Articles');
         $events = $this->sdk->articles();
-        $this->iterateSerializeTask($events, $logger, 'research_article_validate');
+        $this->iterateSerializeTask($events, $logger, 'research_article_validate', $events->count());
     }
 
     public function importInterviews(LoggerInterface $logger)
     {
+        $logger->info('Importing Interviews');
         $events = $this->sdk->interviews();
-        $this->iterateSerializeTask($events, $logger, 'interview_validate');
+        $this->iterateSerializeTask($events, $logger, 'interview_validate', $events->count());
     }
 
     public function importEvents(LoggerInterface $logger)
     {
+        $logger->info('Importing Events');
         $events = $this->sdk->events();
-        $this->iterateSerializeTask($events, $logger, 'event_validate');
+        $this->iterateSerializeTask($events, $logger, 'event_validate', $events->count());
     }
 
     public function importBlogArticles(LoggerInterface $logger)
     {
+        $logger->info('Importing Blog Articles');
         $articles = $this->sdk->blogArticles();
-        // Loop all articles.
-        // @todo ask Chris about garbage collection for large collections. ($articles->flush() that removed entities from memory.)
-        foreach ($articles as $article) {
-            if ($article instanceof BlogArticle) {
-                try {
-                    $normalized = $this->serializer->serialize($article, 'json');
-                    $logger->info('Starting... '.$article->getTitle());
-                    $this->task('blog_article_validate', $normalized);
-                } catch (Error $e) {
-                    $logger->critical($e->getMessage());
-                }
-            }
-        }
+        $this->iterateSerializeTask($articles, $logger, 'blog_article_validate', $articles->count());
     }
 
-    private function iterateSerializeTask(Traversable $items, LoggerInterface $logger, string $task)
+    private function iterateSerializeTask(Traversable $items, LoggerInterface $logger, string $task, int $count = 0)
     {
+        $progress = new ProgressBar($this->output, $count);
         foreach ($items as $item) {
+            $progress->advance();
             try {
-                $normalized = $this->serializer->serialize($item, 'json');
                 $title = method_exists($item, 'getTitle') ? $item->getTitle() : ' a new '.get_class($item);
-                $logger->info('Starting... '.$title);
-                $this->task($task, $normalized);
+                // @todo remove temporary import fix.
+                if (
+                    trim($title) !== 'Mapping the zoonotic niche of Ebola virus disease in Africa' &&
+                    trim($title) !== 'The genome sequence of the colonial chordate, <i>Botryllus schlosseri</i>'
+                ) {
+                    $normalized = $this->serializer->serialize($item, 'json');
+                    $this->task($task, $normalized);
+                }
+            } catch (Throwable $e) {
+                $logger->alert($e->getMessage());
+                continue;
             } catch (Error $e) {
-                $logger->critical($e->getMessage());
+                $logger->error($e->getMessage());
+                continue;
             }
         }
+        $progress->finish();
+        $progress->clear();
     }
 
     private function task($item, ...$data)

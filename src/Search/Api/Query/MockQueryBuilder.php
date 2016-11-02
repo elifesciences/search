@@ -2,17 +2,25 @@
 
 namespace eLife\Search\Api\Query;
 
+use tests\eLife\Search\RamlRequirement;
+
 final class MockQueryBuilder implements QueryBuilder
 {
+    use RamlRequirement;
+
     const NAME = 'can\'t believe its not google';
-    const VERSION = '1.0.1';
+    const VERSION = '1.0.2';
     private $clever = false;
 
     private $data;
 
     public function __construct(array $data = null, $clever = false)
     {
-        $this->data = $data === null ? json_decode(file_get_contents(__DIR__.'/data/search.json'), true) : $data;
+        $this->data = [
+            json_decode($this->getFixture('article-poa/v1/minimum.json')),
+            json_decode($this->getFixture('article-vor/v1/minimum.json')),
+        ];
+        // $this->data = $data === null ? json_decode(file_get_contents(__DIR__.'/data/search.json'), true) : $data;
         $this->clever = $clever;
     }
 
@@ -114,25 +122,6 @@ final class MockQueryBuilder implements QueryBuilder
 
     public function getQuery() : QueryExecutor
     {
-        return new class($this->data) implements QueryExecutor {
-            public $data;
-
-            public function __construct($data)
-            {
-                $this->data = $data;
-            }
-
-            public function getHash() : string
-            {
-                return md5(json_encode($this->data));
-            }
-
-            public function execute() : QueryResponse
-            {
-                return new MockQueryResponse(array_map(function ($item) {
-                    return json_encode($item, true);
-                }, $this->data));
-            }
-        };
+        return new MockQueryExecutor($this->data);
     }
 }

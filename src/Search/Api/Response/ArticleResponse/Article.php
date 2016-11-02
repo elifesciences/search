@@ -81,5 +81,5 @@ trait Article
      * @Since(version="1")
      * @Accessor(getter="getType")
      */
-    public $type = 'research-article';
+    public $type;
 }

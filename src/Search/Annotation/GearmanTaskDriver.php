@@ -41,7 +41,8 @@ final class GearmanTaskDriver
                         $annotation->parameters,
                         $annotation->serialize ? [$workflow, $annotation->serialize] : null,
                         $annotation->deserialize ? [$workflow, $annotation->deserialize] : null,
-                        $annotation->next
+                        $annotation->next,
+                        $annotation->priority
                     );
                 }
             }
@@ -80,7 +81,18 @@ final class GearmanTaskDriver
                 $value = $object->{$method}($data);
             }
             if ($task->next) {
-                $this->client->doHighBackground($task->next, $task->serialize($value));
+                switch ($task->priority) {
+                    case 'low':
+                        $this->client->doLowBackground($task->next, $task->serialize($value));
+                        break;
+                    case 'medium':
+                        $this->client->doBackground($task->next, $task->serialize($value));
+                        break;
+                    default:
+                    case 'high':
+                        $this->client->doHighBackground($task->next, $task->serialize($value));
+                        break;
+                }
             }
 
             return GEARMAN_SUCCESS;
@@ -103,9 +115,9 @@ final class GearmanTaskDriver
         } catch (Throwable $e) {
             $logger->critical($e->getMessage());
             if ($this->autoRestart) {
-                $logger->warning('====================================');
-                $logger->warning('Restarting worker to avoid downtime.');
-                $logger->warning('====================================');
+                $logger->warning('========================================');
+                $logger->warning('| Restarting worker to avoid downtime. |');
+                $logger->warning('========================================');
                 $this->work($logger, true);
             }
         }

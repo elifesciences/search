@@ -2,6 +2,7 @@
 
 namespace eLife\Search\Api\Response;
 
+use eLife\Search\Api\Response\Common\Image;
 use eLife\Search\Api\Response\Common\SnippetFields;
 use eLife\Search\Api\Response\Common\Subjects;
 use JMS\Serializer\Annotation\Accessor;
@@ -13,6 +14,7 @@ final class BlogArticleResponse implements SearchResult
 {
     use SnippetFields;
     use Subjects;
+    use Image;
 
     /**
      * @Type("DateTime<'Y-m-d\TH:i:sP'>")

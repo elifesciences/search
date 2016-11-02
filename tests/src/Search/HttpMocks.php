@@ -13,7 +13,7 @@ trait HttpMocks
     final private function createSubjectJson()
     {
         return [
-            'id' => 'id',
+            'id' => 'subject1',
             'name' => 'Subject id name',
             'impactStatement' => 'Subject id impact statement',
             'image' => [
@@ -44,7 +44,7 @@ trait HttpMocks
         $this->storage->save(
             new Request(
                 'GET',
-                'http://api.elifesciences.org/subjects/id',
+                'http://api.elifesciences.org/subjects/subject1',
                 ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)]
             ),
             new Response(

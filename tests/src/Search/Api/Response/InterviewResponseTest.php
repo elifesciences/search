@@ -3,10 +3,13 @@
 namespace tests\eLife\Search\Api\Response;
 
 use eLife\Search\Api\Response\InterviewResponse;
+use tests\eLife\Search\RamlRequirement;
 use tests\eLife\Search\SerializerTest;
 
 class InterviewResponseTest extends SerializerTest
 {
+    use RamlRequirement;
+
     public function getResponseClass() : string
     {
         return InterviewResponse::class;
@@ -14,122 +17,37 @@ class InterviewResponseTest extends SerializerTest
 
     public function jsonProvider() : array
     {
-        $minimum = '
-        {
-            "id": "2",
-            "interviewee": {
-                "name": {
-                    "preferred": "Alicia Rosello",
-                    "index": "Rosello, Alicia"
-                }
-            },
-            "title": "Infection, statistics and public health",
-            "published": "2015-11-03T11:00:53+00:00",
-            "content": [
-                {
-                    "type": "question",
-                    "question": "What attracted you to studying epidemiology?",
-                    "answer": [
-                        {
-                            "type": "paragraph",
-                            "text": "During a placement year in my undergraduate degree I worked in multiple sclerosis research, obtaining patient blood samples at outpatient clinics and analysing their immune cells in the laboratory. The time I spent at the hospital and with medical researchers made me realise that I wanted to work in human biology, so I decided to study the virulence of <i>Staphylococcus aureus</i> during my final year undergraduate project. I found learning about infection fascinating but working in a laboratory was a bit lonely. I then studied a Masters in Public Health, which introduced me to many aspects of public health, including epidemiology. I was particularly interested in using statistical and mathematical techniques to help answer public health questions relating to infectious diseases and I chose to pursue this interest in my PhD."
-                        }
-                    ]
-                }
-            ]
-        }
-        ';
-        $minimum_expected = '
-        {
-            "id": "2",
-            "type": "interview",
-            "interviewee": {
-                "name": {
-                    "preferred": "Alicia Rosello",
-                    "index": "Rosello, Alicia"
-                }
-            },
-            "title": "Infection, statistics and public health",
-            "published": "2015-11-03T11:00:53+00:00"
-        }
-        ';
-
-        $complete = '
-        {
-            "id": "1",
-            "interviewee": {
-                "name": {
-                    "preferred": "Ramanath Hegde",
-                    "index": "Hegde, Ramanath"
-                },
-                "cv": [
-                    {
-                        "date": "2013 – Present",
-                        "text": "Postdoctoral fellow, Institute of Protein Biochemistry CNR, Naples, Italy"
-                    },
-                    {
-                        "date": "2009 – 2013",
-                        "text": "PhD in Life and Biomolecular Sciences, The Open University, UK / Telethon Institute of Genetics and Medicine, Naples, Italy"
-                    }
-                ]
-            },
-            "title": "Controlling traffic",
-            "impactStatement": "Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.",
-            "published": "2016-01-29T16:22:28+00:00",
-            "content": [
-                {
-                    "type": "question",
-                    "question": "What attracted you to studying epidemiology?",
-                    "answer": [
-                        {
-                            "type": "paragraph",
-                            "text": "During a placement year in my undergraduate degree I worked in multiple sclerosis research, obtaining patient blood samples at outpatient clinics and analysing their immune cells in the laboratory. The time I spent at the hospital and with medical researchers made me realise that I wanted to work in human biology, so I decided to study the virulence of <i>Staphylococcus aureus</i> during my final year undergraduate project. I found learning about infection fascinating but working in a laboratory was a bit lonely. I then studied a Masters in Public Health, which introduced me to many aspects of public health, including epidemiology. I was particularly interested in using statistical and mathematical techniques to help answer public health questions relating to infectious diseases and I chose to pursue this interest in my PhD."
-                        }
-                    ]
-                },
-                {
-                    "type": "question",
-                    "question": "How did you become interested in studying biology?",
-                    "answer": [
-                        {
-                            "type": "paragraph",
-                            "text": "I grew up in a house in the middle of a thick rainforest, in a small village in the western ghat region of Karnataka, India. I spent my time appreciating and wondering about Mother Nature, making toys, art and furniture, helping my father farm and learning to cook from my mother. When I was at high school my interest in TVs, cars and trucks made me think of becoming an engineer, but what later impressed me were the cells that build an organism, and how they build and maintain themselves. During my undergraduate and Masters studies I was interested in studying how proteins are transported within cells. This interest evolved into my current research on proteostasis – the biological pathways that control protein folding, trafficking and degradation within cells."
-                        },
-                        {
-                            "type": "paragraph",
-                            "text": "There are many genetic mutations that result in misfolded proteins. Some of these proteins can still work if they reach their proper destination, but proteostasis degrades them before they get there. If we understand how proteostasis removes the mutant proteins, we could try to alter proteostasis to allow these proteins to reach their proper destination. Then, we may be able to cure genetic diseases like cystic fibrosis and Wilson’s disease (a condition where copper accumulates in the body)."
-                        }
-                    ]
-                },
-                {
-                    "type": "paragraph",
-                    "text": "Cystic fibrosis is caused by mutations in the gene for CFTR, which is a protein that sits in the cell membrane, and controls the movement of salt in and out of cells. Like in any other manufacturing factory, cells have quality control processes, and in cells these quality control processes remove faulty proteins. I study how CFTR quality control is regulated in order to devise a new tool to ‘cheat’ this control. This would allow the CFTR channels to be more efficiently trafficked to their proper places in the cell, and so reduce the symptoms of cystic fibrosis."
-                }
-            ]
-        }
-        ';
-        $complete_expected = '
-        {
-            "id": "1",
-            "type": "interview",
-            "interviewee": {
-                "name": {
-                    "preferred": "Ramanath Hegde",
-                    "index": "Hegde, Ramanath"
-                }
-            },
-            "title": "Controlling traffic",
-            "impactStatement": "Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.",
-            "published": "2016-01-29T16:22:28+00:00"
-        }
-        ';
-
         return [
             [
-                $minimum, $minimum_expected,
+                $this->getFixture('interview/v1/minimum.json'), '
+                {
+                    "id": "2",
+                    "type": "interview",
+                    "interviewee": {
+                        "name": {
+                            "preferred": "Alicia Rosello",
+                            "index": "Rosello, Alicia"
+                        }
+                    },
+                    "title": "Infection, statistics and public health",
+                    "published": "2015-11-03T11:00:53+00:00"
+                }',
             ],
             [
-                $complete, $complete_expected,
+                $this->getFixture('interview/v1/complete.json'), '
+                {
+                    "id": "1",
+                    "type": "interview",
+                    "interviewee": {
+                        "name": {
+                            "preferred": "Ramanath Hegde",
+                            "index": "Hegde, Ramanath"
+                        }
+                    },
+                    "title": "Controlling traffic",
+                    "impactStatement": "Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.",
+                    "published": "2016-01-29T16:22:28+00:00"
+                }',
             ],
         ];
     }
