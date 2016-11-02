@@ -43,14 +43,16 @@ class ElasticsearchClient
                     '_default_' => [
                         'properties' => [
                             'subjects' => json_decode('{
-                                "type": "object",
+                                "type": "nested",
+                                "include_in_parent": true,
                                 "properties": {
                                     "id": {
                                         "type": "string",
                                         "index": "not_analyzed"
                                     },
                                     "name": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "index": "not_analyzed"
                                     }
                                 }
                             }', true),
@@ -479,18 +481,6 @@ class ElasticsearchClient
                             },
                             "elocationId": {
                                 "type": "string"
-                            },
-                            "subjects": {
-                                "type": "object",
-                                "properties": {
-                                    "id": {
-                                        "type": "string",
-                                        "index": "not_analyzed"
-                                    },
-                                    "name": {
-                                        "type": "string"
-                                    }
-                                }
                             },
                             "body": {
                               "type": "object",

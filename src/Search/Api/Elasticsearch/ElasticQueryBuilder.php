@@ -4,13 +4,11 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use eLife\Search\Api\Query\QueryBuilder;
 use eLife\Search\Api\Query\QueryExecutor;
-use LogicException;
 
 final class ElasticQueryBuilder implements QueryBuilder
 {
     private $order;
     private $exec;
-    private $run = false;
 
     public function __construct(string $index, ElasticQueryExecutor $exec)
     {
@@ -18,8 +16,24 @@ final class ElasticQueryBuilder implements QueryBuilder
         $this->query['body']['aggregations']['type_agg']['terms'] = [
             'field' => '_type',
         ];
-        $this->query['body']['aggregations']['subject_agg']['terms'] = [
-            'field' => 'subjects',
+        $this->query['body']['aggregations']['subject_agg'] = [
+            'nested' => [
+                'path' => 'subjects',
+            ],
+            'aggs' => [
+                'name' => [
+                    'terms' => [
+                        'field' => 'subjects.id',
+                    ],
+                    'aggs' => [
+                        'name' => [
+                            'terms' => [
+                                'field' => 'subjects.name',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
         $this->exec = $exec;
     }
@@ -90,7 +104,7 @@ final class ElasticQueryBuilder implements QueryBuilder
     public function whereSubjects(array $subjects = []) : QueryBuilder
     {
         $this->query['body']['filter']['terms'] = [
-            'subjects' => $subjects,
+            'subjects.id' => $subjects,
         ];
 
         return $this;
@@ -112,12 +126,8 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function getQuery() : QueryExecutor
     {
-        //        if ($this->run) {
-//            throw new LogicException('You cannot run the same query twice.');
-//        }
         $exec = clone $this->exec;
         $exec->setQuery($this);
-//        $this->run = true;
 
         return $exec;
     }
