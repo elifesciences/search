@@ -49,7 +49,8 @@ final class ResearchArticleWorkflow implements Workflow
      *     name="research_article_validate",
      *     next="research_article_index",
      *     deserialize="deserialize",
-     *     serialize="serialize"
+     *     serialize="serialize",
+     *     priority="medium"
      * )
      */
     public function validate(ArticleVersion $article) : ArticleVersion

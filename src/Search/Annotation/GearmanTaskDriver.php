@@ -41,7 +41,8 @@ final class GearmanTaskDriver
                         $annotation->parameters,
                         $annotation->serialize ? [$workflow, $annotation->serialize] : null,
                         $annotation->deserialize ? [$workflow, $annotation->deserialize] : null,
-                        $annotation->next
+                        $annotation->next,
+                        $annotation->priority
                     );
                 }
             }
@@ -92,6 +93,7 @@ final class GearmanTaskDriver
                         $this->client->doHighBackground($task->next, $task->serialize($value));
                         break;
                 }
+                usleep(100000);
             }
 
             return GEARMAN_SUCCESS;
@@ -114,9 +116,9 @@ final class GearmanTaskDriver
         } catch (Throwable $e) {
             $logger->critical($e->getMessage());
             if ($this->autoRestart) {
-                $logger->warning('====================================');
-                $logger->warning('Restarting worker to avoid downtime.');
-                $logger->warning('====================================');
+                $logger->warning('========================================');
+                $logger->warning('| Restarting worker to avoid downtime. |');
+                $logger->warning('========================================');
                 $this->work($logger, true);
             }
         }
