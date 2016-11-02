@@ -5,7 +5,7 @@ namespace eLife\Search\Api\Query;
 final class MockQueryBuilder implements QueryBuilder
 {
     const NAME = 'can\'t believe its not google';
-    const VERSION = '1.0.1';
+    const VERSION = '1.0.2';
     private $clever = false;
 
     private $data;
@@ -114,25 +114,6 @@ final class MockQueryBuilder implements QueryBuilder
 
     public function getQuery() : QueryExecutor
     {
-        return new class($this->data) implements QueryExecutor {
-            public $data;
-
-            public function __construct($data)
-            {
-                $this->data = $data;
-            }
-
-            public function getHash() : string
-            {
-                return md5(json_encode($this->data));
-            }
-
-            public function execute() : QueryResponse
-            {
-                return new MockQueryResponse(array_map(function ($item) {
-                    return json_encode($item, true);
-                }, $this->data));
-            }
-        };
+        return new MockQueryExecutor($this->data);
     }
 }
