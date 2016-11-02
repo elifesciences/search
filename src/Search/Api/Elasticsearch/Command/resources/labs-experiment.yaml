@@ -1,0 +1,71 @@
+labs-experiment:
+  properties:
+    content:
+      properties:
+        alt:
+          type: string
+        content:
+          properties:
+            alt:
+              type: string
+            height:
+              type: long
+            id:
+              type: string
+            text:
+              type: string
+            title:
+              type: string
+            type:
+              type: string
+            uri:
+              type: string
+            width:
+              type: long
+        text:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        uri:
+          type: string
+    image:
+      properties:
+        banner:
+          properties:
+            alt:
+              type: string
+            sizes:
+              properties:
+                '2:1':
+                  properties:
+                    '900':
+                      type: string
+                    '1800':
+                      type: string
+        thumbnail:
+          properties:
+            alt:
+              type: string
+            sizes:
+              properties:
+                '16:9':
+                  properties:
+                    '250':
+                      type: string
+                    '500':
+                      type: string
+                '1:1':
+                  properties:
+                    '70':
+                      type: string
+                    '140':
+                      type: string
+    impactStatement:
+      type: string
+    number:
+      type: long
+    type:
+      type: string
+      index: not_analyzed
