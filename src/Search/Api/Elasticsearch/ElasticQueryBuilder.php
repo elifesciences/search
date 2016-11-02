@@ -61,6 +61,11 @@ final class ElasticQueryBuilder implements QueryBuilder
         $this->query['body']['query'][$key] = $body;
     }
 
+    private function must($query)
+    {
+        $this->query['body']['query']['bool']['must'][] = $query;
+    }
+
     public function searchFor(string $string) : QueryBuilder
     {
         if ($string === '') {
@@ -103,18 +108,18 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function whereSubjects(array $subjects = []) : QueryBuilder
     {
-        $this->query['body']['filter']['terms'] = [
-            'subjects.id' => $subjects,
-        ];
+        $this->must([
+            'terms' => ['subjects.id' => $subjects],
+        ]);
 
         return $this;
     }
 
     public function whereType(array $types = []) : QueryBuilder
     {
-        $this->query['body']['filter']['terms'] = [
-            '_type' => $types,
-        ];
+        $this->must([
+            'terms' => ['_type' => $types],
+        ]);
 
         return $this;
     }

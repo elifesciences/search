@@ -42,8 +42,6 @@ final class SearchResultDiscriminator implements EventSubscriberInterface
             $data['internal_type'] = $data['type'];
             // If its one of the research articles..
             if (in_array($data['type'], self::$articleTypes)) {
-                // @todo change this thing!
-                $data['type'] = 'research-article';
                 // Do the right thing.
                 $data['internal_type'] = 'research-article--'.$data['status'];
             }
