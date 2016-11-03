@@ -2,8 +2,6 @@
 
 namespace eLife\Search\Api\Query;
 
-use tests\eLife\Search\RamlRequirement;
-
 final class MockQueryBuilder implements QueryBuilder
 {
     use RamlRequirement;
