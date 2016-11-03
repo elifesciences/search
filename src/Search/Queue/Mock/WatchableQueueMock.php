@@ -7,7 +7,7 @@ use eLife\Search\Queue\WatchableQueue;
 
 final class WatchableQueueMock implements WatchableQueue
 {
-    public $items = [];
+    private $items = [];
     private $process = [];
 
     public function __construct(QueueItem ...$items)
