@@ -34,7 +34,7 @@ final class WatchableQueueMock implements WatchableQueue
      * Mock: Move to separate "in progress" queue.
      * SQS: this will change the timeout of the in-memory item.
      */
-    public function dequeue(int $timeout = 30) : QueueItem
+    public function dequeue(int $timeout = null) : QueueItem
     {
         $item = array_pop($this->items);
 

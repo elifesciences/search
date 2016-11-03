@@ -18,7 +18,7 @@ interface WatchableQueue
      * Mock: Move to separate "in progress" queue.
      * SQS: this will change the timeout of the in-memory item.
      */
-    public function dequeue(int $timeout = 30) : QueueItem;
+    public function dequeue(int $timeoutOverride = null) : QueueItem;
 
     /**
      * Commits to removing item from queue, marks item as done and processed.
