@@ -47,14 +47,9 @@ final class WatchableQueueMock implements WatchableQueue
      * Mock: Remove item completely.
      * SQS: this will delete the item from the queue.
      */
-    public function commit(QueueItem $item) : bool
+    public function commit(QueueItem $item)
     {
-        $value = (isset($this->process[$item->getReceipt()]));
-        if ($value) {
-            unset($this->process[$item->getReceipt()]);
-        }
-
-        return $value;
+        unset($this->process[$item->getReceipt()]);
     }
 
     /**

@@ -26,7 +26,7 @@ interface WatchableQueue
      * Mock: Remove item completely.
      * SQS: this will delete the item from the queue.
      */
-    public function commit(QueueItem $item) : bool;
+    public function commit(QueueItem $item);
 
     /**
      * This will happen when an error happens, we release the item back into the queue.
