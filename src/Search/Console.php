@@ -8,7 +8,6 @@ use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use eLife\Search\Api\Response\BlogArticleResponse;
-use eLife\Search\Gearman\Command\QueueCommand;
 use eLife\Search\Workflow\CliLogger;
 use Exception;
 use GuzzleHttp\Client;
@@ -72,7 +71,8 @@ final class Console
         if (GEARMAN_INSTALLED) {
             $this->console->addCommands([
                 $app->get('console.gearman.worker'),
-                $app->get('console.gearman.client') ,
+                $app->get('console.gearman.client'),
+                $app->get('console.gearman.queue'),
             ]);
         }
     }

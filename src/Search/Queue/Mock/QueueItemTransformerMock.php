@@ -10,14 +10,16 @@ use LogicException;
 final class QueueItemTransformerMock implements QueueItemTransformer
 {
     private $sdk;
+    private $serializer;
 
     public function __construct(
         ApiSdk $sdk
     ) {
+        $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
     }
 
-    public function getSdk(QueueItem $item) : object
+    public function getSdk(QueueItem $item)
     {
         switch ($item->getType()) {
             case 'blog-article':
@@ -30,12 +32,12 @@ final class QueueItemTransformerMock implements QueueItemTransformer
         }
     }
 
-    public function transform(QueueItem $item) : object
+    public function transform(QueueItem $item)
     {
         $sdk = $this->getSdk($item);
         $entity = $sdk->get($item->getId());
 
-        return $entity;
+        return $this->serializer->serialize($entity->wait(true), 'json');
     }
 
     public function getGearmanTask(QueueItem $item) : string

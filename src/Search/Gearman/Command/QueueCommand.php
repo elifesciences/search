@@ -2,6 +2,7 @@
 
 namespace eLife\Search\Gearman\Command;
 
+use eLife\Search\Queue\Mock\QueueItemMock;
 use eLife\Search\Queue\QueueItem;
 use eLife\Search\Queue\QueueItemTransformer;
 use eLife\Search\Queue\WatchableQueue;
@@ -44,7 +45,7 @@ class QueueCommand extends Command
             ->addOption('iterations', 'l', InputOption::VALUE_OPTIONAL, 'Max iterations before stopping.', 360)
             ->addOption('memory', 'm', InputOption::VALUE_OPTIONAL, 'Memory limit before exiting safely (Megabytes).', 360)
             ->addOption('memory-interval', 'M', InputOption::VALUE_OPTIONAL, 'How often to check memory.', 10)
-            ->addOption('queue-timeout', 'q', InputOption::VALUE_OPTIONAL, 'Visibility Timeout for AWS queue item', 10)
+            ->addOption('queue-timeout', 'T', InputOption::VALUE_OPTIONAL, 'Visibility Timeout for AWS queue item', 10)
             ->addOption('queue-interval', 'I', InputOption::VALUE_OPTIONAL, 'How many iterations before checking status of items.', 1)
             ->addArgument('topic', InputArgument::REQUIRED, 'Which topic to subscribe to.');
     }
@@ -120,9 +121,10 @@ class QueueCommand extends Command
     public function loop(InputInterface $input, LoggerInterface $logger)
     {
         $topic = $input->getArgument('topic');
-        $timeout = $input->getArgument('queue-timeout');
+        $timeout = $input->getOption('queue-timeout');
         $logger->info('Hello queue. topic: '.$topic);
-        if ($item = $this->queue->dequeue($timeout)) {
+        if ($this->queue->isValid()) {
+            $item = $this->queue->dequeue($timeout);
             // Set up some tracking.
             // @todo I think this will be handled by the dequeue method.
             $this->trackStatus($item);
@@ -135,5 +137,6 @@ class QueueCommand extends Command
             // Run the task.
             $logger->info('Running task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
         }
+        $this->queue->enqueue(new QueueItemMock('blog-article', 359325));
     }
 }
