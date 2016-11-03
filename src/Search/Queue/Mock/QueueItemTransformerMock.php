@@ -7,10 +7,9 @@ use eLife\Search\Queue\QueueItem;
 use eLife\Search\Queue\QueueItemTransformer;
 use LogicException;
 
-final  class QueueItemTransformerMock implements QueueItemTransformer
+final class QueueItemTransformerMock implements QueueItemTransformer
 {
     private $sdk;
-    private $cache;
 
     public function __construct(
         ApiSdk $sdk
@@ -35,7 +34,6 @@ final  class QueueItemTransformerMock implements QueueItemTransformer
     {
         $sdk = $this->getSdk($item);
         $entity = $sdk->get($item->getId());
-        $this->cache[$item->getId()] = $entity;
 
         return $entity;
     }
