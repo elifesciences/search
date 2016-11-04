@@ -1,3 +1,5 @@
 <?php
 
-return ['gearman_servers' => ['localhost']];
+return [
+    'gearman_servers' => ['localhost'],
+];

@@ -21,16 +21,18 @@ class QueueCommand extends Command
     private $transformer;
     private $client;
     private $items_status;
+    private $isMock;
 
     public function __construct(
         WatchableQueue $queue,
         QueueItemTransformer $transformer,
-        GearmanClient $client
+        GearmanClient $client,
+        bool $isMock = false
     ) {
         $this->queue = $queue;
         $this->transformer = $transformer;
         $this->client = $client;
-
+        $this->isMock = $isMock;
         parent::__construct(null);
     }
 
@@ -54,6 +56,9 @@ class QueueCommand extends Command
     {
         // Options.
         $logger = new CliLogger($input, $output);
+        if ($this->isMock) {
+            $logger->warning('This is using mocked information.');
+        }
         $restTime = (int) $input->getOption('interval');
         $restTime = $restTime < 1 ? 10 : $restTime;
         $timeout = (int) $input->getOption('timeout');
@@ -132,10 +137,13 @@ class QueueCommand extends Command
             $entity = $this->transformer->transform($item);
             // Grab the gearman task.
             $gearmanTask = $this->transformer->getGearmanTask($item);
-            // Set the task to go.
-            $this->client->doLow($gearmanTask, $entity, $item->getReceipt());
             // Run the task.
             $logger->info('Running task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
+            // Set the task to go.
+            $this->client->doLow($gearmanTask, $entity, md5($item->getReceipt()));
+            // Commit.
+            $this->queue->commit($item);
+            $logger->info('Committed task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
         }
         $this->queue->enqueue(new QueueItemMock('blog-article', 359325));
     }

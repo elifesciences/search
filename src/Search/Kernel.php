@@ -2,6 +2,7 @@
 
 namespace eLife\Search;
 
+use Aws\Sqs\SqsClient;
 use Closure;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
@@ -26,6 +27,8 @@ use eLife\Search\Gearman\Command\QueueCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
 use eLife\Search\Queue\Mock\QueueItemTransformerMock;
 use eLife\Search\Queue\Mock\WatchableQueueMock;
+use eLife\Search\Queue\SqsMessageTransformer;
+use eLife\Search\Queue\SqsWatchableQueue;
 use GearmanClient;
 use GearmanWorker;
 use GuzzleHttp\Client;
@@ -72,6 +75,13 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
             'gearman_auto_restart' => true,
+            'aws' => [
+                'mock_queue' => true,
+                'queue_name' => 'eLife-search',
+                'key' => '-----------------------',
+                'secret' => '-------------------------------',
+                'region' => '---------',
+            ],
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
@@ -261,6 +271,25 @@ final class Kernel implements MinimalKernel
             return new GearmanTaskDriver($app['annotations.reader'], $app['gearman.worker'], $app['gearman.client'], $app['config']['gearman_auto_restart']);
         };
 
+        $app['aws.sqs'] = function (Application $app) {
+            return new SqsClient([
+                'credentials' => [
+                    'key' => $app['config']['aws']['key'],
+                    'secret' => $app['config']['aws']['secret'],
+                ],
+                'version' => '2012-11-05',
+                'region' => $app['config']['aws']['region'],
+            ]);
+        };
+
+        $app['aws.queue'] = function (Application $app) {
+            return new SqsWatchableQueue($app['aws.sqs'], $app['config']['aws']['queue_name']);
+        };
+
+        $app['aws.queue_transformer'] = function (Application $app) {
+            return new SqsMessageTransformer($app['api.sdk']);
+        };
+
         $app['mocks.queue'] = function () {
             return new WatchableQueueMock();
         };
@@ -278,7 +307,11 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.gearman.queue'] = function (Application $app) {
-            return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client']);
+            if ($app['config']['aws']['mock_queue']) {
+                return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client']);
+            }
+
+            return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client']);
         };
     }
 

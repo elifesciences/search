@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "258510d684b5a807f4bf471e7a097be0",
-    "content-hash": "558dd08724d3c5c17eaa96082a2ad429",
+    "hash": "0308077461963679bbe37e84eef90f6a",
+    "content-hash": "934ae520d707ebf798905bc7064df7fa",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "dev-master",
+            "version": "3.19.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "36a05623d5f7f4a001cd3396ce0f000262c75062"
+                "reference": "fbfb87734e5d298b40354ac7fb3f95d0f72ad16e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/36a05623d5f7f4a001cd3396ce0f000262c75062",
-                "reference": "36a05623d5f7f4a001cd3396ce0f000262c75062",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fbfb87734e5d298b40354ac7fb3f95d0f72ad16e",
+                "reference": "fbfb87734e5d298b40354ac7fb3f95d0f72ad16e",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2016-10-25 19:23:39"
+            "time": "2016-11-03 20:28:28"
         },
         {
             "name": "beberlei/assert",
@@ -632,7 +632,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/b2f591b844839f1e99310a1181457c5d2dbf2923",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/cdaa3313b3fb412b71bcd4be1c2d07b9bcf7ac2d",
                 "reference": "b2f591b844839f1e99310a1181457c5d2dbf2923",
                 "shasum": ""
             },
@@ -5357,7 +5357,6 @@
         "doctrine/cache": 20,
         "symfony/event-dispatcher": 20,
         "monolog/monolog": 20,
-        "aws/aws-sdk-php": 20,
         "webmozart/json": 20
     },
     "prefer-stable": true,
