@@ -22,7 +22,10 @@ use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Api\SubjectStore;
 use eLife\Search\Gearman\Command\ApiSdkCommand;
+use eLife\Search\Gearman\Command\QueueCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
+use eLife\Search\Queue\Mock\QueueItemTransformerMock;
+use eLife\Search\Queue\Mock\WatchableQueueMock;
 use GearmanClient;
 use GearmanWorker;
 use GuzzleHttp\Client;
@@ -258,12 +261,24 @@ final class Kernel implements MinimalKernel
             return new GearmanTaskDriver($app['annotations.reader'], $app['gearman.worker'], $app['gearman.client'], $app['config']['gearman_auto_restart']);
         };
 
+        $app['mocks.queue'] = function () {
+            return new WatchableQueueMock();
+        };
+
+        $app['mocks.queue_transformer'] = function (Application $app) {
+            return new QueueItemTransformerMock($app['api.sdk']);
+        };
+
         $app['console.gearman.worker'] = function (Application $app) {
             return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator']);
         };
 
         $app['console.gearman.client'] = function (Application $app) {
             return new ApiSdkCommand($app['api.sdk'], $app['gearman.client']);
+        };
+
+        $app['console.gearman.queue'] = function (Application $app) {
+            return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client']);
         };
     }
 

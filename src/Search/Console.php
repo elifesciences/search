@@ -72,6 +72,7 @@ final class Console
             $this->console->addCommands([
                 $app->get('console.gearman.worker'),
                 $app->get('console.gearman.client'),
+                $app->get('console.gearman.queue'),
             ]);
         }
     }
