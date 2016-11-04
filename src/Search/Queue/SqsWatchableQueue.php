@@ -97,11 +97,14 @@ final class SqsWatchableQueue implements WatchableQueue
      */
     public function isValid() : bool
     {
+        if ($this->next !== null) {
+            return true;
+        }
         $message = $this->client->receiveMessage(['QueueUrl' => $this->url])->toArray();
         if (!SqsMessageTransformer::hasItems($message)) {
             return false;
         }
-        $this->next = SqsMessageTransformer::fromMessage(array_shift($message['Messages']));
+        $this->next = SqsMessageTransformer::fromMessage($message);
 
         return true;
     }

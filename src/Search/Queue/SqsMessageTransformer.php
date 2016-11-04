@@ -20,6 +20,7 @@ final class SqsMessageTransformer implements QueueItemTransformer
 
     public static function fromMessage($message) : QueueItem
     {
+        $message = array_shift($message['Messages']);
         $messageId = $message['MessageId'];
         $body = json_decode($message['Body']);
         $md5 = $message['MD5OfBody'];

@@ -10,6 +10,7 @@ use eLife\Search\Workflow\CliLogger;
 use GearmanClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -49,6 +50,7 @@ class QueueCommand extends Command
             ->addOption('memory-interval', 'M', InputOption::VALUE_OPTIONAL, 'How often to check memory.', 10)
             ->addOption('queue-timeout', 'T', InputOption::VALUE_OPTIONAL, 'Visibility Timeout for AWS queue item', 10)
             ->addOption('queue-interval', 'I', InputOption::VALUE_OPTIONAL, 'How many iterations before checking status of items.', 1)
+            ->addOption('mock', 'k', InputOption::VALUE_OPTIONAL, 'How many mock items to start with', 0)
             ->addArgument('topic', InputArgument::REQUIRED, 'Which topic to subscribe to.');
     }
 
@@ -58,6 +60,16 @@ class QueueCommand extends Command
         $logger = new CliLogger($input, $output);
         if ($this->isMock) {
             $logger->warning('This is using mocked information.');
+        }
+        if ($mocks = $input->getOption('mock')) {
+            $progress = new ProgressBar($output, $mocks);
+            for ($i = 0; $i < $mocks; ++$i) {
+                $progress->advance();
+                $this->queue->enqueue(new QueueItemMock('blog-article', 359325));
+            }
+            $progress->finish();
+            $logger->info("\nAdded ".$mocks.' blog articles');
+            exit;
         }
         $restTime = (int) $input->getOption('interval');
         $restTime = $restTime < 1 ? 10 : $restTime;
@@ -69,6 +81,7 @@ class QueueCommand extends Command
         // Initial values.
         $startTime = time();
         $iterations = 0;
+        $next = false;
         // Loop.
         while (true) {
             ++$iterations;
@@ -88,19 +101,24 @@ class QueueCommand extends Command
                 $logger->warning('Max time reached, stopping script.');
                 break;
             }
-            if ($iterations % $queueCheckInterval === 0) {
-                $this->checkStatus($input, $logger);
+            $next = $this->loop($input, $logger);
+            if (!$next) {
+                sleep($restTime);
             }
-            $this->loop($input, $logger);
-            sleep($restTime);
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function trackStatus(QueueItem $item)
     {
         $this->items_status[] = $item;
     }
 
+    /**
+     * @deprecated
+     */
     public function checkStatus(InputInterface $input, LoggerInterface $logger)
     {
         // @todo WARNING PSEUDO CODE.
@@ -125,15 +143,12 @@ class QueueCommand extends Command
 
     public function loop(InputInterface $input, LoggerInterface $logger)
     {
-        $logger->info('Loop start... [');
+        $logger->debug('Loop start... [');
         $topic = $input->getArgument('topic');
         $timeout = $input->getOption('queue-timeout');
-        $logger->info('-> Hello queue. topic: '.$topic);
+        $logger->info('-> Listening on topic: '.$topic);
         if ($this->queue->isValid()) {
             $item = $this->queue->dequeue($timeout);
-            // Set up some tracking.
-            // @todo I think this will be handled by the dequeue method.
-            // $this->trackStatus($item);
             // Transform into something for gearman.
             $entity = $this->transformer->transform($item);
             // Grab the gearman task.
@@ -146,8 +161,8 @@ class QueueCommand extends Command
             $this->queue->commit($item);
             $logger->info('-> Committed task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
         }
-        $logger->info('-> Adding new blog article');
-        $this->queue->enqueue(new QueueItemMock('blog-article', 359325));
-        $logger->info("] Loop end\n");
+        $logger->debug("]\n");
+
+        return $this->queue->isValid();
     }
 }
