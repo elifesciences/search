@@ -125,26 +125,29 @@ class QueueCommand extends Command
 
     public function loop(InputInterface $input, LoggerInterface $logger)
     {
+        $logger->info('Loop start... [');
         $topic = $input->getArgument('topic');
         $timeout = $input->getOption('queue-timeout');
-        $logger->info('Hello queue. topic: '.$topic);
+        $logger->info('-> Hello queue. topic: '.$topic);
         if ($this->queue->isValid()) {
             $item = $this->queue->dequeue($timeout);
             // Set up some tracking.
             // @todo I think this will be handled by the dequeue method.
-            $this->trackStatus($item);
+            // $this->trackStatus($item);
             // Transform into something for gearman.
             $entity = $this->transformer->transform($item);
             // Grab the gearman task.
             $gearmanTask = $this->transformer->getGearmanTask($item);
             // Run the task.
-            $logger->info('Running task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
+            $logger->info('-> Running task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
             // Set the task to go.
             $this->client->doLow($gearmanTask, $entity, md5($item->getReceipt()));
             // Commit.
             $this->queue->commit($item);
-            $logger->info('Committed task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
+            $logger->info('-> Committed task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
         }
+        $logger->info('-> Adding new blog article');
         $this->queue->enqueue(new QueueItemMock('blog-article', 359325));
+        $logger->info("] Loop end\n");
     }
 }
