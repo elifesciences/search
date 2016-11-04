@@ -1,26 +1,13 @@
 <?php
 
-namespace eLife\Search\Queue\Mock;
+namespace eLife\Search\Queue;
 
-use eLife\ApiSdk\ApiSdk;
-use eLife\Search\Queue\BasicTransformer;
-use eLife\Search\Queue\QueueItem;
-use eLife\Search\Queue\QueueItemTransformer;
-use LogicException;
+use MongoDB\Driver\Exception\LogicException;
 
-final class QueueItemTransformerMock implements QueueItemTransformer
+trait BasicTransformer
 {
-    use BasicTransformer;
-
     private $sdk;
     private $serializer;
-
-    public function __construct(
-        ApiSdk $sdk
-    ) {
-        $this->serializer = $sdk->getSerializer();
-        $this->sdk = $sdk;
-    }
 
     public function getSdk(QueueItem $item)
     {

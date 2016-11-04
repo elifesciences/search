@@ -3,10 +3,11 @@
 namespace eLife\Search\Queue;
 
 use eLife\ApiSdk\ApiSdk;
-use LogicException;
 
 final class SqsMessageTransformer implements QueueItemTransformer
 {
+    use BasicTransformer;
+
     private $sdk;
     private $serializer;
 
@@ -34,38 +35,5 @@ final class SqsMessageTransformer implements QueueItemTransformer
     {
         // If Messages exists and is not empty.
         return isset($message['Messages']) ? (empty($message['Messages']) ? false : true) : false;
-    }
-
-    public function getSdk(QueueItem $item)
-    {
-        switch ($item->getType()) {
-            case 'blog-article':
-                return $this->sdk->blogArticles();
-                break;
-
-            // ...
-            default:
-                throw new LogicException('Wat');
-        }
-    }
-
-    public function transform(QueueItem $item)
-    {
-        $sdk = $this->getSdk($item);
-        $entity = $sdk->get($item->getId());
-
-        return $this->serializer->serialize($entity->wait(true), 'json');
-    }
-
-    public function getGearmanTask(QueueItem $item) : string
-    {
-        switch ($item->getType()) {
-            case 'blog-article':
-                return 'blog_article_validate';
-
-            // ...
-            default:
-                throw new LogicException('Wat');
-        }
     }
 }
