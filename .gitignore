@@ -1,3 +1,5 @@
+.graniterc
+/bin/commands
 /build/
 /vendor/
 /cache/
