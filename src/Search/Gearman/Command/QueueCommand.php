@@ -89,16 +89,26 @@ class QueueCommand extends Command
                 $memory = memory_get_usage();
                 $logger->debug('Memory usage at '.memory_get_usage());
                 if ($memory > $memoryThreshold) {
-                    $logger->error('Memory limit reached, stopping script.');
+                    $logger->error('Memory limit reached, stopping script.', [
+                        'limit' => $memoryThreshold,
+                        'memory' => $memory,
+                        'interval' => $memoryCheckInterval,
+                    ]);
                     break;
                 }
             }
             if ($iterations === $maxIterations) {
-                $logger->warning('Max iterations reached, stopping script.');
+                $logger->warning('Max iterations reached, stopping script.', [
+                    'iterations' => $iterations,
+                    'maxIterations' => $maxIterations,
+                ]);
                 break;
             }
             if (time() - $startTime >= $timeout) {
-                $logger->warning('Max time reached, stopping script.');
+                $logger->warning('Max time reached, stopping script.', [
+                    'time' => time() - $startTime,
+                    'timeout' => $timeout,
+                ]);
                 break;
             }
             $next = $this->loop($input, $logger);
@@ -146,7 +156,7 @@ class QueueCommand extends Command
         $logger->debug('Loop start... [');
         $topic = $input->getArgument('topic');
         $timeout = $input->getOption('queue-timeout');
-        $logger->info('-> Listening on topic: '.$topic);
+        $logger->info('-> Listening to topic ', ['topic' => $topic]);
         if ($this->queue->isValid()) {
             $item = $this->queue->dequeue($timeout);
             // Transform into something for gearman.
@@ -154,12 +164,20 @@ class QueueCommand extends Command
             // Grab the gearman task.
             $gearmanTask = $this->transformer->getGearmanTask($item);
             // Run the task.
-            $logger->info('-> Running task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
+            $logger->info('-> Running gearman task', [
+                'gearmanTask' => $gearmanTask,
+                'type' => $item->getType(),
+                'id' => $item->getId(),
+            ]);
             // Set the task to go.
             $this->client->doLow($gearmanTask, $entity, md5($item->getReceipt()));
             // Commit.
             $this->queue->commit($item);
-            $logger->info('-> Committed task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
+            $logger->info('-> Committed task', [
+                'gearmanTask' => $gearmanTask,
+                'type' => $item->getType(),
+                'id' => $item->getId(),
+            ]);
         }
         $logger->debug("]\n");
 
