@@ -86,12 +86,12 @@ final class MockQueryBuilder implements QueryBuilder
 
     public function sortByRelevance($reverse = false) : QueryBuilder
     {
-        // TODO: Implement sortByRelevance() method.
+        return $this;
     }
 
     public function sortByDate($reverse = false) : QueryBuilder
     {
-        // TODO: Implement sortByDate() method.
+        return $this;
     }
 
     public function whereSubjects(array $subjects = []) : QueryBuilder

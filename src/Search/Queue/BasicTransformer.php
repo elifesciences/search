@@ -4,7 +4,7 @@ namespace eLife\Search\Queue;
 
 use eLife\ApiSdk\ApiSdk;
 use JMS\Serializer\Serializer;
-use MongoDB\Driver\Exception\LogicException;
+use LogicException;
 
 trait BasicTransformer
 {

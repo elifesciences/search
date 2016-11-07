@@ -8,6 +8,15 @@ trait RamlRequirement
 {
     public static $root = __DIR__.'/../../../vendor/elife/api/dist/samples/';
 
+    public function getFixtureWithType(string $name, string $type) : string
+    {
+        $fixture = $this->getFixture($name);
+        $fixture = json_decode($fixture);
+        $fixture->type = $type;
+
+        return json_encode($fixture, JSON_PRETTY_PRINT);
+    }
+
     public function getFixture(string $name) : string
     {
         $file = self::$root.$name;
