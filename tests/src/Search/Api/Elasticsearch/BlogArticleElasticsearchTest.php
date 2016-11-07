@@ -2,20 +2,17 @@
 
 namespace tests\eLife\Search\Api\Elasticsearch;
 
+use tests\eLife\Search\RamlRequirement;
+
 final class BlogArticleElasticsearchTest extends ElasticsearchTestCase
 {
+    use RamlRequirement;
+
     public function jsonProvider() : array
     {
         return [
-            [
-                '{
-                    "id": "12456",
-                    "type": "blog-article",
-                    "title": "some blog article",
-                    "impactStatement": "Something impacting in a statement like fashion.",
-                    "published": "2016-06-09T15:15:10+00:00"
-                }',
-            ],
+            [$this->getFixtureWithType('blog-article/v1/minimum.json', 'blog-article')],
+            [$this->getFixtureWithType('blog-article/v1/complete.json', 'blog-article')],
         ];
     }
 }

@@ -20,7 +20,7 @@ final class GearmanTaskDriver
     private $worker;
     private $autoRestart;
 
-    public function __construct(Reader $reader, GearmanWorker $worker = null, GearmanClient $client, bool $autoRestart)
+    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, bool $autoRestart)
     {
         $this->reader = $reader;
         $this->worker = $worker;
