@@ -73,7 +73,6 @@ final class ApiSdkCommand extends Command
     {
         $episodes = $this->sdk->podcastEpisodes();
         $this->iterateSerializeTask($episodes, $logger, 'podcast_episode_validate');
-
     }
 
     public function importCollections(LoggerInterface $logger)
@@ -146,7 +145,6 @@ final class ApiSdkCommand extends Command
 
     private function task($item, ...$data)
     {
-
         $this->client->doLow($item, ...$data);
     }
 }
