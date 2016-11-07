@@ -3,6 +3,7 @@
 namespace eLife\Search\Queue;
 
 use eLife\ApiSdk\ApiSdk;
+use LogicException;
 
 final class SqsMessageTransformer implements QueueItemTransformer
 {
@@ -26,7 +27,7 @@ final class SqsMessageTransformer implements QueueItemTransformer
         $md5 = $message['MD5OfBody'];
         $handle = $message['ReceiptHandle'];
         if (md5($message['Body']) !== $md5) {
-            // Do something...
+            throw new LogicException('Hash mismatch: possible corrupted message.');
         }
 
         return new SqsMessage($messageId, $body->id ?? $body->number, $body->type, $handle);
