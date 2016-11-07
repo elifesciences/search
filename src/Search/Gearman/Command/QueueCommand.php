@@ -49,9 +49,24 @@ class QueueCommand extends Command
             ->addOption('memory', 'm', InputOption::VALUE_OPTIONAL, 'Memory limit before exiting safely (Megabytes).', 360)
             ->addOption('memory-interval', 'M', InputOption::VALUE_OPTIONAL, 'How often to check memory.', 10)
             ->addOption('queue-timeout', 'T', InputOption::VALUE_OPTIONAL, 'Visibility Timeout for AWS queue item', 10)
-            ->addOption('queue-interval', 'I', InputOption::VALUE_OPTIONAL, 'How many iterations before checking status of items.', 1)
             ->addOption('mock', 'k', InputOption::VALUE_OPTIONAL, 'How many mock items to start with', 0)
             ->addArgument('topic', InputArgument::REQUIRED, 'Which topic to subscribe to.');
+    }
+
+    protected function mock(OutputInterface $output, LoggerInterface $logger, int $mocks)
+    {
+        $progress = new ProgressBar($output, $mocks);
+        for ($i = 0; $i < $mocks; ++$i) {
+            $progress->advance();
+            // These will work with real or mocked queues.
+            $this->queue->enqueue(new QueueItemMock('blog-article', 359325));
+        }
+        $progress->finish();
+        $logger->info("\nAdded ".$mocks.' blog articles');
+        if ($this->isMock === false) {
+            // Exit the application here if we have real data.
+            exit;
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -62,26 +77,17 @@ class QueueCommand extends Command
             $logger->warning('This is using mocked information.');
         }
         if ($mocks = $input->getOption('mock')) {
-            $progress = new ProgressBar($output, $mocks);
-            for ($i = 0; $i < $mocks; ++$i) {
-                $progress->advance();
-                $this->queue->enqueue(new QueueItemMock('blog-article', 359325));
-            }
-            $progress->finish();
-            $logger->info("\nAdded ".$mocks.' blog articles');
-            exit;
+            $this->mock($output, $logger, $mocks);
         }
         $restTime = (int) $input->getOption('interval');
         $restTime = $restTime < 1 ? 10 : $restTime;
         $timeout = (int) $input->getOption('timeout');
         $maxIterations = $input->getOption('iterations');
         $memoryCheckInterval = $input->getOption('memory-interval');
-        $queueCheckInterval = $input->getOption('queue-interval');
         $memoryThreshold = ($input->getOption('memory')) * 1000 * 1000;
         // Initial values.
         $startTime = time();
         $iterations = 0;
-        $next = false;
         // Loop.
         while (true) {
             ++$iterations;
@@ -112,6 +118,7 @@ class QueueCommand extends Command
                 break;
             }
             $next = $this->loop($input, $logger);
+
             if (!$next) {
                 sleep($restTime);
             }
@@ -178,6 +185,8 @@ class QueueCommand extends Command
                 'type' => $item->getType(),
                 'id' => $item->getId(),
             ]);
+        } else {
+            $logger->info('-> Queue is empty ', ['topic' => $topic]);
         }
         $logger->debug("]\n");
 
