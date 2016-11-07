@@ -71,8 +71,8 @@ final class ApiSdkCommand extends Command
 
     public function importPodcastEpisodes(LoggerInterface $logger)
     {
-        // Waiting for API SDK models.
-        // $logger->error('You cannot currently import PodcastEpisodes');
+        $episodes = $this->sdk->podcastEpisodes();
+        $this->iterateSerializeTask($episodes, $logger, 'podcast_episode_validate');
     }
 
     public function importCollections(LoggerInterface $logger)
