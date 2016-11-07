@@ -77,8 +77,9 @@ final class ApiSdkCommand extends Command
 
     public function importCollections(LoggerInterface $logger)
     {
-        // Waiting for API SDK models.
-        // $logger->error('You cannot currently import Collections');
+        $logger->info('Importing Collections');
+        $collections = $this->sdk->collections();
+        $this->iterateSerializeTask($collections, $logger, 'collection_validate', $collections->count());
     }
 
     public function importLabsExperiments(LoggerInterface $logger)
