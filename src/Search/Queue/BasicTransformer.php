@@ -73,6 +73,7 @@ trait BasicTransformer
         if ($type === null) {
             throw new LogicException('Workflow does not exist for that type.');
         }
+
         return $type;
     }
 }
