@@ -73,6 +73,7 @@ final class Console
                 $app->get('console.gearman.worker'),
                 $app->get('console.gearman.client'),
                 $app->get('console.gearman.queue'),
+                $app->get('console.build_index'),
             ]);
         }
     }
