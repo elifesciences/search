@@ -10,6 +10,7 @@ use eLife\Search\Workflow\CliLogger;
 use GearmanClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,16 +22,18 @@ class QueueCommand extends Command
     private $transformer;
     private $client;
     private $items_status;
+    private $isMock;
 
     public function __construct(
         WatchableQueue $queue,
         QueueItemTransformer $transformer,
-        GearmanClient $client
+        GearmanClient $client,
+        bool $isMock = false
     ) {
         $this->queue = $queue;
         $this->transformer = $transformer;
         $this->client = $client;
-
+        $this->isMock = $isMock;
         parent::__construct(null);
     }
 
@@ -46,20 +49,41 @@ class QueueCommand extends Command
             ->addOption('memory', 'm', InputOption::VALUE_OPTIONAL, 'Memory limit before exiting safely (Megabytes).', 360)
             ->addOption('memory-interval', 'M', InputOption::VALUE_OPTIONAL, 'How often to check memory.', 10)
             ->addOption('queue-timeout', 'T', InputOption::VALUE_OPTIONAL, 'Visibility Timeout for AWS queue item', 10)
-            ->addOption('queue-interval', 'I', InputOption::VALUE_OPTIONAL, 'How many iterations before checking status of items.', 1)
+            ->addOption('mock', 'k', InputOption::VALUE_OPTIONAL, 'How many mock items to start with', 0)
             ->addArgument('topic', InputArgument::REQUIRED, 'Which topic to subscribe to.');
+    }
+
+    protected function mock(OutputInterface $output, LoggerInterface $logger, int $mocks)
+    {
+        $progress = new ProgressBar($output, $mocks);
+        for ($i = 0; $i < $mocks; ++$i) {
+            $progress->advance();
+            // These will work with real or mocked queues.
+            $this->queue->enqueue(new QueueItemMock('blog-article', 359325));
+        }
+        $progress->finish();
+        $logger->info("\nAdded ".$mocks.' blog articles');
+        if ($this->isMock === false) {
+            // Exit the application here if we have real data.
+            exit;
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Options.
         $logger = new CliLogger($input, $output);
+        if ($this->isMock) {
+            $logger->warning('This is using mocked information.');
+        }
+        if ($mocks = $input->getOption('mock')) {
+            $this->mock($output, $logger, $mocks);
+        }
         $restTime = (int) $input->getOption('interval');
         $restTime = $restTime < 1 ? 10 : $restTime;
         $timeout = (int) $input->getOption('timeout');
         $maxIterations = $input->getOption('iterations');
         $memoryCheckInterval = $input->getOption('memory-interval');
-        $queueCheckInterval = $input->getOption('queue-interval');
         $memoryThreshold = ($input->getOption('memory')) * 1000 * 1000;
         // Initial values.
         $startTime = time();
@@ -71,31 +95,47 @@ class QueueCommand extends Command
                 $memory = memory_get_usage();
                 $logger->debug('Memory usage at '.memory_get_usage());
                 if ($memory > $memoryThreshold) {
-                    $logger->error('Memory limit reached, stopping script.');
+                    $logger->error('Memory limit reached, stopping script.', [
+                        'limit' => $memoryThreshold,
+                        'memory' => $memory,
+                        'interval' => $memoryCheckInterval,
+                    ]);
                     break;
                 }
             }
             if ($iterations === $maxIterations) {
-                $logger->warning('Max iterations reached, stopping script.');
+                $logger->warning('Max iterations reached, stopping script.', [
+                    'iterations' => $iterations,
+                    'maxIterations' => $maxIterations,
+                ]);
                 break;
             }
             if (time() - $startTime >= $timeout) {
-                $logger->warning('Max time reached, stopping script.');
+                $logger->warning('Max time reached, stopping script.', [
+                    'time' => time() - $startTime,
+                    'timeout' => $timeout,
+                ]);
                 break;
             }
-            if ($iterations % $queueCheckInterval === 0) {
-                $this->checkStatus($input, $logger);
+            $next = $this->loop($input, $logger);
+
+            if (!$next) {
+                sleep($restTime);
             }
-            $this->loop($input, $logger);
-            sleep($restTime);
         }
     }
 
+    /**
+     * @deprecated
+     */
     public function trackStatus(QueueItem $item)
     {
         $this->items_status[] = $item;
     }
 
+    /**
+     * @deprecated
+     */
     public function checkStatus(InputInterface $input, LoggerInterface $logger)
     {
         // @todo WARNING PSEUDO CODE.
@@ -120,23 +160,36 @@ class QueueCommand extends Command
 
     public function loop(InputInterface $input, LoggerInterface $logger)
     {
+        $logger->debug('Loop start... [');
         $topic = $input->getArgument('topic');
         $timeout = $input->getOption('queue-timeout');
-        $logger->info('Hello queue. topic: '.$topic);
+        $logger->info('-> Listening to topic ', ['topic' => $topic]);
         if ($this->queue->isValid()) {
             $item = $this->queue->dequeue($timeout);
-            // Set up some tracking.
-            // @todo I think this will be handled by the dequeue method.
-            $this->trackStatus($item);
             // Transform into something for gearman.
             $entity = $this->transformer->transform($item);
             // Grab the gearman task.
             $gearmanTask = $this->transformer->getGearmanTask($item);
-            // Set the task to go.
-            $this->client->doLow($gearmanTask, $entity, $item->getReceipt());
             // Run the task.
-            $logger->info('Running task "'.$gearmanTask.'" for '.$item->getType().'<'.$item->getId().'>');
+            $logger->info('-> Running gearman task', [
+                'gearmanTask' => $gearmanTask,
+                'type' => $item->getType(),
+                'id' => $item->getId(),
+            ]);
+            // Set the task to go.
+            $this->client->doLow($gearmanTask, $entity, md5($item->getReceipt()));
+            // Commit.
+            $this->queue->commit($item);
+            $logger->info('-> Committed task', [
+                'gearmanTask' => $gearmanTask,
+                'type' => $item->getType(),
+                'id' => $item->getId(),
+            ]);
+        } else {
+            $logger->info('-> Queue is empty ', ['topic' => $topic]);
         }
-        $this->queue->enqueue(new QueueItemMock('blog-article', 359325));
+        $logger->debug("]\n");
+
+        return $this->queue->isValid();
     }
 }

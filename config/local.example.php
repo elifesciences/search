@@ -12,4 +12,11 @@ return [
     'ttl' => 0,
     'gearman_servers' => ['elife_gearman_1'],
     'gearman_auto_restart' => true,
+    'aws' => [
+        'mock_queue' => false,
+        'queue_name' => 'eLife-search',
+        'key' => '-----------------------',
+        'secret' => '-------------------------------',
+        'region' => '---------',
+    ],
 ];
