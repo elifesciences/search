@@ -1,0 +1,29 @@
+# This rule set is applied to all indexes.
+_default_:
+  properties:
+
+    # Special index property for aggregation. (Makes full string facetable)
+    subjects:
+      type: nested
+      include_in_parent: true
+      properties:
+        id:
+          type: string
+          index: not_analyzed
+        name:
+          type: string
+          index: not_analyzed
+
+    # Special index property for aggregation.
+    type:
+      type: string
+      index: not_analyzed
+
+    # Everything that has a title is a string
+    title:
+      type: string
+
+    # Published on all fields.
+    published:
+      type: date
+      format: strict_date_optional_time||epoch_millis

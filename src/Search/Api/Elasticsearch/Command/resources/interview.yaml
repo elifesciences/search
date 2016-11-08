@@ -1,0 +1,37 @@
+interview:
+  properties:
+    content:
+      properties:
+        answer:
+          properties:
+            text:
+              type: string
+            type:
+              type: string
+        question:
+          type: string
+        text:
+          type: string
+        type:
+          type: string
+    id:
+      type: string
+    impactStatement:
+      type: string
+    interviewee:
+      properties:
+        cv:
+          properties:
+            date:
+              type: string
+            text:
+              type: string
+        name:
+          properties:
+            index:
+              type: string
+            preferred:
+              type: string
+    type:
+      type: string
+      index: not_analyzed

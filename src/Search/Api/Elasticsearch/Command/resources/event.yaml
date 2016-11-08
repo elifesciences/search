@@ -1,0 +1,51 @@
+event:
+  properties:
+    content:
+      properties:
+        text:
+          type: string
+        type:
+          type: string
+    ends:
+      type: date
+      format: strict_date_optional_time||epoch_millis
+    id:
+      type: string
+    impactStatement:
+      type: string
+    starts:
+      type: date
+      format: strict_date_optional_time||epoch_millis
+    timezone:
+      type: string
+    type:
+      type: string
+      index: not_analyzed
+    venue:
+      properties:
+        address:
+          properties:
+            components:
+              properties:
+                area:
+                  type: string
+                country:
+                  type: string
+                locality:
+                  type: string
+                postalCode:
+                  type: string
+                streetAddress:
+                  type: string
+            formatted:
+              type: string
+        coordinates:
+          properties:
+            latitude:
+              type: double
+            longitude:
+              type: double
+        id:
+          type: string
+        name:
+          type: string

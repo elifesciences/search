@@ -500,6 +500,13 @@ class ElasticsearchClient
         return $this->connection->indices()->create($params);
     }
 
+    public function customIndex($params)
+    {
+        $params['index'] = $this->index;
+
+        return $this->connection->indices()->create($params);
+    }
+
     public function indexJsonDocument($type, $id, $body)
     {
         $params = [

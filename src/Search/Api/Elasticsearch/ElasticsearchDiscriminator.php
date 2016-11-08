@@ -48,6 +48,8 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
             case
                 isset($data['_index']) === false &&
                 isset($data['_shards']) === false &&
+                isset($data['acknowledged']) === false &&
+                isset($data['created']) === false &&
                 isset($data['error']) === false:
             case is_string($data):
                 return;

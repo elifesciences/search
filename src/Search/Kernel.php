@@ -15,6 +15,7 @@ use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
+use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
 use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
@@ -312,6 +313,10 @@ final class Kernel implements MinimalKernel
             }
 
             return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client']);
+        };
+
+        $app['console.build_index'] = function (Application $app) {
+            return new BuildIndexCommand($app['elastic.client']);
         };
     }
 
