@@ -25,7 +25,7 @@ class BuildIndexCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('search:reindex')
+            ->setName('search:setup')
             ->setDescription('Re-index elasticsearch <comment>WARNING: DROPS CONTENT</comment>')
             ->setHelp('Creates new Gearman client and imports entities from API');
     }
