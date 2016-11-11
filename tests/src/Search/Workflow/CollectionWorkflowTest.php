@@ -53,16 +53,16 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
         /** @var Collection $deserialized */
         $deserialized = $this->workflow->deserialize($serialized);
         $this->assertInstanceOf(Collection::class, $deserialized);
-//        $this->asyncAssertEquals($collection->getContent(), $deserialized->getContent(), 'Content matches after serializing');
         $this->asyncAssertEquals($collection->getId(), $deserialized->getId(), 'Id matches after serializing');
         $this->asyncAssertEquals($collection->getImpactStatement(), $deserialized->getImpactStatement(), 'Impact statement matches after serializing');
         $this->asyncAssertEquals($collection->getPublishedDate(), $deserialized->getPublishedDate(), 'Published date matches after serializing');
-//        $this->asyncAssertEquals($collection->getSubjects()->toArray(), $deserialized->getSubjects()->toArray(), 'Subjects matches after serializing');
         $this->asyncAssertEquals($collection->getTitle(), $deserialized->getTitle(), 'Title matches after serializing');
+        $this->asyncAssertEquals($collection->getSubTitle(), $deserialized->getSubTitle(), 'Subtitle matches after serializing');
+//        $this->asyncAssertEquals($collection->getContent(), $deserialized->getContent(), 'Content matches after serializing');
+//        $this->asyncAssertEquals($collection->getSubjects()->toArray(), $deserialized->getSubjects()->toArray(), 'Subjects matches after serializing');
 //        $this->asyncAssertEquals($collection->getCurators(), $deserialized->getCurators(), 'Curators matches after serializing');
 //        $this->asyncAssertEquals($collection->getPodcastEpisodes(), $deserialized->getPodcastEpisodes(), 'Podcast episodes match after serializing');
 //        $this->asyncAssertEquals($collection->getRelatedContent(), $deserialized->getRelatedContent(), 'Related content matches after serializing');
-//        $this->asyncAssertEquals($collection->getSubTitle(), $deserialized->getSubTitle(), 'Subtitle matches after serializing');
 //        $this->asyncAssertEquals($collection->getThumbnail(), $deserialized->getThumbnail(), 'Thumbnail matches after serializing');
 
         // Check B to A
