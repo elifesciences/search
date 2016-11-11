@@ -4,10 +4,12 @@ namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiClient\ApiClient\ArticlesClient;
 use eLife\ApiClient\ApiClient\BlogClient;
+use eLife\ApiClient\ApiClient\CollectionsClient;
 use eLife\ApiClient\ApiClient\EventsClient;
 use eLife\ApiClient\ApiClient\InterviewsClient;
 use eLife\ApiClient\ApiClient\LabsClient;
 use eLife\ApiClient\ApiClient\PeopleClient;
+use eLife\ApiClient\ApiClient\PodcastClient;
 use eLife\ApiClient\ApiClient\SubjectsClient;
 use eLife\ApiSdk\Client\Subjects;
 use eLife\ApiSdk\Serializer\AddressNormalizer;
@@ -16,6 +18,7 @@ use eLife\ApiSdk\Serializer\ArticlePoANormalizer;
 use eLife\ApiSdk\Serializer\ArticleVoRNormalizer;
 use eLife\ApiSdk\Serializer\Block;
 use eLife\ApiSdk\Serializer\BlogArticleNormalizer;
+use eLife\ApiSdk\Serializer\CollectionNormalizer;
 use eLife\ApiSdk\Serializer\EventNormalizer;
 use eLife\ApiSdk\Serializer\GroupAuthorNormalizer;
 use eLife\ApiSdk\Serializer\ImageNormalizer;
@@ -24,8 +27,10 @@ use eLife\ApiSdk\Serializer\LabsExperimentNormalizer;
 use eLife\ApiSdk\Serializer\MediumArticleNormalizer;
 use eLife\ApiSdk\Serializer\OnBehalfOfAuthorNormalizer;
 use eLife\ApiSdk\Serializer\PersonAuthorNormalizer;
+use eLife\ApiSdk\Serializer\PersonDetailsNormalizer;
 use eLife\ApiSdk\Serializer\PersonNormalizer;
 use eLife\ApiSdk\Serializer\PlaceNormalizer;
+use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
 use eLife\ApiSdk\Serializer\Reference;
 use eLife\ApiSdk\Serializer\SubjectNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -60,6 +65,9 @@ trait GetSerializer
             new PersonNormalizer(new PeopleClient($this->getHttpClient())),
             new PlaceNormalizer(),
             new SubjectNormalizer(new SubjectsClient($this->getHttpClient())),
+            new CollectionNormalizer(new CollectionsClient($this->getHttpClient())),
+            new PersonDetailsNormalizer(),
+            new PodcastEpisodeNormalizer(new PodcastClient($this->getHttpClient())),
             new Block\BoxNormalizer(),
             new Block\FileNormalizer(),
             new Block\ImageNormalizer(),

@@ -36,7 +36,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->workflow = new BlogArticleWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
     }
 
-    public function tearDown()
+    public function asyncTearDown()
     {
         Mockery::close();
         parent::tearDown();
@@ -48,10 +48,8 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
      */
     public function testSerializationSmokeTest(BlogArticle $blogArticle, array $context = [], array $expected = [])
     {
-        $this->markTestIncomplete('Work in progress');
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();
-
         // Check A to B
         $serialized = $this->workflow->serialize($blogArticle);
         /** @var BlogArticle $deserialized */
@@ -76,9 +74,8 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
      */
     public function testValidationOfBlogArticle(BlogArticle $blogArticle)
     {
-        // Validator is being inaccurate.
-        // $return = $this->workflow->validate($blogArticle);
-        // $this->assertInstanceOf(BlogArticle::class, $return);
+        $return = $this->workflow->validate($blogArticle);
+        $this->assertInstanceOf(BlogArticle::class, $return);
     }
 
     /**
