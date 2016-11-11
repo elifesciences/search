@@ -54,15 +54,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $serialized = $this->workflow->serialize($blogArticle);
         /** @var BlogArticle $deserialized */
         $deserialized = $this->workflow->deserialize($serialized);
-
         $this->assertInstanceOf(BlogArticle::class, $deserialized);
-        $this->asyncAssertEquals($blogArticle->getContent(), $deserialized->getContent(), 'Content matches after serializing');
-        $this->asyncAssertEquals($blogArticle->getId(), $deserialized->getId(), 'Id matches after serializing');
-        $this->asyncAssertEquals($blogArticle->getImpactStatement(), $deserialized->getImpactStatement(), 'Impact statement matches after serializing');
-        $this->asyncAssertEquals($blogArticle->getPublishedDate(), $deserialized->getPublishedDate(), 'Published date matches after serializing');
-        $this->asyncAssertEquals($blogArticle->getSubjects(), $deserialized->getSubjects(), 'Subjects matches after serializing');
-        $this->asyncAssertEquals($blogArticle->getTitle(), $deserialized->getTitle(), 'Title matches after serializing');
-
         // Check B to A
         $final_serialized = $this->workflow->serialize($deserialized);
         $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
