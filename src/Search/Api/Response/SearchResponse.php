@@ -49,8 +49,10 @@ final class SearchResponse implements HasHeaders
         $this->items = $items;
         // @todo remove this hack!
         $this->items = array_map(function ($item) {
-            if ($item->image) {
-                $item->image = $item->image->https();
+            if (property_exists($item, 'image')) {
+                if ($item->image) {
+                    $item->image = $item->image->https();
+                }
             }
             $item->statusDate = new DateTime();
 

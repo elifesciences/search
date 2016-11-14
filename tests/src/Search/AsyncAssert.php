@@ -4,6 +4,7 @@ namespace tests\eLife\Search;
 
 use BadMethodCallException;
 use Closure;
+use Exception;
 use function GuzzleHttp\Promise\all;
 
 /**
@@ -114,8 +115,8 @@ trait AsyncAssert
                 all($arguments)->then(Closure::bind(function ($args) use ($fn) {
                     try {
                         $this->{$fn}(...$args);
-                    } catch (\Exception $e) {
-                        $this->messages[] = $e->getMessage();
+                    } catch (Exception $e) {
+                        $this->messages[] = $e;
                     }
                 }, $this));
             } else {
@@ -124,11 +125,12 @@ trait AsyncAssert
         }
     }
 
-    public function tearDown()
+    final public function tearDown()
     {
         if (method_exists($this, 'fail')) {
             foreach ($this->messages as $message) {
-                $this->fail($message.'(1 of '.count($this->messages).' failures)');
+                echo 'There were '.count($this->messages).' total failures';
+                throw $message;
             }
         }
         if (method_exists($this, 'asyncTearDown')) {

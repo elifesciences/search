@@ -36,7 +36,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->workflow = new BlogArticleWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
     }
 
-    public function tearDown()
+    public function asyncTearDown()
     {
         Mockery::close();
         parent::tearDown();
@@ -48,23 +48,13 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
      */
     public function testSerializationSmokeTest(BlogArticle $blogArticle, array $context = [], array $expected = [])
     {
-        $this->markTestIncomplete('Work in progress');
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();
-
         // Check A to B
         $serialized = $this->workflow->serialize($blogArticle);
         /** @var BlogArticle $deserialized */
         $deserialized = $this->workflow->deserialize($serialized);
-
         $this->assertInstanceOf(BlogArticle::class, $deserialized);
-        $this->asyncAssertEquals($blogArticle->getContent(), $deserialized->getContent(), 'Content matches after serializing');
-        $this->asyncAssertEquals($blogArticle->getId(), $deserialized->getId(), 'Id matches after serializing');
-        $this->asyncAssertEquals($blogArticle->getImpactStatement(), $deserialized->getImpactStatement(), 'Impact statement matches after serializing');
-        $this->asyncAssertEquals($blogArticle->getPublishedDate(), $deserialized->getPublishedDate(), 'Published date matches after serializing');
-        $this->asyncAssertEquals($blogArticle->getSubjects(), $deserialized->getSubjects(), 'Subjects matches after serializing');
-        $this->asyncAssertEquals($blogArticle->getTitle(), $deserialized->getTitle(), 'Title matches after serializing');
-
         // Check B to A
         $final_serialized = $this->workflow->serialize($deserialized);
         $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
@@ -76,9 +66,8 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
      */
     public function testValidationOfBlogArticle(BlogArticle $blogArticle)
     {
-        // Validator is being inaccurate.
-        // $return = $this->workflow->validate($blogArticle);
-        // $this->assertInstanceOf(BlogArticle::class, $return);
+        $return = $this->workflow->validate($blogArticle);
+        $this->assertInstanceOf(BlogArticle::class, $return);
     }
 
     /**
