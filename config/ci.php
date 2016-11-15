@@ -9,4 +9,5 @@ return [
     'ttl' => 0,
     'gearman_servers' => ['localhost'],
     'gearman_auto_restart' => false,
+    'aws' => ['queue_name' => 'search--ci'],
 ];
