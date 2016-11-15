@@ -77,6 +77,7 @@ final class Kernel implements MinimalKernel
             'elastic_index' => 'elife_search',
             'gearman_auto_restart' => true,
             'aws' => [
+                'credential_file' => false,
                 'mock_queue' => true,
                 'queue_name' => 'eLife-search',
                 'key' => '-----------------------',
@@ -273,6 +274,10 @@ final class Kernel implements MinimalKernel
         };
 
         $app['aws.sqs'] = function (Application $app) {
+            if ($app['config']['aws']['credential_file'] === true) {
+                return new SqsClient(['version' => '2012-11-05']);
+            }
+
             return new SqsClient([
                 'credentials' => [
                     'key' => $app['config']['aws']['key'],
