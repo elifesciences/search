@@ -5,5 +5,6 @@ return [
     'aws' => [
         'queue_name' => 'search--prod',
         'credential_file' => true,
+        'region' => 'us-east-1',
     ],
 ];
