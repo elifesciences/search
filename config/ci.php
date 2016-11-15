@@ -12,5 +12,6 @@ return [
     'aws' => [
         'queue_name' => 'search--ci',
         'credential_file' => true,
+        'region' => 'us-east-1',
     ],
 ];

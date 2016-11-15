@@ -275,7 +275,10 @@ final class Kernel implements MinimalKernel
 
         $app['aws.sqs'] = function (Application $app) {
             if ($app['config']['aws']['credential_file'] === true) {
-                return new SqsClient(['version' => '2012-11-05']);
+                return new SqsClient([
+                    'version' => '2012-11-05',
+                    'region' => $app['config']['aws']['region'],
+                ]);
             }
 
             return new SqsClient([
