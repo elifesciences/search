@@ -46,6 +46,7 @@ use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -356,8 +357,12 @@ final class Kernel implements MinimalKernel
         }
     }
 
-    public function handleException($e) : Response
+    public function handleException(Throwable $e) : Response
     {
+        return new JsonResponse([
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
     }
 
     public function withApp(callable $fn)
