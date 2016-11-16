@@ -3,7 +3,6 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\Search\Queue\Mock\QueueItemMock;
-use eLife\Search\Queue\QueueItem;
 use eLife\Search\Queue\QueueItemTransformer;
 use eLife\Search\Queue\WatchableQueue;
 use eLife\Search\Workflow\CliLogger;
@@ -11,7 +10,6 @@ use GearmanClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,19 +19,21 @@ class QueueCommand extends Command
     private $queue;
     private $transformer;
     private $client;
-    private $items_status;
     private $isMock;
+    private $topic;
 
     public function __construct(
         WatchableQueue $queue,
         QueueItemTransformer $transformer,
         GearmanClient $client,
-        bool $isMock = false
+        bool $isMock,
+        string $topic
     ) {
         $this->queue = $queue;
         $this->transformer = $transformer;
         $this->client = $client;
         $this->isMock = $isMock;
+        $this->topic = $topic;
         parent::__construct(null);
     }
 
@@ -49,8 +49,7 @@ class QueueCommand extends Command
             ->addOption('memory', 'm', InputOption::VALUE_OPTIONAL, 'Memory limit before exiting safely (Megabytes).', 360)
             ->addOption('memory-interval', 'M', InputOption::VALUE_OPTIONAL, 'How often to check memory.', 10)
             ->addOption('queue-timeout', 'T', InputOption::VALUE_OPTIONAL, 'Visibility Timeout for AWS queue item', 10)
-            ->addOption('mock', 'k', InputOption::VALUE_OPTIONAL, 'How many mock items to start with', 0)
-            ->addArgument('topic', InputArgument::REQUIRED, 'Which topic to subscribe to.');
+            ->addOption('mock', 'k', InputOption::VALUE_OPTIONAL, 'How many mock items to start with', 0);
     }
 
     protected function mock(OutputInterface $output, LoggerInterface $logger, int $mocks)
@@ -125,45 +124,11 @@ class QueueCommand extends Command
         }
     }
 
-    /**
-     * @deprecated
-     */
-    public function trackStatus(QueueItem $item)
-    {
-        $this->items_status[] = $item;
-    }
-
-    /**
-     * @deprecated
-     */
-    public function checkStatus(InputInterface $input, LoggerInterface $logger)
-    {
-        // @todo WARNING PSEUDO CODE.
-        // If they are done, we will run: $this->queue->commit($item);
-        // This will remove them from that internal queue.
-        // @todo check if we need the store item_status with the other queue in place.
-        // Check if we have items to check.
-        if (!empty($this->items_status)) {
-            // This will be where we ask gearman if our tasks are done.
-            foreach ($this->items_status as $k => $item) {
-                if ($item instanceof QueueItem) {
-                    $status = $this->client->jobStatus($item->getReceipt().'--complete'); // Flag for last step.
-                    // Something like this but nicer.
-                    if (!isset($status[0])) {
-                        $this->queue->commit($item);
-                        unset($this->items_status[$k]);
-                    }
-                }
-            }
-        }
-    }
-
     public function loop(InputInterface $input, LoggerInterface $logger)
     {
         $logger->debug('Loop start... [');
-        $topic = $input->getArgument('topic');
         $timeout = $input->getOption('queue-timeout');
-        $logger->info('-> Listening to topic ', ['topic' => $topic]);
+        $logger->info('-> Listening to topic ', ['topic' => $this->topic]);
         if ($this->queue->isValid()) {
             $item = $this->queue->dequeue($timeout);
             // Transform into something for gearman.
@@ -186,7 +151,7 @@ class QueueCommand extends Command
                 'id' => $item->getId(),
             ]);
         } else {
-            $logger->info('-> Queue is empty ', ['topic' => $topic]);
+            $logger->info('-> Queue is empty ', ['topic' => $this->topic]);
         }
         $logger->debug("]\n");
 
