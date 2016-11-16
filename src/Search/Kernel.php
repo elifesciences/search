@@ -386,7 +386,10 @@ final class Kernel implements MinimalKernel
     public function validate(Request $request, Response $response)
     {
         try {
-            if (strpos($response->headers->get('Content-Type'), 'json')) {
+            if (
+                strpos($response->headers->get('Content-Type'), 'json') &&
+                !$response instanceof JsonResponse
+            ) {
                 $this->app['puli.validator']->validate(
                     $this->app['psr7.bridge']->createResponse($response)
                 );
