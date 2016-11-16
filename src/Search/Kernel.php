@@ -317,10 +317,10 @@ final class Kernel implements MinimalKernel
 
         $app['console.gearman.queue'] = function (Application $app) {
             if ($app['config']['aws']['mock_queue']) {
-                return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client'], true);
+                return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client'], true, $app['config']['aws']['queue_name']);
             }
 
-            return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client'], $app['config']['aws']['queue_name']);
+            return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client'], false, $app['config']['aws']['queue_name']);
         };
 
         $app['console.build_index'] = function (Application $app) {
