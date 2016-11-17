@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+./bin/console search:setup
+./bin/console gearman:worker &
+./bin/console gearman:import all
+sleep 15
+kill $!
