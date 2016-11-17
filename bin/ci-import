@@ -9,8 +9,10 @@ fi;
 ./bin/console gearman:worker --env=$environment &
 ./bin/console gearman:import all --env=$environment
 
+workerPid=$!
+
 gearmanTasks=$(gearadmin --status | cut -f 2 | paste -sd+ | bc);
 
 until [ "$gearmanTasks" -eq "0" ]; do :; done;
 
-kill $!;
+kill $workerPid;
