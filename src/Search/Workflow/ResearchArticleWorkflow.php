@@ -121,7 +121,7 @@ final class ResearchArticleWorkflow implements Workflow
         // But maintain original content.
         $articleObject->body = [
             'format' => 'json',
-            'value' => json_encode($articleObject->body),
+            'value' => json_encode($articleObject->body ?? '[]'),
         ];
 
         $this->logger->debug('Article<'.$article->getId().'> Detected type '.($article->getType() ?? 'research-article'));

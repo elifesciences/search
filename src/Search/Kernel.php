@@ -46,6 +46,7 @@ use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -57,7 +58,6 @@ final class Kernel implements MinimalKernel
 
     public static $routes = [
         '/search' => 'indexAction',
-        '/test-search' => 'searchTestAction',
     ];
 
     private $app;
@@ -318,7 +318,8 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.gearman.queue'] = function (Application $app) {
-            if ($app['config']['aws']['mock_queue']) {
+            $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
+            if ($mock_queue) {
                 return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client'], true, $app['config']['aws']['queue_name']);
             }
 
@@ -357,8 +358,12 @@ final class Kernel implements MinimalKernel
         }
     }
 
-    public function handleException($e) : Response
+    public function handleException(Throwable $e) : Response
     {
+        return new JsonResponse([
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
     }
 
     public function withApp(callable $fn)
@@ -382,7 +387,10 @@ final class Kernel implements MinimalKernel
     public function validate(Request $request, Response $response)
     {
         try {
-            if (strpos($response->headers->get('Content-Type'), 'json')) {
+            if (
+                strpos($response->headers->get('Content-Type'), 'json') &&
+                !$response instanceof JsonResponse
+            ) {
                 $this->app['puli.validator']->validate(
                     $this->app['psr7.bridge']->createResponse($response)
                 );

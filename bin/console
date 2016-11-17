@@ -11,7 +11,8 @@ use Symfony\Component\Console\Input\ArgvInput;
 $input = new ArgvInput();
 $env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'local');
 if (!file_exists(__DIR__.'/../config/'.$env.'.php')) {
-    die('Environment `'.$env.'` not found.');
+    print 'Environment `'.$env.'` not found.';
+    exit(1);
 }
 $config = require __DIR__.'/../config/'.$env.'.php';
 if (!defined('GEARMAN_INSTALLED')) {
