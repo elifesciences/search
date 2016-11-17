@@ -11,8 +11,6 @@ fi;
 
 workerPid=$!
 
-gearmanTasks=$(gearadmin --status | cut -f 2 | paste -sd+ | bc);
-
-until [ "$gearmanTasks" -eq "0" ]; do :; done;
+until [ `gearadmin --status | cut -f 2 | paste -sd+ | bc` -eq "0" ]; do :; done;
 
 kill $workerPid;
