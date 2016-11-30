@@ -132,11 +132,8 @@ final class ApiSdkCommand extends Command
                     $normalized = $this->serializer->serialize($item, 'json');
                     $this->task($task, $normalized);
                 }
-            } catch (Throwable $e) {
-                $logger->alert($e->getMessage());
-                continue;
-            } catch (Error $e) {
-                $logger->error($e->getMessage());
+            } catch ($e) {
+                $logger->alert("Error on a ".get_class($item), ['exception' => $e]);
                 continue;
             }
         }
