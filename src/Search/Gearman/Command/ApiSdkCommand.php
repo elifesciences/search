@@ -133,7 +133,7 @@ final class ApiSdkCommand extends Command
                     $this->task($task, $normalized);
                 }
             } catch (Throwable $e) {
-                $logger->alert("Error on a ".get_class($item), ['exception' => $e]);
+                $logger->alert('Error on a '.get_class($item), ['exception' => $e]);
                 continue;
             }
         }
