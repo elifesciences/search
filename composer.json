@@ -3,7 +3,7 @@
     "description": "Search API gateway",
     "require": {
         "elife/api-validator": "dev-master#6dc70d7",
-        "elife/api-sdk": "dev-master#b2f591b844",
+        "elife/api-sdk": "dev-master#ea6d0d1",
         "elife/api": "dev-master#b3b1321",
         "silex/silex": "^2.0",
         "jms/serializer": "^1.3",

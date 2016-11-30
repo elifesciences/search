@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0308077461963679bbe37e84eef90f6a",
-    "content-hash": "934ae520d707ebf798905bc7064df7fa",
+    "hash": "5a1db64c0c43f5af4ef5b3b070542cfd",
+    "content-hash": "63aa9f0ab4c872c5f32731bc26d1bd0e",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -549,12 +549,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "b3b13210b45e14b11940ffe91a0aca2706b964ee"
+                "reference": "b3b1321"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/b3b13210b45e14b11940ffe91a0aca2706b964ee",
-                "reference": "b3b13210b45e14b11940ffe91a0aca2706b964ee",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/b3b1321",
+                "reference": "b3b1321",
                 "shasum": ""
             },
             "require": {
@@ -628,12 +628,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "b2f591b844839f1e99310a1181457c5d2dbf2923"
+                "reference": "ea6d0d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/cdaa3313b3fb412b71bcd4be1c2d07b9bcf7ac2d",
-                "reference": "b2f591b844839f1e99310a1181457c5d2dbf2923",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/ea6d0d1",
+                "reference": "ea6d0d1",
                 "shasum": ""
             },
             "require": {
@@ -668,7 +668,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2016-10-28 13:23:45"
+            "time": "2016-11-30 08:46:58"
         },
         {
             "name": "elife/api-validator",
@@ -3182,16 +3182,16 @@
         },
         {
             "name": "symfony/stopwatch",
-            "version": "v3.1.6",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/stopwatch.git",
-                "reference": "bb42806b12c5f89db4ebf64af6741afe6d8457e1"
+                "reference": "5b139e1c4290e6c7640ba80d9c9b5e49ef22b841"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/bb42806b12c5f89db4ebf64af6741afe6d8457e1",
-                "reference": "bb42806b12c5f89db4ebf64af6741afe6d8457e1",
+                "url": "https://api.github.com/repos/symfony/stopwatch/zipball/5b139e1c4290e6c7640ba80d9c9b5e49ef22b841",
+                "reference": "5b139e1c4290e6c7640ba80d9c9b5e49ef22b841",
                 "shasum": ""
             },
             "require": {
@@ -3200,7 +3200,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -3227,7 +3227,7 @@
             ],
             "description": "Symfony Stopwatch Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-29 05:41:56"
+            "time": "2016-06-29 05:43:10"
         },
         {
             "name": "symfony/translation",
@@ -3295,21 +3295,21 @@
         },
         {
             "name": "symfony/twig-bridge",
-            "version": "v3.1.6",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/twig-bridge.git",
-                "reference": "a75dfd56d7cf8df1843dcf44a0d6d4ef8b72440c"
+                "reference": "9a5cc4dd0f05425bfab26d6e33299becc45bcd4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/twig-bridge/zipball/a75dfd56d7cf8df1843dcf44a0d6d4ef8b72440c",
-                "reference": "a75dfd56d7cf8df1843dcf44a0d6d4ef8b72440c",
+                "url": "https://api.github.com/repos/symfony/twig-bridge/zipball/9a5cc4dd0f05425bfab26d6e33299becc45bcd4f",
+                "reference": "9a5cc4dd0f05425bfab26d6e33299becc45bcd4f",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.9",
-                "twig/twig": "~1.27|~2.0"
+                "twig/twig": "~1.28|~2.0"
             },
             "require-dev": {
                 "symfony/asset": "~2.8|~3.0",
@@ -3317,7 +3317,7 @@
                 "symfony/expression-language": "~2.8|~3.0",
                 "symfony/finder": "~2.8|~3.0",
                 "symfony/form": "~3.0.4",
-                "symfony/http-kernel": "~2.8|~3.0",
+                "symfony/http-kernel": "~3.2",
                 "symfony/polyfill-intl-icu": "~1.0",
                 "symfony/routing": "~2.8|~3.0",
                 "symfony/security": "~2.8|~3.0",
@@ -3325,7 +3325,7 @@
                 "symfony/stopwatch": "~2.8|~3.0",
                 "symfony/templating": "~2.8|~3.0",
                 "symfony/translation": "~2.8|~3.0",
-                "symfony/var-dumper": "~2.8.9|~3.0.9|~3.1.3|~3.2",
+                "symfony/var-dumper": "~2.8.10|~3.1.4|~3.2",
                 "symfony/yaml": "~2.8|~3.0"
             },
             "suggest": {
@@ -3345,7 +3345,7 @@
             "type": "symfony-bridge",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -3372,7 +3372,7 @@
             ],
             "description": "Symfony Twig Bridge",
             "homepage": "https://symfony.com",
-            "time": "2016-10-24 15:52:44"
+            "time": "2016-11-15 16:06:06"
         },
         {
             "name": "symfony/validator",
@@ -3513,16 +3513,16 @@
         },
         {
             "name": "symfony/web-profiler-bundle",
-            "version": "v3.1.6",
+            "version": "v3.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/web-profiler-bundle.git",
-                "reference": "051d666ab2a9ddb48fb9283d8b940aba055a6a84"
+                "reference": "bd7cfbf8ee670e2df6a4b5ce7a534b1d6c3139bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/051d666ab2a9ddb48fb9283d8b940aba055a6a84",
-                "reference": "051d666ab2a9ddb48fb9283d8b940aba055a6a84",
+                "url": "https://api.github.com/repos/symfony/web-profiler-bundle/zipball/bd7cfbf8ee670e2df6a4b5ce7a534b1d6c3139bd",
+                "reference": "bd7cfbf8ee670e2df6a4b5ce7a534b1d6c3139bd",
                 "shasum": ""
             },
             "require": {
@@ -3567,7 +3567,7 @@
             ],
             "description": "Symfony WebProfilerBundle",
             "homepage": "https://symfony.com",
-            "time": "2016-10-23 01:13:38"
+            "time": "2016-11-16 22:17:09"
         },
         {
             "name": "symfony/yaml",
@@ -3620,16 +3620,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.27.0",
+            "version": "v1.28.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97"
+                "reference": "b22ce0eb070e41f7cba65d78fe216de29726459c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97",
-                "reference": "3c6c0033fd3b5679c6e1cb60f4f9766c2b424d97",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b22ce0eb070e41f7cba65d78fe216de29726459c",
+                "reference": "b22ce0eb070e41f7cba65d78fe216de29726459c",
                 "shasum": ""
             },
             "require": {
@@ -3637,12 +3637,12 @@
             },
             "require-dev": {
                 "symfony/debug": "~2.7",
-                "symfony/phpunit-bridge": "~2.7"
+                "symfony/phpunit-bridge": "~3.2@dev"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.27-dev"
+                    "dev-master": "1.28-dev"
                 }
             },
             "autoload": {
@@ -3677,7 +3677,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-10-25 19:17:17"
+            "time": "2016-11-23 18:41:40"
         },
         {
             "name": "webmozart/assert",
