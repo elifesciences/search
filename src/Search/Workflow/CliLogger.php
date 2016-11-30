@@ -68,7 +68,7 @@ final class CliLogger implements LoggerInterface
         if (array_key_exists('exception', $context)) {
             $e = $context['exception'];
             $this->output->writeln($e->getMessage());
-            $this->output->writeln($e->getFile().':'$e->getLine());
+            $this->output->writeln($e->getFile().':'.$e->getLine());
             $this->output->writeln($e->getTraceAsString());
         }
     }
