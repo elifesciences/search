@@ -45,7 +45,7 @@ trait BasicTransformer
                 break;
 
             default:
-                throw new LogicException('ApiSDK does not exist for that type.');
+                throw new LogicException("ApiSDK does not exist for the type `{$item->getType()}`.");
         }
     }
 
