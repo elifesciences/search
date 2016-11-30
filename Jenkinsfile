@@ -14,6 +14,7 @@ elifePipeline {
         elifeEnd2EndTest({
             builderDeployRevision 'search--end2end', commit
             builderSmokeTests 'search--end2end', '/srv/search'
+            builderCmd 'search--end2end', 'cd /srv/search; php bin/console gearman:import all --env=end2end'
         }, 'two')
 
         stage 'Approval'
