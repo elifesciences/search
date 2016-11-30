@@ -11,6 +11,6 @@ fi;
 
 workerPid=$!
 
-until [ `gearadmin --status | cut -f 2 | paste -sd+ | bc` -eq "0" ]; do :; done;
+./bin/wait-for-empty-gearman-queue
 
 kill $workerPid;
