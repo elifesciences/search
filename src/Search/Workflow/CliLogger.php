@@ -25,6 +25,7 @@ final class CliLogger implements LoggerInterface
     public function alert($message, array $context = array())
     {
         $this->output->writeln('<error>ALERT: '.$message.'</error>');
+        $this->dumpExceptionIfPresent($context);
     }
 
     public function critical($message, array $context = array())
@@ -60,5 +61,15 @@ final class CliLogger implements LoggerInterface
     public function log($level, $message, array $context = array())
     {
         $this->output->writeln($message);
+    }
+
+    private function dumpExceptionIfPresent(array $context)
+    {
+        if (array_key_exists('exception', $context)) {
+            $e = $context['exception'];
+            $this->output->writeln($e->getMessage());
+            $this->output->writeln($e->getFile().':'.$e->getLine());
+            $this->output->writeln($e->getTraceAsString());
+        }
     }
 }
