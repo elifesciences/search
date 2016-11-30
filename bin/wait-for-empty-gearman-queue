@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+while true; do
+    queue=$(gearadmin --status | cut -f 2 | paste -sd+ | bc)
+    echo "Job in queue: $queue"
+    if [ "$queue" -eq "0" ]; then
+        break
+    fi
+done
