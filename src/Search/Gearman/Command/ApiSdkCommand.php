@@ -126,7 +126,7 @@ final class ApiSdkCommand extends Command
                 $normalized = $this->serializer->serialize($item, 'json');
                 $this->task($task, $normalized);
             } catch (Throwable $e) {
-                $logger->warning('Warning on a '.get_class($item), ['exception' => $e]);
+                $logger->warning('Skipping import on a '.get_class($item), ['exception' => $e]);
                 continue;
             }
         }

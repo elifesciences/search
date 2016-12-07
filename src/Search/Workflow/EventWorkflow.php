@@ -118,8 +118,10 @@ final class EventWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('Event<'.$id.'>', $e->getMessage());
-            $this->logger->alert('Event<'.$id.'> Rolling back...');
+            $this->logger->alert('Event<'.$id.'> Rolling back...', [
+                'message' => $e->getMessage(),
+                'exception' => $e,
+            ]);
             $this->client->deleteDocument($type, $id);
 
             return self::WORKFLOW_FAILURE;

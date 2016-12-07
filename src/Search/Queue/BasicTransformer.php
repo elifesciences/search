@@ -41,6 +41,7 @@ trait BasicTransformer
                 break;
 
             case 'research-article':
+            case 'article':
                 return $this->sdk->articles();
                 break;
 
