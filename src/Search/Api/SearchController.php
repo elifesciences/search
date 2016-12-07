@@ -81,6 +81,11 @@ final class SearchController
         throw new ServiceUnavailableHttpException(10);
     }
 
+    public function pingAction()
+    {
+        return new Response('pong', 200);
+    }
+
     private function serialize($data, int $version = null, $group = null)
     {
         $context = $this->context;
