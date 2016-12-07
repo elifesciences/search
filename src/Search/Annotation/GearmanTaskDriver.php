@@ -109,15 +109,12 @@ final class GearmanTaskDriver
         try {
             while ($this->worker->work());
         } catch (InvalidWorkflow $e) {
-            $logger->error($e->getMessage());
-            $logger->warning('Recoverable error...');
+            $logger->warning('Recoverable error...', ['exception' => $e]);
             $this->work($logger, true);
         } catch (Throwable $e) {
             $logger->critical($e->getMessage());
             if ($this->autoRestart) {
-                $logger->warning('========================================');
-                $logger->warning('| Restarting worker to avoid downtime. |');
-                $logger->warning('========================================');
+                $logger->warning('> Restarting worker to avoid downtime.', ['exception' => $e]);
                 $this->work($logger, true);
             }
         }

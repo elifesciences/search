@@ -119,8 +119,10 @@ final class PodcastEpisodeWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert($e->getMessage());
-            $this->logger->alert('PodcastEpisode<'.$id.'> rolling back');
+            $this->logger->alert('PodcastEpisode<'.$id.'> rolling back', [
+                'message' => $e->getMessage(),
+                'exception' => $e,
+            ]);
             $this->client->deleteDocument($type, $id);
             // We failed.
             return self::WORKFLOW_FAILURE;

@@ -123,17 +123,10 @@ final class ApiSdkCommand extends Command
         foreach ($items as $item) {
             $progress->advance();
             try {
-                $title = method_exists($item, 'getTitle') ? $item->getTitle() : ' a new '.get_class($item);
-                // @todo remove temporary import fix.
-                if (
-                    trim($title) !== 'Mapping the zoonotic niche of Ebola virus disease in Africa' &&
-                    trim($title) !== 'The genome sequence of the colonial chordate, <i>Botryllus schlosseri</i>'
-                ) {
-                    $normalized = $this->serializer->serialize($item, 'json');
-                    $this->task($task, $normalized);
-                }
+                $normalized = $this->serializer->serialize($item, 'json');
+                $this->task($task, $normalized);
             } catch (Throwable $e) {
-                $logger->alert('Error on a '.get_class($item), ['exception' => $e]);
+                $logger->warning('Skipping import on a '.get_class($item), ['exception' => $e]);
                 continue;
             }
         }

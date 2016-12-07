@@ -65,7 +65,6 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
                 break;
 
             // We have hit an error.
-            // @todo maybe some normalization here?
             case isset($data['error']):
                 $data['internal_search_type'] = 'error';
                 break;

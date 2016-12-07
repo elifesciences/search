@@ -40,7 +40,7 @@ trait BasicTransformer
                 return $this->sdk->collections();
                 break;
 
-            case 'research-article':
+            case 'article':
                 return $this->sdk->articles();
                 break;
 
@@ -64,7 +64,7 @@ trait BasicTransformer
         'labs-experiment' => 'labs_experiment_validate',
         'podcast-episode' => 'podcast_episode_validate',
         'collection' => 'collection_validate',
-        'research-article' => 'research_article_validate',
+        'article' => 'research_article_validate',
     ];
 
     public function getGearmanTask(QueueItem $item) : string
