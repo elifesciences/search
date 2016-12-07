@@ -12,7 +12,6 @@ use JMS\Serializer\EventDispatcher\PreSerializeEvent;
 final class SearchResultDiscriminator implements EventSubscriberInterface
 {
     public static $articleTypes = [
-        'article',
         'correction',
         'editorial',
         'feature',
