@@ -1,0 +1,14 @@
+elifePipeline {
+    def commit
+    stage 'Checkout approved', {
+        checkout scm
+        commit = elifeGitRevision()
+    }
+
+    stage 'Deploy', {
+        elifeDeploySlackNotification 'search', 'prod'
+        elifeGitMoveToBranch commit, 'master'
+        builderDeployRevision 'search--prod', commit
+        builderSmokeTests 'search--prod', '/srv/search'
+    }
+}
