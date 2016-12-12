@@ -130,7 +130,7 @@ class QueueCommand extends Command
     {
         $logger->debug('Loop start... [');
         $timeout = $input->getOption('queue-timeout');
-        $logger->info('-> Listening to topic ', ['topic' => $this->topic]);
+        $logger->debug('-> Listening to topic ', ['topic' => $this->topic]);
         if ($this->queue->isValid()) {
             $item = $this->queue->dequeue($timeout);
             // Transform into something for gearman.
@@ -153,7 +153,7 @@ class QueueCommand extends Command
                 'id' => $item->getId(),
             ]);
         } else {
-            $logger->info('-> Queue is empty ', ['topic' => $this->topic]);
+            $logger->debug('-> Queue is empty ', ['topic' => $this->topic]);
         }
         $logger->debug("]\n");
 
