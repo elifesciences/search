@@ -41,7 +41,6 @@ use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
 use Monolog\Handler\LogglyHandler;
-use Monolog\Handler\PHPConsoleHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\NullLogger;
@@ -82,8 +81,8 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
             'gearman_auto_restart' => true,
-            'file_log_path' => self::ROOT . '/var/logs/debug.log',
-            'file_error_log_path' => self::ROOT . '/var/logs/error.log',
+            'file_log_path' => self::ROOT.'/var/logs/debug.log',
+            'file_error_log_path' => self::ROOT.'/var/logs/error.log',
             'loggly_key' => null,
             'aws' => [
                 'credential_file' => false,
@@ -187,11 +186,12 @@ final class Kernel implements MinimalKernel
             if ($app['config']['loggly_key']) {
                 $logger->pushHandler(new LogglyHandler($app['config']['loggly_key']));
             }
+
             return $logger;
         };
 
         $app['logger.cli'] = function (Application $app) {
-          return $app['logger'];
+            return $app['logger'];
         };
 
         //#####################################################
