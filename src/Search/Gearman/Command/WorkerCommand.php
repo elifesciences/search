@@ -15,6 +15,7 @@ use eLife\Search\Workflow\LabsExperimentWorkflow;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
 use JMS\Serializer\Serializer;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,19 +28,23 @@ final class WorkerCommand extends Command
     private $gearman;
     private $client;
     private $validator;
+    private $logger;
 
     public function __construct(
         ApiSdk $sdk,
         Serializer $serializer,
         GearmanTaskDriver $gearman,
         ElasticsearchClient $client,
-        ApiValidator $validator
+        ApiValidator $validator,
+        LoggerInterface $logger
     ) {
         $this->sdk = $sdk;
         $this->serializer = $serializer;
         $this->gearman = $gearman;
         $this->client = $client;
         $this->validator = $validator;
+        $this->logger = $logger;
+
         parent::__construct(null);
     }
 
@@ -54,7 +59,7 @@ final class WorkerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $logger = new CliLogger($input, $output);
+        $logger = new CliLogger($input, $output, $this->logger);
         // Working..
         $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new EventWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));

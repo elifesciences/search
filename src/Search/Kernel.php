@@ -335,24 +335,24 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.gearman.worker'] = function (Application $app) {
-            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator']);
+            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator'], $app['logger.cli']);
         };
 
         $app['console.gearman.client'] = function (Application $app) {
-            return new ApiSdkCommand($app['api.sdk'], $app['gearman.client']);
+            return new ApiSdkCommand($app['api.sdk'], $app['gearman.client'], $app['logger.cli']);
         };
 
         $app['console.gearman.queue'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
-                return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client'], true, $app['config']['aws']['queue_name']);
+                return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client'], true, $app['config']['aws']['queue_name'], $app['logger.cli']);
             }
 
-            return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client'], false, $app['config']['aws']['queue_name']);
+            return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client'], false, $app['config']['aws']['queue_name'], $app['logger.cli']);
         };
 
         $app['console.build_index'] = function (Application $app) {
-            return new BuildIndexCommand($app['elastic.client']);
+            return new BuildIndexCommand($app['elastic.client'], $app['logger.cli']);
         };
     }
 

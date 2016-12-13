@@ -23,14 +23,18 @@ final class ApiSdkCommand extends Command
     private $sdk;
     private $serializer;
     private $output;
+    private $logger;
 
     public function __construct(
         ApiSdk $sdk,
-        GearmanClient $client
+        GearmanClient $client,
+        LoggerInterface $logger
     ) {
         $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
         $this->client = $client;
+        $this->logger = $logger;
+
         parent::__construct(null);
     }
 
@@ -45,7 +49,7 @@ final class ApiSdkCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $logger = new CliLogger($input, $output);
+        $logger = new CliLogger($input, $output, $this->logger);
         $this->output = $output;
         $entity = $input->getArgument('entity');
         // Only the configured.

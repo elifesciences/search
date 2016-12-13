@@ -5,6 +5,7 @@ namespace eLife\Search\Api\Elasticsearch\Command;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use eLife\Search\Workflow\CliLogger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,10 +15,12 @@ use Throwable;
 class BuildIndexCommand extends Command
 {
     private $client;
+    private $logger;
 
-    public function __construct(ElasticsearchClient $client)
+    public function __construct(ElasticsearchClient $client, LoggerInterface $logger)
     {
         $this->client = $client;
+        $this->logger = $logger;
 
         parent::__construct(null);
     }
@@ -32,7 +35,7 @@ class BuildIndexCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $logger = new CliLogger($input, $output);
+        $logger = new CliLogger($input, $output, $this->logger);
 
         $mapping = array_filter(
             array_merge(
