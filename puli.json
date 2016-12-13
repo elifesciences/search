@@ -343,6 +343,10 @@
             "install-path": "vendor/symfony/polyfill-mbstring",
             "installer": "composer"
         },
+        "symfony/polyfill-php70": {
+            "install-path": "vendor/symfony/polyfill-php70",
+            "installer": "composer"
+        },
         "symfony/process": {
             "install-path": "vendor/symfony/process",
             "installer": "composer"
