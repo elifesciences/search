@@ -1,0 +1,31 @@
+0
+a:5:{s:6:"status";i:200;s:7:"headers";a:7:{s:6:"Server";a:1:{i:0;s:11:"nginx/1.6.2";}s:12:"Content-Type";a:1:{i:0;s:50:"application/vnd.elife.blog-article+json; version=1";}s:17:"Transfer-Encoding";a:1:{i:0;s:7:"chunked";}s:10:"Connection";a:1:{i:0;s:10:"keep-alive";}s:12:"X-Powered-By";a:1:{i:0;s:10:"PHP/7.0.10";}s:13:"Cache-Control";a:1:{i:0;s:8:"no-cache";}s:4:"Date";a:1:{i:0;s:29:"Tue, 13 Dec 2016 13:14:33 GMT";}}s:4:"body";s:1856:"{
+    "id": "359325",
+    "title": "Media coverage: Slime can see",
+    "impactStatement": "In their research paper \u2013 Cyanobacteria use micro-optics to sense light direction \u2013 Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world\u2019s oldest and smallest camera eye, allowing them to \u2018see\u2019.",
+    "published": "2016-07-08T08:33:25Z",
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "Cyanobacteria are found in huge numbers in water bodies or can form a slippery green film on rocks and pebbles. The species used in the study, <i>Synechocystis</i>, is found naturally in freshwater lakes and rivers."
+        },
+        {
+            "type": "paragraph",
+            "text": "As photosynthesis is crucial to the survival of these bacteria, scientists have sought to understand how they sense light. Previous studies have shown that they contain photosensors and are able to perceive the position of a light source and move towards it, a phenomenon called phototaxis."
+        },
+        {
+            "type": "paragraph",
+            "text": "The current study reveals that they are able to do this because the cell body acts like a lens. As light hits the spherical surface, it refracts into a point on the other side of the cell. This triggers movement by the cell away from the focused spot."
+        },
+        {
+            "type": "paragraph",
+            "text": "Within minutes, the bacteria grow tiny tentacle-like structures called pili that reach out towards the light source. As they attach to the surface that they\u2019re on, they retract and pull the bacteria along."
+        }
+    ],
+    "subjects": [
+        {
+            "id": "biophysics-structural-biology",
+            "name": "Biophysics and Structural Biology"
+        }
+    ]
+}";s:7:"version";s:3:"1.1";s:6:"reason";s:2:"OK";}

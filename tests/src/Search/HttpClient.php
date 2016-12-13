@@ -3,6 +3,8 @@
 namespace tests\eLife\Search;
 
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
+use Doctrine\Common\Cache\FilesystemCache;
+use eLife\ApiClient\HttpClient as SdkClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
@@ -19,25 +21,24 @@ trait HttpClient
     public $storage;
     public $httpClient;
 
-    final protected function getHttpClient() : \eLife\ApiClient\HttpClient
+    final protected function getHttpClient($record = false) : SdkClient
     {
         if (self::$puli === null) {
             self::setUpPuli();
         }
         if (null === $this->httpClient) {
-            $storage = new InMemoryStorageAdapter();
+            $storage = new DoctrineAdapter(new FilesystemCache(__DIR__.'/fixtures'));
             $validator = new JsonMessageValidator(
                 new PuliSchemaFinder(self::$puli),
                 new JsonDecoder()
             );
-
             $this->storage = new ValidatingStorageAdapter($storage, $validator);
 
             $stack = HandlerStack::create();
-            $stack->push(new MockMiddleware($this->storage, 'replay'));
+            $stack->push(new MockMiddleware($this->storage, $record ? 'record' : 'replay'));
 
             $this->httpClient = new Guzzle6HttpClient(new Client([
-                'base_uri' => 'http://api.elifesciences.org',
+                'base_uri' => 'http://localhost:1399/',
                 'handler' => $stack,
             ]));
         }

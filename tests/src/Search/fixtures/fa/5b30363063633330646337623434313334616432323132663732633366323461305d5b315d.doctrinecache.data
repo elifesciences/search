@@ -1,0 +1,35 @@
+0
+a:5:{s:6:"status";i:200;s:7:"headers";a:7:{s:6:"Server";a:1:{i:0;s:11:"nginx/1.6.2";}s:12:"Content-Type";a:1:{i:0;s:50:"application/vnd.elife.blog-article+json; version=1";}s:17:"Transfer-Encoding";a:1:{i:0;s:7:"chunked";}s:10:"Connection";a:1:{i:0;s:10:"keep-alive";}s:12:"X-Powered-By";a:1:{i:0;s:10:"PHP/7.0.10";}s:13:"Cache-Control";a:1:{i:0;s:8:"no-cache";}s:4:"Date";a:1:{i:0;s:29:"Tue, 13 Dec 2016 13:03:13 GMT";}}s:4:"body";s:3424:"{
+    "id": "339482",
+    "title": "Policy update: Building momentum for open science in Europe",
+    "impactStatement": "Dutch ministers are taking advantage of their EU presidency during 2016 to push forward the open-science agenda through a collaborative approach by funders, publishers, researchers, and policymakers. The Amsterdam Open Science Conference in April brought together key stakeholders from across Europe to discuss how concerted action by all parties could advance the open-science movement.",
+    "published": "2016-05-31T11:18:30Z",
+    "content": [
+        {
+            "type": "paragraph",
+            "text": "Dutch ministers are taking advantage of their EU presidency during 2016 to push forward the open-science agenda through a collaborative approach by funders, publishers, researchers, and policymakers. The Amsterdam Open Science Conference in April brought together key stakeholders from across Europe to discuss how concerted action by all parties could advance the open-science movement."
+        },
+        {
+            "type": "paragraph",
+            "text": "Several speakers - including Sander Dekker, the Dutch State Secretary for Education, Culture and Science - highlighted how new open-access journals such as eLife were leading to changes in the publishing landscape. \"There are these new players coming in - eLife, PLOS - and I think that's good.\" said Dekker, \"because we know that there are a few big publishing houses, it is nearly a monopoly, so there need to be new reliable players to challenge the system\". Martin Stratmann, President of the Max Planck Society (which funds eLife), also spoke of the need for open-access journals to challenge \"highly valued journals like Science, Nature and Cell\"."
+        },
+        {
+            "type": "paragraph",
+            "text": "Mark Patterson, eLife\u2019s Executive Director, proposed a movement towards evaluation methods that better recognise researchers who practise open science. Sander Dekker agreed that funders\u2019 current evaluation of researchers, based on journal Impact Factor and publication in a limited set of journals, conflicts with their own policies requiring publication in open-access journals."
+        },
+        {
+            "type": "paragraph",
+            "text": "Mark Patterson, eLife\u2019s Executive Director, proposed a movement towards evaluation methods that better recognise researchers who practise open science. Sander Dekker agreed that funders\u2019 current evaluation of researchers, based on journal Impact Factor and publication in a limited set of journals, conflicts with their own policies requiring publication in open-access journals."
+        },
+        {
+            "type": "youtube",
+            "id": "Y8Bcr2KTa9o",
+            "width": 640,
+            "height": 360
+        },
+        {
+            "type": "paragraph",
+            "text": "European Commissioner Carlos Moedas highlighted the importance of combining current efforts to promote open science. The key messages were drawn together into a call for action across establishments, with two main goals arising: firstly, for all publicly funded scientific publications in the EU to be open access by 2020 and, secondly, for open-data principles to be followed as standard for all publicly funded research. These goals were adopted by EU ministers for Research and Innovation on 27 May."
+        }
+    ]
+}";s:7:"version";s:3:"1.1";s:6:"reason";s:2:"OK";}

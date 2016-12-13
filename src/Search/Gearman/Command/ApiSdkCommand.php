@@ -119,9 +119,9 @@ final class ApiSdkCommand extends Command
 
     private function iterateSerializeTask(Traversable $items, LoggerInterface $logger, string $task, int $count = 0)
     {
-        $progress = new ProgressBar($this->output, $count);
+        $progress = $this->output ? new ProgressBar($this->output, $count) : null;
         foreach ($items as $item) {
-            $progress->advance();
+            $progress && $progress->advance();
             try {
                 $normalized = $this->serializer->serialize($item, 'json');
                 $this->task($task, $normalized);
@@ -130,8 +130,8 @@ final class ApiSdkCommand extends Command
                 continue;
             }
         }
-        $progress->finish();
-        $progress->clear();
+        $progress && $progress->finish();
+        $progress && $progress->clear();
     }
 
     private function task($item, ...$data)
