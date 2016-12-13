@@ -4,6 +4,7 @@ namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiClient\Exception\BadResponse;
 use eLife\Search\Queue\Mock\QueueItemMock;
+use eLife\Search\Queue\QueueItem;
 use eLife\Search\Queue\QueueItemTransformer;
 use eLife\Search\Queue\WatchableQueue;
 use eLife\Search\Workflow\CliLogger;
@@ -128,6 +129,33 @@ class QueueCommand extends Command
         }
     }
 
+    public function transform(QueueItem $item, LoggerInterface $logger)
+    {
+        $entity = null;
+        try {
+            // Transform into something for gearman.
+            $entity = $this->transformer->transform($item);
+        } catch (BadResponse $e) {
+            // We got a 404 or server error.
+            $logger->error("Item does not exist in API: {$item->getType()} ({$item->getId()})", [
+                'exception' => $e,
+                'item' => $item,
+            ]);
+            // Remove from queue.
+            $this->queue->commit($item);
+        } catch (Throwable $e) {
+            // Unknown error.
+            $logger->error("There was an unknown problem importing {$item->getType()} ({$item->getId()})", [
+                'exception' => $e,
+                'item' => $item,
+            ]);
+            // Remove from queue.
+            $this->queue->commit($item);
+        }
+
+        return $entity;
+    }
+
     public function loop(InputInterface $input, LoggerInterface $logger)
     {
         $logger->debug('Loop start... [');
@@ -135,26 +163,7 @@ class QueueCommand extends Command
         $logger->debug('-> Listening to topic ', ['topic' => $this->topic]);
         if ($this->queue->isValid()) {
             $item = $this->queue->dequeue($timeout);
-            $entity = null;
-            try {
-                // Transform into something for gearman.
-                $entity = $this->transformer->transform($item);
-            } catch (BadResponse $e) {
-                $logger->error("Item does not exist in API: {$item->getType()} ({$item->getId()})", [
-                    'exception' => $e,
-                    'item' => $item,
-                ]);
-                // Remove from queue.
-                $this->queue->commit($item);
-            } catch (Throwable $e) {
-                $logger->error("There was an unknown problem importing {$item->getType()} ({$item->getId()})", [
-                    'exception' => $e,
-                    'item' => $item,
-                ]);
-                // Remove from queue.
-                $this->queue->commit($item);
-            }
-            if ($entity) {
+            if ($entity = $this->transform($item, $logger)) {
                 // Grab the gearman task.
                 $gearmanTask = $this->transformer->getGearmanTask($item);
                 // Run the task.
