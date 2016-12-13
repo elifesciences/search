@@ -10,6 +10,8 @@ return [
     'elastic_servers' => ['http://elife_search_elasticsearch:9200'],
     'annotation_cache' => false,
     'ttl' => 0,
+    'file_log_path' => __DIR__.'../var/logs/debug.log',
+    'file_error_log_path' => __DIR__.'../var/logs/error.log',
     'gearman_servers' => ['elife_gearman_1'],
     'gearman_auto_restart' => true,
     'aws' => [

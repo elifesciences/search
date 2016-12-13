@@ -81,8 +81,8 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
             'gearman_auto_restart' => true,
-            'file_log_path' => self::ROOT.'/var/logs/debug.log',
-            'file_error_log_path' => self::ROOT.'/var/logs/error.log',
+            'file_log_path' => null,
+            'file_error_log_path' => null,
             'loggly_key' => null,
             'aws' => [
                 'credential_file' => false,
