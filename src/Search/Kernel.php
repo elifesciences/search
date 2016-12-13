@@ -103,7 +103,7 @@ final class Kernel implements MinimalKernel
             $app->register(new Provider\ServiceControllerServiceProvider());
             $app->register(new Provider\TwigServiceProvider());
             $app->register(new Provider\WebProfilerServiceProvider(), array(
-                'profiler.cache_dir' => self::ROOT.'/var/cache/profiler',
+                'profiler.cache_dir' => self::ROOT.'/cache/profiler',
                 'profiler.mount_prefix' => '/_profiler', // this is the default
             ));
         }
@@ -127,7 +127,7 @@ final class Kernel implements MinimalKernel
                     $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
                     $dispatcher->addSubscriber(new SearchResultDiscriminator());
                 })
-                ->setCacheDir(self::ROOT.'/var/cache')
+                ->setCacheDir(self::ROOT.'/cache')
                 ->build();
         };
         $app['serializer.context'] = function () {
@@ -145,7 +145,7 @@ final class Kernel implements MinimalKernel
         };
         // General cache.
         $app['cache'] = function () {
-            return new FilesystemCache(self::ROOT.'/var/cache');
+            return new FilesystemCache(self::ROOT.'/cache');
         };
         // Annotation reader.
         $app['annotations.reader'] = function (Application $app) {
