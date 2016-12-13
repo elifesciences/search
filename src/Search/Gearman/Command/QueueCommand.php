@@ -2,6 +2,7 @@
 
 namespace eLife\Search\Gearman\Command;
 
+use eLife\ApiClient\Exception\BadResponse;
 use eLife\Search\Queue\Mock\QueueItemMock;
 use eLife\Search\Queue\QueueItemTransformer;
 use eLife\Search\Queue\WatchableQueue;
@@ -14,6 +15,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 class QueueCommand extends Command
 {
@@ -133,25 +135,44 @@ class QueueCommand extends Command
         $logger->debug('-> Listening to topic ', ['topic' => $this->topic]);
         if ($this->queue->isValid()) {
             $item = $this->queue->dequeue($timeout);
-            // Transform into something for gearman.
-            $entity = $this->transformer->transform($item);
-            // Grab the gearman task.
-            $gearmanTask = $this->transformer->getGearmanTask($item);
-            // Run the task.
-            $logger->info('-> Running gearman task', [
-                'gearmanTask' => $gearmanTask,
-                'type' => $item->getType(),
-                'id' => $item->getId(),
-            ]);
-            // Set the task to go.
-            $this->client->doLow($gearmanTask, $entity, md5($item->getReceipt()));
-            // Commit.
-            $this->queue->commit($item);
-            $logger->info('-> Committed task', [
-                'gearmanTask' => $gearmanTask,
-                'type' => $item->getType(),
-                'id' => $item->getId(),
-            ]);
+            $entity = null;
+            try {
+                // Transform into something for gearman.
+                $entity = $this->transformer->transform($item);
+            } catch (BadResponse $e) {
+                $logger->error("Item does not exist in API: {$item->getType()} ({$item->getId()})", [
+                    'exception' => $e,
+                    'item' => $item,
+                ]);
+                // Remove from queue.
+                $this->queue->commit($item);
+            } catch (Throwable $e) {
+                $logger->error("There was an unknown problem importing {$item->getType()} ({$item->getId()})", [
+                    'exception' => $e,
+                    'item' => $item,
+                ]);
+                // Remove from queue.
+                $this->queue->commit($item);
+            }
+            if ($entity) {
+                // Grab the gearman task.
+                $gearmanTask = $this->transformer->getGearmanTask($item);
+                // Run the task.
+                $logger->info('-> Running gearman task', [
+                    'gearmanTask' => $gearmanTask,
+                    'type' => $item->getType(),
+                    'id' => $item->getId(),
+                ]);
+                // Set the task to go.
+                $this->client->doLow($gearmanTask, $entity, md5($item->getReceipt()));
+                // Commit.
+                $this->queue->commit($item);
+                $logger->info('-> Committed task', [
+                    'gearmanTask' => $gearmanTask,
+                    'type' => $item->getType(),
+                    'id' => $item->getId(),
+                ]);
+            }
         } else {
             $logger->debug('-> Queue is empty ', ['topic' => $this->topic]);
         }
