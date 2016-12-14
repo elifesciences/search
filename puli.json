@@ -295,7 +295,8 @@
         },
         "silex/web-profiler": {
             "install-path": "vendor/silex/web-profiler/Silex/Provider",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "symfony/browser-kit": {
             "install-path": "vendor/symfony/browser-kit",
@@ -345,7 +346,8 @@
         },
         "symfony/polyfill-php70": {
             "install-path": "vendor/symfony/polyfill-php70",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "symfony/process": {
             "install-path": "vendor/symfony/process",
@@ -365,7 +367,8 @@
         },
         "symfony/stopwatch": {
             "install-path": "vendor/symfony/stopwatch",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "symfony/translation": {
             "install-path": "vendor/symfony/translation",
@@ -373,7 +376,8 @@
         },
         "symfony/twig-bridge": {
             "install-path": "vendor/symfony/twig-bridge",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "symfony/validator": {
             "install-path": "vendor/symfony/validator",
@@ -381,11 +385,13 @@
         },
         "symfony/var-dumper": {
             "install-path": "vendor/symfony/var-dumper",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "symfony/web-profiler-bundle": {
             "install-path": "vendor/symfony/web-profiler-bundle",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "symfony/yaml": {
             "install-path": "vendor/symfony/yaml",
@@ -393,7 +399,8 @@
         },
         "twig/twig": {
             "install-path": "vendor/twig/twig",
-            "installer": "composer"
+            "installer": "composer",
+            "env": "dev"
         },
         "webmozart/assert": {
             "install-path": "vendor/webmozart/assert",

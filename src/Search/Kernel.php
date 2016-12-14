@@ -40,7 +40,7 @@ use JMS\Serializer\SerializerBuilder;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
-use Monolog\Handler\LogglyHandler;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\NullLogger;
@@ -178,13 +178,14 @@ final class Kernel implements MinimalKernel
         $app['logger'] = function (Application $app) {
             $logger = new Logger('search-api');
             if ($app['config']['file_log_path']) {
-                $logger->pushHandler(new StreamHandler($app['config']['file_log_path'], Logger::INFO));
+                $stream = new StreamHandler($app['config']['file_log_path'], Logger::INFO);
+                $stream->setFormatter(new LineFormatter());
+                $logger->pushHandler($stream);
             }
             if ($app['config']['file_error_log_path']) {
-                $logger->pushHandler(new StreamHandler($app['config']['file_error_log_path'], Logger::ERROR));
-            }
-            if ($app['config']['loggly_key']) {
-                $logger->pushHandler(new LogglyHandler($app['config']['loggly_key']));
+                $stream = new StreamHandler($app['config']['file_error_log_path'], Logger::ERROR);
+                $stream->setFormatter(new LineFormatter());
+                $logger->pushHandler($stream);
             }
 
             return $logger;
@@ -356,7 +357,7 @@ final class Kernel implements MinimalKernel
         };
     }
 
-    public function applicationFlow(Application $app) : Application
+    public function applicationFlow(Application $app): Application
     {
         // Routes
         $this->routes($app);
@@ -383,7 +384,7 @@ final class Kernel implements MinimalKernel
         }
     }
 
-    public function handleException(Throwable $e) : Response
+    public function handleException(Throwable $e): Response
     {
         return new JsonResponse([
             'error' => $e->getMessage(),
