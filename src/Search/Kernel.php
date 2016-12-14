@@ -40,7 +40,7 @@ use JMS\Serializer\SerializerBuilder;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
-use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\NullLogger;
@@ -82,8 +82,8 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
             'gearman_auto_restart' => true,
-            'file_log_path' => null,
-            'file_error_log_path' => null,
+            'file_log_path' => self::ROOT.'/var/logs/debug.log',
+            'file_error_log_path' => self::ROOT.'/var/logs/error.log',
             'loggly_key' => null,
             'aws' => [
                 'credential_file' => false,
@@ -104,7 +104,7 @@ final class Kernel implements MinimalKernel
             $app->register(new Provider\ServiceControllerServiceProvider());
             $app->register(new Provider\TwigServiceProvider());
             $app->register(new Provider\WebProfilerServiceProvider(), array(
-                'profiler.cache_dir' => self::CACHE_DIR . '/profiler',
+                'profiler.cache_dir' => self::CACHE_DIR.'/profiler',
                 'profiler.mount_prefix' => '/_profiler', // this is the default
             ));
         }
@@ -180,12 +180,12 @@ final class Kernel implements MinimalKernel
             $logger = new Logger('search-api');
             if ($app['config']['file_log_path']) {
                 $stream = new StreamHandler($app['config']['file_log_path'], Logger::INFO);
-                $stream->setFormatter(new LineFormatter());
+                $stream->setFormatter(new JsonFormatter());
                 $logger->pushHandler($stream);
             }
             if ($app['config']['file_error_log_path']) {
                 $stream = new StreamHandler($app['config']['file_error_log_path'], Logger::ERROR);
-                $stream->setFormatter(new LineFormatter());
+                $stream->setFormatter(new JsonFormatter());
                 $logger->pushHandler($stream);
             }
 
