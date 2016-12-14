@@ -84,7 +84,6 @@ final class Kernel implements MinimalKernel
             'gearman_auto_restart' => true,
             'file_log_path' => self::ROOT.'/var/logs/debug.log',
             'file_error_log_path' => self::ROOT.'/var/logs/error.log',
-            'loggly_key' => null,
             'aws' => [
                 'credential_file' => false,
                 'mock_queue' => true,
