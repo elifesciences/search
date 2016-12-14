@@ -57,6 +57,7 @@ use Webmozart\Json\JsonDecoder;
 final class Kernel implements MinimalKernel
 {
     const ROOT = __DIR__.'/../..';
+    const CACHE_DIR = __DIR__.'/../../var/cache';
 
     public static $routes = [
         '/search' => 'indexAction',
@@ -103,7 +104,7 @@ final class Kernel implements MinimalKernel
             $app->register(new Provider\ServiceControllerServiceProvider());
             $app->register(new Provider\TwigServiceProvider());
             $app->register(new Provider\WebProfilerServiceProvider(), array(
-                'profiler.cache_dir' => self::ROOT.'/cache/profiler',
+                'profiler.cache_dir' => self::CACHE_DIR . '/profiler',
                 'profiler.mount_prefix' => '/_profiler', // this is the default
             ));
         }
@@ -127,7 +128,7 @@ final class Kernel implements MinimalKernel
                     $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
                     $dispatcher->addSubscriber(new SearchResultDiscriminator());
                 })
-                ->setCacheDir(self::ROOT.'/cache')
+                ->setCacheDir(self::CACHE_DIR)
                 ->build();
         };
         $app['serializer.context'] = function () {
@@ -145,7 +146,7 @@ final class Kernel implements MinimalKernel
         };
         // General cache.
         $app['cache'] = function () {
-            return new FilesystemCache(self::ROOT.'/cache');
+            return new FilesystemCache(self::CACHE_DIR);
         };
         // Annotation reader.
         $app['annotations.reader'] = function (Application $app) {
