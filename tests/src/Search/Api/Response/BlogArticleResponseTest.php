@@ -19,14 +19,14 @@ class BlogArticleResponseTest extends SerializerTest
             'id' => '12456',
             'title' => 'some blog article',
             'impactStatement' => 'Something impacting in a statement like fashion.',
-            'published' => '2016-06-09T15:15:10+00:00',
+            'published' => '2016-06-09T15:15:10Z',
         ]);
 
         $this->assertEquals('blog-article', $article->type);
         $this->assertEquals('12456', $article->id);
         $this->assertEquals('some blog article', $article->title);
         $this->assertEquals('Something impacting in a statement like fashion.', $article->impactStatement);
-        $this->assertEquals('2016-06-09T15:15:10+00:00', $article->published->format('c'));
+        $this->assertEquals('2016-06-09T15:15:10Z', $article->published->format('Y-m-d\TH:i:s\Z'));
     }
 
     public function getResponseClass() : string
@@ -43,14 +43,14 @@ class BlogArticleResponseTest extends SerializerTest
                     "id": "2",
                     "type": "blog-article",
                     "title": "More eLife authors are linking submissions to their ORCID iDs",
-                    "published": "2016-06-09T15:15:10+00:00",
+                    "published": "2016-06-09T15:15:10Z",
                     "impactStatement": "eLife sees positive results of requiring corresponding authors to register and link their profiles to their ORCID iDs"
                 }',
             ],
             [
                 $this->getFixture('blog-article/v1/complete.json'), '
                 {
-                    "published": "2016-07-08T08:33:25+00:00",
+                    "published": "2016-07-08T08:33:25Z",
                     "type": "blog-article",
                     "id": "1",
                     "title": "Media coverage: Slime can see",

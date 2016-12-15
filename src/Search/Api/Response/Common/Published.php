@@ -8,7 +8,7 @@ use JMS\Serializer\Annotation\Type;
 trait Published
 {
     /**
-     * @Type("DateTime<'Y-m-d\TH:i:sP'>")
+     * @Type("DateTime<'Y-m-d\TH:i:s\Z'>")
      * @Since(version="1")
      */
     public $published;

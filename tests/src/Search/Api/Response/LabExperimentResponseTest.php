@@ -24,7 +24,7 @@ class LabExperimentResponseTest extends SerializerTest
                     "number": 1,
                     "type": "labs-experiment",
                     "title": "Experimental eLife Lens search page",
-                    "published": "2015-04-01T11:32:47+00:00",
+                    "published": "2015-04-01T11:32:47Z",
                     "image": {
                         "banner": {
                             "alt": "",
@@ -58,7 +58,7 @@ class LabExperimentResponseTest extends SerializerTest
                     "type": "labs-experiment",
                     "title": "Experimental eLife Lens search page",
                     "impactStatement": "Today on eLife Labs we are launching a small demo of a search interface that brings together some elements of eLife Lens and some of the native power of a technology called elasticsearch. Head over to the demo to try it out now.",
-                    "published": "2015-04-01T11:32:47+00:00",
+                    "published": "2015-04-01T11:32:47Z",
                     "image": {
                         "banner": {
                             "alt": "",

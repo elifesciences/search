@@ -30,7 +30,7 @@ class InterviewResponseTest extends SerializerTest
                         }
                     },
                     "title": "Infection, statistics and public health",
-                    "published": "2015-11-03T11:00:53+00:00"
+                    "published": "2015-11-03T11:00:53Z"
                 }',
             ],
             [
@@ -46,7 +46,7 @@ class InterviewResponseTest extends SerializerTest
                     },
                     "title": "Controlling traffic",
                     "impactStatement": "Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.",
-                    "published": "2016-01-29T16:22:28+00:00"
+                    "published": "2016-01-29T16:22:28Z"
                 }',
             ],
         ];

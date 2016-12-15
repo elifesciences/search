@@ -16,7 +16,7 @@ class CollectionResponseTest extends SerializerTest
             'id' => '1',
             'title' => 'Tropical disease',
             'impactStatement' => 'eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness. The articles below have been selected by eLife editors to give a flavour of the breadth of research on tropical diseases published by the journal.',
-            'updated' => '2015-09-16T11:19:26+00:00',
+            'updated' => '2015-09-16T11:19:26Z',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -58,7 +58,7 @@ class CollectionResponseTest extends SerializerTest
         $this->assertSame('Tropical disease', $collection->title);
         $this->assertSame($data['image']['thumbnail'], (array) $collection->image->thumbnail);
         $this->assertSame($data['image']['banner'], (array) $collection->image->banner);
-        $this->assertSame('2015-09-16T11:19:26+00:00', $collection->updated->format('c'));
+        $this->assertSame('2015-09-16T11:19:26Z', $collection->updated->format('Y-m-d\TH:i:s\Z'));
         $this->assertSame($data['selectedCurator'], (array) $collection->selectedCurator);
     }
 
@@ -73,7 +73,7 @@ class CollectionResponseTest extends SerializerTest
             [
                 $this->getFixture('collection/v1/minimum.json'), '
                 {
-                    "updated": "2015-09-16T11:19:26+00:00",
+                    "updated": "2015-09-16T11:19:26Z",
                     "selectedCurator": {
                         "id": "pjha",
                         "type": "senior-editor",
@@ -115,7 +115,7 @@ class CollectionResponseTest extends SerializerTest
             [
                 $this->getFixture('collection/v1/complete.json'), '
                 {
-                    "updated": "2015-09-16T11:19:26+00:00",
+                    "updated": "2015-09-16T11:19:26Z",
                     "selectedCurator": {
                         "id": "pjha",
                         "type": "senior-editor",

@@ -25,20 +25,20 @@ class SearchResponseTest extends SerializerTest
                     "items": [
                         {
                             "status": "poa",
-                            "statusDate": "2016-03-28T00:00:00+00:00",
+                            "statusDate": "2016-03-28T00:00:00Z",
                             "volume": 5,
                             "version": 1,
                             "elocationId": "e14107",
                             "doi": "10.7554\/eLife.14107",
                             "authorLine": "Yongjian Huang et al",
                             "type": "research-article",
-                            "published": "2016-03-28T00:00:00+00:00",
+                            "published": "2016-03-28T00:00:00Z",
                             "id": "14107",
                             "title": "Molecular basis for multimerization in the activation of the epidermal growth factor"
                         },
                         {
                             "status": "vor",
-                            "statusDate": "2015-09-10T00:00:00+00:00",
+                            "statusDate": "2015-09-10T00:00:00Z",
                             "volume": 4,
                             "version": 1,
                             "titlePrefix": "Title prefix",
@@ -47,7 +47,7 @@ class SearchResponseTest extends SerializerTest
                             "authorLine": "Lee R Berger et al",
                             "pdf": "https:\/\/elifesciences.org\/content\/4\/e09560.pdf",
                             "type": "research-article",
-                            "published": "2015-09-10T00:00:00+00:00",
+                            "published": "2015-09-10T00:00:00Z",
                             "subjects": [
                                 {
                                     "id": "genomics-evolutionary-biology",
@@ -74,7 +74,7 @@ class SearchResponseTest extends SerializerTest
                             "impactStatement": "A new hominin species has been unearthed in the Dinaledi Chamber of the Rising Star cave system in the largest assemblage of a single species of hominins yet discovered in Africa."
                         },
                         {
-                            "published": "2016-07-08T08:33:25+00:00",
+                            "published": "2016-07-08T08:33:25Z",
                             "type": "blog-article",
                             "id": "1",
                             "title": "Media coverage: Slime can see",
@@ -105,7 +105,7 @@ class SearchResponseTest extends SerializerTest
                                     }
                                 }
                             },
-                            "published": "2015-04-01T11:32:47+00:00"
+                            "published": "2015-04-01T11:32:47Z"
                         },
                         {
                             "number": 29,
@@ -117,7 +117,7 @@ class SearchResponseTest extends SerializerTest
                             ],
                             "type": "podcast-episode",
                             "title": "April\/May 2016",
-                            "published": "2016-05-27T13:19:42+00:00",
+                            "published": "2016-05-27T13:19:42Z",
                             "image": {
                                 "thumbnail": {
                                     "alt": "",
@@ -135,8 +135,8 @@ class SearchResponseTest extends SerializerTest
                             }
                         },
                         {
-                            "starts": "2016-04-22T20:00:00+00:00",
-                            "ends": "2016-04-22T21:00:00+00:00",
+                            "starts": "2016-04-22T20:00:00Z",
+                            "ends": "2016-04-22T21:00:00Z",
                             "timezone": "America\/Seattle",
                             "type": "event",
                             "id": "1",
@@ -144,7 +144,7 @@ class SearchResponseTest extends SerializerTest
                             "impactStatement": "How eLife is influencing the culture of peer review"
                         },
                         {
-                            "updated": "2015-09-16T11:19:26+00:00",
+                            "updated": "2015-09-16T11:19:26Z",
                             "selectedCurator": {
                                 "id": "pjha",
                                 "type": "senior-editor",
@@ -184,7 +184,7 @@ class SearchResponseTest extends SerializerTest
                             "id": "1",
                             "title": "Controlling traffic",
                             "impactStatement": "Ramanath Hegde is a Postdoctoral Fellow at the Institute of Protein Biochemistry in Naples, Italy, where he investigates ways of preventing cells from destroying mutant proteins.",
-                            "published": "2016-01-29T16:22:28+00:00"
+                            "published": "2016-01-29T16:22:28Z"
                         }
                     ],
                     "types": {

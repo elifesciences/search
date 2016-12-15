@@ -37,6 +37,7 @@ final class ImageBannerResponse implements ImageVariant
                 $sizes[$k] = str_replace(['http:/', 'internal_elife_dummy_api'], ['https:/', 'internal_elife_dummy_api.com'], $size);
             }
         }
+
         return $sizes;
     }
 

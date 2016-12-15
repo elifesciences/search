@@ -16,14 +16,14 @@ class EventResponseTest extends SerializerTest
             'id' => '2',
             'title' => 'eLife Continuum webinar',
             'impactStatement' => 'something something impact',
-            'starts' => '2016-08-04T15:00:00+00:00',
-            'ends' => '2016-08-04T16:00:00+00:00',
+            'starts' => '2016-08-04T15:00:00Z',
+            'ends' => '2016-08-04T16:00:00Z',
             'timezone' => 'gmt',
         ]);
 
         $this->assertEquals('2', $event->id);
-        $this->assertEquals('2016-08-04T15:00:00+00:00', $event->starts->format('c'));
-        $this->assertEquals('2016-08-04T16:00:00+00:00', $event->ends->format('c'));
+        $this->assertEquals('2016-08-04T15:00:00Z', $event->starts->format('Y-m-d\TH:i:s\Z'));
+        $this->assertEquals('2016-08-04T16:00:00Z', $event->ends->format('Y-m-d\TH:i:s\Z'));
         $this->assertEquals('gmt', $event->timezone);
         $this->assertEquals('something something impact', $event->impactStatement);
         $this->assertEquals('event', $event->getType());
@@ -38,8 +38,8 @@ class EventResponseTest extends SerializerTest
                     "id": "2",
                     "type": "event",
                     "title": "eLife Continuum webinar",
-                    "starts": "2016-08-04T15:00:00+00:00",
-                    "ends": "2016-08-04T16:00:00+00:00"
+                    "starts": "2016-08-04T15:00:00Z",
+                    "ends": "2016-08-04T16:00:00Z"
                 }',
             ],
             [
@@ -49,8 +49,8 @@ class EventResponseTest extends SerializerTest
                     "type": "event",
                     "title": "Changing peer review in cancer research: a seminar at Fred Hutch",
                     "impactStatement": "How eLife is influencing the culture of peer review",
-                    "starts": "2016-04-22T20:00:00+00:00",
-                    "ends": "2016-04-22T21:00:00+00:00",
+                    "starts": "2016-04-22T20:00:00Z",
+                    "ends": "2016-04-22T21:00:00Z",
                     "timezone": "America/Los_Angeles"
                 }',
             ],
