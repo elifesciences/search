@@ -27,6 +27,12 @@ namespace {
         class GearmanClient
         {
         }
+        class GearmanTask
+        {
+        }
+        class GearmanWorker
+        {
+        }
 
         define('GEARMAN_SUCCESS', 'GEARMAN_SUCCESS');
     }

@@ -1,0 +1,30 @@
+0
+a:5:{s:6:"status";i:200;s:7:"headers";a:7:{s:6:"Server";a:1:{i:0;s:11:"nginx/1.6.2";}s:12:"Content-Type";a:1:{i:0;s:55:"application/vnd.elife.blog-article-list+json; version=1";}s:17:"Transfer-Encoding";a:1:{i:0;s:7:"chunked";}s:10:"Connection";a:1:{i:0;s:10:"keep-alive";}s:12:"X-Powered-By";a:1:{i:0;s:10:"PHP/7.0.10";}s:13:"Cache-Control";a:1:{i:0;s:8:"no-cache";}s:4:"Date";a:1:{i:0;s:29:"Tue, 13 Dec 2016 13:14:33 GMT";}}s:4:"body";s:1634:"{
+    "total": 3,
+    "items": [
+        {
+            "id": "359325",
+            "title": "Media coverage: Slime can see",
+            "impactStatement": "In their research paper \u2013 Cyanobacteria use micro-optics to sense light direction \u2013 Schuergers et al. reveal how bacterial cells act as the equivalent of a microscopic eyeball or the world\u2019s oldest and smallest camera eye, allowing them to \u2018see\u2019.",
+            "published": "2016-07-08T08:33:25Z",
+            "subjects": [
+                {
+                    "id": "biophysics-structural-biology",
+                    "name": "Biophysics and Structural Biology"
+                }
+            ]
+        },
+        {
+            "id": "345983",
+            "title": "More eLife authors are linking submissions to their ORCID iDs",
+            "impactStatement": "eLife sees positive results of requiring corresponding authors to register and link their profiles to their ORCID iDs",
+            "published": "2016-06-09T15:15:10Z"
+        },
+        {
+            "id": "339482",
+            "title": "Policy update: Building momentum for open science in Europe",
+            "impactStatement": "Dutch ministers are taking advantage of their EU presidency during 2016 to push forward the open-science agenda through a collaborative approach by funders, publishers, researchers, and policymakers. The Amsterdam Open Science Conference in April brought together key stakeholders from across Europe to discuss how concerted action by all parties could advance the open-science movement.",
+            "published": "2016-05-31T11:18:30Z"
+        }
+    ]
+}";s:7:"version";s:3:"1.1";s:6:"reason";s:2:"OK";}
