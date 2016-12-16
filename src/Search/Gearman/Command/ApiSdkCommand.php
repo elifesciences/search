@@ -23,14 +23,18 @@ final class ApiSdkCommand extends Command
     private $sdk;
     private $serializer;
     private $output;
+    private $logger;
 
     public function __construct(
         ApiSdk $sdk,
-        GearmanClient $client
+        GearmanClient $client,
+        LoggerInterface $logger
     ) {
         $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
         $this->client = $client;
+        $this->logger = $logger;
+
         parent::__construct(null);
     }
 
@@ -45,7 +49,7 @@ final class ApiSdkCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $logger = new CliLogger($input, $output);
+        $logger = new CliLogger($input, $output, $this->logger);
         $this->output = $output;
         $entity = $input->getArgument('entity');
         // Only the configured.
@@ -93,7 +97,7 @@ final class ApiSdkCommand extends Command
     {
         $logger->info('Importing Research Articles');
         $events = $this->sdk->articles();
-        $this->iterateSerializeTask($events, $logger, 'research_article_validate', $events->count());
+        $this->iterateSerializeTask($events, $logger, 'research_article_validate', $events->count(), $skipInvalid = true);
     }
 
     public function importInterviews(LoggerInterface $logger)
@@ -117,12 +121,15 @@ final class ApiSdkCommand extends Command
         $this->iterateSerializeTask($articles, $logger, 'blog_article_validate', $articles->count());
     }
 
-    private function iterateSerializeTask(Iterator $items, LoggerInterface $logger, string $task, int $count = 0)
+    private function iterateSerializeTask(Iterator $items, LoggerInterface $logger, string $task, int $count = 0, $skipInvalid = false)
     {
         $progress = new ProgressBar($this->output, $count);
 
         while ($items->valid()) {
             $progress->advance();
+            if ($item === null) {
+                continue;
+            }
             try {
                 $items->next();
                 $item = $items->current();

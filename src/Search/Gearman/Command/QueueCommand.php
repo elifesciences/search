@@ -25,19 +25,22 @@ class QueueCommand extends Command
     private $client;
     private $isMock;
     private $topic;
+    private $logger;
 
     public function __construct(
         WatchableQueue $queue,
         QueueItemTransformer $transformer,
         GearmanClient $client,
         bool $isMock,
-        string $topic
+        string $topic,
+        LoggerInterface $logger
     ) {
         $this->queue = $queue;
         $this->transformer = $transformer;
         $this->client = $client;
         $this->isMock = $isMock;
         $this->topic = $topic;
+        $this->logger = $logger;
         parent::__construct(null);
     }
 
@@ -76,7 +79,7 @@ class QueueCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Options.
-        $logger = new CliLogger($input, $output);
+        $logger = new CliLogger($input, $output, $this->logger);
         if ($this->isMock) {
             $logger->warning('This is using mocked information.');
         }

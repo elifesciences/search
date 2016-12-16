@@ -1,5 +1,8 @@
 #!/usr/bin/env php
 <?php
+// perms.
+umask(002);
+
 require_once __DIR__.'/../vendor/autoload.php';
 set_time_limit(0);
 
@@ -11,7 +14,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 $input = new ArgvInput();
 $env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'local');
 if (!file_exists(__DIR__.'/../config/'.$env.'.php')) {
-    print 'Environment `'.$env.'` not found.';
+    echo 'Environment `'.$env.'` not found.';
     exit(1);
 }
 $config = require __DIR__.'/../config/'.$env.'.php';

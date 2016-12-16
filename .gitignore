@@ -5,3 +5,6 @@
 /config/local.php
 /tests/raml/
 !/tests/raml/.gitkeep
+
+var
+!.gitkeep
