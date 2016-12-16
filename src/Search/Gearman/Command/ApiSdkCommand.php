@@ -127,12 +127,12 @@ final class ApiSdkCommand extends Command
 
         while ($items->valid()) {
             $progress->advance();
-            if ($item === null) {
-                continue;
-            }
             try {
                 $items->next();
                 $item = $items->current();
+                if ($item === null) {
+                    continue;
+                }
                 $normalized = $this->serializer->serialize($item, 'json');
                 $this->task($task, $normalized);
             } catch (Throwable $e) {
