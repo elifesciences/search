@@ -40,6 +40,8 @@ use JMS\Serializer\SerializerBuilder;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
+use Monolog\Formatter\JsonFormatter;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\NullLogger;
 use Silex\Application;
@@ -55,6 +57,7 @@ use Webmozart\Json\JsonDecoder;
 final class Kernel implements MinimalKernel
 {
     const ROOT = __DIR__.'/../..';
+    const CACHE_DIR = __DIR__.'/../../var/cache';
 
     public static $routes = [
         '/search' => 'indexAction',
@@ -65,8 +68,6 @@ final class Kernel implements MinimalKernel
 
     public function __construct($config = [])
     {
-        // perms.
-        umask(002);
         $app = new Application();
         // Load config
         $app['config'] = array_merge([
@@ -79,6 +80,8 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
             'gearman_auto_restart' => true,
+            'file_log_path' => self::ROOT.'/var/logs/all.log',
+            'file_error_log_path' => self::ROOT.'/var/logs/error.log',
             'aws' => [
                 'credential_file' => false,
                 'mock_queue' => true,
@@ -98,7 +101,7 @@ final class Kernel implements MinimalKernel
             $app->register(new Provider\ServiceControllerServiceProvider());
             $app->register(new Provider\TwigServiceProvider());
             $app->register(new Provider\WebProfilerServiceProvider(), array(
-                'profiler.cache_dir' => self::ROOT.'/cache/profiler',
+                'profiler.cache_dir' => self::CACHE_DIR.'/profiler',
                 'profiler.mount_prefix' => '/_profiler', // this is the default
             ));
         }
@@ -122,7 +125,7 @@ final class Kernel implements MinimalKernel
                     $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
                     $dispatcher->addSubscriber(new SearchResultDiscriminator());
                 })
-                ->setCacheDir(self::ROOT.'/cache')
+                ->setCacheDir(self::CACHE_DIR)
                 ->build();
         };
         $app['serializer.context'] = function () {
@@ -140,7 +143,7 @@ final class Kernel implements MinimalKernel
         };
         // General cache.
         $app['cache'] = function () {
-            return new FilesystemCache(self::ROOT.'/cache');
+            return new FilesystemCache(self::CACHE_DIR);
         };
         // Annotation reader.
         $app['annotations.reader'] = function (Application $app) {
@@ -168,6 +171,26 @@ final class Kernel implements MinimalKernel
 
         $app['validator'] = function (Application $app) {
             return new ApiValidator($app['serializer'], $app['serializer.context'], $app['puli.validator'], $app['psr7.bridge']);
+        };
+
+        $app['logger'] = function (Application $app) {
+            $logger = new Logger('search-api');
+            if ($app['config']['file_log_path']) {
+                $stream = new StreamHandler($app['config']['file_log_path'], Logger::INFO);
+                $stream->setFormatter(new JsonFormatter());
+                $logger->pushHandler($stream);
+            }
+            if ($app['config']['file_error_log_path']) {
+                $stream = new StreamHandler($app['config']['file_error_log_path'], Logger::ERROR);
+                $stream->setFormatter(new JsonFormatter());
+                $logger->pushHandler($stream);
+            }
+
+            return $logger;
+        };
+
+        $app['logger.cli'] = function (Application $app) {
+            return $app['logger'];
         };
 
         //#####################################################
@@ -311,28 +334,28 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.gearman.worker'] = function (Application $app) {
-            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator']);
+            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator'], $app['logger.cli']);
         };
 
         $app['console.gearman.client'] = function (Application $app) {
-            return new ApiSdkCommand($app['api.sdk'], $app['gearman.client']);
+            return new ApiSdkCommand($app['api.sdk'], $app['gearman.client'], $app['logger.cli']);
         };
 
         $app['console.gearman.queue'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
-                return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client'], true, $app['config']['aws']['queue_name']);
+                return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client'], true, $app['config']['aws']['queue_name'], $app['logger.cli']);
             }
 
-            return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client'], false, $app['config']['aws']['queue_name']);
+            return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client'], false, $app['config']['aws']['queue_name'], $app['logger.cli']);
         };
 
         $app['console.build_index'] = function (Application $app) {
-            return new BuildIndexCommand($app['elastic.client']);
+            return new BuildIndexCommand($app['elastic.client'], $app['logger.cli']);
         };
     }
 
-    public function applicationFlow(Application $app) : Application
+    public function applicationFlow(Application $app): Application
     {
         // Routes
         $this->routes($app);
@@ -359,7 +382,7 @@ final class Kernel implements MinimalKernel
         }
     }
 
-    public function handleException(Throwable $e) : Response
+    public function handleException(Throwable $e): Response
     {
         return new JsonResponse([
             'error' => $e->getMessage(),

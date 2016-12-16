@@ -12,6 +12,7 @@ use eLife\Search\Workflow\CliLogger;
 use Exception;
 use GuzzleHttp\Client;
 use LogicException;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -74,6 +75,7 @@ final class Console
                 $app->get('console.build_index'),
             ]);
         }
+        $this->logger = $app->get('logger.cli');
     }
 
     private function path($path = '')
@@ -317,7 +319,7 @@ final class Console
                 ->register($name)
                 ->setDescription($cmd['description'] ?? $name.' command')
                 ->setCode(Closure::bind(function (InputInterface $input, OutputInterface $output) use ($fn, $name) {
-                    $logger = new CliLogger($input, $output);
+                    $logger = new CliLogger($input, $output, $this->logger);
                     $this->{$fn.'Command'}($input, $output, $logger);
                 }, $this));
 
