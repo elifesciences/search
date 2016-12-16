@@ -97,7 +97,7 @@ final class ApiSdkCommand extends Command
     {
         $logger->info('Importing Research Articles');
         $events = $this->sdk->articles();
-        $this->iterateSerializeTask($events, $logger, 'research_article_validate', $events->count());
+        $this->iterateSerializeTask($events, $logger, 'research_article_validate', $events->count(), $skipInvalid = true);
     }
 
     public function importInterviews(LoggerInterface $logger)
@@ -121,11 +121,14 @@ final class ApiSdkCommand extends Command
         $this->iterateSerializeTask($articles, $logger, 'blog_article_validate', $articles->count());
     }
 
-    private function iterateSerializeTask(Traversable $items, LoggerInterface $logger, string $task, int $count = 0)
+    private function iterateSerializeTask(Traversable $items, LoggerInterface $logger, string $task, int $count = 0, $skipInvalid = false)
     {
         $progress = new ProgressBar($this->output, $count);
         foreach ($items as $item) {
             $progress->advance();
+            if ($item === null) {
+                continue;
+            }
             try {
                 $normalized = $this->serializer->serialize($item, 'json');
                 $this->task($task, $normalized);
