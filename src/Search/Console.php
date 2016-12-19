@@ -63,8 +63,12 @@ final class Console
         $helper = new QuestionHelper();
         // Get the type.
         $choice = new ChoiceQuestion('<question>Which type would you like to import</question>', [
-            'research-article',
-            'blog-articles',
+            'article',
+            'blog-article',
+            'event',
+            'interview',
+            'labs-experiment',
+            'podcast-episode',
             'collection',
         ], 0);
         $type = $helper->ask($input, $output, $choice);
