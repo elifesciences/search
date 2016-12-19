@@ -4,7 +4,7 @@ namespace eLife\Search\Queue\Mock;
 
 use eLife\Search\Queue\QueueItem;
 
-final class QueueItemMock implements QueueItem
+final class BusSqsMessage implements QueueItem
 {
     private $type;
     private $id;
