@@ -182,7 +182,9 @@ final class Kernel implements MinimalKernel
             }
             if ($app['config']['file_error_log_path']) {
                 $stream = new StreamHandler($app['config']['file_error_log_path'], Logger::ERROR);
-                $stream->setFormatter(new JsonFormatter());
+                $detailedFormatter = new JsonFormatter();
+                $detailedFormatter->includeStacktraces();
+                $stream->setFormatter($detailedFormatter);
                 $logger->pushHandler($stream);
             }
 
