@@ -8,8 +8,10 @@ set_time_limit(0);
 
 use eLife\Search\Console;
 use eLife\Search\Kernel;
+use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 $input = new ArgvInput();
 $env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'local');
@@ -22,5 +24,7 @@ if (!defined('GEARMAN_INSTALLED')) {
     define('GEARMAN_INSTALLED', class_exists('GearmanClient'));
 }
 $app = new Kernel($config);
+$output = new ConsoleOutput();
+$app->get('logger')->pushHandler(new ConsoleHandler($output));
 $console = new Console(new Application('eLife Sciences Search API'), $app);
-$console->run();
+$console->run($input, $output);

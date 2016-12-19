@@ -75,7 +75,7 @@ final class Console
                 $app->get('console.build_index'),
             ]);
         }
-        $this->logger = $app->get('logger.cli');
+        $this->logger = $app->get('logger');
     }
 
     private function path($path = '')
@@ -299,7 +299,7 @@ final class Console
         $logger->debug('This is working');
     }
 
-    public function run()
+    public function run($input = null, $output = null)
     {
         foreach (self::$quick_commands as $name => $cmd) {
             if (strpos($name, ':')) {
@@ -329,6 +329,6 @@ final class Console
                 }
             }
         }
-        $this->console->run();
+        $this->console->run($input, $output);
     }
 }

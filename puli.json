@@ -340,6 +340,10 @@
             "install-path": "vendor/symfony/http-kernel",
             "installer": "composer"
         },
+        "symfony/monolog-bridge": {
+            "install-path": "vendor/symfony/monolog-bridge",
+            "installer": "composer"
+        },
         "symfony/polyfill-mbstring": {
             "install-path": "vendor/symfony/polyfill-mbstring",
             "installer": "composer"
