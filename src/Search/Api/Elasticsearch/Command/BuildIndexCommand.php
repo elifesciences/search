@@ -29,12 +29,15 @@ class BuildIndexCommand extends Command
     {
         $this
             ->setName('search:setup')
-            ->setDescription('Re-index elasticsearch <comment>WARNING: DROPS CONTENT</comment>')
+            ->setDescription('Re-index elasticsearch <comment>WARNING: DROPS CONTENT WITH -d</comment>')
+            ->addOption('delete', 'd', null, 'Drop content', false)
             ->setHelp('Creates new Gearman client and imports entities from API');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $toDelete = $input->getParameterOption('delete');
+
         $logger = new CliLogger($input, $output, $this->logger);
 
         $mapping = array_filter(
@@ -59,23 +62,28 @@ class BuildIndexCommand extends Command
         $create = null;
 
         // Try removing old one.
-        try {
-            $delete = $this->client->deleteIndex();
-        } catch (Throwable $e) {
-            $logger->debug($e->getMessage(), $e->getTrace());
+        if ($toDelete) {
+            try {
+                $delete = $this->client->deleteIndex();
+            } catch (Throwable $e) {
+                $logger->debug($e->getMessage(), $e->getTrace());
+            }
+            if ($delete['payload'] instanceof SuccessResponse) {
+                $logger->info('Removed previous index');
+            }
         }
-        if ($delete['payload'] instanceof SuccessResponse) {
-            $logger->info('Removed previous index');
-        }
-
-        // Try adding new one!
-        try {
-            $create = $this->client->customIndex($config);
-        } catch (Throwable $e) {
-            $logger->error($e->getMessage(), $e->getTrace());
-        }
-        if ($create['payload'] instanceof SuccessResponse) {
-            $logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
+        if (!$this->client->indexExists()) {
+            // Try adding new one!
+            try {
+                $create = $this->client->customIndex($config);
+            } catch (Throwable $e) {
+                $logger->error($e->getMessage(), $e->getTrace());
+            }
+            if ($create['payload'] instanceof SuccessResponse) {
+                $logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
+            }
+        } else {
+            $logger->info('Index already exists.');
         }
     }
 }

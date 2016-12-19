@@ -33,6 +33,13 @@ class ElasticsearchClient
         return $this->deleteIndexByName($this->index);
     }
 
+    public function indexExists($params = [])
+    {
+        $params['index'] = $this->index;
+
+        return $this->connection->indices()->exists($params);
+    }
+
     public function customIndex($params)
     {
         $params['index'] = $this->index;
