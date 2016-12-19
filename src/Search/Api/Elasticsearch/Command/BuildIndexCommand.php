@@ -8,6 +8,7 @@ use eLife\Search\Workflow\CliLogger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use Throwable;
@@ -29,12 +30,15 @@ class BuildIndexCommand extends Command
     {
         $this
             ->setName('search:setup')
-            ->setDescription('Re-index elasticsearch <comment>WARNING: DROPS CONTENT</comment>')
+            ->setDescription('Re-index elasticsearch <comment>WARNING: DROPS CONTENT WITH -d</comment>')
+            ->addOption('delete', 'd', InputOption::VALUE_OPTIONAL, 'Drop content', false)
             ->setHelp('Creates new Gearman client and imports entities from API');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $toDelete = $input->getParameterOption('delete');
+
         $logger = new CliLogger($input, $output, $this->logger);
 
         $mapping = array_filter(
@@ -59,15 +63,16 @@ class BuildIndexCommand extends Command
         $create = null;
 
         // Try removing old one.
-        try {
-            $delete = $this->client->deleteIndex();
-        } catch (Throwable $e) {
-            $logger->debug($e->getMessage(), $e->getTrace());
+        if ($toDelete) {
+            try {
+                $delete = $this->client->deleteIndex();
+            } catch (Throwable $e) {
+                $logger->debug($e->getMessage(), $e->getTrace());
+            }
+            if ($delete['payload'] instanceof SuccessResponse) {
+                $logger->info('Removed previous index');
+            }
         }
-        if ($delete['payload'] instanceof SuccessResponse) {
-            $logger->info('Removed previous index');
-        }
-
         // Try adding new one!
         try {
             $create = $this->client->customIndex($config);
@@ -76,6 +81,9 @@ class BuildIndexCommand extends Command
         }
         if ($create['payload'] instanceof SuccessResponse) {
             $logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
+        }
+        if (isset($create['error'])) {
+            $logger->warning('Index '.$create['error']['reason'].' skipping creation.');
         }
     }
 }
