@@ -7,7 +7,6 @@ use eLife\Search\Queue\Mock\QueueItemMock;
 use eLife\Search\Queue\QueueItem;
 use eLife\Search\Queue\QueueItemTransformer;
 use eLife\Search\Queue\WatchableQueue;
-use eLife\Search\Workflow\CliLogger;
 use GearmanClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -60,7 +59,7 @@ class QueueCommand extends Command
             ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
     }
 
-    protected function mock(OutputInterface $output, LoggerInterface $logger, int $mocks)
+    protected function mock(OutputInterface $output, int $mocks)
     {
         $progress = new ProgressBar($output, $mocks);
         for ($i = 0; $i < $mocks; ++$i) {
@@ -69,7 +68,7 @@ class QueueCommand extends Command
             $this->queue->enqueue(new QueueItemMock('blog-article', 359325));
         }
         $progress->finish();
-        $logger->info("\nAdded ".$mocks.' blog articles');
+        $this->logger->info("\nAdded ".$mocks.' blog articles');
         if ($this->isMock === false) {
             // Exit the application here if we have real data.
             exit;
@@ -79,12 +78,11 @@ class QueueCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Options.
-        $logger = new CliLogger($input, $output, $this->logger);
         if ($this->isMock) {
-            $logger->warning('This is using mocked information.');
+            $this->logger->warning('This is using mocked information.');
         }
         if ($mocks = $input->getOption('mock')) {
-            $this->mock($output, $logger, $mocks);
+            $this->mock($output, $mocks);
         }
         $restTime = (int) $input->getOption('interval');
         $restTime = $restTime < 1 ? 10 : $restTime;
@@ -100,9 +98,9 @@ class QueueCommand extends Command
             ++$iterations;
             if ($iterations % $memoryCheckInterval === 0) {
                 $memory = memory_get_usage();
-                $logger->debug('Memory usage at '.memory_get_usage());
+                $this->logger->debug('Memory usage at '.memory_get_usage());
                 if ($memory > $memoryThreshold) {
-                    $logger->error('Memory limit reached, stopping script.', [
+                    $this->logger->error('Memory limit reached, stopping script.', [
                         'limit' => $memoryThreshold,
                         'memory' => $memory,
                         'interval' => $memoryCheckInterval,
@@ -111,20 +109,20 @@ class QueueCommand extends Command
                 }
             }
             if ($iterations === $maxIterations) {
-                $logger->warning('Max iterations reached, stopping script.', [
+                $this->logger->warning('Max iterations reached, stopping script.', [
                     'iterations' => $iterations,
                     'maxIterations' => $maxIterations,
                 ]);
                 break;
             }
             if (time() - $startTime >= $timeout) {
-                $logger->warning('Max time reached, stopping script.', [
+                $this->logger->warning('Max time reached, stopping script.', [
                     'time' => time() - $startTime,
                     'timeout' => $timeout,
                 ]);
                 break;
             }
-            $next = $this->loop($input, $logger);
+            $next = $this->loop($input);
 
             if (!$next) {
                 sleep($restTime);
@@ -132,7 +130,7 @@ class QueueCommand extends Command
         }
     }
 
-    public function transform(QueueItem $item, LoggerInterface $logger)
+    public function transform(QueueItem $item)
     {
         $entity = null;
         try {
@@ -140,7 +138,7 @@ class QueueCommand extends Command
             $entity = $this->transformer->transform($item);
         } catch (BadResponse $e) {
             // We got a 404 or server error.
-            $logger->error("Item does not exist in API: {$item->getType()} ({$item->getId()})", [
+            $this->logger->error("Item does not exist in API: {$item->getType()} ({$item->getId()})", [
                 'exception' => $e,
                 'item' => $item,
             ]);
@@ -148,7 +146,7 @@ class QueueCommand extends Command
             $this->queue->commit($item);
         } catch (Throwable $e) {
             // Unknown error.
-            $logger->error("There was an unknown problem importing {$item->getType()} ({$item->getId()})", [
+            $this->logger->error("There was an unknown problem importing {$item->getType()} ({$item->getId()})", [
                 'exception' => $e,
                 'item' => $item,
             ]);
@@ -159,18 +157,18 @@ class QueueCommand extends Command
         return $entity;
     }
 
-    public function loop(InputInterface $input, LoggerInterface $logger)
+    public function loop(InputInterface $input)
     {
-        $logger->debug('Loop start... [');
+        $this->logger->debug('Loop start... [');
         $timeout = $input->getOption('queue-timeout');
-        $logger->debug('-> Listening to topic ', ['topic' => $this->topic]);
+        $this->logger->debug('-> Listening to topic ', ['topic' => $this->topic]);
         if ($this->queue->isValid()) {
             $item = $this->queue->dequeue($timeout);
-            if ($entity = $this->transform($item, $logger)) {
+            if ($entity = $this->transform($item, $this->logger)) {
                 // Grab the gearman task.
                 $gearmanTask = $this->transformer->getGearmanTask($item);
                 // Run the task.
-                $logger->info('-> Running gearman task', [
+                $this->logger->info('-> Running gearman task', [
                     'gearmanTask' => $gearmanTask,
                     'type' => $item->getType(),
                     'id' => $item->getId(),
@@ -179,16 +177,16 @@ class QueueCommand extends Command
                 $this->client->doLow($gearmanTask, $entity, md5($item->getReceipt()));
                 // Commit.
                 $this->queue->commit($item);
-                $logger->info('-> Committed task', [
+                $this->logger->info('-> Committed task', [
                     'gearmanTask' => $gearmanTask,
                     'type' => $item->getType(),
                     'id' => $item->getId(),
                 ]);
             }
         } else {
-            $logger->debug('-> Queue is empty ', ['topic' => $this->topic]);
+            $this->logger->debug('-> Queue is empty ', ['topic' => $this->topic]);
         }
-        $logger->debug("]\n");
+        $this->logger->debug("]\n");
 
         return $this->queue->isValid();
     }

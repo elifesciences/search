@@ -7,7 +7,6 @@ use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Workflow\BlogArticleWorkflow;
-use eLife\Search\Workflow\CliLogger;
 use eLife\Search\Workflow\CollectionWorkflow;
 use eLife\Search\Workflow\EventWorkflow;
 use eLife\Search\Workflow\InterviewWorkflow;
@@ -59,15 +58,14 @@ final class WorkerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $logger = new CliLogger($input, $output, $this->logger);
         // Working..
-        $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new EventWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new LabsExperimentWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new PodcastEpisodeWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new CollectionWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
+        $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
+        $this->gearman->registerWorkflow(new EventWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
+        $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
+        $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
+        $this->gearman->registerWorkflow(new LabsExperimentWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
+        $this->gearman->registerWorkflow(new PodcastEpisodeWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
+        $this->gearman->registerWorkflow(new CollectionWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->work();
     }
 }
