@@ -18,13 +18,15 @@ final class GearmanTaskDriver
     public $tasks = [];
     private $reader;
     private $worker;
+    private $logger;
     private $autoRestart;
 
-    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, bool $autoRestart)
+    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger, bool $autoRestart)
     {
         $this->reader = $reader;
         $this->worker = $worker;
         $this->client = $client;
+        $this->logger = $logger;
         $this->autoRestart = $autoRestart;
     }
 
@@ -58,16 +60,16 @@ final class GearmanTaskDriver
         }
     }
 
-    public function addTasksToWorker(GearmanWorker $worker, LoggerInterface $logger)
+    public function addTasksToWorker(GearmanWorker $worker)
     {
         foreach ($this->tasks as $task) {
-            $this->addTaskToWorker($task, $worker, $logger);
+            $this->addTaskToWorker($task, $worker);
         }
     }
 
-    public function addTaskToWorker(GearmanTaskInstance $task, GearmanWorker $worker, LoggerInterface $logger)
+    public function addTaskToWorker(GearmanTaskInstance $task, GearmanWorker $worker)
     {
-        $worker->addFunction($task->name, Closure::bind(function (GearmanJob $job) use ($task, $logger) {
+        $worker->addFunction($task->name, Closure::bind(function (GearmanJob $job) use ($task) {
             $data = $task->deserialize($job->workload());
             $object = $task->instance;
             $method = $task->method;
@@ -99,23 +101,22 @@ final class GearmanTaskDriver
         }, $this));
     }
 
-    public function work(LoggerInterface $logger = null, bool $restart = false)
+    public function work(bool $restart = false)
     {
-        if ($logger && $restart === false) {
-            $logger->warning('Worker started.');
-            $logger->warning('===============');
+        if ($restart === false) {
+            $this->logger->info('Worker started.');
         }
-        $this->addTasksToWorker($this->worker, $logger);
+        $this->addTasksToWorker($this->worker);
         try {
             while ($this->worker->work());
         } catch (InvalidWorkflow $e) {
-            $logger->warning('Recoverable error...', ['exception' => $e]);
-            $this->work($logger, true);
+            $this->logger->warning('Recoverable error...', ['exception' => $e]);
+            $this->work(true);
         } catch (Throwable $e) {
-            $logger->critical($e->getMessage());
+            $this->logger->critical($e->getMessage());
             if ($this->autoRestart) {
-                $logger->warning('> Restarting worker to avoid downtime.', ['exception' => $e]);
-                $this->work($logger, true);
+                $this->logger->warning('> Restarting worker to avoid downtime.', ['exception' => $e]);
+                $this->work(true);
             }
         }
     }

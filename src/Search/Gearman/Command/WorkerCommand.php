@@ -68,6 +68,6 @@ final class WorkerCommand extends Command
         $this->gearman->registerWorkflow(new LabsExperimentWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new PodcastEpisodeWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new CollectionWorkflow($this->sdk->getSerializer(), $logger, $this->client, $this->validator));
-        $this->gearman->work($logger);
+        $this->gearman->work();
     }
 }

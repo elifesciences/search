@@ -10,6 +10,7 @@ namespace tests\eLife\Search\Gearman {
     use GearmanWorker;
     use MockAnnotations;
     use PHPUnit_Framework_TestCase;
+    use Psr\Log\LoggerInterface;
 
     class GearmanTaskDriverTest extends PHPUnit_Framework_TestCase
     {
@@ -25,7 +26,13 @@ namespace tests\eLife\Search\Gearman {
                 $this->markTestSkipped('Gearman must be installed to run these tests');
             }
 
-            $this->taskDriver = new GearmanTaskDriver(new AnnotationReader(), new GearmanWorker(), new GearmanClientMock(), false);
+            $this->taskDriver = new GearmanTaskDriver(
+                new AnnotationReader(),
+                new GearmanWorker(),
+                new GearmanClientMock(),
+                $this->createMock(LoggerInterface::class), 
+                false
+            );
         }
 
         /**
