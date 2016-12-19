@@ -60,7 +60,7 @@ class BuildIndexCommand extends Command
         $create = null;
 
         // Try removing old one.
-        if ($toDelete) {
+        if ($toDelete && $this->client->indexExists()) {
             try {
                 $delete = $this->client->deleteIndex();
             } catch (Throwable $e) {
@@ -70,17 +70,23 @@ class BuildIndexCommand extends Command
                 $this->logger->info('Removed previous index');
             }
         }
-        // Try adding new one!
-        try {
-            $create = $this->client->customIndex($config);
-        } catch (Throwable $e) {
-            $this->logger->error($e->getMessage(), $e->getTrace());
-        }
-        if ($create['payload'] instanceof SuccessResponse) {
-            $this->logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
-        }
-        if (isset($create['error'])) {
-            $this->logger->error('Index '.$create['error']['reason'].' skipping creation.');
+
+        if (!$this->client->indexExists()) {
+            // Try adding new one!
+            try {
+                $create = $this->client->customIndex($config);
+            } catch (Throwable $e) {
+                $this->logger->error($e->getMessage(), $e->getTrace());
+            }
+            if ($create['payload'] instanceof SuccessResponse) {
+                $this->logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
+            }
+            if (isset($create['error'])) {
+                $this->logger->error('Index ' . $create['error']['reason'] . ' skipping creation.');
+            }
+        } else {
+            $this->logger->error('Index already exists, skipping creation.');
+
         }
     }
 }

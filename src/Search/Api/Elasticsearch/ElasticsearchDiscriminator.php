@@ -44,6 +44,11 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
 
         // Discriminator.
         switch (true) {
+            // First check settings call and turn into into a success. (current avoids knowing the index name)
+            case isset(current($data)['settings']) === true:
+                $data['internal_search_type'] = 'success';
+                break;
+
             // Nope out early to avoid errors.
             case
                 isset($data['_index']) === false &&
