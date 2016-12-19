@@ -176,7 +176,7 @@ final class Kernel implements MinimalKernel
         $app['logger'] = function (Application $app) {
             $logger = new Logger('search-api');
             if ($app['config']['file_log_path']) {
-                $stream = new StreamHandler($app['config']['file_log_path'], Logger::INFO);
+                $stream = new StreamHandler($app['config']['file_log_path'], Logger::DEBUG);
                 $stream->setFormatter(new JsonFormatter());
                 $logger->pushHandler($stream);
             }
