@@ -8,6 +8,8 @@ use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use eLife\Search\Api\Response\BlogArticleResponse;
+use eLife\Search\Queue\Mock\QueueItemMock;
+use eLife\Search\Queue\WatchableQueue;
 use Exception;
 use GuzzleHttp\Client;
 use LogicException;
@@ -19,6 +21,7 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
 use ZipArchive;
@@ -43,6 +46,7 @@ final class Console
         'cache:clear' => ['description' => 'Clears cache'],
         'debug:params' => ['description' => 'Lists current parameters'],
         'debug:search' => ['description' => 'Test command for debugging elasticsearch'],
+        'queue:push' => ['description' => 'Manually enqueue item into SQS.'],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
         'spawn' => [
             'description' => 'WARNING: Experimental, may create child processes.',
@@ -53,6 +57,28 @@ final class Console
             ],
         ],
     ];
+
+    public function queuePushCommand(InputInterface $input, OutputInterface $output)
+    {
+        $helper = new QuestionHelper();
+        // Get the type.
+        $choice = new ChoiceQuestion('<question>Which type would you like to import</question>', [
+            'research-article',
+            'blog-articles',
+            'collection',
+        ], 0);
+        $type = $helper->ask($input, $output, $choice);
+        // Ge the Id.
+        $choice = new Question('<question>Whats the ID of the item to import: </question>');
+        $id = $helper->ask($input, $output, $choice);
+        // Create queue item.
+        $item = new QueueItemMock($type, $id);
+        /** @var $queue WatchableQueue */
+        $queue = $this->app->get('aws.queue');
+        // Queue item.
+        $queue->enqueue($item);
+        $this->logger->info('Item added successfully.');
+    }
 
     public function __construct(Application $console, Kernel $app)
     {
