@@ -3,15 +3,24 @@
 namespace tests\eLife\Search;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
+use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
+use eLife\Search\Api\ApiValidator;
+use eLife\Search\Api\Response\SearchResponse;
+use eLife\Search\Api\Response\SearchResult;
 use eLife\Search\Api\SearchResultDiscriminator;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use PHPUnit_Framework_TestCase;
+use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Throwable;
+use Webmozart\Json\JsonDecoder;
 
 abstract class SerializerTest extends PHPUnit_Framework_TestCase
 {
+    private $validator;
+
     abstract public function getResponseClass() : string;
 
     abstract public function jsonProvider() : array;
@@ -23,6 +32,16 @@ abstract class SerializerTest extends PHPUnit_Framework_TestCase
     {
         try {
             $event = $this->serializer->deserialize($actual_json, $this->getResponseClass(), 'json');
+            $isValid = true;
+            if ($event instanceof SearchResult) {
+                $isValid = $this->validator->validateSearchResult($event);
+            }
+            if ($event instanceof SearchResponse) {
+                $isValid = $this->validator->validateSearchResponse($event);
+            }
+            if (!$isValid) {
+                throw $this->validator->getLastError();
+            }
         } catch (Throwable $e) {
             $this->fail('Serialization failed: '.$e->getMessage());
 
@@ -48,6 +67,9 @@ abstract class SerializerTest extends PHPUnit_Framework_TestCase
             })
             ->build();
         $this->context = SerializationContext::create();
+        $puli = PULI_FACTORY_CLASS;
+        $puli = (new $puli())->createRepository();
+        $this->validator = new ApiValidator($this->serializer, $this->context, new JsonMessageValidator(new PuliSchemaFinder($puli), new JsonDecoder()), new DiactorosFactory());
 
         parent::__construct($name, $data, $dataName);
     }
