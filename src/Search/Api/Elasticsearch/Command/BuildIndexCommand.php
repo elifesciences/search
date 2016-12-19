@@ -82,11 +82,10 @@ class BuildIndexCommand extends Command
                 $this->logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
             }
             if (isset($create['error'])) {
-                $this->logger->error('Index ' . $create['error']['reason'] . ' skipping creation.');
+                $this->logger->error('Index '.$create['error']['reason'].' skipping creation.');
             }
         } else {
             $this->logger->error('Index already exists, skipping creation.');
-
         }
     }
 }
