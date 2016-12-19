@@ -73,18 +73,17 @@ class BuildIndexCommand extends Command
                 $logger->info('Removed previous index');
             }
         }
-        if (!$this->client->indexExists()) {
-            // Try adding new one!
-            try {
-                $create = $this->client->customIndex($config);
-            } catch (Throwable $e) {
-                $logger->error($e->getMessage(), $e->getTrace());
-            }
-            if ($create['payload'] instanceof SuccessResponse) {
-                $logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
-            }
-        } else {
-            $logger->info('Index already exists.');
+        // Try adding new one!
+        try {
+            $create = $this->client->customIndex($config);
+        } catch (Throwable $e) {
+            $logger->error($e->getMessage(), $e->getTrace());
+        }
+        if ($create['payload'] instanceof SuccessResponse) {
+            $logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
+        }
+        if (isset($create['error'])) {
+            $logger->warning('Index '.$create['error']['reason'].' skipping creation.');
         }
     }
 }

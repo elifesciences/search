@@ -25,7 +25,7 @@ final class SearchResponseSerializer implements SerializerInterface
      */
     public function serialize($data) : string
     {
-        if (is_string($data) || is_bool($data)) {
+        if (is_string($data)) {
             return $data;
         }
         $searchResult = $this->serializer->serialize($data, 'json');
