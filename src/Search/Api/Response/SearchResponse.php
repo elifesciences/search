@@ -2,7 +2,6 @@
 
 namespace eLife\Search\Api\Response;
 
-use DateTime;
 use eLife\Search\Api\HasHeaders;
 use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Since;
@@ -54,7 +53,6 @@ final class SearchResponse implements HasHeaders
                     $item->image = $item->image->https();
                 }
             }
-            $item->statusDate = new DateTime();
 
             return $item;
         }, $items);

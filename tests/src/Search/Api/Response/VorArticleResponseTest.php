@@ -23,6 +23,7 @@ class VorArticleResponseTest extends SerializerTest
                 {
                     "status": "vor",
                     "statusDate": "2015-09-10T00:00:00Z",
+                    "stage": "published",
                     "volume": 4,
                     "version": 1,
                     "elocationId": "e09560",
@@ -40,6 +41,7 @@ class VorArticleResponseTest extends SerializerTest
                 {
                     "status": "vor",
                     "statusDate": "2015-09-10T00:00:00Z",
+                    "stage": "published",
                     "volume": 4,
                     "version": 1,
                     "issue": 3,
