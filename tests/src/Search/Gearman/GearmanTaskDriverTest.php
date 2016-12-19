@@ -30,7 +30,7 @@ namespace tests\eLife\Search\Gearman {
                 new AnnotationReader(),
                 new GearmanWorker(),
                 new GearmanClientMock(),
-                $this->createMock(LoggerInterface::class), 
+                $this->createMock(LoggerInterface::class),
                 false
             );
         }

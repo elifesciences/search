@@ -300,7 +300,7 @@ final class Kernel implements MinimalKernel
         $app['console.gearman.task_driver'] = function (Application $app) {
             return new GearmanTaskDriver(
                 $app['annotations.reader'],
-                $app['gearman.worker'], 
+                $app['gearman.worker'],
                 $app['gearman.client'],
                 $app['logger'],
                 $app['config']['gearman_auto_restart']

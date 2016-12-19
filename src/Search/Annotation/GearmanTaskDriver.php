@@ -70,7 +70,7 @@ final class GearmanTaskDriver
     public function addTaskToWorker(GearmanTaskInstance $task, GearmanWorker $worker)
     {
         $worker->addFunction($task->name, Closure::bind(function (GearmanJob $job) use ($task) {
-            $this->logger->info("GearmanTaskDriver task started", ['task' => $task->name]);
+            $this->logger->info('GearmanTaskDriver task started', ['task' => $task->name]);
             $data = $task->deserialize($job->workload());
             $object = $task->instance;
             $method = $task->method;
@@ -83,7 +83,7 @@ final class GearmanTaskDriver
             } else {
                 $value = $object->{$method}($data);
             }
-            $this->logger->info("GearmanTaskDriver task completed", ['task' => $task->name]);
+            $this->logger->info('GearmanTaskDriver task completed', ['task' => $task->name]);
             if ($task->next) {
                 switch ($task->priority) {
                     case 'low':
