@@ -3,7 +3,6 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiSdk\ApiSdk;
-use eLife\Search\Workflow\CliLogger;
 use Error;
 use GearmanClient;
 use Iterator;
@@ -49,12 +48,11 @@ final class ApiSdkCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $logger = new CliLogger($input, $output, $this->logger);
         $this->output = $output;
         $entity = $input->getArgument('entity');
         // Only the configured.
         if (!in_array($entity, self::$supports)) {
-            $logger->error('Entity with name '.$entity.' not supported.');
+            $this->logger->error('Entity with name '.$entity.' not supported.');
 
             return;
         }
@@ -62,66 +60,66 @@ final class ApiSdkCommand extends Command
             foreach (self::$supports as $e) {
                 if ($e !== 'all') {
                     // Run the item.
-                    $this->{'import'.$e}($logger);
+                    $this->{'import'.$e}();
                 }
             }
         } else {
             // Run the item.
-            $this->{'import'.$entity}($logger);
+            $this->{'import'.$entity}();
         }
         // Reporting.
-        $logger->info("\nAll entities queued.");
+        $this->logger->info("\nAll entities queued.");
     }
 
-    public function importPodcastEpisodes(LoggerInterface $logger)
+    public function importPodcastEpisodes()
     {
         $episodes = $this->sdk->podcastEpisodes();
-        $this->iterateSerializeTask($episodes, $logger, 'podcast_episode_validate');
+        $this->iterateSerializeTask($episodes, 'podcast_episode_validate');
     }
 
-    public function importCollections(LoggerInterface $logger)
+    public function importCollections()
     {
-        $logger->info('Importing Collections');
+        $this->logger->info('Importing Collections');
         $collections = $this->sdk->collections();
-        $this->iterateSerializeTask($collections, $logger, 'collection_validate', $collections->count());
+        $this->iterateSerializeTask($collections, 'collection_validate', $collections->count());
     }
 
-    public function importLabsExperiments(LoggerInterface $logger)
+    public function importLabsExperiments()
     {
-        $logger->info('Importing Labs Experiments');
+        $this->logger->info('Importing Labs Experiments');
         $events = $this->sdk->labsExperiments();
-        $this->iterateSerializeTask($events, $logger, 'labs_experiment_validate', $events->count());
+        $this->iterateSerializeTask($events, 'labs_experiment_validate', $events->count());
     }
 
-    public function importResearchArticles(LoggerInterface $logger)
+    public function importResearchArticles()
     {
-        $logger->info('Importing Research Articles');
+        $this->logger->info('Importing Research Articles');
         $events = $this->sdk->articles();
-        $this->iterateSerializeTask($events, $logger, 'research_article_validate', $events->count(), $skipInvalid = true);
+        $this->iterateSerializeTask($events, 'research_article_validate', $events->count(), $skipInvalid = true);
     }
 
-    public function importInterviews(LoggerInterface $logger)
+    public function importInterviews()
     {
-        $logger->info('Importing Interviews');
+        $this->logger->info('Importing Interviews');
         $events = $this->sdk->interviews();
-        $this->iterateSerializeTask($events, $logger, 'interview_validate', $events->count());
+        $this->iterateSerializeTask($events, 'interview_validate', $events->count());
     }
 
-    public function importEvents(LoggerInterface $logger)
+    public function importEvents()
     {
-        $logger->info('Importing Events');
+        $this->logger->info('Importing Events');
         $events = $this->sdk->events();
-        $this->iterateSerializeTask($events, $logger, 'event_validate', $events->count());
+        $this->iterateSerializeTask($events, 'event_validate', $events->count());
     }
 
-    public function importBlogArticles(LoggerInterface $logger)
+    public function importBlogArticles()
     {
-        $logger->info('Importing Blog Articles');
+        $this->logger->info('Importing Blog Articles');
         $articles = $this->sdk->blogArticles();
-        $this->iterateSerializeTask($articles, $logger, 'blog_article_validate', $articles->count());
+        $this->iterateSerializeTask($articles, 'blog_article_validate', $articles->count());
     }
 
-    private function iterateSerializeTask(Iterator $items, LoggerInterface $logger, string $task, int $count = 0, $skipInvalid = false)
+    private function iterateSerializeTask(Iterator $items, string $task, int $count = 0, $skipInvalid = false)
     {
         $progress = new ProgressBar($this->output, $count);
 
@@ -137,7 +135,7 @@ final class ApiSdkCommand extends Command
                 $this->task($task, $normalized);
             } catch (Throwable $e) {
                 $item = $item ?? null;
-                $logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
+                $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
                 continue;
             }
         }

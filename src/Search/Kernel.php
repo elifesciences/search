@@ -43,6 +43,7 @@ use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Monolog\Processor\ProcessIdProcessor;
 use Psr\Log\NullLogger;
 use Silex\Application;
 use Silex\Provider;
@@ -176,12 +177,14 @@ final class Kernel implements MinimalKernel
         $app['logger'] = function (Application $app) {
             $logger = new Logger('search-api');
             if ($app['config']['file_log_path']) {
-                $stream = new StreamHandler($app['config']['file_log_path'], Logger::INFO);
+                $stream = new StreamHandler($app['config']['file_log_path'], Logger::DEBUG);
+                $stream->pushProcessor(new ProcessIdProcessor());
                 $stream->setFormatter(new JsonFormatter());
                 $logger->pushHandler($stream);
             }
             if ($app['config']['file_error_log_path']) {
                 $stream = new StreamHandler($app['config']['file_error_log_path'], Logger::ERROR);
+                $stream->pushProcessor(new ProcessIdProcessor());
                 $detailedFormatter = new JsonFormatter();
                 $detailedFormatter->includeStacktraces();
                 $stream->setFormatter($detailedFormatter);
@@ -189,10 +192,6 @@ final class Kernel implements MinimalKernel
             }
 
             return $logger;
-        };
-
-        $app['logger.cli'] = function (Application $app) {
-            return $app['logger'];
         };
 
         //#####################################################
@@ -298,7 +297,13 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.gearman.task_driver'] = function (Application $app) {
-            return new GearmanTaskDriver($app['annotations.reader'], $app['gearman.worker'], $app['gearman.client'], $app['config']['gearman_auto_restart']);
+            return new GearmanTaskDriver(
+                $app['annotations.reader'],
+                $app['gearman.worker'],
+                $app['gearman.client'],
+                $app['logger'],
+                $app['config']['gearman_auto_restart']
+            );
         };
 
         $app['aws.sqs'] = function (Application $app) {
@@ -336,24 +341,24 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.gearman.worker'] = function (Application $app) {
-            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator'], $app['logger.cli']);
+            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator'], $app['logger']);
         };
 
         $app['console.gearman.client'] = function (Application $app) {
-            return new ApiSdkCommand($app['api.sdk'], $app['gearman.client'], $app['logger.cli']);
+            return new ApiSdkCommand($app['api.sdk'], $app['gearman.client'], $app['logger']);
         };
 
         $app['console.gearman.queue'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
-                return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client'], true, $app['config']['aws']['queue_name'], $app['logger.cli']);
+                return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client'], true, $app['config']['aws']['queue_name'], $app['logger']);
             }
 
-            return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client'], false, $app['config']['aws']['queue_name'], $app['logger.cli']);
+            return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client'], false, $app['config']['aws']['queue_name'], $app['logger']);
         };
 
         $app['console.build_index'] = function (Application $app) {
-            return new BuildIndexCommand($app['elastic.client'], $app['logger.cli']);
+            return new BuildIndexCommand($app['elastic.client'], $app['logger']);
         };
     }
 

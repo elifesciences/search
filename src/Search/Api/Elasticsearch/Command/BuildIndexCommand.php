@@ -4,7 +4,6 @@ namespace eLife\Search\Api\Elasticsearch\Command;
 
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
-use eLife\Search\Workflow\CliLogger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,8 +38,6 @@ class BuildIndexCommand extends Command
     {
         $toDelete = $input->getParameterOption('delete');
 
-        $logger = new CliLogger($input, $output, $this->logger);
-
         $mapping = array_filter(
             array_merge(
                 [],
@@ -67,23 +64,23 @@ class BuildIndexCommand extends Command
             try {
                 $delete = $this->client->deleteIndex();
             } catch (Throwable $e) {
-                $logger->debug($e->getMessage(), $e->getTrace());
+                $this->logger->debug($e->getMessage(), $e->getTrace());
             }
             if ($delete['payload'] instanceof SuccessResponse) {
-                $logger->info('Removed previous index');
+                $this->logger->info('Removed previous index');
             }
         }
         // Try adding new one!
         try {
             $create = $this->client->customIndex($config);
         } catch (Throwable $e) {
-            $logger->error($e->getMessage(), $e->getTrace());
+            $this->logger->error($e->getMessage(), $e->getTrace());
         }
         if ($create['payload'] instanceof SuccessResponse) {
-            $logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
+            $this->logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
         }
         if (isset($create['error'])) {
-            $logger->error('Index '.$create['error']['reason'].' skipping creation.');
+            $this->logger->error('Index '.$create['error']['reason'].' skipping creation.');
         }
     }
 }

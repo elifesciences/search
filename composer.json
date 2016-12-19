@@ -18,7 +18,8 @@
         "elasticsearch/elasticsearch": "~2.0",
         "webmozart/json": "^1.3@dev",
         "clue/block-react": "^1.1",
-        "kevinrob/guzzle-cache-middleware": "^1.4"
+        "kevinrob/guzzle-cache-middleware": "^1.4",
+        "symfony/monolog-bridge": "^3.2"
     },
     "autoload": {
         "psr-4": {

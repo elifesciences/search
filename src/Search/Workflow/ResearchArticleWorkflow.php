@@ -55,6 +55,7 @@ final class ResearchArticleWorkflow implements Workflow
      */
     public function validate(ArticleVersion $article) : ArticleVersion
     {
+        $this->logger->debug('ResearchArticle<'.$article->getId().'> Validating '.$article->getTitle());
         $articleSearchResponse = $this->validator->deserialize($this->serialize($article), SearchResult::class);
         // @todo remove hack at some point.
         if ($articleSearchResponse->image) {
@@ -153,6 +154,7 @@ final class ResearchArticleWorkflow implements Workflow
      */
     public function postValidate(string $type, string $id)
     {
+        $this->logger->debug('ResearchArticle<'.$id.'> post validation.');
         try {
             // Post-validation, we got a document.
             $document = $this->client->getDocumentById($type, $id);
