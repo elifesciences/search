@@ -6,6 +6,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\Search\Workflow\CliLogger;
 use Error;
 use GearmanClient;
+use Iterator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -13,7 +14,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
-use Traversable;
 
 final class ApiSdkCommand extends Command
 {
@@ -121,18 +121,23 @@ final class ApiSdkCommand extends Command
         $this->iterateSerializeTask($articles, $logger, 'blog_article_validate', $articles->count());
     }
 
-    private function iterateSerializeTask(Traversable $items, LoggerInterface $logger, string $task, int $count = 0, $skipInvalid = false)
+    private function iterateSerializeTask(Iterator $items, LoggerInterface $logger, string $task, int $count = 0, $skipInvalid = false)
     {
         $progress = new ProgressBar($this->output, $count);
-        foreach ($items as $item) {
+
+        while ($items->valid()) {
             $progress->advance();
-            if ($item === null) {
-                continue;
-            }
             try {
+                $items->next();
+                $item = $items->current();
+                if ($item === null) {
+                    continue;
+                }
                 $normalized = $this->serializer->serialize($item, 'json');
                 $this->task($task, $normalized);
             } catch (Throwable $e) {
+                $item = $item ?? null;
+                $logger->warning($e->getMessage());
                 $logger->warning('Skipping import on a '.get_class($item), ['exception' => $e]);
                 continue;
             }

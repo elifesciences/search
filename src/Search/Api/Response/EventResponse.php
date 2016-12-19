@@ -14,14 +14,14 @@ final class EventResponse implements SearchResult
 
     /**
      * @see https://github.com/schmittjoh/JMSSerializerBundle/issues/459
-     * @Type("DateTime<'Y-m-d\TH:i:sP'>")
+     * @Type("DateTime<'Y-m-d\TH:i:s\Z'>")
      * @Since(version="1")
      */
     public $starts;
 
     /**
      * @see https://github.com/schmittjoh/JMSSerializerBundle/issues/459
-     * @Type("DateTime<'Y-m-d\TH:i:sP'>")
+     * @Type("DateTime<'Y-m-d\TH:i:s\Z'>")
      * @Since(version="1")
      */
     public $ends;

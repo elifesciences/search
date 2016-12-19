@@ -24,7 +24,7 @@ class PodcastEpisodeResponseTest extends SerializerTest
                     "number": 30,
                     "type": "podcast-episode",
                     "title": "June 2016",
-                    "published": "2016-07-01T08:30:15+00:00",
+                    "published": "2016-07-01T08:30:15Z",
                     "image": {
                                 "banner": {
                                     "alt": "",
@@ -81,7 +81,7 @@ class PodcastEpisodeResponseTest extends SerializerTest
                             "name": "Ecology"
                         }
                     ],
-                    "published": "2016-07-01T08:30:15+00:00",
+                    "published": "2016-07-01T08:30:15Z",
                     "image": {
                         "banner": {
                             "alt": "",

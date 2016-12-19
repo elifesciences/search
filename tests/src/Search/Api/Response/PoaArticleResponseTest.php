@@ -20,14 +20,14 @@ class PoaArticleResponseTest extends SerializerTest
             [
                 $this->getFixture('article-poa/v1/minimum.json'), '{
                     "status": "poa",
-                    "statusDate": "2016-03-28T00:00:00+00:00",
+                    "statusDate": "2016-03-28T00:00:00Z",
                     "volume": 5,
                     "version": 1,
                     "elocationId": "e14107",
                     "doi": "10.7554\/eLife.14107",
                     "authorLine": "Yongjian Huang et al",
                     "type": "research-article",
-                    "published": "2016-03-28T00:00:00+00:00",
+                    "published": "2016-03-28T00:00:00Z",
                     "id": "14107",
                     "title": "Molecular basis for multimerization in the activation of the epidermal growth factor"
                 }',
@@ -36,7 +36,7 @@ class PoaArticleResponseTest extends SerializerTest
                 $this->getFixture('article-poa/v1/complete.json'), '
                 {
                     "status": "poa",
-                    "statusDate": "2016-03-28T00:00:00+00:00",
+                    "statusDate": "2016-03-28T00:00:00Z",
                     "volume": 5,
                     "version": 1,
                     "issue": 1,
@@ -46,7 +46,7 @@ class PoaArticleResponseTest extends SerializerTest
                     "authorLine": "Yongjian Huang et al",
                     "pdf": "https:\/\/elifesciences.org\/content\/5\/e14107.pdf",
                     "type": "research-article",
-                    "published": "2016-03-28T00:00:00+00:00",
+                    "published": "2016-03-28T00:00:00Z",
                     "subjects": [
                         {
                             "id": "biochemistry",

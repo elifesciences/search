@@ -22,14 +22,14 @@ class VorArticleResponseTest extends SerializerTest
                 $this->getFixture('article-vor/v1/minimum.json'), '
                 {
                     "status": "vor",
-                    "statusDate": "2015-09-10T00:00:00+00:00",
+                    "statusDate": "2015-09-10T00:00:00Z",
                     "volume": 4,
                     "version": 1,
                     "elocationId": "e09560",
                     "doi": "10.7554\/eLife.09560",
                     "authorLine": "Lee R Berger et al",
                     "type": "research-article",
-                    "published": "2015-09-10T00:00:00+00:00",
+                    "published": "2015-09-10T00:00:00Z",
                     "id": "09560",
                     "title": "<i>Homo naledi<\/i>, a new species of the genus <i>Homo<\/i> from the Dinaledi Chamber, South Africa"
                 }
@@ -39,7 +39,7 @@ class VorArticleResponseTest extends SerializerTest
                 $this->getFixture('article-vor/v1/complete.json'), '
                 {
                     "status": "vor",
-                    "statusDate": "2015-09-10T00:00:00+00:00",
+                    "statusDate": "2015-09-10T00:00:00Z",
                     "volume": 4,
                     "version": 1,
                     "issue": 3,
@@ -49,7 +49,7 @@ class VorArticleResponseTest extends SerializerTest
                     "authorLine": "Lee R Berger et al",
                     "pdf": "https:\/\/elifesciences.org\/content\/4\/e09560.pdf",
                     "type": "research-article",
-                    "published": "2015-09-10T00:00:00+00:00",
+                    "published": "2015-09-10T00:00:00Z",
                     "subjects": [
                         {
                             "id": "genomics-evolutionary-biology",
