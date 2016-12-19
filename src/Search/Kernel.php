@@ -43,6 +43,7 @@ use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Monolog\Processor\ProcessIdProcessor;
 use Psr\Log\NullLogger;
 use Silex\Application;
 use Silex\Provider;
@@ -177,11 +178,13 @@ final class Kernel implements MinimalKernel
             $logger = new Logger('search-api');
             if ($app['config']['file_log_path']) {
                 $stream = new StreamHandler($app['config']['file_log_path'], Logger::DEBUG);
+                $stream->pushProcessor(new ProcessIdProcessor());
                 $stream->setFormatter(new JsonFormatter());
                 $logger->pushHandler($stream);
             }
             if ($app['config']['file_error_log_path']) {
                 $stream = new StreamHandler($app['config']['file_error_log_path'], Logger::ERROR);
+                $stream->pushProcessor(new ProcessIdProcessor());
                 $detailedFormatter = new JsonFormatter();
                 $detailedFormatter->includeStacktraces();
                 $stream->setFormatter($detailedFormatter);
