@@ -3,7 +3,7 @@
 namespace tests\eLife\Search\Queue;
 
 use eLife\ApiSdk\ApiSdk;
-use eLife\Search\Queue\SqsMessage;
+use eLife\Search\Queue\InternalSqsMessage;
 use eLife\Search\Queue\SqsMessageTransformer;
 use LogicException;
 use PHPUnit_Framework_TestCase;
@@ -30,7 +30,7 @@ final class QueueTransformerTest extends PHPUnit_Framework_TestCase
     public function test_it_can()
     {
         $this->expectException(LogicException::class);
-        $this->transformer->getGearmanTask(new SqsMessage('123', '1234', 'non-existent-type', '098765432'));
+        $this->transformer->getGearmanTask(new InternalSqsMessage('123', '1234', 'non-existent-type', '098765432'));
     }
 
     public function test_can_transform_sqs_message()
