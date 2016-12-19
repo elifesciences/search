@@ -46,7 +46,14 @@ final class Console
         'cache:clear' => ['description' => 'Clears cache'],
         'debug:params' => ['description' => 'Lists current parameters'],
         'debug:search' => ['description' => 'Test command for debugging elasticsearch'],
-        'queue:push' => ['description' => 'Manually enqueue item into SQS.'],
+        'queue:interactive' => ['description' => 'Manually enqueue item into SQS. (interactive)'],
+        'queue:push' => [
+            'description' => 'Manually enqueue item into SQS.',
+            'args' => [
+                ['name' => 'type'],
+                ['name' => 'id'],
+            ],
+        ],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
         'spawn' => [
             'description' => 'WARNING: Experimental, may create child processes.',
@@ -59,6 +66,14 @@ final class Console
     ];
 
     public function queuePushCommand(InputInterface $input, OutputInterface $output)
+    {
+        $id = $input->getArgument('id');
+        $type = $input->getArgument('type');
+        // Enqueue.
+        $this->enqueue($type, $id);
+    }
+
+    public function queueInteractiveCommand(InputInterface $input, OutputInterface $output)
     {
         $helper = new QuestionHelper();
         // Get the type.
@@ -75,6 +90,12 @@ final class Console
         // Ge the Id.
         $choice = new Question('<question>Whats the ID of the item to import: </question>');
         $id = $helper->ask($input, $output, $choice);
+        // Enqueue.
+        $this->enqueue($type, $id);
+    }
+
+    private function enqueue($type, $id)
+    {
         // Create queue item.
         $item = new QueueItemMock($type, $id);
         /** @var $queue WatchableQueue */
