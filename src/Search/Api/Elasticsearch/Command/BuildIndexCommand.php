@@ -83,7 +83,7 @@ class BuildIndexCommand extends Command
             $logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
         }
         if (isset($create['error'])) {
-            $logger->warning('Index '.$create['error']['reason'].' skipping creation.');
+            $logger->error('Index '.$create['error']['reason'].' skipping creation.');
         }
     }
 }
