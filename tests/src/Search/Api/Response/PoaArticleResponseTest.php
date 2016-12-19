@@ -19,6 +19,7 @@ class PoaArticleResponseTest extends SerializerTest
         return [
             [
                 $this->getFixture('article-poa/v1/minimum.json'), '{
+                    "stage": "published",
                     "status": "poa",
                     "statusDate": "2016-03-28T00:00:00Z",
                     "volume": 5,
@@ -41,6 +42,7 @@ class PoaArticleResponseTest extends SerializerTest
                     "version": 1,
                     "issue": 1,
                     "titlePrefix": "Title prefix",
+                    "stage": "published",
                     "elocationId": "e14107",
                     "doi": "10.7554\/eLife.14107",
                     "authorLine": "Yongjian Huang et al",

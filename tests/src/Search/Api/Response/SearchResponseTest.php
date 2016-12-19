@@ -26,6 +26,7 @@ class SearchResponseTest extends SerializerTest
                         {
                             "status": "poa",
                             "statusDate": "2016-03-28T00:00:00Z",
+                            "stage": "published",
                             "volume": 5,
                             "version": 1,
                             "elocationId": "e14107",
@@ -39,6 +40,7 @@ class SearchResponseTest extends SerializerTest
                         {
                             "status": "vor",
                             "statusDate": "2015-09-10T00:00:00Z",
+                            "stage": "published",
                             "volume": 4,
                             "version": 1,
                             "titlePrefix": "Title prefix",
