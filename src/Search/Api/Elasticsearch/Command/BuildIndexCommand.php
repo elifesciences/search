@@ -7,6 +7,7 @@ use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use eLife\Search\Workflow\CliLogger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
@@ -30,7 +31,7 @@ class BuildIndexCommand extends Command
         $this
             ->setName('search:setup')
             ->setDescription('Re-index elasticsearch <comment>WARNING: DROPS CONTENT WITH -d</comment>')
-            ->addOption('delete', 'd', null, 'Drop content', false)
+            ->addOption('delete', 'd', InputArgument::OPTIONAL, 'Drop content', false)
             ->setHelp('Creates new Gearman client and imports entities from API');
     }
 
