@@ -38,6 +38,13 @@ trait Article
     public $version;
 
     /**
+     * @Type("DateTime<'Y-m-d\TH:i:s\Z'>")
+     * @Since(version="1")
+     * @SerializedName("versionDate")
+     */
+    public $versionDate;
+
+    /**
      * @Type("integer")
      * @Since(version="1")
      */
