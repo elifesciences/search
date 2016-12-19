@@ -64,7 +64,7 @@ class BuildIndexCommand extends Command
             try {
                 $delete = $this->client->deleteIndex();
             } catch (Throwable $e) {
-                $this->logger->debug($e->getMessage(), $e->getTrace());
+                $this->logger->error($e->getMessage(), $e->getTrace());
             }
             if ($delete['payload'] instanceof SuccessResponse) {
                 $this->logger->info('Removed previous index');

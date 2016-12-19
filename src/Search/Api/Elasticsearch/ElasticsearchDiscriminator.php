@@ -42,10 +42,12 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
             $data['_source']['type'] = $data['_type'];
         }
 
+        $root = is_array($data) ? current($data) : [];
+
         // Discriminator.
         switch (true) {
             // First check settings call and turn into into a success. (current avoids knowing the index name)
-            case isset(current($data)['settings']) === true:
+            case isset($root['settings']) === true:
                 $data['internal_search_type'] = 'success';
                 break;
 
