@@ -137,8 +137,7 @@ final class ApiSdkCommand extends Command
                 $this->task($task, $normalized);
             } catch (Throwable $e) {
                 $item = $item ?? null;
-                $logger->warning($e->getMessage());
-                $logger->warning('Skipping import on a '.get_class($item), ['exception' => $e]);
+                $logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
                 continue;
             }
         }
