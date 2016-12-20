@@ -348,8 +348,15 @@ final class Kernel implements MinimalKernel
             return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator'], $app['logger']);
         };
 
+        // TODO: rename key
         $app['console.gearman.client'] = function (Application $app) {
-            return new ApiSdkCommand($app['api.sdk'], $app['gearman.client'], $app['logger']);
+            return new ApiSdkCommand(
+                $app['api.sdk'],
+                // TODO: remove collaborator if possible?
+                $app['gearman.client'],
+                $app['aws.queue'],
+                $app['logger']
+            );
         };
 
         $app['console.gearman.queue'] = function (Application $app) {

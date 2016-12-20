@@ -7,10 +7,11 @@ if [ -z "$environment" ]; then
 fi;
 
 ./bin/console gearman:worker --env=$environment &
+workerPid=$!
+./bin/console queue:watch --env=$environment &
+queueWatchPid=$!
 ./bin/console gearman:import all --env=$environment
 
-workerPid=$!
+timeout 60 ./bin/wait-for-empty-gearman-queue
 
-./bin/wait-for-empty-gearman-queue
-
-kill $workerPid;
+kill $workerPid $queueWatchPid;
