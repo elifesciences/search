@@ -54,6 +54,9 @@ final class Console
                 ['name' => 'id'],
             ],
         ],
+        'queue:clean' => [
+            'description' => 'Manually clean the queue. Asynchronous, takes up to 60 seconds',
+        ],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
         'spawn' => [
             'description' => 'WARNING: Experimental, may create child processes.',
@@ -92,6 +95,12 @@ final class Console
         $id = $helper->ask($input, $output, $choice);
         // Enqueue.
         $this->enqueue($type, $id);
+    }
+
+    public function queueCleanCommand(InputInterface $input, OutputInterface $output)
+    {
+        $queue = $this->app->get('aws.queue');
+        $queue->clean();
     }
 
     private function enqueue($type, $id)
