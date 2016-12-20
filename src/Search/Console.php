@@ -8,7 +8,7 @@ use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use eLife\Search\Api\Response\BlogArticleResponse;
-use eLife\Search\Queue\Mock\BusSqsMessage;
+use eLife\Search\Queue\InternalSqsMessage;
 use eLife\Search\Queue\WatchableQueue;
 use Exception;
 use GuzzleHttp\Client;
@@ -54,6 +54,9 @@ final class Console
                 ['name' => 'id'],
             ],
         ],
+        'queue:clean' => [
+            'description' => 'Manually clean the queue. Asynchronous, takes up to 60 seconds',
+        ],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
         'spawn' => [
             'description' => 'WARNING: Experimental, may create child processes.',
@@ -94,10 +97,16 @@ final class Console
         $this->enqueue($type, $id);
     }
 
+    public function queueCleanCommand(InputInterface $input, OutputInterface $output)
+    {
+        $queue = $this->app->get('aws.queue');
+        $queue->clean();
+    }
+
     private function enqueue($type, $id)
     {
         // Create queue item.
-        $item = new BusSqsMessage($type, $id);
+        $item = new InternalSqsMessage($type, $id);
         /** @var $queue WatchableQueue */
         $queue = $this->app->get('aws.queue');
         // Queue item.

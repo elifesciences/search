@@ -3,7 +3,7 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiClient\Exception\BadResponse;
-use eLife\Search\Queue\Mock\BusSqsMessage;
+use eLife\Search\Queue\InternalSqsMessage;
 use eLife\Search\Queue\QueueItem;
 use eLife\Search\Queue\QueueItemTransformer;
 use eLife\Search\Queue\WatchableQueue;
@@ -65,7 +65,7 @@ class QueueCommand extends Command
         for ($i = 0; $i < $mocks; ++$i) {
             $progress->advance();
             // These will work with real or mocked queues.
-            $this->queue->enqueue(new BusSqsMessage('blog-article', 359325));
+            $this->queue->enqueue(new InternalSqsMessage('blog-article', 359325));
         }
         $progress->finish();
         $this->logger->info("\nAdded ".$mocks.' blog articles');

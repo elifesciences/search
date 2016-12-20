@@ -6,11 +6,16 @@ if [ -z "$environment" ]; then
     exit 2;
 fi;
 
+./bin/console queue:clean --env=$environment
+# TODO: poll for queue:count == 0, with timeout
+sleep 5
+
 ./bin/console gearman:worker --env=$environment &
+workerPid=$!
+./bin/console queue:watch --env=$environment &
+queueWatchPid=$!
 ./bin/console gearman:import all --env=$environment
 
-workerPid=$!
+timeout 60 ./bin/wait-for-empty-gearman-queue
 
-./bin/wait-for-empty-gearman-queue
-
-kill $workerPid;
+kill $workerPid $queueWatchPid;

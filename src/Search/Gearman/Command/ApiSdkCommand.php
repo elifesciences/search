@@ -3,6 +3,7 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiSdk\ApiSdk;
+use eLife\Search\Queue\InternalSqsMessage;
 use Error;
 use GearmanClient;
 use Iterator;
@@ -27,11 +28,14 @@ final class ApiSdkCommand extends Command
     public function __construct(
         ApiSdk $sdk,
         GearmanClient $client,
+        // TODO: type hint
+        $queue,
         LoggerInterface $logger
     ) {
         $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
         $this->client = $client;
+        $this->queue = $queue;
         $this->logger = $logger;
 
         parent::__construct(null);
@@ -73,53 +77,54 @@ final class ApiSdkCommand extends Command
 
     public function importPodcastEpisodes()
     {
+        $this->logger->info('Importing PodcastEpisodes');
         $episodes = $this->sdk->podcastEpisodes();
-        $this->iterateSerializeTask($episodes, 'podcast_episode_validate');
+        $this->iterateSerializeTask($episodes, 'podcast-episode', 'getNumber', $episodes->count());
     }
 
     public function importCollections()
     {
         $this->logger->info('Importing Collections');
         $collections = $this->sdk->collections();
-        $this->iterateSerializeTask($collections, 'collection_validate', $collections->count());
+        $this->iterateSerializeTask($collections, 'collection', 'getId', $collections->count());
     }
 
     public function importLabsExperiments()
     {
         $this->logger->info('Importing Labs Experiments');
         $events = $this->sdk->labsExperiments();
-        $this->iterateSerializeTask($events, 'labs_experiment_validate', $events->count());
+        $this->iterateSerializeTask($events, 'labs-experiment', 'getNumber', $events->count());
     }
 
     public function importResearchArticles()
     {
         $this->logger->info('Importing Research Articles');
         $events = $this->sdk->articles();
-        $this->iterateSerializeTask($events, 'research_article_validate', $events->count(), $skipInvalid = true);
+        $this->iterateSerializeTask($events, 'article', 'getId', $events->count(), $skipInvalid = true);
     }
 
     public function importInterviews()
     {
         $this->logger->info('Importing Interviews');
         $events = $this->sdk->interviews();
-        $this->iterateSerializeTask($events, 'interview_validate', $events->count());
+        $this->iterateSerializeTask($events, 'interview', 'getId', $events->count());
     }
 
     public function importEvents()
     {
         $this->logger->info('Importing Events');
         $events = $this->sdk->events();
-        $this->iterateSerializeTask($events, 'event_validate', $events->count());
+        $this->iterateSerializeTask($events, 'event', 'getId', $events->count());
     }
 
     public function importBlogArticles()
     {
         $this->logger->info('Importing Blog Articles');
         $articles = $this->sdk->blogArticles();
-        $this->iterateSerializeTask($articles, 'blog_article_validate', $articles->count());
+        $this->iterateSerializeTask($articles, 'blog-article', 'getId', $articles->count());
     }
 
-    private function iterateSerializeTask(Iterator $items, string $task, int $count = 0, $skipInvalid = false)
+    private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
         $progress = new ProgressBar($this->output, $count);
 
@@ -131,8 +136,7 @@ final class ApiSdkCommand extends Command
                 if ($item === null) {
                     continue;
                 }
-                $normalized = $this->serializer->serialize($item, 'json');
-                $this->task($task, $normalized);
+                $this->enqueue($type, $item->$method());
             } catch (Throwable $e) {
                 $item = $item ?? null;
                 $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
@@ -141,6 +145,15 @@ final class ApiSdkCommand extends Command
         }
         $progress->finish();
         $progress->clear();
+    }
+
+    private function enqueue($type, $identifier)
+    {
+        $item = new InternalSqsMessage($type, $identifier);
+        /* @var $queue WatchableQueue */
+        // Queue item.
+        $this->queue->enqueue($item);
+        $this->logger->info("Item ($type, $identifier) added successfully");
     }
 
     private function task($item, ...$data)

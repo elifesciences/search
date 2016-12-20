@@ -43,4 +43,9 @@ interface WatchableQueue
      * SQS: this will take an item off the queue and store it in memory unless there is one already stored in memory.
      */
     public function isValid() : bool;
+
+    /**
+     * Deletes everything from the queue.
+     */
+    public function clean();
 }

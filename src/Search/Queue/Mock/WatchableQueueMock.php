@@ -75,4 +75,9 @@ final class WatchableQueueMock implements WatchableQueue
     {
         return !empty($this->items);
     }
+
+    public function clean()
+    {
+        $this->items = [];
+    }
 }

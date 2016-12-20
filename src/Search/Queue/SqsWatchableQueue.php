@@ -108,4 +108,11 @@ final class SqsWatchableQueue implements WatchableQueue
 
         return true;
     }
+
+    public function clean()
+    {
+        $this->client->purgeQueue([
+            'QueueUrl' => $this->url,
+        ]);
+    }
 }
