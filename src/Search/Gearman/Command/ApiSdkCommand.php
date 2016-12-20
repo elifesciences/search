@@ -100,7 +100,7 @@ final class ApiSdkCommand extends Command
     {
         $this->logger->info('Importing Research Articles');
         $events = $this->sdk->articles();
-        $this->iterateSerializeTask($events, 'research-article', 'getId', $events->count(), $skipInvalid = true);
+        $this->iterateSerializeTask($events, 'article', 'getId', $events->count(), $skipInvalid = true);
     }
 
     public function importInterviews()
