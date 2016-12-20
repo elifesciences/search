@@ -2,7 +2,7 @@
 
 namespace eLife\Search\Queue;
 
-final class SqsMessage implements QueueItem
+final class InternalSqsMessage implements QueueItem
 {
     private $id;
     private $type;

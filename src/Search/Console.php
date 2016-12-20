@@ -8,7 +8,7 @@ use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use eLife\Search\Api\Response\BlogArticleResponse;
-use eLife\Search\Queue\Mock\QueueItemMock;
+use eLife\Search\Queue\Mock\BusSqsMessage;
 use eLife\Search\Queue\WatchableQueue;
 use Exception;
 use GuzzleHttp\Client;
@@ -46,7 +46,14 @@ final class Console
         'cache:clear' => ['description' => 'Clears cache'],
         'debug:params' => ['description' => 'Lists current parameters'],
         'debug:search' => ['description' => 'Test command for debugging elasticsearch'],
-        'queue:push' => ['description' => 'Manually enqueue item into SQS.'],
+        'queue:interactive' => ['description' => 'Manually enqueue item into SQS. (interactive)'],
+        'queue:push' => [
+            'description' => 'Manually enqueue item into SQS.',
+            'args' => [
+                ['name' => 'type'],
+                ['name' => 'id'],
+            ],
+        ],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
         'spawn' => [
             'description' => 'WARNING: Experimental, may create child processes.',
@@ -59,6 +66,14 @@ final class Console
     ];
 
     public function queuePushCommand(InputInterface $input, OutputInterface $output)
+    {
+        $id = $input->getArgument('id');
+        $type = $input->getArgument('type');
+        // Enqueue.
+        $this->enqueue($type, $id);
+    }
+
+    public function queueInteractiveCommand(InputInterface $input, OutputInterface $output)
     {
         $helper = new QuestionHelper();
         // Get the type.
@@ -75,8 +90,14 @@ final class Console
         // Ge the Id.
         $choice = new Question('<question>Whats the ID of the item to import: </question>');
         $id = $helper->ask($input, $output, $choice);
+        // Enqueue.
+        $this->enqueue($type, $id);
+    }
+
+    private function enqueue($type, $id)
+    {
         // Create queue item.
-        $item = new QueueItemMock($type, $id);
+        $item = new BusSqsMessage($type, $id);
         /** @var $queue WatchableQueue */
         $queue = $this->app->get('aws.queue');
         // Queue item.
