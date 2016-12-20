@@ -9,6 +9,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\FilesystemCache;
 use Elasticsearch\ClientBuilder;
+use eLife\ApiClient\HttpClient\BatchingHttpClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
@@ -220,8 +221,11 @@ final class Kernel implements MinimalKernel
 
         $app['api.sdk'] = function (Application $app) {
             return new ApiSdk(
-                new Guzzle6HttpClient(
-                    $app['guzzle']
+                new BatchingHttpClient(
+                    new Guzzle6HttpClient(
+                        $app['guzzle']
+                    ),
+                    10
                 )
             );
         };
