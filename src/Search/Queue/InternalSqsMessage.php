@@ -4,17 +4,13 @@ namespace eLife\Search\Queue;
 
 final class InternalSqsMessage implements QueueItem
 {
-    private $id;
     private $type;
-    private $receipt;
-    private $messageId;
+    private $id;
 
-    public function __construct(string $messageId, string $id, string $type, string $receipt)
+    public function __construct(string $type, string $id)
     {
-        $this->messageId = $messageId;
-        $this->id = $id;
         $this->type = $type;
-        $this->receipt = $receipt;
+        $this->id = $id;
     }
 
     /**
@@ -38,6 +34,6 @@ final class InternalSqsMessage implements QueueItem
      */
     public function getReceipt() : string
     {
-        return $this->receipt;
+        return $this->type.'--'.$this->id;
     }
 }

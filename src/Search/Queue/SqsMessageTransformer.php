@@ -30,7 +30,7 @@ final class SqsMessageTransformer implements QueueItemTransformer
             throw new LogicException('Hash mismatch: possible corrupted message.');
         }
 
-        return new InternalSqsMessage($messageId, $body->id ?? $body->number, $body->type, $handle);
+        return new BusSqsMessage($messageId, $body->id ?? $body->number, $body->type, $handle);
     }
 
     public static function hasItems(array $message)

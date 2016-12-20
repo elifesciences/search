@@ -3,7 +3,7 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiSdk\ApiSdk;
-use eLife\Search\Queue\Mock\BusSqsMessage;
+use eLife\Search\Queue\InternalSqsMessage;
 use Error;
 use GearmanClient;
 use Iterator;
@@ -149,7 +149,7 @@ final class ApiSdkCommand extends Command
 
     private function enqueue($type, $identifier)
     {
-        $item = new BusSqsMessage($type, $identifier);
+        $item = new InternalSqsMessage($type, $identifier);
         /* @var $queue WatchableQueue */
         // Queue item.
         $this->queue->enqueue($item);

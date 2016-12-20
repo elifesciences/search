@@ -1,18 +1,20 @@
 <?php
 
-namespace eLife\Search\Queue\Mock;
-
-use eLife\Search\Queue\QueueItem;
+namespace eLife\Search\Queue;
 
 final class BusSqsMessage implements QueueItem
 {
-    private $type;
     private $id;
+    private $type;
+    private $receipt;
+    private $messageId;
 
-    public function __construct(string $type, string $id)
+    public function __construct(string $messageId, string $id, string $type, string $receipt)
     {
-        $this->type = $type;
+        $this->messageId = $messageId;
         $this->id = $id;
+        $this->type = $type;
+        $this->receipt = $receipt;
     }
 
     /**
@@ -36,6 +38,6 @@ final class BusSqsMessage implements QueueItem
      */
     public function getReceipt() : string
     {
-        return $this->type.'--'.$this->id;
+        return $this->receipt;
     }
 }
