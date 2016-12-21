@@ -103,22 +103,18 @@ final class GearmanTaskDriver
         }, $this));
     }
 
-    public function work(bool $restart = false)
+    public function work()
     {
-        if ($restart === false) {
-            $this->logger->info('Worker started.');
-        }
+        $this->logger->info('Worker started.');
         $this->addTasksToWorker($this->worker);
-        try {
-            while ($this->worker->work());
-        } catch (InvalidWorkflow $e) {
-            $this->logger->warning('Recoverable error...', ['exception' => $e]);
-            $this->work(true);
-        } catch (Throwable $e) {
-            $this->logger->critical($e->getMessage());
-            if ($this->autoRestart) {
-                $this->logger->warning('> Restarting worker to avoid downtime.', ['exception' => $e]);
-                $this->work(true);
+        while (true) {
+            try {
+                $this->worker->work();
+            } catch (InvalidWorkflow $e) {
+                $this->logger->warning('Recoverable error...', ['exception' => $e]);
+            } catch (Throwable $e) {
+                $this->logger->critical($e->getMessage());
+                return;
             }
         }
     }
