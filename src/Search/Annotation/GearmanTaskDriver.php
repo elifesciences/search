@@ -114,6 +114,7 @@ final class GearmanTaskDriver
                 $this->logger->warning('Recoverable error...', ['exception' => $e]);
             } catch (Throwable $e) {
                 $this->logger->critical($e->getMessage());
+
                 return;
             }
         }

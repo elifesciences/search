@@ -33,7 +33,9 @@ namespace tests\eLife\Search\Gearman {
                 new GearmanWorker(),
                 new GearmanClientMock(),
                 $this->logger,
-                function() { return $this->limitReached; }
+                function () {
+                    return $this->limitReached;
+                }
             );
         }
 
@@ -98,7 +100,7 @@ namespace tests\eLife\Search\Gearman {
                     $this->logLines[] = $logLine;
                 })); // start and stop
 
-            $this->limitReached = true;    
+            $this->limitReached = true;
             $this->taskDriver->work();
 
             $this->assertEquals(
