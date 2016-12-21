@@ -19,15 +19,13 @@ final class GearmanTaskDriver
     private $reader;
     private $worker;
     private $logger;
-    private $autoRestart;
 
-    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger, bool $autoRestart)
+    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger)
     {
         $this->reader = $reader;
         $this->worker = $worker;
         $this->client = $client;
         $this->logger = $logger;
-        $this->autoRestart = $autoRestart;
     }
 
     public function registerWorkflow(Workflow $workflow)

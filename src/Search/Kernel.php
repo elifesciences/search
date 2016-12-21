@@ -81,7 +81,6 @@ final class Kernel implements MinimalKernel
             'ttl' => 3600,
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
-            'gearman_auto_restart' => true,
             'file_log_path' => self::ROOT.'/var/logs/all.log',
             'file_error_log_path' => self::ROOT.'/var/logs/error.log',
             'aws' => [
@@ -305,8 +304,7 @@ final class Kernel implements MinimalKernel
                 $app['annotations.reader'],
                 $app['gearman.worker'],
                 $app['gearman.client'],
-                $app['logger'],
-                $app['config']['gearman_auto_restart']
+                $app['logger']
             );
         };
 
