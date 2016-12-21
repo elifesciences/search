@@ -84,6 +84,7 @@ final class Kernel implements MinimalKernel
             'elastic_index' => 'elife_search',
             'file_log_path' => self::ROOT.'/var/logs/all.log',
             'file_error_log_path' => self::ROOT.'/var/logs/error.log',
+            'process_memory_limit' => 256,
             'aws' => [
                 'credential_file' => false,
                 'mock_queue' => true,
@@ -306,7 +307,7 @@ final class Kernel implements MinimalKernel
                 $app['gearman.worker'],
                 $app['gearman.client'],
                 $app['logger'],
-                MemoryLimit::mb(256)
+                MemoryLimit::mb($app['config']['process_memory_limit'])
             );
         };
 
