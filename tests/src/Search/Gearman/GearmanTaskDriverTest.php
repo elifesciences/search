@@ -26,11 +26,14 @@ namespace tests\eLife\Search\Gearman {
                 $this->markTestSkipped('Gearman must be installed to run these tests');
             }
 
+            $this->limitReached = false;
+            $this->logger = $this->createMock(LoggerInterface::class);
             $this->taskDriver = new GearmanTaskDriver(
                 new AnnotationReader(),
                 new GearmanWorker(),
                 new GearmanClientMock(),
-                $this->createMock(LoggerInterface::class)
+                $this->logger,
+                function() { return $this->limitReached; }
             );
         }
 
@@ -81,6 +84,30 @@ namespace tests\eLife\Search\Gearman {
                 $this->assertSame('testingCMethod', $item->method);
                 $this->assertSame(['testA', 'testB'], $item->parameters);
             }, $this));
+        }
+
+        /**
+         * @test
+         */
+        public function exits_on_limit_being_reached()
+        {
+            $this->logLines = [];
+            $this->logger->expects($this->any())
+                ->method('info')
+                ->will($this->returnCallback(function ($logLine) {
+                    $this->logLines[] = $logLine;
+                })); // start and stop
+
+            $this->limitReached = true;    
+            $this->taskDriver->work();
+
+            $this->assertEquals(
+                [
+                    'Worker started.',
+                    'Worker stopped because of limits reached.',
+                ],
+                $this->logLines
+            );
         }
     }
 

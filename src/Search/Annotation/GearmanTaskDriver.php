@@ -20,12 +20,13 @@ final class GearmanTaskDriver
     private $worker;
     private $logger;
 
-    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger)
+    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger, callable $limit)
     {
         $this->reader = $reader;
         $this->worker = $worker;
         $this->client = $client;
         $this->logger = $logger;
+        $this->limit = $limit;
     }
 
     public function registerWorkflow(Workflow $workflow)
@@ -105,7 +106,8 @@ final class GearmanTaskDriver
     {
         $this->logger->info('Worker started.');
         $this->addTasksToWorker($this->worker);
-        while (true) {
+        $limit = $this->limit;
+        while (!$limit()) {
             try {
                 $this->worker->work();
             } catch (InvalidWorkflow $e) {
@@ -115,6 +117,7 @@ final class GearmanTaskDriver
                 return;
             }
         }
+        $this->logger->info('Worker stopped because of limits reached.');
     }
 
     public function map(callable $fn)

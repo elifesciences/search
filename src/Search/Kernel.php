@@ -15,6 +15,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Annotation\GearmanTaskDriver;
+use eLife\Search\Annotation\MemoryLimit;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
 use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
@@ -304,7 +305,8 @@ final class Kernel implements MinimalKernel
                 $app['annotations.reader'],
                 $app['gearman.worker'],
                 $app['gearman.client'],
-                $app['logger']
+                $app['logger'],
+                MemoryLimit::mb(256)
             );
         };
 
