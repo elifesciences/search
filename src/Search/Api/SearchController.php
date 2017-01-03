@@ -46,7 +46,7 @@ final class SearchController
         $order = $request->query->get('order', 'desc');
         $page = $request->query->get('page', 1);
         $perPage = $request->query->get('per-page', 10);
-        // $sort = $request->query->get('sort');
+        $sort = $request->query->get('sort', 'relevance');
         $subjects = $request->query->get('subject');
         $types = $request->query->get('type');
 
@@ -64,6 +64,16 @@ final class SearchController
         $query = $query
             ->paginate($page, $perPage)
             ->order($order);
+
+        switch ($sort) {
+            case 'date':
+                $query = $query->sortByDate();
+                break;
+            case 'relevance':
+            default:
+                $query = $query->sortByRelevance();
+                break;
+        }
 
         $data = $query->getQuery()->execute();
 

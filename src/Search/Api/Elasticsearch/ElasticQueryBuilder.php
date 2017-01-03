@@ -40,10 +40,10 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     private $query = [];
 
-    private function sort($sort)
+    private function sort($sort = [])
     {
         $this->query['sort'] = $this->query['sort'] ?? [];
-        $this->query['sort'][] = $sort;
+        $this->query['sort'] = array_merge($this->query['sort'], $sort);
     }
 
     private function getSort($reverse = false)
@@ -68,9 +68,7 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function searchFor(string $string) : QueryBuilder
     {
-        if ($string === '') {
-            $this->sort('_doc');
-        } else {
+        if ($string !== '') {
             $this->query('match', ['_all' => $string]);
         }
 
