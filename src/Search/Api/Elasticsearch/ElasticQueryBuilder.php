@@ -92,14 +92,14 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function sortByRelevance($reverse = false) : QueryBuilder
     {
-        $this->sort(['_all' => $this->getSort($reverse)]);
+        $this->sort(['_all' => ['order' => $this->getSort($reverse)]]);
 
         return $this;
     }
 
     public function sortByDate($reverse = false) : QueryBuilder
     {
-        $this->sort(['published' => $this->getSort($reverse)]);
+        $this->sort(['published' => ['order' => $this->getSort($reverse)]]);
 
         return $this;
     }
