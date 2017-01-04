@@ -10,10 +10,13 @@ fi;
 # TODO: poll for queue:count == 0, with timeout
 sleep 5
 
-./bin/console gearman:worker --env=$environment &
+echo "Starting a gearman:worker"
+./bin/console gearman:worker --env=$environment | tee /tmp/gearman-worker.log &
 workerPid=$!
-./bin/console queue:watch --env=$environment &
+echo "Starting a queue:watch"
+./bin/console queue:watch --env=$environment | tee /tmp/queue-watch.log &
 queueWatchPid=$!
+echo "Starting import"
 ./bin/console gearman:import all --env=$environment
 
 timeout 60 ./bin/wait-for-empty-gearman-queue
