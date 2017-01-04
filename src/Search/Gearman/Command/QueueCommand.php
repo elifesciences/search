@@ -32,7 +32,8 @@ class QueueCommand extends Command
         GearmanClient $client,
         bool $isMock,
         string $topic,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        callable $limit
     ) {
         $this->queue = $queue;
         $this->transformer = $transformer;
@@ -93,8 +94,10 @@ class QueueCommand extends Command
         // Initial values.
         $startTime = time();
         $iterations = 0;
+        $this->logger->info('Queue watch started listening.');
         // Loop.
-        while (true) {
+        $limit = $this->limit;
+        while (!$limit()) {
             ++$iterations;
             if ($iterations % $memoryCheckInterval === 0) {
                 $memory = memory_get_usage();
@@ -128,6 +131,7 @@ class QueueCommand extends Command
                 sleep($restTime);
             }
         }
+        $this->logger->info('Queue watch stopped because of limits reached.');
     }
 
     public function transform(QueueItem $item)

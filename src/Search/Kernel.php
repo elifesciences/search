@@ -28,6 +28,7 @@ use eLife\Search\Api\SubjectStore;
 use eLife\Search\Gearman\Command\ApiSdkCommand;
 use eLife\Search\Gearman\Command\QueueCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
+use eLife\Search\Gearman\Command;
 use eLife\Search\Queue\Mock\QueueItemTransformerMock;
 use eLife\Search\Queue\Mock\WatchableQueueMock;
 use eLife\Search\Queue\SqsMessageTransformer;
@@ -370,7 +371,8 @@ final class Kernel implements MinimalKernel
                     $app['gearman.client'], 
                     true,
                     $app['config']['aws']['queue_name'],
-                    $app['logger']
+                    $app['logger'],
+                    MemoryLimit::mb($app['config']['process_memory_limit'])
                 );
             }
 
@@ -380,7 +382,8 @@ final class Kernel implements MinimalKernel
                 $app['gearman.client'],
                 false,
                 $app['config']['aws']['queue_name'],
-                $app['logger']
+                $app['logger'],
+                MemoryLimit::mb($app['config']['process_memory_limit'])
             );
         };
 
