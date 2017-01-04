@@ -78,6 +78,7 @@ final class Kernel implements MinimalKernel
             'validate' => false,
             'annotation_cache' => true,
             'api_url' => '',
+            'api_requests_batch' => 10,
             'ttl' => 3600,
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
@@ -225,7 +226,7 @@ final class Kernel implements MinimalKernel
                     new Guzzle6HttpClient(
                         $app['guzzle']
                     ),
-                    10
+                    $app['config']['api_requests_batch']
                 )
             );
         };
