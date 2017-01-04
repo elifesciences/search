@@ -53,8 +53,6 @@ class QueueCommand extends Command
             ->addOption('interval', 'i', InputOption::VALUE_OPTIONAL, 'Time in seconds to reset between queue checking.', 10)
             ->addOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'Timeout for process.', 3600)
             ->addOption('iterations', 'l', InputOption::VALUE_OPTIONAL, 'Max iterations before stopping.', 360)
-            ->addOption('memory', 'm', InputOption::VALUE_OPTIONAL, 'Memory limit before exiting safely (Megabytes).', 360)
-            ->addOption('memory-interval', 'M', InputOption::VALUE_OPTIONAL, 'How often to check memory.', 10)
             ->addOption('queue-timeout', 'T', InputOption::VALUE_OPTIONAL, 'Visibility Timeout for AWS queue item', 10)
             ->addOption('mock', 'k', InputOption::VALUE_OPTIONAL, 'How many mock items to start with', 0)
             ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
@@ -89,8 +87,6 @@ class QueueCommand extends Command
         $restTime = $restTime < 1 ? 10 : $restTime;
         $timeout = (int) $input->getOption('timeout');
         $maxIterations = $input->getOption('iterations');
-        $memoryCheckInterval = $input->getOption('memory-interval');
-        $memoryThreshold = ($input->getOption('memory')) * 1000 * 1000;
         // Initial values.
         $startTime = time();
         $iterations = 0;
@@ -99,18 +95,6 @@ class QueueCommand extends Command
         $limit = $this->limit;
         while (!$limit()) {
             ++$iterations;
-            if ($iterations % $memoryCheckInterval === 0) {
-                $memory = memory_get_usage();
-                $this->logger->debug('Memory usage at '.memory_get_usage());
-                if ($memory > $memoryThreshold) {
-                    $this->logger->error('Memory limit reached, stopping script.', [
-                        'limit' => $memoryThreshold,
-                        'memory' => $memory,
-                        'interval' => $memoryCheckInterval,
-                    ]);
-                    break;
-                }
-            }
             if ($iterations === $maxIterations) {
                 $this->logger->warning('Max iterations reached, stopping script.', [
                     'iterations' => $iterations,
