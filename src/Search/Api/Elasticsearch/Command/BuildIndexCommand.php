@@ -77,6 +77,8 @@ class BuildIndexCommand extends Command
                 $create = $this->client->customIndex($config);
             } catch (Throwable $e) {
                 $this->logger->error($e->getMessage(), $e->getTrace());
+                // Re throw.
+                throw $e;
             }
             if ($create['payload'] instanceof SuccessResponse) {
                 $this->logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
