@@ -11,10 +11,10 @@ fi;
 sleep 5
 
 echo "Starting a gearman:worker"
-./bin/console gearman:worker --env=$environment | tee /tmp/gearman-worker.log &
+./bin/console gearman:worker --env=$environment 2>&1 | tee /tmp/gearman-worker.log &
 workerPid=$!
 echo "Starting a queue:watch"
-./bin/console queue:watch --env=$environment | tee /tmp/queue-watch.log &
+./bin/console queue:watch --env=$environment 2>&1 | tee /tmp/queue-watch.log &
 queueWatchPid=$!
 echo "Starting import"
 ./bin/console gearman:import all --env=$environment
