@@ -99,7 +99,9 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function sortByDate($reverse = false): QueryBuilder
     {
+        $this->sort("statusDate:{$this->getSort($reverse)}");
         $this->sort("published:{$this->getSort($reverse)}");
+        $this->sort("updated:{$this->getSort($reverse)}");
 
         return $this;
     }
