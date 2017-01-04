@@ -25,6 +25,7 @@ class QueueCommand extends Command
     private $isMock;
     private $topic;
     private $logger;
+    private $limit;
 
     public function __construct(
         WatchableQueue $queue,
@@ -41,6 +42,7 @@ class QueueCommand extends Command
         $this->isMock = $isMock;
         $this->topic = $topic;
         $this->logger = $logger;
+        $this->limit = $limit;
         parent::__construct(null);
     }
 
