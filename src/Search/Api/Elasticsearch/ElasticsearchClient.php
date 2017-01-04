@@ -5,6 +5,7 @@ namespace eLife\Search\Api\Elasticsearch;
 use Elasticsearch\Client;
 use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResult;
+use Throwable;
 
 class ElasticsearchClient
 {
@@ -31,6 +32,19 @@ class ElasticsearchClient
     public function deleteIndex()
     {
         return $this->deleteIndexByName($this->index);
+    }
+
+    public function indexExists()
+    {
+        try {
+            $this->connection->indices()->getSettings([
+                'index' => $this->index,
+            ]);
+
+            return true;
+        } catch (Throwable $e) {
+            return false;
+        }
     }
 
     public function customIndex($params)
