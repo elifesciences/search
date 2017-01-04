@@ -19,15 +19,14 @@ final class GearmanTaskDriver
     private $reader;
     private $worker;
     private $logger;
-    private $autoRestart;
 
-    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger, bool $autoRestart)
+    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger, callable $limit)
     {
         $this->reader = $reader;
         $this->worker = $worker;
         $this->client = $client;
         $this->logger = $logger;
-        $this->autoRestart = $autoRestart;
+        $this->limit = $limit;
     }
 
     public function registerWorkflow(Workflow $workflow)
@@ -103,24 +102,23 @@ final class GearmanTaskDriver
         }, $this));
     }
 
-    public function work(bool $restart = false)
+    public function work()
     {
-        if ($restart === false) {
-            $this->logger->info('Worker started.');
-        }
+        $this->logger->info('Worker started.');
         $this->addTasksToWorker($this->worker);
-        try {
-            while ($this->worker->work());
-        } catch (InvalidWorkflow $e) {
-            $this->logger->warning('Recoverable error...', ['exception' => $e]);
-            $this->work(true);
-        } catch (Throwable $e) {
-            $this->logger->critical($e->getMessage());
-            if ($this->autoRestart) {
-                $this->logger->warning('> Restarting worker to avoid downtime.', ['exception' => $e]);
-                $this->work(true);
+        $limit = $this->limit;
+        while (!$limit()) {
+            try {
+                $this->worker->work();
+            } catch (InvalidWorkflow $e) {
+                $this->logger->warning('Recoverable error...', ['exception' => $e]);
+            } catch (Throwable $e) {
+                $this->logger->critical($e->getMessage());
+
+                return;
             }
         }
+        $this->logger->info('Worker stopped because of limits reached.');
     }
 
     public function map(callable $fn)

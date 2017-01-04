@@ -15,6 +15,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Annotation\GearmanTaskDriver;
+use eLife\Search\Annotation\MemoryLimit;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
 use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
@@ -82,9 +83,9 @@ final class Kernel implements MinimalKernel
             'ttl' => 3600,
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
-            'gearman_auto_restart' => true,
             'file_log_path' => self::ROOT.'/var/logs/all.log',
             'file_error_log_path' => self::ROOT.'/var/logs/error.log',
+            'process_memory_limit' => 256,
             'aws' => [
                 'credential_file' => false,
                 'mock_queue' => true,
@@ -307,7 +308,7 @@ final class Kernel implements MinimalKernel
                 $app['gearman.worker'],
                 $app['gearman.client'],
                 $app['logger'],
-                $app['config']['gearman_auto_restart']
+                MemoryLimit::mb($app['config']['process_memory_limit'])
             );
         };
 
