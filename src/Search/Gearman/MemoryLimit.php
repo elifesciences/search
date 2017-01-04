@@ -1,6 +1,6 @@
 <?php
 
-namespace eLife\Search\Annotation;
+namespace eLife\Search\Gearman;
 
 class MemoryLimit
 {
