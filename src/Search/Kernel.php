@@ -15,7 +15,6 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
 use eLife\Search\Annotation\GearmanTaskDriver;
-use eLife\Search\Annotation\MemoryLimit;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
 use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
@@ -28,6 +27,7 @@ use eLife\Search\Api\SubjectStore;
 use eLife\Search\Gearman\Command\ApiSdkCommand;
 use eLife\Search\Gearman\Command\QueueCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
+use eLife\Search\Gearman\MemoryLimit;
 use eLife\Search\Queue\Mock\QueueItemTransformerMock;
 use eLife\Search\Queue\Mock\WatchableQueueMock;
 use eLife\Search\Queue\SqsMessageTransformer;
@@ -364,10 +364,26 @@ final class Kernel implements MinimalKernel
         $app['console.gearman.queue'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
-                return new QueueCommand($app['mocks.queue'], $app['mocks.queue_transformer'], $app['gearman.client'], true, $app['config']['aws']['queue_name'], $app['logger']);
+                return new QueueCommand(
+                    $app['mocks.queue'],
+                    $app['mocks.queue_transformer'],
+                    $app['gearman.client'],
+                    true,
+                    $app['config']['aws']['queue_name'],
+                    $app['logger'],
+                    MemoryLimit::mb($app['config']['process_memory_limit'])
+                );
             }
 
-            return new QueueCommand($app['aws.queue'], $app['aws.queue_transformer'], $app['gearman.client'], false, $app['config']['aws']['queue_name'], $app['logger']);
+            return new QueueCommand(
+                $app['aws.queue'],
+                $app['aws.queue_transformer'],
+                $app['gearman.client'],
+                false,
+                $app['config']['aws']['queue_name'],
+                $app['logger'],
+                MemoryLimit::mb($app['config']['process_memory_limit'])
+            );
         };
 
         $app['console.build_index'] = function (Application $app) {
