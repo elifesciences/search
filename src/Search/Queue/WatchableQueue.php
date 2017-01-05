@@ -2,7 +2,9 @@
 
 namespace eLife\Search\Queue;
 
-interface WatchableQueue
+use Countable;
+
+interface WatchableQueue extends Countable
 {
     /**
      * Adds item to the queue.

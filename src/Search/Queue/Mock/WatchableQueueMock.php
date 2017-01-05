@@ -80,4 +80,9 @@ final class WatchableQueueMock implements WatchableQueue
     {
         $this->items = [];
     }
+
+    public function count() : int
+    {
+        return count($this->items);
+    }
 }
