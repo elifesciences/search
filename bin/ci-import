@@ -6,6 +6,9 @@ if [ -z "$environment" ]; then
     exit 2;
 fi;
 
+# propagate SIGINT to waiting process
+trap 'kill -INT -$waitingPid' INT
+
 ./bin/console queue:clean --env="$environment"
 # TODO: poll for queue:count == 0, with timeout
 sleep 5
@@ -20,8 +23,10 @@ echo "Starting import"
 ./bin/console gearman:import all --env="$environment"
 
 # will return also on failing conditions such as dead processes
-timeout 60 ./bin/wait-for-empty-gearman-queue "$environment"
-# clean up processes
+timeout 60 ./bin/wait-for-empty-gearman-queue "$environment" &
+waitingPid=$!
+wait "$waitingPid"
+# clean up PHP processes
 kill "$workerPid" "$queueWatchPid";
 
 # final verification
