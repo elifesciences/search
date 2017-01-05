@@ -122,9 +122,9 @@ class QueueCommand extends Command
     public function loop(InputInterface $input)
     {
         $this->logger->debug('queue:watch: Loop start, listening to queue', ['queue' => $this->topic]);
-            $item = $this->queue->dequeue();
-            if ($item && ($entity = $this->transform($item))) {
-                // Grab the gearman task.
+        $item = $this->queue->dequeue();
+        if ($item && ($entity = $this->transform($item))) {
+            // Grab the gearman task.
                 $gearmanTask = $this->transformer->getGearmanTask($item);
                 // Run the task.
                 $this->logger->info('queue:watch: Running gearman task', [
@@ -136,12 +136,12 @@ class QueueCommand extends Command
                 $this->client->doLowBackground($gearmanTask, $entity, md5($item->getReceipt()));
                 // Commit.
                 $this->queue->commit($item);
-                $this->logger->info('queue:watch: Committed task', [
+            $this->logger->info('queue:watch: Committed task', [
                     'gearmanTask' => $gearmanTask,
                     'type' => $item->getType(),
                     'id' => $item->getId(),
                 ]);
-            }
-        $this->logger->debug("queue:watch: End of loop");
+        }
+        $this->logger->debug('queue:watch: End of loop');
     }
 }

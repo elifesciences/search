@@ -74,7 +74,7 @@ final class GearmanTaskDriver
                 $data = $task->deserialize($job->workload());
             } catch (Throwable $e) {
                 $this->logger->error(
-                    "Cannot deserialize a job workload",
+                    'Cannot deserialize a job workload',
                     [
                         'workload' => $job->workload(),
                         'sdk_class' => $task->getSdkClass(),

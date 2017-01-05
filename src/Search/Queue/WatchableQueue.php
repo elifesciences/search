@@ -13,6 +13,7 @@ interface WatchableQueue extends Countable
 
     /**
      * Gets an item to process.
+     *
      * @return QueueItem|null TODO: nullable return type if on PHP 7.1 in the future
      */
     public function dequeue();
