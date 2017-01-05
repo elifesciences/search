@@ -20,7 +20,7 @@ echo "Starting import"
 ./bin/console gearman:import all --env="$environment"
 
 # will return also on failing conditions such as dead processes
-timeout 60 ./bin/wait-for-empty-gearman-queue
+timeout 60 ./bin/wait-for-empty-gearman-queue "$environment"
 # clean up processes
 kill "$workerPid" "$queueWatchPid";
 
