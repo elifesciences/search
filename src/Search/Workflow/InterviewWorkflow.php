@@ -48,7 +48,7 @@ final class InterviewWorkflow implements Workflow
     public function validate(Interview $interview) : Interview
     {
         // Create response to validate
-        $searchInterview = $this->validator->deserialize($serialized = $this->serialize($interview), InterviewResponse::class);
+        $searchInterview = $this->validator->deserialize($this->serialize($interview), InterviewResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchInterview);
         if ($isValid === false) {
@@ -59,7 +59,7 @@ final class InterviewWorkflow implements Workflow
                         'type' => 'interview',
                         'id' => $interview->getId(),
                     ],
-                    'search_result' => $serialized,
+                    'search_result' => $this->validator->serialize($searchInterview),
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
