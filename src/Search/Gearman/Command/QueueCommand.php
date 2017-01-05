@@ -53,7 +53,6 @@ class QueueCommand extends Command
             ->setDescription('Create queue watcher')
             ->setHelp('Creates process that will watch for incoming items on a queue')
             ->addOption('interval', 'i', InputOption::VALUE_OPTIONAL, 'Time in seconds to reset between queue checking.', 10)
-            ->addOption('queue-timeout', 'T', InputOption::VALUE_OPTIONAL, 'Visibility Timeout for AWS queue item', 10)
             ->addOption('mock', 'k', InputOption::VALUE_OPTIONAL, 'How many mock items to start with', 0)
             ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
     }
@@ -86,11 +85,11 @@ class QueueCommand extends Command
         $this->logger->info('queue:watch: Started listening.');
         // Loop.
         $limit = $this->limit;
-        while (true) {
+        while (!$limit()) {
             $this->loop($input);
         }
         // TODO: graceful handling of SIGTERM
-        //$this->logger->info('queue:watch: Stopped because of limits reached.');
+        $this->logger->info('queue:watch: Stopped because of limits reached.');
     }
 
     public function transform(QueueItem $item)
@@ -122,12 +121,9 @@ class QueueCommand extends Command
 
     public function loop(InputInterface $input)
     {
-        $this->logger->debug('queue:watch: Loop start... [');
-        $timeout = $input->getOption('queue-timeout');
-        $this->logger->debug('queue:watch: Listening to queue', ['queue' => $this->topic]);
-        if ($this->queue->isValid()) {
-            $item = $this->queue->dequeue($timeout);
-            if ($entity = $this->transform($item)) {
+        $this->logger->debug('queue:watch: Loop start, listening to queue', ['queue' => $this->topic]);
+            $item = $this->queue->dequeue();
+            if ($item && ($entity = $this->transform($item))) {
                 // Grab the gearman task.
                 $gearmanTask = $this->transformer->getGearmanTask($item);
                 // Run the task.
@@ -146,9 +142,6 @@ class QueueCommand extends Command
                     'id' => $item->getId(),
                 ]);
             }
-        } else {
-            $this->logger->debug('queue:watch: Queue is empty', ['queue' => $this->topic]);
-        }
         $this->logger->debug("queue:watch: End of loop");
     }
 }
