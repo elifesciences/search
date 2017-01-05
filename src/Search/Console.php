@@ -341,9 +341,9 @@ final class Console
     {
         $this->logger->info('Clearing cache...');
         try {
-            exec('rm -rf '.$this->root.'/cache/*');
+            exec('rm -rf '.$this->root.'/var/cache/*');
         } catch (Exception $e) {
-            $this->logger->error('Cannot clean cache/', ['exception' => $e]);
+            $this->logger->error('Cannot clean var/cache/', ['exception' => $e]);
         }
         $this->logger->info('Cache cleared successfully.');
     }
