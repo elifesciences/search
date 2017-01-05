@@ -19,8 +19,12 @@ queueWatchPid=$!
 echo "Starting import"
 ./bin/console gearman:import all --env="$environment"
 
+# will return also on failing conditions such as dead processes
 timeout 60 ./bin/wait-for-empty-gearman-queue
+# clean up processes
+kill "$workerPid" "$queueWatchPid";
 
+# final verification
 # we start from an empty index
 total=$(curl -v localhost/search | jq ".total")
 echo "Total results in the index: $total"
@@ -30,4 +34,3 @@ if [ ! "$total" -ge "$minimum" ]; then
     exit 2
 fi
 
-kill "$workerPid" "$queueWatchPid";
