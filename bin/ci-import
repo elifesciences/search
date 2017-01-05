@@ -21,4 +21,13 @@ echo "Starting import"
 
 timeout 60 ./bin/wait-for-empty-gearman-queue
 
+# we start from an empty index
+total=$(curl -v localhost/search | jq ".total")
+echo "Total results in the index: $total"
+minimum=1
+if [ ! "$total" -ge "$minimum" ]; then
+    echo "There should be at least $minimum result in the index"
+    exit 2
+fi
+
 kill $workerPid $queueWatchPid;
