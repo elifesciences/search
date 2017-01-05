@@ -158,7 +158,7 @@ class QueueCommand extends Command
                     'id' => $item->getId(),
                 ]);
                 // Set the task to go.
-                $this->client->doLow($gearmanTask, $entity, md5($item->getReceipt()));
+                $this->client->doLowBackground($gearmanTask, $entity, md5($item->getReceipt()));
                 // Commit.
                 $this->queue->commit($item);
                 $this->logger->info('queue:watch: Committed task', [

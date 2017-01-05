@@ -155,9 +155,4 @@ final class ApiSdkCommand extends Command
         $this->queue->enqueue($item);
         $this->logger->info("Item ($type, $identifier) added successfully");
     }
-
-    private function task($item, ...$data)
-    {
-        $this->client->doLow($item, ...$data);
-    }
 }
