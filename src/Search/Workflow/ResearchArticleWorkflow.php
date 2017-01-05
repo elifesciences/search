@@ -124,6 +124,16 @@ final class ResearchArticleWorkflow implements Workflow
             'format' => 'json',
             'value' => json_encode($articleObject->body ?? '[]'),
         ];
+        // Completely serialize funding
+        $articleObject->funding = [
+            'format' => 'json',
+            'value' => json_encode($articleObject->funding ?? '[]'),
+        ];
+        // Completely serialize dataSets
+        $articleObject->dataSets = [
+            'format' => 'json',
+            'value' => json_encode($articleObject->dataSets ?? '[]'),
+        ];
 
         $this->logger->debug('Article<'.$article->getId().'> Detected type '.($article->getType() ?? 'research-article'));
 
