@@ -53,8 +53,6 @@ class QueueCommand extends Command
             ->setDescription('Create queue watcher')
             ->setHelp('Creates process that will watch for incoming items on a queue')
             ->addOption('interval', 'i', InputOption::VALUE_OPTIONAL, 'Time in seconds to reset between queue checking.', 10)
-            ->addOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'Timeout for process.', 3600)
-            ->addOption('iterations', 'l', InputOption::VALUE_OPTIONAL, 'Max iterations before stopping.', 360)
             ->addOption('queue-timeout', 'T', InputOption::VALUE_OPTIONAL, 'Visibility Timeout for AWS queue item', 10)
             ->addOption('mock', 'k', InputOption::VALUE_OPTIONAL, 'How many mock items to start with', 0)
             ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
@@ -85,33 +83,14 @@ class QueueCommand extends Command
         if ($mocks = $input->getOption('mock')) {
             $this->mock($output, $mocks);
         }
-        $timeout = (int) $input->getOption('timeout');
-        $maxIterations = $input->getOption('iterations');
-        // Initial values.
-        $startTime = time();
-        $iterations = 0;
         $this->logger->info('queue:watch: Started listening.');
         // Loop.
         $limit = $this->limit;
-        while (!$limit()) {
-            ++$iterations;
-            if ($iterations === $maxIterations) {
-                $this->logger->warning('queue:watch: Max iterations reached, stopping script.', [
-                    'iterations' => $iterations,
-                    'maxIterations' => $maxIterations,
-                ]);
-                break;
-            }
-            if (time() - $startTime >= $timeout) {
-                $this->logger->warning('queue:watch: Max time reached, stopping script.', [
-                    'time' => time() - $startTime,
-                    'timeout' => $timeout,
-                ]);
-                break;
-            }
+        while (true) {
             $this->loop($input);
         }
-        $this->logger->info('queue:watch: Stopped because of limits reached.');
+        // TODO: graceful handling of SIGTERM
+        //$this->logger->info('queue:watch: Stopped because of limits reached.');
     }
 
     public function transform(QueueItem $item)
