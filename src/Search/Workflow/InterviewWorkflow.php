@@ -60,6 +60,7 @@ final class InterviewWorkflow implements Workflow
                         'id' => $interview->getId(),
                     ],
                     'search_result' => $serialized,
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
             throw new InvalidWorkflow('Interview<'.$interview->getId().'> Invalid item tried to be imported.');

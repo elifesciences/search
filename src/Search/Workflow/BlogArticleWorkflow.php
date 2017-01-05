@@ -61,6 +61,7 @@ final class BlogArticleWorkflow implements Workflow
                         'id' => $blogArticle->getId(),
                     ],
                     'search_result' => $serialized,
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
             throw new InvalidWorkflow('BlogArticle<'.$blogArticle->getId().'> Invalid item tried to be imported.');
