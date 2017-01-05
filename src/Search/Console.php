@@ -57,6 +57,9 @@ final class Console
         'queue:clean' => [
             'description' => 'Manually clean the queue. Asynchronous, takes up to 60 seconds',
         ],
+        'queue:count' => [
+            'description' => 'Counts (approximately) how many messages are in the queue',
+        ],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
         'spawn' => [
             'description' => 'WARNING: Experimental, may create child processes.',
