@@ -103,6 +103,12 @@ final class Console
         $queue->clean();
     }
 
+    public function queueCountCommand(InputInterface $input, OutputInterface $output)
+    {
+        $queue = $this->app->get('aws.queue');
+        $output->writeln($queue->count());
+    }
+
     private function enqueue($type, $id)
     {
         // Create queue item.

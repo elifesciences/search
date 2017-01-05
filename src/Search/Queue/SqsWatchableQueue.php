@@ -115,4 +115,23 @@ final class SqsWatchableQueue implements WatchableQueue
             'QueueUrl' => $this->url,
         ]);
     }
+
+    public function count() : int
+    {
+        $attributes = [
+            'ApproximateNumberOfMessages',
+            'ApproximateNumberOfMessagesDelayed',
+            'ApproximateNumberOfMessagesNotVisible',
+        ];
+        $result = $this->client->getQueueAttributes([
+            'AttributeNames' => $attributes,
+            'QueueUrl' => $this->url,
+        ]);
+        $total = 0;
+        foreach ($attributes as $attributeName) {
+            $total += $result['Attributes'][$attributeName];
+        }
+
+        return $total;
+    }
 }
