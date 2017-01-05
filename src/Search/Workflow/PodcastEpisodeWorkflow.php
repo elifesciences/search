@@ -60,6 +60,7 @@ final class PodcastEpisodeWorkflow implements Workflow
                         'number' => $podcastEpisode->getNumber(),
                     ],
                     'search_result' => $serialized,
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
             throw new InvalidWorkflow('PodcastEpisode<'.$podcastEpisode->getNumber().'> Invalid item tried to be imported.');

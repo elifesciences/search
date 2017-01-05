@@ -72,6 +72,7 @@ final class ResearchArticleWorkflow implements Workflow
                         'id' => $article->getId(),
                     ],
                     'search_result' => $serialized,
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
             throw new InvalidWorkflow('ResearchArticle<'.$article->getId().'> Invalid item tried to be imported.');

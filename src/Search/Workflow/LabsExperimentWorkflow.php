@@ -60,6 +60,7 @@ final class LabsExperimentWorkflow implements Workflow
                         'number' => $labsExperiment->getNumber(),
                     ],
                     'search_result' => $serialized,
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
             throw new InvalidWorkflow('LabsExperiment<'.$labsExperiment->getNumber().'> Invalid item tried to be imported.');

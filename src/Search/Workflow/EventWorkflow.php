@@ -63,6 +63,7 @@ final class EventWorkflow implements Workflow
                         'id' => $event->getId(),
                     ],
                     'search_result' => $serialized,
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
             throw new InvalidWorkflow('Event<'.$event->getId().'> Invalid item tried to be imported.');
