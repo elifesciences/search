@@ -52,10 +52,19 @@ final class EventWorkflow implements Workflow
     public function validate(Event $event) : Event
     {
         // Create response to validate.
-        $searchEvent = $this->validator->deserialize($this->serialize($event), EventResponse::class);
+        $searchEvent = $this->validator->deserialize($serialized = $this->serialize($event), EventResponse::class);
         // Validate that response.
         if ($this->validator->validateSearchResult($searchEvent) === false) {
-            $this->logger->error($this->validator->getLastError()->getMessage());
+            $this->logger->error(
+                'Event<'.$event->getId().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'event',
+                        'id' => $event->getId(),
+                    ],
+                    'search_result' => $serialized,
+                ]
+            );
             throw new InvalidWorkflow('Event<'.$event->getId().'> Invalid item tried to be imported.');
         }
         // Log results.
