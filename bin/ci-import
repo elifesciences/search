@@ -6,18 +6,18 @@ if [ -z "$environment" ]; then
     exit 2;
 fi;
 
-./bin/console queue:clean --env=$environment
+./bin/console queue:clean --env="$environment"
 # TODO: poll for queue:count == 0, with timeout
 sleep 5
 
 echo "Starting a gearman:worker"
-./bin/console gearman:worker --env=$environment 2>&1 | tee /tmp/gearman-worker.log &
+./bin/console gearman:worker --env="$environment" 2>&1 | tee /tmp/gearman-worker.log &
 workerPid=$!
 echo "Starting a queue:watch"
-./bin/console queue:watch --env=$environment 2>&1 | tee /tmp/queue-watch.log &
+./bin/console queue:watch --env="$environment" 2>&1 | tee /tmp/queue-watch.log &
 queueWatchPid=$!
 echo "Starting import"
-./bin/console gearman:import all --env=$environment
+./bin/console gearman:import all --env="$environment"
 
 timeout 60 ./bin/wait-for-empty-gearman-queue
 
@@ -30,4 +30,4 @@ if [ ! "$total" -ge "$minimum" ]; then
     exit 2
 fi
 
-kill $workerPid $queueWatchPid;
+kill "$workerPid" "$queueWatchPid";
