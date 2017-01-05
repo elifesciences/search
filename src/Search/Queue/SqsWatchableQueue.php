@@ -40,7 +40,7 @@ final class SqsWatchableQueue implements WatchableQueue
 
     /**
      * Get an item from the queue and start is processing,
-     * making it invisible to other processes for $timeoutOverride seconds
+     * making it invisible to other processes for $timeoutOverride seconds.
      */
     public function dequeue()
     {
@@ -59,7 +59,6 @@ final class SqsWatchableQueue implements WatchableQueue
 
     /**
      * Commits to removing item from queue, marks item as done and processed.
-     *
      */
     public function commit(QueueItem $item)
     {
