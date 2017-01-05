@@ -64,7 +64,7 @@ final class ResearchArticleWorkflow implements Workflow
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($articleSearchResponse);
         if ($isValid === false) {
-            $this->logger->alert($this->validator->getLastError()->getMessage());
+            $this->logger->error($this->validator->getLastError()->getMessage());
             throw new InvalidWorkflow('ResearchArticle<'.$article->getId().'> Invalid item tried to be imported.');
         }
         $this->logger->info('ResearchArticle<'.$article->getId().'> validated against current schema.');
@@ -175,7 +175,7 @@ final class ResearchArticleWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('ResearchArticle<'.$id.'> rolling back', [
+            $this->logger->error('ResearchArticle<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);

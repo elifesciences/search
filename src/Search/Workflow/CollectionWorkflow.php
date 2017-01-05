@@ -53,7 +53,7 @@ final class CollectionWorkflow implements Workflow
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchCollection);
         if ($isValid === false) {
-            $this->logger->alert($this->validator->getLastError()->getMessage());
+            $this->logger->error($this->validator->getLastError()->getMessage());
             throw new InvalidWorkflow('Collection<'.$collection->getId().'> Invalid item tried to be imported.');
         }
         // Log results.
@@ -111,7 +111,7 @@ final class CollectionWorkflow implements Workflow
             // That collection is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('Collection<'.$id.'> rolling back', [
+            $this->logger->error('Collection<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);

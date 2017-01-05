@@ -52,7 +52,7 @@ final class InterviewWorkflow implements Workflow
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchInterview);
         if ($isValid === false) {
-            $this->logger->alert($this->validator->getLastError()->getMessage());
+            $this->logger->error($this->validator->getLastError()->getMessage());
             throw new InvalidWorkflow('Interview<'.$interview->getId().'> Invalid item tried to be imported.');
         }
         // Log results.
@@ -110,7 +110,7 @@ final class InterviewWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('Interview<'.$id.'> rolling back', [
+            $this->logger->error('Interview<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);

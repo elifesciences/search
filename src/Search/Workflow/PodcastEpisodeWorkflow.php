@@ -52,7 +52,7 @@ final class PodcastEpisodeWorkflow implements Workflow
         // Validate response.
         $isValid = $this->validator->validateSearchResult($searchPodcastEpisode);
         if ($isValid === false) {
-            $this->logger->alert('PodcastEpisode<'.$podcastEpisode->getNumber().'> Invalid item trid to be imported.', [
+            $this->logger->error('PodcastEpisode<'.$podcastEpisode->getNumber().'> Invalid item trid to be imported.', [
                 'type' => 'podcast-episode',
                 'number' => $podcastEpisode->getNumber(),
             ]);
@@ -119,7 +119,7 @@ final class PodcastEpisodeWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('PodcastEpisode<'.$id.'> rolling back', [
+            $this->logger->error('PodcastEpisode<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);
