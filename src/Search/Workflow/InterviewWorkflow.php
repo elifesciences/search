@@ -63,7 +63,7 @@ final class InterviewWorkflow implements Workflow
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
-            throw new InvalidWorkflow('Interview<'.$interview->getId().'> Invalid item tried to be imported.');
+            throw new InvalidWorkflow('Interview<'.$interview->getId().'> cannot be trasformed into a valid search result.');
         }
         // Log results.
         $this->logger->info('Interview<'.$interview->getId().'> validated against current schema.');

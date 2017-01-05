@@ -64,7 +64,7 @@ final class BlogArticleWorkflow implements Workflow
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
-            throw new InvalidWorkflow('BlogArticle<'.$blogArticle->getId().'> Invalid item tried to be imported.');
+            throw new InvalidWorkflow('BlogArticle<'.$blogArticle->getId().'> cannot be transformed into a valid search result.');
         }
         // Log results.
         $this->logger->info('BlogArticle<'.$blogArticle->getId().'> validated against current schema.');
