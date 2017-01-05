@@ -2,9 +2,20 @@
 set -e
 
 while true; do
+    workers=$(ps faxww | grep gearman:worker | grep -v grep | wc -l)
+    if [ "$workers" -eq "0" ]; then
+        echo "No alive gearman:worker processes, failing"
+        exit 2
+    fi
+    watches=$(ps faxww | grep queue:watch | grep -v grep | wc -l)
+    if [ "$watches" -eq "0" ]; then
+        echo "No alive queue:watch processes, failing"
+        exit 3
+    fi
     queue=$(gearadmin --status | cut -f 2 | paste -sd+ | bc)
     echo "Job in queue: $queue"
-    if [ "$queue" -eq "0" ]; then
+    if [ "$queue" -eq "0"]; then
+        echo "No more jobs, finished waiting"
         break
     fi
     sleep 1
