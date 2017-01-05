@@ -49,7 +49,7 @@ final class BlogArticleWorkflow implements Workflow
     public function validate(BlogArticle $blogArticle) : BlogArticle
     {
         // Create response to validate.
-        $searchBlogArticle = $this->validator->deserialize($serialized = $this->serialize($blogArticle), BlogArticleResponse::class);
+        $searchBlogArticle = $this->validator->deserialize($this->serialize($blogArticle), BlogArticleResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchBlogArticle);
         if ($isValid === false) {
@@ -60,7 +60,7 @@ final class BlogArticleWorkflow implements Workflow
                         'type' => 'blog-article',
                         'id' => $blogArticle->getId(),
                     ],
-                    'search_result' => $serialized,
+                    'search_result' => $this->validator->serialize($searchBlogArticle),
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
