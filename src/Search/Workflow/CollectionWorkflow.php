@@ -49,11 +49,20 @@ final class CollectionWorkflow implements Workflow
     public function validate(Collection $collection) : Collection
     {
         // Create response to validate.
-        $searchCollection = $this->validator->deserialize($this->serialize($collection), CollectionResponse::class);
+        $searchCollection = $this->validator->deserialize($serialized = $this->serialize($collection), CollectionResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchCollection);
         if ($isValid === false) {
-            $this->logger->error($this->validator->getLastError()->getMessage());
+            $this->logger->error(
+                'Collection<'.$collection->getId().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'collection',
+                        'id' => $collection->getId(),
+                    ],
+                    'search_result' => $serialized,
+                ]
+            );
             throw new InvalidWorkflow('Collection<'.$collection->getId().'> Invalid item tried to be imported.');
         }
         // Log results.

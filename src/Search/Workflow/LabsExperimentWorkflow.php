@@ -48,11 +48,20 @@ final class LabsExperimentWorkflow implements Workflow
     public function validate(LabsExperiment $labsExperiment) : LabsExperiment
     {
         // Create response to validate.
-        $searchLabsExperiment = $this->validator->deserialize($this->serialize($labsExperiment), LabsExperimentResponse::class);
+        $searchLabsExperiment = $this->validator->deserialize($serialized = $this->serialize($labsExperiment), LabsExperimentResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchLabsExperiment);
         if ($isValid === false) {
-            $this->logger->error($this->validator->getLastError()->getMessage());
+            $this->logger->error(
+                'LabsExperiment<'.$labsExperiment->getNumber().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'labs-experiment',
+                        'number' => $labsExperiment->getNumber(),
+                    ],
+                    'search_result' => $serialized,
+                ]
+            );
             throw new InvalidWorkflow('LabsExperiment<'.$labsExperiment->getNumber().'> Invalid item tried to be imported.');
         }
         // Log results.

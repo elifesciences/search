@@ -49,11 +49,20 @@ final class BlogArticleWorkflow implements Workflow
     public function validate(BlogArticle $blogArticle) : BlogArticle
     {
         // Create response to validate.
-        $searchBlogArticle = $this->validator->deserialize($this->serialize($blogArticle), BlogArticleResponse::class);
+        $searchBlogArticle = $this->validator->deserialize($serialized = $this->serialize($blogArticle), BlogArticleResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchBlogArticle);
         if ($isValid === false) {
-            $this->logger->error($this->validator->getLastError()->getMessage());
+            $this->logger->error(
+                'BlogArticle<'.$blogArticle->getId().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'blog-article',
+                        'id' => $blogArticle->getId(),
+                    ],
+                    'search_result' => $serialized,
+                ]
+            );
             throw new InvalidWorkflow('BlogArticle<'.$blogArticle->getId().'> Invalid item tried to be imported.');
         }
         // Log results.

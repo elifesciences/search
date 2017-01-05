@@ -48,11 +48,20 @@ final class InterviewWorkflow implements Workflow
     public function validate(Interview $interview) : Interview
     {
         // Create response to validate
-        $searchInterview = $this->validator->deserialize($this->serialize($interview), InterviewResponse::class);
+        $searchInterview = $this->validator->deserialize($serialized = $this->serialize($interview), InterviewResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchInterview);
         if ($isValid === false) {
-            $this->logger->error($this->validator->getLastError()->getMessage());
+            $this->logger->error(
+                'Interview<'.$event->getId().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'interview',
+                        'id' => $interview->getId(),
+                    ],
+                    'search_result' => $serialized,
+                ]
+            );
             throw new InvalidWorkflow('Interview<'.$interview->getId().'> Invalid item tried to be imported.');
         }
         // Log results.

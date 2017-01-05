@@ -48,14 +48,20 @@ final class PodcastEpisodeWorkflow implements Workflow
     public function validate(PodcastEpisode $podcastEpisode) : PodcastEpisode
     {
         // Create response to validate.
-        $searchPodcastEpisode = $this->validator->deserialize($this->serialize($podcastEpisode), PodcastEpisodeResponse::class);
+        $searchPodcastEpisode = $this->validator->deserialize($serialized = $this->serialize($podcastEpisode), PodcastEpisodeResponse::class);
         // Validate response.
         $isValid = $this->validator->validateSearchResult($searchPodcastEpisode);
         if ($isValid === false) {
-            $this->logger->error('PodcastEpisode<'.$podcastEpisode->getNumber().'> Invalid item trid to be imported.', [
-                'type' => 'podcast-episode',
-                'number' => $podcastEpisode->getNumber(),
-            ]);
+            $this->logger->error(
+                'PodcastEpisode<'.$podcastEpisode->getNumber().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'podcast-episode',
+                        'number' => $podcastEpisode->getNumber(),
+                    ],
+                    'search_result' => $serialized,
+                ]
+            );
             throw new InvalidWorkflow('PodcastEpisode<'.$podcastEpisode->getNumber().'> Invalid item tried to be imported.');
         }
         // Log results.
