@@ -5,12 +5,12 @@ while true; do
     workers=$(pgrep -cf gearman:worker)
     if [ "$workers" -eq "0" ]; then
         echo "No alive gearman:worker processes, failing"
-        exit 2
+        break
     fi
     watches=$(pgrep -cf queue:watch)
     if [ "$watches" -eq "0" ]; then
         echo "No alive queue:watch processes, failing"
-        exit 3
+        break
     fi
     queue=$(gearadmin --status | cut -f 2 | paste -sd+ | bc)
     echo "Job in queue: $queue"
