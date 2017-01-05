@@ -56,7 +56,7 @@ final class ResearchArticleWorkflow implements Workflow
     public function validate(ArticleVersion $article) : ArticleVersion
     {
         $this->logger->debug('ResearchArticle<'.$article->getId().'> Validating '.$article->getTitle());
-        $articleSearchResponse = $this->validator->deserialize($serialized = $this->serialize($article), SearchResult::class);
+        $articleSearchResponse = $this->validator->deserialize($this->serialize($article), SearchResult::class);
         // @todo remove hack at some point.
         if ($articleSearchResponse->image) {
             $articleSearchResponse->image = $articleSearchResponse->image->https();
@@ -71,7 +71,7 @@ final class ResearchArticleWorkflow implements Workflow
                         'type' => 'article',
                         'id' => $article->getId(),
                     ],
-                    'search_result' => $serialized,
+                    'search_result' => $this->validator->serialize($articleSearchResponse),
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );

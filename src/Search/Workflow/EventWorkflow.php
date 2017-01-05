@@ -52,7 +52,7 @@ final class EventWorkflow implements Workflow
     public function validate(Event $event) : Event
     {
         // Create response to validate.
-        $searchEvent = $this->validator->deserialize($serialized = $this->serialize($event), EventResponse::class);
+        $searchEvent = $this->validator->deserialize($this->serialize($event), EventResponse::class);
         // Validate that response.
         if ($this->validator->validateSearchResult($searchEvent) === false) {
             $this->logger->error(
@@ -62,7 +62,7 @@ final class EventWorkflow implements Workflow
                         'type' => 'event',
                         'id' => $event->getId(),
                     ],
-                    'search_result' => $serialized,
+                    'search_result' => $this->validator->serialize($searchEvent),
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );

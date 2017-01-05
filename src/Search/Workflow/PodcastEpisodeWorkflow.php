@@ -48,7 +48,7 @@ final class PodcastEpisodeWorkflow implements Workflow
     public function validate(PodcastEpisode $podcastEpisode) : PodcastEpisode
     {
         // Create response to validate.
-        $searchPodcastEpisode = $this->validator->deserialize($serialized = $this->serialize($podcastEpisode), PodcastEpisodeResponse::class);
+        $searchPodcastEpisode = $this->validator->deserialize($this->serialize($podcastEpisode), PodcastEpisodeResponse::class);
         // Validate response.
         $isValid = $this->validator->validateSearchResult($searchPodcastEpisode);
         if ($isValid === false) {
@@ -59,7 +59,7 @@ final class PodcastEpisodeWorkflow implements Workflow
                         'type' => 'podcast-episode',
                         'number' => $podcastEpisode->getNumber(),
                     ],
-                    'search_result' => $serialized,
+                    'search_result' => $this->validator->serialize($searchPodcastEpisode),
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
