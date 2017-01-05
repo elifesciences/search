@@ -126,7 +126,11 @@ final class GearmanTaskDriver
         $limit = $this->limit;
         while (!$limit()) {
             try {
-                $this->worker->work();
+                $result = $this->worker->work();
+                if (!$result) {
+                    $this->logger->critical('Uncaught failure, stopping', ['worker_error' => $this->worker->error()]);
+                    return;
+                }
             } catch (InvalidWorkflow $e) {
                 $this->logger->warning('Recoverable error...', ['exception' => $e]);
             } catch (Throwable $e) {
