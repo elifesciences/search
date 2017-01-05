@@ -299,7 +299,7 @@ final class Console
                     if (!$process->isStarted()) {
                         $process->start();
                         $pids[$i] = $process->getPid();
-                        $this->logger->warning('Process starts, PID:'.$process->getPid());
+                        $this->logger->info('Process starts, PID:'.$process->getPid());
                     }
 
                     $output->write($process->getIncrementalOutput());
@@ -308,7 +308,7 @@ final class Console
                     if (!$process->isRunning()) {
                         $process->restart();
                         $this->logger->error('Process stopped (Memory: '.round(memory_get_usage() / 1024 / 1024, 2).'Mb)');
-                        $this->logger->warning('Starting new process');
+                        $this->logger->info('Starting new process');
                         $processes[] = new Process('exec php '.$this->path('/bin/console').' '.$command.' --ansi');
                         unset($processes[$i]);
                     }
@@ -322,15 +322,15 @@ final class Console
     {
         foreach ($this->app->get('config') as $key => $config) {
             if (is_array($config)) {
-                $this->logger->warning($key);
+                $this->logger->info($key);
                 $this->logger->info(json_encode($config, JSON_PRETTY_PRINT));
                 $this->logger->debug(' ');
             } elseif (is_bool($config)) {
-                $this->logger->warning($key);
+                $this->logger->info($key);
                 $this->logger->info($config ? 'true' : 'false');
                 $this->logger->debug(' ');
             } else {
-                $this->logger->warning($key);
+                $this->logger->info($key);
                 $this->logger->info($config);
                 $this->logger->debug(' ');
             }
@@ -339,11 +339,11 @@ final class Console
 
     public function cacheClearCommand(InputInterface $input, OutputInterface $output)
     {
-        $this->logger->warning('Clearing cache...');
+        $this->logger->info('Clearing cache...');
         try {
             exec('rm -rf '.$this->root.'/cache/*');
         } catch (Exception $e) {
-            $this->logger->error($e);
+            $this->logger->error('Cannot clean cache/', ['exception' => $e]);
         }
         $this->logger->info('Cache cleared successfully.');
     }
