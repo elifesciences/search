@@ -33,7 +33,7 @@ kill "$workerPid" "$queueWatchPid";
 # we start from an empty index
 total=$(curl -v localhost/search | jq ".total")
 echo "Total results in the index: $total"
-minimum=26
+minimum=28
 if [ ! "$total" -ge "$minimum" ]; then
     echo "There should be at least $minimum result in the index"
     exit 2
