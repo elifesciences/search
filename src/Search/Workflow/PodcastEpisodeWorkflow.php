@@ -63,7 +63,7 @@ final class PodcastEpisodeWorkflow implements Workflow
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
-            throw new InvalidWorkflow('PodcastEpisode<'.$podcastEpisode->getNumber().'> Invalid item tried to be imported.');
+            throw new InvalidWorkflow('PodcastEpisode<'.$podcastEpisode->getNumber().'> cannot be trasformed into a valid search result.');
         }
         // Log results.
         $this->logger->info('PodcastEpisode<'.$podcastEpisode->getNumber().'> validated against current schema.');

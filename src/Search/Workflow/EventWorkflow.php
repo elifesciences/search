@@ -66,7 +66,7 @@ final class EventWorkflow implements Workflow
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
-            throw new InvalidWorkflow('Event<'.$event->getId().'> Invalid item tried to be imported.');
+            throw new InvalidWorkflow('Event<'.$event->getId().'> cannot be trasformed into a valid search result.');
         }
         // Log results.
         $this->logger->info('Event<'.$event->getId().'> validated against current schema.');

@@ -75,7 +75,7 @@ final class ResearchArticleWorkflow implements Workflow
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
-            throw new InvalidWorkflow('ResearchArticle<'.$article->getId().'> Invalid item tried to be imported.');
+            throw new InvalidWorkflow('ResearchArticle<'.$article->getId().'> cannot be trasformed into a valid search result.');
         }
         $this->logger->info('ResearchArticle<'.$article->getId().'> validated against current schema.');
 

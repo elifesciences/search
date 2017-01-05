@@ -64,7 +64,7 @@ final class CollectionWorkflow implements Workflow
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
-            throw new InvalidWorkflow('Collection<'.$collection->getId().'> Invalid item tried to be imported.');
+            throw new InvalidWorkflow('Collection<'.$collection->getId().'> cannot be trasformed into a valid search result.');
         }
         // Log results.
         $this->logger->info('Collection<'.$collection->getId().'> validated against current schema.');
