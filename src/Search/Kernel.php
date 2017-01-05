@@ -426,9 +426,9 @@ final class Kernel implements MinimalKernel
         ]);
     }
 
-    public function withApp(callable $fn)
+    public function withApp(callable $fn, $scope = null)
     {
-        $boundFn = Closure::bind($fn, $this);
+        $boundFn = Closure::bind($fn, $scope ? $scope : $this);
         $boundFn($this->app);
 
         return $this;
@@ -442,6 +442,10 @@ final class Kernel implements MinimalKernel
     public function get($d)
     {
         return $this->app[$d];
+    }
+
+    public function getApp() {
+        return $this->app;
     }
 
     public function validate(Request $request, Response $response)
