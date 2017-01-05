@@ -9,7 +9,8 @@ final class SqsWatchableQueue implements WatchableQueue
 {
     private $client;
     private $url;
-    private $next;
+    private $pollingTimeout = 20;
+    private $visibilityTimeout = 10;
 
     public function __construct(SqsClient $client, string $name)
     {
@@ -19,9 +20,6 @@ final class SqsWatchableQueue implements WatchableQueue
 
     /**
      * Adds item to the queue.
-     *
-     * Mock: Add item to queue.
-     * SQS: This will set the queue item into the memory slot for re-processing.
      */
     public function enqueue(QueueItem $item) : bool
     {
@@ -41,24 +39,27 @@ final class SqsWatchableQueue implements WatchableQueue
     }
 
     /**
-     * Starts process of removing item.
-     *
-     * Mock: Move to separate "in progress" queue.
-     * SQS: this will change the timeout of the in-memory item.
+     * Get an item from the queue and start is processing,
+     * making it invisible to other processes for $timeoutOverride seconds
      */
-    public function dequeue(int $timeoutOverride = null) : QueueItem
+    public function dequeue()
     {
-        $next = $this->next;
-        $this->next = null;
+        $message = $this->client->receiveMessage([
+            'QueueUrl' => $this->url,
+            'WaitTimeSeconds' => $this->pollingTimeout,
+            'VisibilityTimeout' => $this->visibilityTimeout,
+        ])->toArray();
 
-        return $next;
+        if (!SqsMessageTransformer::hasItems($message)) {
+            return false;
+        }
+
+        return SqsMessageTransformer::fromMessage($message);
     }
 
     /**
      * Commits to removing item from queue, marks item as done and processed.
      *
-     * Mock: Remove item completely.
-     * SQS: this will delete the item from the queue.
      */
     public function commit(QueueItem $item)
     {
@@ -70,9 +71,6 @@ final class SqsWatchableQueue implements WatchableQueue
 
     /**
      * This will happen when an error happens, we release the item back into the queue.
-     *
-     * Mock: re-add to queue.
-     * SQS: this will set the queue item into the memory slot for re-processing. (Maybe delete item and re-add?)
      */
     public function release(QueueItem $item) : bool
     {
@@ -85,26 +83,6 @@ final class SqsWatchableQueue implements WatchableQueue
         } catch (Throwable $e) {
             return false;
         }
-
-        return true;
-    }
-
-    /**
-     * Returns false if queue is empty.
-     *
-     * Mock: isEmpty check.
-     * SQS: this will take an item off the queue and store it in memory unless there is one already stored in memory.
-     */
-    public function isValid() : bool
-    {
-        if ($this->next !== null) {
-            return true;
-        }
-        $message = $this->client->receiveMessage(['QueueUrl' => $this->url])->toArray();
-        if (!SqsMessageTransformer::hasItems($message)) {
-            return false;
-        }
-        $this->next = SqsMessageTransformer::fromMessage($message);
 
         return true;
     }
