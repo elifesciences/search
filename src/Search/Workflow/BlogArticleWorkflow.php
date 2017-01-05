@@ -112,7 +112,6 @@ final class BlogArticleWorkflow implements Workflow
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
             $this->logger->alert('BlogArticle<'.$id.'> rolling back', [
-                'message' => $e->getMessage(),
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);

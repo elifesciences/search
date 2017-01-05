@@ -113,7 +113,7 @@ final class GearmanTaskDriver
             } catch (InvalidWorkflow $e) {
                 $this->logger->warning('Recoverable error...', ['exception' => $e]);
             } catch (Throwable $e) {
-                $this->logger->critical($e->getMessage());
+                $this->logger->critical('Unrecoverable error in worker, stopping', ['exception' => $e]);
 
                 return;
             }

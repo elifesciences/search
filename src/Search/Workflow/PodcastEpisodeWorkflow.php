@@ -120,7 +120,6 @@ final class PodcastEpisodeWorkflow implements Workflow
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
             $this->logger->alert('PodcastEpisode<'.$id.'> rolling back', [
-                'message' => $e->getMessage(),
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);
