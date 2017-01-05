@@ -64,7 +64,7 @@ class BuildIndexCommand extends Command
             try {
                 $delete = $this->client->deleteIndex();
             } catch (Throwable $e) {
-                $this->logger->error('Cannot delete ElasticSearch index', ['exception' => $e);
+                $this->logger->error('Cannot delete ElasticSearch index', ['exception' => $e]);
             }
             if ($delete['payload'] instanceof SuccessResponse) {
                 $this->logger->info('Removed previous index');
@@ -76,7 +76,7 @@ class BuildIndexCommand extends Command
             try {
                 $create = $this->client->customIndex($config);
             } catch (Throwable $e) {
-                $this->logger->error('Cannot create ElasticSearch index', ['exception' => $e->getMessage());
+                $this->logger->error('Cannot create ElasticSearch index', ['exception' => $e->getMessage()]);
                 // Re throw.
                 throw $e;
             }
