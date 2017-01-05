@@ -2,12 +2,12 @@
 set -e
 
 while true; do
-    workers=$(ps faxww | grep gearman:worker | grep -v grep | wc -l)
+    workers=$(pgrep -cf gearman:worker)
     if [ "$workers" -eq "0" ]; then
         echo "No alive gearman:worker processes, failing"
         exit 2
     fi
-    watches=$(ps faxww | grep queue:watch | grep -v grep | wc -l)
+    watches=$(pgrep -cf queue:watch)
     if [ "$watches" -eq "0" ]; then
         echo "No alive queue:watch processes, failing"
         exit 3
