@@ -128,6 +128,11 @@ namespace MockAnnotations {
         public function testingAMethod()
         {
         }
+
+        public function getSdkClass() : string
+        {
+            return 'stdClass';
+        }
     }
 
     class MockClassWithNamedAndFlowAnnotations implements Workflow
@@ -138,6 +143,11 @@ namespace MockAnnotations {
         public function testingBMethod()
         {
         }
+
+        public function getSdkClass() : string
+        {
+            return 'stdClass';
+        }
     }
 
     class MockClassWithNamedAndParametersAnnotations implements Workflow
@@ -147,6 +157,11 @@ namespace MockAnnotations {
          */
         public function testingCMethod()
         {
+        }
+
+        public function getSdkClass() : string
+        {
+            return 'stdClass';
         }
     }
 
