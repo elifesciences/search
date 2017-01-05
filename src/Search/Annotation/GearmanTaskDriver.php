@@ -70,7 +70,23 @@ final class GearmanTaskDriver
     {
         $worker->addFunction($task->name, Closure::bind(function (GearmanJob $job) use ($task) {
             $this->logger->debug('GearmanTaskDriver task started', ['task' => $task->name]);
-            $data = $task->deserialize($job->workload());
+            try {
+                $data = $task->deserialize($job->workload());
+            } catch (Throwable $e) {
+                $this->logger->error(
+                    "Cannot deserialize a job workload",
+                    [
+                        'workload' => $job->workload(),
+                        'class' => $task->getSdkClass(),
+                        'exception' => $e,
+                    ]
+                );
+                throw new InvalidWorkflow(
+                    "Cannot deserialize a {$task->getSdkClass()}",
+                    0,
+                    $e
+                );
+            }
             $object = $task->instance;
             $method = $task->method;
             $params = [];

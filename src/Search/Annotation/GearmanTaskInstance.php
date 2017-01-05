@@ -58,4 +58,9 @@ final class GearmanTaskInstance
 
         return $deserialize($data);
     }
+
+    public function getSdkClass() : string
+    {
+        return $this->instance->getSdkClass();
+    }
 }
