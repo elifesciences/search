@@ -128,20 +128,21 @@ final class ApiSdkCommand extends Command
     {
         $progress = new ProgressBar($this->output, $count);
 
+        $items->rewind();
         while ($items->valid()) {
             $progress->advance();
             try {
-                $items->next();
                 $item = $items->current();
                 if ($item === null) {
+                    $items->next();
                     continue;
                 }
                 $this->enqueue($type, $item->$method());
             } catch (Throwable $e) {
                 $item = $item ?? null;
                 $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
-                continue;
             }
+            $items->next();
         }
         $progress->finish();
         $progress->clear();
