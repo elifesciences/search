@@ -119,7 +119,6 @@ final class EventWorkflow implements Workflow
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
             $this->logger->alert('Event<'.$id.'> Rolling back...', [
-                'message' => $e->getMessage(),
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);
