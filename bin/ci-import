@@ -37,9 +37,9 @@ fi
 # we start from an empty index
 total=$(curl -v localhost/search | jq ".total")
 echo "Total results in the index: $total"
-minimum=28
-if [ ! "$total" -ge "$minimum" ]; then
-    echo "There should be at least $minimum result in the index"
+expected_results_api_dummy=28
+if [ ! "$total" -eq "$expected_results_api_dummy" ]; then
+    echo "There should be at least $expected_results_api_dummy results in the index"
     exit 2
 fi
 
