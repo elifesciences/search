@@ -21,6 +21,8 @@ class ExampleWebTest extends WebTestCase
     protected $console;
     /** @var Kernel */
     protected $kernel;
+    /** @var ElasticsearchClient */
+    private $client;
 
     /**
      * Creates the application.
@@ -73,10 +75,9 @@ class ExampleWebTest extends WebTestCase
      */
     public function testElasticSearchIndex()
     {
-        $client = $this->getElasticSearchClient();
-        $client->deleteIndex();
-        $this->runCommand('search:setup');
-        $client->indexJsonDocument('research-article', '19662', '
+        $lines = $this->runCommand('search:setup');
+        $this->assertStringStartsWith('Created new index', $lines[0]);
+        $this->client->indexJsonDocument('research-article', '19662', '
         {
             "status": "vor",
             "volume": 5,
@@ -118,8 +119,18 @@ class ExampleWebTest extends WebTestCase
 
         $this->assertEquals($json->total, 1);
         $this->assertEquals($json->items[0]->status, 'vor');
-        // ...
-        $client->deleteIndex();
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->client = $this->getElasticSearchClient();
+    }
+
+    public function tearDown()
+    {
+        $this->client->deleteIndex();
+        parent::tearDown();
     }
 
     public function runCommand(string $command)
@@ -138,6 +149,11 @@ class ExampleWebTest extends WebTestCase
         }
 
         $app = new Application();
+        $this->kernel->withApp(function ($app) use ($logger) {
+            $app['logger'] = function () use ($logger) {
+                return $logger;
+            };
+        });
         $app->setAutoExit(false);
         $application = new Console($app, $this->kernel);
         $application->logger = $logger;
