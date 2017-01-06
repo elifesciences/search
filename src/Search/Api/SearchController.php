@@ -23,6 +23,7 @@ final class SearchController
     private $context;
     private $cache;
     private $subjects;
+    private $elasticIndex;
 
     public function __construct(
         Serializer $serializer,
@@ -30,7 +31,8 @@ final class SearchController
         ElasticQueryExecutor $elastic,
         Cache $cache,
         string $apiUrl,
-        SubjectStore $subjects
+        SubjectStore $subjects,
+        string $elasticIndex
     ) {
         $this->elastic = $elastic;
         $this->serializer = $serializer;
@@ -38,6 +40,7 @@ final class SearchController
         $this->cache = $cache;
         $this->apiUrl = $apiUrl;
         $this->subjects = $subjects;
+        $this->elasticIndex = $elasticIndex;
     }
 
     public function indexAction(Request $request)
@@ -50,7 +53,7 @@ final class SearchController
         $subjects = $request->query->get('subject');
         $types = $request->query->get('type');
 
-        $query = new ElasticQueryBuilder('elife_search', $this->elastic);
+        $query = new ElasticQueryBuilder($this->elasticIndex, $this->elastic);
 
         $query = $query->searchFor($for);
 

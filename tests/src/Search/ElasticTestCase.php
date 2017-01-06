@@ -67,6 +67,8 @@ abstract class ElasticTestCase extends WebTestCase
             $config = include __DIR__.'/../../../config/ci.php';
         }
 
+        $config['elastic_index'] = 'elife_test';
+
         return $config;
     }
 

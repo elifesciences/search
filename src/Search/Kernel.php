@@ -237,7 +237,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['api.subjects']);
+            return new SearchController($app['serializer'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['api.subjects'], $app['config']['elastic_index']);
         };
 
         //#####################################################
