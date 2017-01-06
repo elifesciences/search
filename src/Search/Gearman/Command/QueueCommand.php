@@ -3,6 +3,7 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiClient\Exception\BadResponse;
+use eLife\Search\Monitoring;
 use eLife\Search\Queue\InternalSqsMessage;
 use eLife\Search\Queue\QueueItem;
 use eLife\Search\Queue\QueueItemTransformer;
@@ -25,6 +26,7 @@ class QueueCommand extends Command
     private $isMock;
     private $topic;
     private $logger;
+    private $monitoring;
     private $limit;
 
     public function __construct(
@@ -34,6 +36,7 @@ class QueueCommand extends Command
         bool $isMock,
         string $topic,
         LoggerInterface $logger,
+        Monitoring $monitoring,
         callable $limit
     ) {
         $this->queue = $queue;
@@ -42,6 +45,7 @@ class QueueCommand extends Command
         $this->isMock = $isMock;
         $this->topic = $topic;
         $this->logger = $logger;
+        $this->monitoring = $monitoring;
         $this->limit = $limit;
         parent::__construct(null);
     }

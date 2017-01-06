@@ -5,6 +5,7 @@ namespace eLife\Search\Annotation;
 use Closure;
 use Doctrine\Common\Annotations\Reader;
 use eLife\Search\Gearman\InvalidWorkflow;
+use eLife\Search\Monitoring;
 use eLife\Search\Workflow\Workflow;
 use GearmanClient;
 use GearmanJob;
@@ -19,13 +20,16 @@ final class GearmanTaskDriver
     private $reader;
     private $worker;
     private $logger;
+    private $monitoring;
+    private $limit;
 
-    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger, callable $limit)
+    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger, Monitoring $monitoring, callable $limit)
     {
         $this->reader = $reader;
         $this->worker = $worker;
         $this->client = $client;
         $this->logger = $logger;
+        $this->monitoring = $monitoring;
         $this->limit = $limit;
     }
 

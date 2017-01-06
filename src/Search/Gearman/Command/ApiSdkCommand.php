@@ -3,6 +3,7 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiSdk\ApiSdk;
+use eLife\Search\Monitoring;
 use eLife\Search\Queue\InternalSqsMessage;
 use Error;
 use GearmanClient;
@@ -24,13 +25,15 @@ final class ApiSdkCommand extends Command
     private $serializer;
     private $output;
     private $logger;
+    private $monitoring;
 
     public function __construct(
         ApiSdk $sdk,
         GearmanClient $client,
         // TODO: type hint
         $queue,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Monitoring $monitoring
     ) {
         $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;

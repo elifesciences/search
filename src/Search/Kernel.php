@@ -197,6 +197,14 @@ final class Kernel implements MinimalKernel
             return $logger;
         };
 
+        $app['monitoring'] = function (Application $app) {
+            return new Monitoring;
+        };
+
+        $app['limit'] = function (Application $app) {
+            return MemoryLimit::mb($app['config']['process_memory_limit']);
+        };
+
         //#####################################################
         // ------------------ Networking ---------------------
         //#####################################################
@@ -308,7 +316,8 @@ final class Kernel implements MinimalKernel
                 $app['gearman.worker'],
                 $app['gearman.client'],
                 $app['logger'],
-                MemoryLimit::mb($app['config']['process_memory_limit'])
+                $app['monitoring'],
+                $app['limit']
             );
         };
 
@@ -357,7 +366,8 @@ final class Kernel implements MinimalKernel
                 // TODO: remove collaborator if possible?
                 $app['gearman.client'],
                 $app['aws.queue'],
-                $app['logger']
+                $app['logger'],
+                $app['monitoring']
             );
         };
 
@@ -371,7 +381,8 @@ final class Kernel implements MinimalKernel
                     true,
                     $app['config']['aws']['queue_name'],
                     $app['logger'],
-                    MemoryLimit::mb($app['config']['process_memory_limit'])
+                    $app['monitoring'],
+                    $app['limit']
                 );
             }
 
@@ -382,7 +393,8 @@ final class Kernel implements MinimalKernel
                 false,
                 $app['config']['aws']['queue_name'],
                 $app['logger'],
-                MemoryLimit::mb($app['config']['process_memory_limit'])
+                $app['monitoring'],
+                $app['limit']
             );
         };
 
