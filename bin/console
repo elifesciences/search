@@ -27,4 +27,5 @@ $app = new Kernel($config);
 $output = new ConsoleOutput();
 $app->get('logger')->pushHandler(new ConsoleHandler($output));
 $console = new Console(new Application('eLife Sciences Search API'), $app);
+$app->get('monitoring')->markAsBackground();
 $console->run($input, $output);

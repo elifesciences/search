@@ -131,8 +131,6 @@ final class GearmanTaskDriver
     {
         $this->logger->info('Worker started.');
         $this->addTasksToWorker($this->worker);
-        // TODO: extract in Console.php
-        $this->monitoring->markAsBackground();
         $limit = $this->limit;
         while (!$limit()) {
             try {

@@ -87,7 +87,6 @@ class QueueCommand extends Command
             $this->mock($output, $mocks);
         }
         $this->logger->info('queue:watch: Started listening.');
-        $this->monitoring->markAsBackground();
         $this->monitoring->nameTransaction('queue:watch');
         // Loop.
         $limit = $this->limit;

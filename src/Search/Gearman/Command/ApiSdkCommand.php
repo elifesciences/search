@@ -53,7 +53,6 @@ final class ApiSdkCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->monitoring->markAsBackground();
         $this->output = $output;
         $entity = $input->getArgument('entity');
         // Only the configured.
