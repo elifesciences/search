@@ -87,6 +87,8 @@ class QueueCommand extends Command
             $this->mock($output, $mocks);
         }
         $this->logger->info('queue:watch: Started listening.');
+        $this->monitoring->markAsBackground();
+        $this->monitoring->nameTransaction('queue:watch');
         // Loop.
         $limit = $this->limit;
         while (!$limit()) {
@@ -116,6 +118,7 @@ class QueueCommand extends Command
                 'exception' => $e,
                 'item' => $item,
             ]);
+            $this->monitoring->recordException($e, "Error in importing {$item->getType()} {$item->getId()}");
             // Remove from queue.
             $this->queue->commit($item);
         }
@@ -127,7 +130,9 @@ class QueueCommand extends Command
     {
         $this->logger->debug('queue:watch: Loop start, listening to queue', ['queue' => $this->topic]);
         $item = $this->queue->dequeue();
-        if ($item && ($entity = $this->transform($item))) {
+        if ($item) {
+            $this->monitoring->startTransaction();
+            if ($entity = $this->transform($item))) {
             // Grab the gearman task.
                 $gearmanTask = $this->transformer->getGearmanTask($item);
                 // Run the task.
@@ -145,6 +150,8 @@ class QueueCommand extends Command
                     'type' => $item->getType(),
                     'id' => $item->getId(),
                 ]);
+            }
+            $this->monitoring->endTransaction();
         }
         $this->logger->debug('queue:watch: End of loop');
     }

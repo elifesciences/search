@@ -48,7 +48,7 @@ class Monitoring
     {
         if ($this->extension) {
             newrelic_end_transaction();
-        } 
+        }
     }
 
     public function recordException(Throwable $exception, $message = null)
