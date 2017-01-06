@@ -444,7 +444,8 @@ final class Kernel implements MinimalKernel
         return $this->app[$d];
     }
 
-    public function getApp() {
+    public function getApp()
+    {
         return $this->app;
     }
 

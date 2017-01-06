@@ -54,7 +54,7 @@ class ElasticsearchClient
         return $this->connection->indices()->create($params);
     }
 
-    public function indexJsonDocument($type, $id, $body)
+    public function indexJsonDocument($type, $id, $body, $flush = false)
     {
         $params = [
             'index' => $this->index,
@@ -63,7 +63,12 @@ class ElasticsearchClient
             'body' => $body,
         ];
 
-        return $this->connection->index($params)['payload'] ?? null;
+        $con = $this->connection->index($params)['payload'] ?? null;
+        if ($flush) {
+            $this->connection->indices()->flushSynced(['index' => $this->index]);
+        }
+
+        return $con;
     }
 
     public function indexDocument($type, $id, SearchResult $body)
