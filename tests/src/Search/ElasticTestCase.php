@@ -45,10 +45,10 @@ abstract class ElasticTestCase extends WebTestCase
         return $this->api->getResponse();
     }
 
-    public function addDocumentToElasticSearch(string $doc)
+    public function addDocumentToElasticSearch($doc)
     {
-        $obj = json_decode($doc);
-        $this->client->indexJsonDocument($obj->type, $obj->id, $doc, true);
+        $obj = is_string($doc) ? json_decode($doc, true) : $doc;
+        $this->client->indexJsonDocument($obj['type'], $obj['id'], is_string($doc) ? $doc : json_encode($doc), true);
     }
     public function addDocumentsToElasticSearch(array $docs)
     {
@@ -107,9 +107,10 @@ abstract class ElasticTestCase extends WebTestCase
     {
         parent::setUp();
         $this->client = $this->getElasticSearchClient();
+        $this->client->deleteIndex();
         $lines = $this->runCommand('search:setup');
         if ($lines[0] === 'No alive nodes found in your cluster') {
-            $this->markTestSkipped('Elasticsearch may not be installed, skipping');
+            $this->fail('Elasticsearch may not be installed, skipping');
         }
         $this->assertStringStartsWith('Created new index', $lines[0], 'Failed to run test during set up');
     }
@@ -128,7 +129,7 @@ abstract class ElasticTestCase extends WebTestCase
         $logs = [];
         $logger = $this->createMock(NullLogger::class);
 
-        foreach (['debug', 'info', 'alert', 'notice', 'error'] as $level) {
+        foreach (['debug', 'info', 'warning', 'critical', 'emergency', 'alert', 'log', 'notice', 'error'] as $level) {
             $logger
                 ->expects($this->any())
                 ->method($level)

@@ -22,7 +22,6 @@ class ElasticsearchClient
         $params = [
             'index' => $index,
             'client' => ['ignore' => [400, 404]],
-            'sync' => true,
         ];
 
         return $this->connection->indices()->delete($params);
