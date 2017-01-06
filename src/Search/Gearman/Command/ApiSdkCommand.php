@@ -37,7 +37,7 @@ final class ApiSdkCommand extends Command
         $this->sdk = $sdk;
         $this->queue = $queue;
         $this->logger = $logger;
-        $thos->monitoring = $Monitoring;
+        $thos->monitoring = $monitoring;
 
         parent::__construct(null);
     }

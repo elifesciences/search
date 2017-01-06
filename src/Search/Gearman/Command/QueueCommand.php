@@ -132,7 +132,7 @@ class QueueCommand extends Command
         $item = $this->queue->dequeue();
         if ($item) {
             $this->monitoring->startTransaction();
-            if ($entity = $this->transform($item))) {
+            if ($entity = $this->transform($item)) {
             // Grab the gearman task.
                 $gearmanTask = $this->transformer->getGearmanTask($item);
                 // Run the task.
