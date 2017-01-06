@@ -86,14 +86,14 @@ final class Kernel implements MinimalKernel
             'file_log_path' => self::ROOT.'/var/logs/all.log',
             'file_error_log_path' => self::ROOT.'/var/logs/error.log',
             'process_memory_limit' => 256,
-            'aws' => [
+            'aws' => array_merge([
                 'credential_file' => false,
                 'mock_queue' => true,
                 'queue_name' => 'eLife-search',
                 'key' => '-----------------------',
                 'secret' => '-------------------------------',
                 'region' => '---------',
-            ],
+            ], $config['aws'] ?? []),
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
@@ -313,7 +313,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['aws.sqs'] = function (Application $app) {
-            if ($app['config']['aws']['credential_file'] === true) {
+            if (isset($app['config']['aws']['credential_file']) && $app['config']['aws']['credential_file'] === true) {
                 return new SqsClient([
                     'version' => '2012-11-05',
                     'region' => $app['config']['aws']['region'],

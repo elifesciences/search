@@ -88,7 +88,7 @@ final class SearchController
 
     private function serialize($data, int $version = null, $group = null)
     {
-        $context = $this->context;
+        $context = clone $this->context;
         if ($version) {
             $context->setVersion($version);
         }

@@ -2,47 +2,11 @@
 
 namespace tests\eLife\Search;
 
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
-use eLife\Search\Console;
-use eLife\Search\Kernel;
-use Psr\Log\NullLogger;
-use Silex\WebTestCase;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Console\Output\StreamOutput;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-
 /**
- * @group failing
+ * @group web
  */
-class ExampleWebTest extends WebTestCase
+class ExampleWebTest extends ElasticTestCase
 {
-    protected $isLocal;
-    protected $console;
-    /** @var Kernel */
-    protected $kernel;
-    /** @var ElasticsearchClient */
-    private $client;
-
-    /**
-     * Creates the application.
-     *
-     * @return HttpKernelInterface
-     */
-    public function createApplication()
-    {
-        if (file_exists(__DIR__.'/../../../config/local.php')) {
-            $this->isLocal = true;
-            $config = include __DIR__.'/../../../config/local.php';
-        } else {
-            $this->isLocal = false;
-            $config = include __DIR__.'/../../../config/ci.php';
-        }
-        $this->kernel = new Kernel($config);
-
-        return $this->kernel->getApp();
-    }
-
     /**
      * @test
      */
@@ -65,19 +29,12 @@ class ExampleWebTest extends WebTestCase
         $this->assertEquals('This is working', $lines[1]);
     }
 
-    public function getElasticSearchClient() : ElasticsearchClient
-    {
-        return $this->kernel->get('elastic.client');
-    }
-
     /**
      * @test
      */
     public function testElasticSearchIndex()
     {
-        $lines = $this->runCommand('search:setup');
-        $this->assertStringStartsWith('Created new index', $lines[0]);
-        $this->client->indexJsonDocument('research-article', '19662', '
+        $this->addDocumentToElasticSearch('
         {
             "status": "vor",
             "volume": 5,
@@ -109,61 +66,18 @@ class ExampleWebTest extends WebTestCase
             "id": "19662",
             "stage": "published"
         }
-        ', true);
+        ');
 
-        $api = $this->createClient();
-        $api->request('GET', '/search');
-        $response = $api->getResponse();
-        $this->assertTrue($response->isOk());
-        $json = json_decode($response->getContent());
+        $this->newClient();
+        $this->jsonRequest('GET', '/search', [
+            'for' => 'Extracellular actin',
+            'per-page' => 1,
+            'page' => 1,
+        ]);
+        $json = $this->getJsonResponse();
 
         $this->assertEquals($json->total, 1);
         $this->assertEquals($json->items[0]->status, 'vor');
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->client = $this->getElasticSearchClient();
-    }
-
-    public function tearDown()
-    {
-        $this->client->deleteIndex();
-        parent::tearDown();
-    }
-
-    public function runCommand(string $command)
-    {
-        $log = $this->returnCallback(function ($message) use (&$logs) {
-            $logs[] = $message;
-        });
-        $logs = [];
-        $logger = $this->createMock(NullLogger::class);
-
-        foreach (['debug', 'info', 'alert', 'notice', 'error'] as $level) {
-            $logger
-                ->expects($this->any())
-                ->method($level)
-                ->will($log);
-        }
-
-        $app = new Application();
-        $this->kernel->withApp(function ($app) use ($logger) {
-            $app['logger'] = function () use ($logger) {
-                return $logger;
-            };
-        });
-        $app->setAutoExit(false);
-        $application = new Console($app, $this->kernel);
-        $application->logger = $logger;
-
-        $fp = tmpfile();
-        $input = new StringInput($command);
-        $output = new StreamOutput($fp);
-
-        $application->run($input, $output);
-
-        return $logs;
+        $this->assertEquals($json->items[0]->id, '19662');
     }
 }
