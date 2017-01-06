@@ -7,7 +7,11 @@ use JMS\Serializer\Annotation\Type;
 
 abstract class NamedResponse
 {
-    use Image;
+    /**
+     * @Type(eLife\Search\Api\Response\ImageThumbnailResponse::class)
+     * @Since(version="1")
+     */
+    public $image;
 
     /**
      * @Type("string")
