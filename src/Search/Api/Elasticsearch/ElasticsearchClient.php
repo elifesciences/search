@@ -17,13 +17,12 @@ class ElasticsearchClient
         $this->index = $index;
     }
 
-    // TODO: Make these ACID like i.e Transactional
-
     public function deleteIndexByName($index)
     {
         $params = [
             'index' => $index,
             'client' => ['ignore' => [400, 404]],
+            'sync' => true,
         ];
 
         return $this->connection->indices()->delete($params);

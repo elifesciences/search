@@ -10,16 +10,6 @@ class ExampleWebTest extends ElasticTestCase
     /**
      * @test
      */
-    public function testCan404()
-    {
-        $client = $this->createClient();
-        $client->request('GET', '/');
-        $this->assertTrue($client->getResponse()->isNotFound());
-    }
-
-    /**
-     * @test
-     */
     public function testCanRunCommand()
     {
         // Run command
