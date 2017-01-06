@@ -12,15 +12,18 @@ use Throwable;
 class Monitoring
 {
     private $extension;
+    private $appName;
     
     public function __construct()
     {
         $this->extension = extension_loaded('newrelic');
-        $appName = ini_get('newrelic.appname');
-        if (!$appName) {
-            throw new RuntimeException("newrelic.appname must be configured in a PHP *.ini file");
+        if ($this->extension) {
+            $appName = ini_get('newrelic.appname');
+            if (!$appName) {
+                throw new RuntimeException("newrelic.appname must be configured in a PHP *.ini file");
+            }
+            $this->appName = $appName;
         }
-        $this->appName = $appName;
     }
 
     public function markAsBackground()

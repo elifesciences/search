@@ -40,6 +40,7 @@ final class ApiSdkCommand extends Command
         $this->client = $client;
         $this->queue = $queue;
         $this->logger = $logger;
+        $thos->monitoring = $Monitoring;
 
         parent::__construct(null);
     }
@@ -55,6 +56,7 @@ final class ApiSdkCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->monitoring->markAsBackground();
         $this->output = $output;
         $entity = $input->getArgument('entity');
         // Only the configured.
@@ -63,6 +65,8 @@ final class ApiSdkCommand extends Command
 
             return;
         }
+        $this->monitoring->nameTransaction('gearman:import');
+        $this->monitoring->startTransaction();
         if ($entity === 'all') {
             foreach (self::$supports as $e) {
                 if ($e !== 'all') {
@@ -76,6 +80,7 @@ final class ApiSdkCommand extends Command
         }
         // Reporting.
         $this->logger->info("\nAll entities queued.");
+        $this->monitoring->endTransaction();
     }
 
     public function importPodcastEpisodes()
@@ -144,6 +149,7 @@ final class ApiSdkCommand extends Command
             } catch (Throwable $e) {
                 $item = $item ?? null;
                 $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
+                $this->monitoring->recordException($e, 'Skipping import on a '.get_class($item));
             }
             $items->next();
         }

@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 $input = new ArgvInput();
 $env = $input->getParameterOption(array('--env', '-e'), getenv('SYMFONY_ENV') ?: 'local');
 if (!file_exists(__DIR__.'/../config/'.$env.'.php')) {
-    echo 'Environment `'.$env.'` not found.';
+    echo 'Environment `'.$env.'` not found. Specify one with --env=$env', PHP_EOL;
     exit(1);
 }
 $config = require __DIR__.'/../config/'.$env.'.php';
