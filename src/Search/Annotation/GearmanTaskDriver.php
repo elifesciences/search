@@ -74,6 +74,8 @@ final class GearmanTaskDriver
     {
         $worker->addFunction($task->name, Closure::bind(function (GearmanJob $job) use ($task) {
             $this->logger->debug('GearmanTaskDriver task started', ['task' => $task->name]);
+            $this->monitoring->nameTransaction('gearman:worker '.$task->name);
+            $this->monitoring->startTransaction();
             try {
                 $data = $task->deserialize($job->workload());
             } catch (Throwable $e) {
@@ -86,6 +88,7 @@ final class GearmanTaskDriver
                         'exception' => $e,
                     ]
                 );
+                $this->monitoring->recordException($e, "Deserialization problem in $task->name");
                 throw new InvalidWorkflow(
                     "Cannot deserialize a {$task->getSdkClass()}",
                     0,
@@ -119,6 +122,7 @@ final class GearmanTaskDriver
                 }
             }
 
+            $this->monitoring->endTransaction();
             return GEARMAN_SUCCESS;
         }, $this));
     }
@@ -127,6 +131,7 @@ final class GearmanTaskDriver
     {
         $this->logger->info('Worker started.');
         $this->addTasksToWorker($this->worker);
+        $this->monitoring->markAsBackground();
         $limit = $this->limit;
         while (!$limit()) {
             try {
@@ -137,9 +142,11 @@ final class GearmanTaskDriver
                     return;
                 }
             } catch (InvalidWorkflow $e) {
-                $this->logger->warning('Recoverable error...', ['exception' => $e]);
+                $this->logger->warning('Invalid workflow', ['exception' => $e]);
+                $this->monitoring->recordException($e, "gearman:worker invalid workflow");
             } catch (Throwable $e) {
                 $this->logger->critical('Unrecoverable error in worker, stopping', ['exception' => $e]);
+                $this->monitoring->recordException($e, "gearman:worker unrecoverable error");
 
                 return;
             }
