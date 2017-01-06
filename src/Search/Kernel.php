@@ -363,8 +363,6 @@ final class Kernel implements MinimalKernel
         $app['console.gearman.client'] = function (Application $app) {
             return new ApiSdkCommand(
                 $app['api.sdk'],
-                // TODO: remove collaborator if possible?
-                $app['gearman.client'],
                 $app['aws.queue'],
                 $app['logger'],
                 $app['monitoring']

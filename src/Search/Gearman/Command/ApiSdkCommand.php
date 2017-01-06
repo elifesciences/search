@@ -20,7 +20,6 @@ final class ApiSdkCommand extends Command
 {
     private static $supports = ['all', 'BlogArticles', 'Events', 'Interviews', 'LabsExperiments', 'PodcastEpisodes', 'Collections', 'ResearchArticles'];
 
-    private $client;
     private $sdk;
     private $serializer;
     private $output;
@@ -29,7 +28,6 @@ final class ApiSdkCommand extends Command
 
     public function __construct(
         ApiSdk $sdk,
-        GearmanClient $client,
         // TODO: type hint
         $queue,
         LoggerInterface $logger,
@@ -37,7 +35,6 @@ final class ApiSdkCommand extends Command
     ) {
         $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
-        $this->client = $client;
         $this->queue = $queue;
         $this->logger = $logger;
         $thos->monitoring = $Monitoring;
@@ -48,9 +45,9 @@ final class ApiSdkCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('gearman:import')
+            ->setName('queue:import')
             ->setDescription('Import items from API.')
-            ->setHelp('Creates new Gearman client and imports entities from API')
+            ->setHelp('Lists entities from API and enqueues them')
             ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>');
     }
 
@@ -65,7 +62,7 @@ final class ApiSdkCommand extends Command
 
             return;
         }
-        $this->monitoring->nameTransaction('gearman:import');
+        $this->monitoring->nameTransaction('queue:import');
         $this->monitoring->startTransaction();
         if ($entity === 'all') {
             foreach (self::$supports as $e) {
