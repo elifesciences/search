@@ -1,8 +1,8 @@
 <?php
 
-namespace eLife\Search\Gearman;
+namespace eLife\Search\Limit;
 
-class MemoryLimit
+class MemoryLimit implements Limit
 {
     private $bytes;
 
@@ -23,5 +23,10 @@ class MemoryLimit
         }
 
         return false;
+    }
+
+    public function getReasons() : array
+    {
+        return ["Memory limit exceeded: {$this->bytes} bytes"];
     }
 }

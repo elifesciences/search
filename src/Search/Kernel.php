@@ -27,9 +27,10 @@ use eLife\Search\Api\SubjectStore;
 use eLife\Search\Gearman\Command\ApiSdkCommand;
 use eLife\Search\Gearman\Command\QueueCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
-use eLife\Search\Gearman\CompositeLimit;
-use eLife\Search\Gearman\MemoryLimit;
-use eLife\Search\Gearman\SignalsLimit;
+use eLife\Search\Limit\CompositeLimit;
+use eLife\Search\Limit\LoggingMiddleware;
+use eLife\Search\Limit\MemoryLimit;
+use eLife\Search\Limit\SignalsLimit;
 use eLife\Search\Queue\Mock\QueueItemTransformerMock;
 use eLife\Search\Queue\Mock\WatchableQueueMock;
 use eLife\Search\Queue\SqsMessageTransformer;
@@ -61,8 +62,8 @@ use Webmozart\Json\JsonDecoder;
 
 final class Kernel implements MinimalKernel
 {
-    const ROOT = __DIR__.'/../..';
-    const CACHE_DIR = __DIR__.'/../../var/cache';
+    const ROOT = __DIR__ . '/../..';
+    const CACHE_DIR = __DIR__ . '/../../var/cache';
 
     public static $routes = [
         '/search' => 'indexAction',
@@ -85,8 +86,8 @@ final class Kernel implements MinimalKernel
             'ttl' => 3600,
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
-            'file_log_path' => self::ROOT.'/var/logs/all.log',
-            'file_error_log_path' => self::ROOT.'/var/logs/error.log',
+            'file_log_path' => self::ROOT . '/var/logs/all.log',
+            'file_error_log_path' => self::ROOT . '/var/logs/error.log',
             'process_memory_limit' => 256,
             'aws' => [
                 'credential_file' => false,
@@ -99,7 +100,7 @@ final class Kernel implements MinimalKernel
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation', self::ROOT.'/vendor/jms/serializer/src'
+            'JMS\Serializer\Annotation', self::ROOT . '/vendor/jms/serializer/src'
         );
         if ($app['config']['debug']) {
             $app->register(new VarDumperServiceProvider());
@@ -107,7 +108,7 @@ final class Kernel implements MinimalKernel
             $app->register(new Provider\ServiceControllerServiceProvider());
             $app->register(new Provider\TwigServiceProvider());
             $app->register(new Provider\WebProfilerServiceProvider(), array(
-                'profiler.cache_dir' => self::CACHE_DIR.'/profiler',
+                'profiler.cache_dir' => self::CACHE_DIR . '/profiler',
                 'profiler.mount_prefix' => '/_profiler', // this is the default
             ));
         }
@@ -204,10 +205,12 @@ final class Kernel implements MinimalKernel
         };
 
         $app['limit'] = function (Application $app) {
-            return new CompositeLimit(
-                MemoryLimit::mb($app['config']['process_memory_limit']),
-                SignalsLimit::sigterm(['SIGINT', 'SIGTERM', 'SIGHUP'])
-            );
+            return new LoggingMiddleware(
+                new CompositeLimit(
+                    MemoryLimit::mb($app['config']['process_memory_limit']),
+                    SignalsLimit::sigterm(['SIGINT', 'SIGTERM', 'SIGHUP'])
+                )
+                , $app['logger']);
         };
 
         //#####################################################
