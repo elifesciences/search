@@ -22,6 +22,7 @@ class CompositeLimit implements Limit
                 $limitReached = true;
             }
         }
+
         return $limitReached;
     }
 
