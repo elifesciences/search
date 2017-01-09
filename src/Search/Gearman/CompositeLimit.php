@@ -13,7 +13,7 @@ class CompositeLimit
     {
         return
             [] === array_filter($this->functions, function ($fn) {
-                return $fn() === false;
+                return $fn() === true;
             })
         ;
     }

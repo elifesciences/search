@@ -27,21 +27,21 @@ final class ApiSdkCommand extends Command
     private $logger;
     private $monitoring;
     private $queue;
-    private $valid;
+    private $limit;
 
     public function __construct(
         ApiSdk $sdk,
         WatchableQueue $queue,
         LoggerInterface $logger,
         Monitoring $monitoring,
-        callable $valid
+        callable $limit
     ) {
         $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
         $this->queue = $queue;
         $this->logger = $logger;
         $this->monitoring = $monitoring;
-        $this->valid = $valid;
+        $this->limit = $limit;
         // Signals
         Signals::register();
 
@@ -137,10 +137,10 @@ final class ApiSdkCommand extends Command
     private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
         $progress = new ProgressBar($this->output, $count);
-        $valid = $this->valid;
+        $limit = $this->limit;
 
         $items->rewind();
-        while ($items->valid() && $valid()) {
+        while ($items->valid() && $limit()) {
             $progress->advance();
             try {
                 $item = $items->current();

@@ -20,6 +20,6 @@ class SignalsLimit
     {
         Signals::tick();
 
-        return Signals::isValid();
+        return !Signals::isValid();
     }
 }
