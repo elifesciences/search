@@ -28,7 +28,7 @@ waitingPid=$!
 wait "$waitingPid"
 waitingReturnCode=$?
 # clean up PHP processes
-kill "$workerPid" "$queueWatchPid";
+# kill "$workerPid" "$queueWatchPid";
 if [ ! "$waitingReturnCode" -eq "0" ]; then
     echo "Waiting for queues to be empty timed out"
     exit "$waitingReturnCode"
