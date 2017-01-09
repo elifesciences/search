@@ -21,18 +21,19 @@ class LimitTest extends PHPUnit_Framework_TestCase
 
     public function test_composite_limit_multiple_failures()
     {
-        $fail = new BasicLimitMock(true);
-        $fail2 = new BasicLimitMock(true);
-        $fail3 = new BasicLimitMock(true);
+        $fail = new BasicLimitMock(true, ['failure 1']);
+        $fail2 = new BasicLimitMock(true, ['failure 2']);
+        $fail3 = new BasicLimitMock(true, ['failure 3', 'failure 4']);
         $pass = new BasicLimitMock();
         $limit = new CompositeLimit($fail, $fail2, $fail3, $pass);
 
         $this->assertTrue($limit());
 
         $this->assertEquals([
-            'This is the reason it failed',
-            'This is the reason it failed',
-            'This is the reason it failed',
+            'failure 1',
+            'failure 2',
+            'failure 3',
+            'failure 4',
         ], $limit->getReasons());
     }
 
@@ -51,15 +52,17 @@ class LimitTest extends PHPUnit_Framework_TestCase
 class BasicLimitMock implements Limit
 {
     private $fail;
+    private $messages;
 
     public function fail()
     {
         $this->fail = true;
     }
 
-    public function __construct($fail = false)
+    public function __construct($fail = false, $messages = ['This is the reason it failed'])
     {
         $this->fail = $fail;
+        $this->messages = $messages;
     }
 
     public function __invoke(): bool
@@ -69,6 +72,6 @@ class BasicLimitMock implements Limit
 
     public function getReasons(): array
     {
-        return ['This is the reason it failed'];
+        return $this->messages;
     }
 }

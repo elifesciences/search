@@ -11,25 +11,29 @@ class SignalsLimit implements Limit
     ];
 
     private $valid;
+    private $reasons;
 
     public function __construct($signals)
     {
         foreach ($signals as $signal) {
-            pcntl_signal(self::$validSignals[$signal], [$this, 'onTermination']);
+            pcntl_signal(self::$validSignals[$signal], function () use ($signal) {
+                $this->onTermination($signal);
+            });
         }
     }
 
-    public function onTermination()
+    public function onTermination($signal)
     {
+        $this->reasons[] = "Received signal: $signal";
         $this->valid = false;
     }
 
-    public static function stopOn(array $signals) : self
+    public static function stopOn(array $signals): self
     {
         return new static($signals);
     }
 
-    public function __invoke() : bool
+    public function __invoke(): bool
     {
         pcntl_signal_dispatch();
 
@@ -38,6 +42,6 @@ class SignalsLimit implements Limit
 
     public function getReasons(): array
     {
-        return ['Signals: Stopped by user'];
+        return $this->reasons;
     }
 }
