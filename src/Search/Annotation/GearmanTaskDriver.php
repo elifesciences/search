@@ -76,6 +76,7 @@ final class GearmanTaskDriver
             $this->logger->debug('GearmanTaskDriver task started', ['task' => $task->name]);
             $this->monitoring->nameTransaction('gearman:worker '.$task->name);
             $this->monitoring->startTransaction();
+
             try {
                 $data = $task->deserialize($job->workload());
             } catch (Throwable $e) {

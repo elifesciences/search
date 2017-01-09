@@ -47,6 +47,7 @@ class QueueCommand extends Command
         $this->logger = $logger;
         $this->monitoring = $monitoring;
         $this->limit = $limit;
+
         parent::__construct(null);
     }
 
@@ -93,7 +94,6 @@ class QueueCommand extends Command
         while (!$limit()) {
             $this->loop($input);
         }
-        // TODO: graceful handling of SIGTERM
         $this->logger->info('queue:watch: Stopped because of limits reached.');
     }
 

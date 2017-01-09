@@ -5,7 +5,7 @@ namespace eLife\Search\Gearman\Command;
 use eLife\ApiSdk\ApiSdk;
 use eLife\Search\Monitoring;
 use eLife\Search\Queue\InternalSqsMessage;
-use Error;
+use eLife\Search\Queue\WatchableQueue;
 use Iterator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -24,19 +24,22 @@ final class ApiSdkCommand extends Command
     private $output;
     private $logger;
     private $monitoring;
+    private $queue;
+    private $limit;
 
     public function __construct(
         ApiSdk $sdk,
-        // TODO: type hint
-        $queue,
+        WatchableQueue $queue,
         LoggerInterface $logger,
-        Monitoring $monitoring
+        Monitoring $monitoring,
+        callable $limit
     ) {
         $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
         $this->queue = $queue;
         $this->logger = $logger;
         $this->monitoring = $monitoring;
+        $this->limit = $limit;
 
         parent::__construct(null);
     }
@@ -130,9 +133,10 @@ final class ApiSdkCommand extends Command
     private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
         $progress = new ProgressBar($this->output, $count);
+        $limit = $this->limit;
 
         $items->rewind();
-        while ($items->valid()) {
+        while ($items->valid() && $limit()) {
             $progress->advance();
             try {
                 $item = $items->current();
@@ -155,8 +159,6 @@ final class ApiSdkCommand extends Command
     private function enqueue($type, $identifier)
     {
         $item = new InternalSqsMessage($type, $identifier);
-        /* @var $queue WatchableQueue */
-        // Queue item.
         $this->queue->enqueue($item);
         $this->logger->info("Item ($type, $identifier) added successfully");
     }
