@@ -52,8 +52,18 @@ final class InterviewWorkflow implements Workflow
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchInterview);
         if ($isValid === false) {
-            $this->logger->alert($this->validator->getLastError()->getMessage());
-            throw new InvalidWorkflow('Interview<'.$interview->getId().'> Invalid item tried to be imported.');
+            $this->logger->error(
+                'Interview<'.$event->getId().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'interview',
+                        'id' => $interview->getId(),
+                    ],
+                    'search_result' => $this->validator->serialize($searchInterview),
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
+                ]
+            );
+            throw new InvalidWorkflow('Interview<'.$interview->getId().'> cannot be trasformed into a valid search result.');
         }
         // Log results.
         $this->logger->info('Interview<'.$interview->getId().'> validated against current schema.');
@@ -110,8 +120,7 @@ final class InterviewWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('Interview<'.$id.'> rolling back', [
-                'message' => $e->getMessage(),
+            $this->logger->error('Interview<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);

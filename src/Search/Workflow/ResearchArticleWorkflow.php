@@ -64,8 +64,18 @@ final class ResearchArticleWorkflow implements Workflow
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($articleSearchResponse);
         if ($isValid === false) {
-            $this->logger->alert($this->validator->getLastError()->getMessage());
-            throw new InvalidWorkflow('ResearchArticle<'.$article->getId().'> Invalid item tried to be imported.');
+            $this->logger->error(
+                'ResearchArticle<'.$article->getId().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'article',
+                        'id' => $article->getId(),
+                    ],
+                    'search_result' => $this->validator->serialize($articleSearchResponse),
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
+                ]
+            );
+            throw new InvalidWorkflow('ResearchArticle<'.$article->getId().'> cannot be trasformed into a valid search result.');
         }
         $this->logger->info('ResearchArticle<'.$article->getId().'> validated against current schema.');
 
@@ -175,8 +185,7 @@ final class ResearchArticleWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('ResearchArticle<'.$id.'> rolling back', [
-                'message' => $e->getMessage(),
+            $this->logger->error('ResearchArticle<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);

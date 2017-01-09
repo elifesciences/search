@@ -6,16 +6,41 @@ if [ -z "$environment" ]; then
     exit 2;
 fi;
 
-./bin/console queue:clean --env=$environment
+# propagate SIGINT to waiting process
+trap 'kill -INT -$waitingPid' INT
+
+./bin/console queue:clean --env="$environment"
 # TODO: poll for queue:count == 0, with timeout
 sleep 5
 
-./bin/console gearman:worker --env=$environment &
+echo "Starting a gearman:worker"
+./bin/console gearman:worker --env="$environment" 2>&1 | tee /tmp/gearman-worker.log &
 workerPid=$!
-./bin/console queue:watch --env=$environment &
+echo "Starting a queue:watch"
+./bin/console queue:watch --env="$environment" 2>&1 | tee /tmp/queue-watch.log &
 queueWatchPid=$!
-./bin/console gearman:import all --env=$environment
+echo "Starting import"
+./bin/console gearman:import all --env="$environment"
 
-timeout 60 ./bin/wait-for-empty-gearman-queue
+# will return also on failing conditions such as dead processes
+timeout 60 ./bin/wait-for-empty-gearman-queue "$environment" &
+waitingPid=$!
+wait "$waitingPid"
+waitingReturnCode=$?
+# clean up PHP processes
+kill "$workerPid" "$queueWatchPid";
+if [ ! "$waitingReturnCode" -eq "0" ]; then
+    echo "Waiting for queues to be empty timed out"
+    exit "$waitingReturnCode"
+fi
 
-kill $workerPid $queueWatchPid;
+# final verification
+# we start from an empty index
+total=$(curl -v localhost/search | jq ".total")
+echo "Total results in the index: $total"
+expected_results_api_dummy=28
+if [ ! "$total" -eq "$expected_results_api_dummy" ]; then
+    echo "There should be at least $expected_results_api_dummy results in the index"
+    exit 2
+fi
+

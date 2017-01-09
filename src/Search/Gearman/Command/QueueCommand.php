@@ -53,9 +53,6 @@ class QueueCommand extends Command
             ->setDescription('Create queue watcher')
             ->setHelp('Creates process that will watch for incoming items on a queue')
             ->addOption('interval', 'i', InputOption::VALUE_OPTIONAL, 'Time in seconds to reset between queue checking.', 10)
-            ->addOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'Timeout for process.', 3600)
-            ->addOption('iterations', 'l', InputOption::VALUE_OPTIONAL, 'Max iterations before stopping.', 360)
-            ->addOption('queue-timeout', 'T', InputOption::VALUE_OPTIONAL, 'Visibility Timeout for AWS queue item', 10)
             ->addOption('mock', 'k', InputOption::VALUE_OPTIONAL, 'How many mock items to start with', 0)
             ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
     }
@@ -80,44 +77,19 @@ class QueueCommand extends Command
     {
         // Options.
         if ($this->isMock) {
-            $this->logger->warning('This is using mocked information.');
+            $this->logger->warning('queue:watch: This is using mocked information.');
         }
         if ($mocks = $input->getOption('mock')) {
             $this->mock($output, $mocks);
         }
-        $restTime = (int) $input->getOption('interval');
-        $restTime = $restTime < 1 ? 10 : $restTime;
-        $timeout = (int) $input->getOption('timeout');
-        $maxIterations = $input->getOption('iterations');
-        // Initial values.
-        $startTime = time();
-        $iterations = 0;
-        $this->logger->info('Queue watch started listening.');
+        $this->logger->info('queue:watch: Started listening.');
         // Loop.
         $limit = $this->limit;
         while (!$limit()) {
-            ++$iterations;
-            if ($iterations === $maxIterations) {
-                $this->logger->warning('Max iterations reached, stopping script.', [
-                    'iterations' => $iterations,
-                    'maxIterations' => $maxIterations,
-                ]);
-                break;
-            }
-            if (time() - $startTime >= $timeout) {
-                $this->logger->warning('Max time reached, stopping script.', [
-                    'time' => time() - $startTime,
-                    'timeout' => $timeout,
-                ]);
-                break;
-            }
-            $next = $this->loop($input);
-
-            if (!$next) {
-                sleep($restTime);
-            }
+            $this->loop($input);
         }
-        $this->logger->info('Queue watch stopped because of limits reached.');
+        // TODO: graceful handling of SIGTERM
+        $this->logger->info('queue:watch: Stopped because of limits reached.');
     }
 
     public function transform(QueueItem $item)
@@ -128,7 +100,7 @@ class QueueCommand extends Command
             $entity = $this->transformer->transform($item);
         } catch (BadResponse $e) {
             // We got a 404 or server error.
-            $this->logger->error("Item does not exist in API: {$item->getType()} ({$item->getId()})", [
+            $this->logger->error("queue:watch: Item does not exist in API: {$item->getType()} ({$item->getId()})", [
                 'exception' => $e,
                 'item' => $item,
             ]);
@@ -136,7 +108,7 @@ class QueueCommand extends Command
             $this->queue->commit($item);
         } catch (Throwable $e) {
             // Unknown error.
-            $this->logger->error("There was an unknown problem importing {$item->getType()} ({$item->getId()})", [
+            $this->logger->error("queue:watch: There was an unknown problem importing {$item->getType()} ({$item->getId()})", [
                 'exception' => $e,
                 'item' => $item,
             ]);
@@ -149,35 +121,27 @@ class QueueCommand extends Command
 
     public function loop(InputInterface $input)
     {
-        $this->logger->debug('Loop start... [');
-        $timeout = $input->getOption('queue-timeout');
-        $this->logger->debug('-> Listening to topic ', ['topic' => $this->topic]);
-        if ($this->queue->isValid()) {
-            $item = $this->queue->dequeue($timeout);
-            if ($entity = $this->transform($item, $this->logger)) {
-                // Grab the gearman task.
+        $this->logger->debug('queue:watch: Loop start, listening to queue', ['queue' => $this->topic]);
+        $item = $this->queue->dequeue();
+        if ($item && ($entity = $this->transform($item))) {
+            // Grab the gearman task.
                 $gearmanTask = $this->transformer->getGearmanTask($item);
                 // Run the task.
-                $this->logger->info('-> Running gearman task', [
+                $this->logger->info('queue:watch: Running gearman task', [
                     'gearmanTask' => $gearmanTask,
                     'type' => $item->getType(),
                     'id' => $item->getId(),
                 ]);
                 // Set the task to go.
-                $this->client->doLow($gearmanTask, $entity, md5($item->getReceipt()));
+                $this->client->doLowBackground($gearmanTask, $entity, md5($item->getReceipt()));
                 // Commit.
                 $this->queue->commit($item);
-                $this->logger->info('-> Committed task', [
+            $this->logger->info('queue:watch: Committed task', [
                     'gearmanTask' => $gearmanTask,
                     'type' => $item->getType(),
                     'id' => $item->getId(),
                 ]);
-            }
-        } else {
-            $this->logger->debug('-> Queue is empty ', ['topic' => $this->topic]);
         }
-        $this->logger->debug("]\n");
-
-        return $this->queue->isValid();
+        $this->logger->debug('queue:watch: End of loop');
     }
 }

@@ -19,7 +19,6 @@ final class WatchableQueueMock implements WatchableQueue
      * Adds item to the queue.
      *
      * Mock: Add item to queue.
-     * SQS: This will set the queue item into the memory slot for re-processing.
      */
     public function enqueue(QueueItem $item) : bool
     {
@@ -29,12 +28,9 @@ final class WatchableQueueMock implements WatchableQueue
     }
 
     /**
-     * Starts process of removing item.
-     *
      * Mock: Move to separate "in progress" queue.
-     * SQS: this will change the timeout of the in-memory item.
      */
-    public function dequeue(int $timeout = null) : QueueItem
+    public function dequeue()
     {
         $item = array_pop($this->items);
 
@@ -42,10 +38,7 @@ final class WatchableQueueMock implements WatchableQueue
     }
 
     /**
-     * Commits to removing item from queue, marks item as done and processed.
-     *
      * Mock: Remove item completely.
-     * SQS: this will delete the item from the queue.
      */
     public function commit(QueueItem $item)
     {
@@ -53,10 +46,7 @@ final class WatchableQueueMock implements WatchableQueue
     }
 
     /**
-     * This will happen when an error happens, we release the item back into the queue.
-     *
      * Mock: re-add to queue.
-     * SQS: this will set the queue item into the memory slot for re-processing. (Maybe delete item and re-add?)
      */
     public function release(QueueItem $item) : bool
     {
@@ -65,19 +55,13 @@ final class WatchableQueueMock implements WatchableQueue
         return true;
     }
 
-    /**
-     * Returns false if queue is empty.
-     *
-     * Mock: isEmpty check.
-     * SQS: this will take an item off the queue and store it in memory unless there is one already stored in memory.
-     */
-    public function isValid() : bool
-    {
-        return !empty($this->items);
-    }
-
     public function clean()
     {
         $this->items = [];
+    }
+
+    public function count() : int
+    {
+        return count($this->items);
     }
 }

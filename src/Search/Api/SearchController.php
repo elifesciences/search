@@ -23,7 +23,6 @@ final class SearchController
     private $context;
     private $cache;
     private $subjects;
-    private $elasticIndex;
 
     public function __construct(
         Serializer $serializer,
@@ -31,8 +30,7 @@ final class SearchController
         ElasticQueryExecutor $elastic,
         Cache $cache,
         string $apiUrl,
-        SubjectStore $subjects,
-        string $elasticIndex
+        SubjectStore $subjects
     ) {
         $this->elastic = $elastic;
         $this->serializer = $serializer;
@@ -40,7 +38,6 @@ final class SearchController
         $this->cache = $cache;
         $this->apiUrl = $apiUrl;
         $this->subjects = $subjects;
-        $this->elasticIndex = $elasticIndex;
     }
 
     public function indexAction(Request $request)
@@ -49,11 +46,11 @@ final class SearchController
         $order = $request->query->get('order', 'desc');
         $page = $request->query->get('page', 1);
         $perPage = $request->query->get('per-page', 10);
-        $sort = $request->query->get('sort', 'relevance');
+        // $sort = $request->query->get('sort');
         $subjects = $request->query->get('subject');
         $types = $request->query->get('type');
 
-        $query = new ElasticQueryBuilder($this->elasticIndex, $this->elastic);
+        $query = new ElasticQueryBuilder('elife_search', $this->elastic);
 
         $query = $query->searchFor($for);
 
@@ -67,16 +64,6 @@ final class SearchController
         $query = $query
             ->paginate($page, $perPage)
             ->order($order);
-
-        switch ($sort) {
-            case 'date':
-                $query = $query->sortByDate();
-                break;
-            case 'relevance':
-            default:
-                $query = $query->sortByRelevance();
-                break;
-        }
 
         $data = $query->getQuery()->execute();
 
@@ -101,7 +88,7 @@ final class SearchController
 
     private function serialize($data, int $version = null, $group = null)
     {
-        $context = clone $this->context;
+        $context = $this->context;
         if ($version) {
             $context->setVersion($version);
         }

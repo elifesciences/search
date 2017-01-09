@@ -52,8 +52,18 @@ final class LabsExperimentWorkflow implements Workflow
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchLabsExperiment);
         if ($isValid === false) {
-            $this->logger->alert($this->validator->getLastError()->getMessage());
-            throw new InvalidWorkflow('LabsExperiment<'.$labsExperiment->getNumber().'> Invalid item tried to be imported.');
+            $this->logger->error(
+                'LabsExperiment<'.$labsExperiment->getNumber().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'labs-experiment',
+                        'number' => $labsExperiment->getNumber(),
+                    ],
+                    'search_result' => $this->validator->serialize($searchLabsExperiment),
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
+                ]
+            );
+            throw new InvalidWorkflow('LabsExperiment<'.$labsExperiment->getNumber().'> cannot be trasformed into a valid search result.');
         }
         // Log results.
         $this->logger->info('LabsExperiment<'.$labsExperiment->getNumber().'> validated against current schema.');
@@ -110,8 +120,7 @@ final class LabsExperimentWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('LabsExperiment<'.$id.'> rolling back', [
-                'message' => $e->getMessage(),
+            $this->logger->error('LabsExperiment<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);

@@ -57,6 +57,9 @@ final class Console
         'queue:clean' => [
             'description' => 'Manually clean the queue. Asynchronous, takes up to 60 seconds',
         ],
+        'queue:count' => [
+            'description' => 'Counts (approximately) how many messages are in the queue',
+        ],
         'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
         'spawn' => [
             'description' => 'WARNING: Experimental, may create child processes.',
@@ -103,6 +106,12 @@ final class Console
         $queue->clean();
     }
 
+    public function queueCountCommand(InputInterface $input, OutputInterface $output)
+    {
+        $queue = $this->app->get('aws.queue');
+        $output->writeln($queue->count());
+    }
+
     private function enqueue($type, $id)
     {
         // Create queue item.
@@ -119,10 +128,6 @@ final class Console
         $this->console = $console;
         $this->app = $app;
         $this->root = __DIR__.'/../..';
-
-        if (!defined('GEARMAN_INSTALLED')) {
-            define('GEARMAN_INSTALLED', class_exists('GearmanClient'));
-        }
 
         // Some annotations
         Register::registerLoader();
@@ -294,7 +299,7 @@ final class Console
                     if (!$process->isStarted()) {
                         $process->start();
                         $pids[$i] = $process->getPid();
-                        $this->logger->warning('Process starts, PID:'.$process->getPid());
+                        $this->logger->info('Process starts, PID:'.$process->getPid());
                     }
 
                     $output->write($process->getIncrementalOutput());
@@ -303,7 +308,7 @@ final class Console
                     if (!$process->isRunning()) {
                         $process->restart();
                         $this->logger->error('Process stopped (Memory: '.round(memory_get_usage() / 1024 / 1024, 2).'Mb)');
-                        $this->logger->warning('Starting new process');
+                        $this->logger->info('Starting new process');
                         $processes[] = new Process('exec php '.$this->path('/bin/console').' '.$command.' --ansi');
                         unset($processes[$i]);
                     }
@@ -317,15 +322,15 @@ final class Console
     {
         foreach ($this->app->get('config') as $key => $config) {
             if (is_array($config)) {
-                $this->logger->warning($key);
+                $this->logger->info($key);
                 $this->logger->info(json_encode($config, JSON_PRETTY_PRINT));
                 $this->logger->debug(' ');
             } elseif (is_bool($config)) {
-                $this->logger->warning($key);
+                $this->logger->info($key);
                 $this->logger->info($config ? 'true' : 'false');
                 $this->logger->debug(' ');
             } else {
-                $this->logger->warning($key);
+                $this->logger->info($key);
                 $this->logger->info($config);
                 $this->logger->debug(' ');
             }
@@ -334,11 +339,11 @@ final class Console
 
     public function cacheClearCommand(InputInterface $input, OutputInterface $output)
     {
-        $this->logger->warning('Clearing cache...');
+        $this->logger->info('Clearing cache...');
         try {
-            exec('rm -rf '.$this->root.'/cache/*');
+            exec('rm -rf '.$this->root.'/var/cache/*');
         } catch (Exception $e) {
-            $this->logger->error($e);
+            $this->logger->error('Cannot clean var/cache/', ['exception' => $e]);
         }
         $this->logger->info('Cache cleared successfully.');
     }

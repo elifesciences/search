@@ -59,8 +59,8 @@ trait BasicTransformer
 
     private static $typeMap = [
         'blog-article' => 'blog_article_validate',
-        'event' => 'blog_article_validate',
-        'interview' => 'interview_article_validate',
+        'event' => 'event_validate',
+        'interview' => 'interview_validate',
         'labs-experiment' => 'labs_experiment_validate',
         'podcast-episode' => 'podcast_episode_validate',
         'collection' => 'collection_validate',

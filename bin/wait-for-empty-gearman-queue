@@ -1,10 +1,29 @@
 #!/usr/bin/env bash
 set -e
+environment=$1
+
+if [ -z "$environment" ]; then
+    echo "environment needs to be passed as first argument";
+    exit 2;
+fi;
 
 while true; do
-    queue=$(gearadmin --status | cut -f 2 | paste -sd+ | bc)
-    echo "Job in queue: $queue"
-    if [ "$queue" -eq "0" ]; then
+    workers=$(pgrep -cf gearman:worker)
+    if [ "$workers" -eq "0" ]; then
+        echo "No alive gearman:worker processes, failing"
+        break
+    fi
+    watches=$(pgrep -cf queue:watch)
+    if [ "$watches" -eq "0" ]; then
+        echo "No alive queue:watch processes, failing"
+        break
+    fi
+    sqs_queue=$(bin/console --env=$environment queue:count)
+    echo "Job in SQS queue (approximate): $sqs_queue"
+    gearman_queue=$(gearadmin --status | cut -f 2 | paste -sd+ | bc)
+    echo "Job in Gearman queue: $gearman_queue"
+    if [ "$sqs_queue" -eq 0 ] && [ "$gearman_queue" -eq "0" ]; then
+        echo "No more jobs, finished waiting"
         break
     fi
     sleep 1

@@ -52,11 +52,18 @@ final class PodcastEpisodeWorkflow implements Workflow
         // Validate response.
         $isValid = $this->validator->validateSearchResult($searchPodcastEpisode);
         if ($isValid === false) {
-            $this->logger->alert('PodcastEpisode<'.$podcastEpisode->getNumber().'> Invalid item trid to be imported.', [
-                'type' => 'podcast-episode',
-                'number' => $podcastEpisode->getNumber(),
-            ]);
-            throw new InvalidWorkflow('PodcastEpisode<'.$podcastEpisode->getNumber().'> Invalid item tried to be imported.');
+            $this->logger->error(
+                'PodcastEpisode<'.$podcastEpisode->getNumber().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'podcast-episode',
+                        'number' => $podcastEpisode->getNumber(),
+                    ],
+                    'search_result' => $this->validator->serialize($searchPodcastEpisode),
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
+                ]
+            );
+            throw new InvalidWorkflow('PodcastEpisode<'.$podcastEpisode->getNumber().'> cannot be trasformed into a valid search result.');
         }
         // Log results.
         $this->logger->info('PodcastEpisode<'.$podcastEpisode->getNumber().'> validated against current schema.');
@@ -119,8 +126,7 @@ final class PodcastEpisodeWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('PodcastEpisode<'.$id.'> rolling back', [
-                'message' => $e->getMessage(),
+            $this->logger->error('PodcastEpisode<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);

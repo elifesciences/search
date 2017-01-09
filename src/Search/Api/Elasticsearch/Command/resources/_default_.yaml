@@ -23,15 +23,7 @@ _default_:
     title:
       type: string
 
-    # Dates to sort on all fields.
+    # Published on all fields.
     published:
-      type: date
-      format: strict_date_optional_time||epoch_millis
-
-    updated:
-      type: date
-      format: strict_date_optional_time||epoch_millis
-
-    statusDate:
       type: date
       format: strict_date_optional_time||epoch_millis

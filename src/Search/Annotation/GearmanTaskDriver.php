@@ -70,7 +70,24 @@ final class GearmanTaskDriver
     {
         $worker->addFunction($task->name, Closure::bind(function (GearmanJob $job) use ($task) {
             $this->logger->debug('GearmanTaskDriver task started', ['task' => $task->name]);
-            $data = $task->deserialize($job->workload());
+            try {
+                $data = $task->deserialize($job->workload());
+            } catch (Throwable $e) {
+                $this->logger->error(
+                    'Cannot deserialize a job workload',
+                    [
+                        'workload' => $job->workload(),
+                        'sdk_class' => $task->getSdkClass(),
+                        'task_name' => $task->name,
+                        'exception' => $e,
+                    ]
+                );
+                throw new InvalidWorkflow(
+                    "Cannot deserialize a {$task->getSdkClass()}",
+                    0,
+                    $e
+                );
+            }
             $object = $task->instance;
             $method = $task->method;
             $params = [];
@@ -109,11 +126,16 @@ final class GearmanTaskDriver
         $limit = $this->limit;
         while (!$limit()) {
             try {
-                $this->worker->work();
+                $result = $this->worker->work();
+                if (!$result) {
+                    $this->logger->critical('Uncaught failure, stopping', ['worker_error' => $this->worker->error()]);
+
+                    return;
+                }
             } catch (InvalidWorkflow $e) {
                 $this->logger->warning('Recoverable error...', ['exception' => $e]);
             } catch (Throwable $e) {
-                $this->logger->critical($e->getMessage());
+                $this->logger->critical('Unrecoverable error in worker, stopping', ['exception' => $e]);
 
                 return;
             }

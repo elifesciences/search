@@ -53,8 +53,18 @@ final class BlogArticleWorkflow implements Workflow
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchBlogArticle);
         if ($isValid === false) {
-            $this->logger->alert($this->validator->getLastError()->getMessage());
-            throw new InvalidWorkflow('BlogArticle<'.$blogArticle->getId().'> Invalid item tried to be imported.');
+            $this->logger->error(
+                'BlogArticle<'.$blogArticle->getId().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'blog-article',
+                        'id' => $blogArticle->getId(),
+                    ],
+                    'search_result' => $this->validator->serialize($searchBlogArticle),
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
+                ]
+            );
+            throw new InvalidWorkflow('BlogArticle<'.$blogArticle->getId().'> cannot be transformed into a valid search result.');
         }
         // Log results.
         $this->logger->info('BlogArticle<'.$blogArticle->getId().'> validated against current schema.');
@@ -111,8 +121,7 @@ final class BlogArticleWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('BlogArticle<'.$id.'> rolling back', [
-                'message' => $e->getMessage(),
+            $this->logger->error('BlogArticle<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);

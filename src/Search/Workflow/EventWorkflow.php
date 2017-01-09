@@ -55,8 +55,18 @@ final class EventWorkflow implements Workflow
         $searchEvent = $this->validator->deserialize($this->serialize($event), EventResponse::class);
         // Validate that response.
         if ($this->validator->validateSearchResult($searchEvent) === false) {
-            $this->logger->alert($this->validator->getLastError()->getMessage());
-            throw new InvalidWorkflow('Event<'.$event->getId().'> Invalid item tried to be imported.');
+            $this->logger->error(
+                'Event<'.$event->getId().'> cannot be transformed into a valid search result',
+                [
+                    'input' => [
+                        'type' => 'event',
+                        'id' => $event->getId(),
+                    ],
+                    'search_result' => $this->validator->serialize($searchEvent),
+                    'validation_error' => $this->validator->getLastError()->getMessage(),
+                ]
+            );
+            throw new InvalidWorkflow('Event<'.$event->getId().'> cannot be trasformed into a valid search result.');
         }
         // Log results.
         $this->logger->info('Event<'.$event->getId().'> validated against current schema.');
@@ -118,8 +128,7 @@ final class EventWorkflow implements Workflow
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->alert('Event<'.$id.'> Rolling back...', [
-                'message' => $e->getMessage(),
+            $this->logger->error('Event<'.$id.'> Rolling back...', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);

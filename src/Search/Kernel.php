@@ -86,14 +86,14 @@ final class Kernel implements MinimalKernel
             'file_log_path' => self::ROOT.'/var/logs/all.log',
             'file_error_log_path' => self::ROOT.'/var/logs/error.log',
             'process_memory_limit' => 256,
-            'aws' => array_merge([
+            'aws' => [
                 'credential_file' => false,
                 'mock_queue' => true,
                 'queue_name' => 'eLife-search',
                 'key' => '-----------------------',
                 'secret' => '-------------------------------',
                 'region' => '---------',
-            ], $config['aws'] ?? []),
+            ],
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
@@ -237,7 +237,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['api.subjects'], $app['config']['elastic_index']);
+            return new SearchController($app['serializer'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['api.subjects']);
         };
 
         //#####################################################
@@ -313,7 +313,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['aws.sqs'] = function (Application $app) {
-            if (isset($app['config']['aws']['credential_file']) && $app['config']['aws']['credential_file'] === true) {
+            if ($app['config']['aws']['credential_file'] === true) {
                 return new SqsClient([
                     'version' => '2012-11-05',
                     'region' => $app['config']['aws']['region'],
@@ -426,9 +426,9 @@ final class Kernel implements MinimalKernel
         ]);
     }
 
-    public function withApp(callable $fn, $scope = null)
+    public function withApp(callable $fn)
     {
-        $boundFn = Closure::bind($fn, $scope ? $scope : $this);
+        $boundFn = Closure::bind($fn, $this);
         $boundFn($this->app);
 
         return $this;
@@ -442,11 +442,6 @@ final class Kernel implements MinimalKernel
     public function get($d)
     {
         return $this->app[$d];
-    }
-
-    public function getApp()
-    {
-        return $this->app;
     }
 
     public function validate(Request $request, Response $response)

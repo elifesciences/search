@@ -59,12 +59,7 @@ class CollectionResponseTest extends SerializerTest
         $this->assertSame($data['image']['thumbnail'], (array) $collection->image->thumbnail);
         $this->assertSame($data['image']['banner'], (array) $collection->image->banner);
         $this->assertSame('2015-09-16T11:19:26Z', $collection->updated->format('Y-m-d\TH:i:s\Z'));
-        $this->assertSame($data['selectedCurator']['id'], $collection->selectedCurator->id);
-        $this->assertSame($data['selectedCurator']['type'], $collection->selectedCurator->type);
-        $this->assertSame($data['selectedCurator']['etAl'], $collection->selectedCurator->etAl);
-        $this->assertSame($data['selectedCurator']['name']['index'], $collection->selectedCurator->name['index']);
-        $this->assertSame($data['selectedCurator']['name']['preferred'], $collection->selectedCurator->name['preferred']);
-        $this->assertSame($data['selectedCurator']['image'], $collection->selectedCurator->image);
+        $this->assertEquals($data['selectedCurator'], (array) $collection->selectedCurator);
     }
 
     public function getResponseClass() : string

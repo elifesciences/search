@@ -17,6 +17,8 @@ class ElasticsearchClient
         $this->index = $index;
     }
 
+    // TODO: Make these ACID like i.e Transactional
+
     public function deleteIndexByName($index)
     {
         $params = [
@@ -52,7 +54,7 @@ class ElasticsearchClient
         return $this->connection->indices()->create($params);
     }
 
-    public function indexJsonDocument($type, $id, $body, $flush = false)
+    public function indexJsonDocument($type, $id, $body)
     {
         $params = [
             'index' => $this->index,
@@ -61,12 +63,7 @@ class ElasticsearchClient
             'body' => $body,
         ];
 
-        $con = $this->connection->index($params)['payload'] ?? null;
-        if ($flush) {
-            $this->connection->indices()->flushSynced(['index' => $this->index]);
-        }
-
-        return $con;
+        return $this->connection->index($params)['payload'] ?? null;
     }
 
     public function indexDocument($type, $id, SearchResult $body)
