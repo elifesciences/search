@@ -59,7 +59,7 @@ class CollectionResponseTest extends SerializerTest
         $this->assertSame($data['image']['thumbnail'], (array) $collection->image->thumbnail);
         $this->assertSame($data['image']['banner'], (array) $collection->image->banner);
         $this->assertSame('2015-09-16T11:19:26Z', $collection->updated->format('Y-m-d\TH:i:s\Z'));
-        $this->assertSame($data['selectedCurator'], (array) $collection->selectedCurator);
+        $this->assertEquals($data['selectedCurator'], (array) $collection->selectedCurator);
     }
 
     public function getResponseClass() : string
