@@ -6,6 +6,7 @@ use Closure;
 use Doctrine\Common\Annotations\Reader;
 use eLife\Search\Gearman\InvalidWorkflow;
 use eLife\Search\Monitoring;
+use eLife\Search\Signals;
 use eLife\Search\Workflow\Workflow;
 use GearmanClient;
 use GearmanJob;
@@ -31,6 +32,8 @@ final class GearmanTaskDriver
         $this->logger = $logger;
         $this->monitoring = $monitoring;
         $this->limit = $limit;
+        // Signals for CLI.
+        Signals::register();
     }
 
     public function registerWorkflow(Workflow $workflow)
@@ -76,6 +79,7 @@ final class GearmanTaskDriver
             $this->logger->debug('GearmanTaskDriver task started', ['task' => $task->name]);
             $this->monitoring->nameTransaction('gearman:worker '.$task->name);
             $this->monitoring->startTransaction();
+
             try {
                 $data = $task->deserialize($job->workload());
             } catch (Throwable $e) {
@@ -133,7 +137,7 @@ final class GearmanTaskDriver
         $this->logger->info('Worker started.');
         $this->addTasksToWorker($this->worker);
         $limit = $this->limit;
-        while (!$limit()) {
+        while (!$limit() && Signals::isValid()) {
             try {
                 $result = $this->worker->work();
                 if (!$result) {
@@ -150,6 +154,8 @@ final class GearmanTaskDriver
 
                 return;
             }
+            // Dispatch any outstanding signals.
+            Signals::tick();
         }
         $this->logger->info('Worker stopped because of limits reached.');
     }

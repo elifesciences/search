@@ -5,6 +5,8 @@ namespace eLife\Search\Gearman\Command;
 use eLife\ApiSdk\ApiSdk;
 use eLife\Search\Monitoring;
 use eLife\Search\Queue\InternalSqsMessage;
+use eLife\Search\Queue\WatchableQueue;
+use eLife\Search\Signals;
 use Error;
 use Iterator;
 use Psr\Log\LoggerInterface;
@@ -24,11 +26,11 @@ final class ApiSdkCommand extends Command
     private $output;
     private $logger;
     private $monitoring;
+    private $queue;
 
     public function __construct(
         ApiSdk $sdk,
-        // TODO: type hint
-        $queue,
+        WatchableQueue $queue,
         LoggerInterface $logger,
         Monitoring $monitoring
     ) {
@@ -37,6 +39,8 @@ final class ApiSdkCommand extends Command
         $this->queue = $queue;
         $this->logger = $logger;
         $this->monitoring = $monitoring;
+        // Signals
+        Signals::register();
 
         parent::__construct(null);
     }
@@ -132,7 +136,7 @@ final class ApiSdkCommand extends Command
         $progress = new ProgressBar($this->output, $count);
 
         $items->rewind();
-        while ($items->valid()) {
+        while ($items->valid() && Signals::isValid()) {
             $progress->advance();
             try {
                 $item = $items->current();
@@ -150,13 +154,12 @@ final class ApiSdkCommand extends Command
         }
         $progress->finish();
         $progress->clear();
+        Signals::tick();
     }
 
     private function enqueue($type, $identifier)
     {
         $item = new InternalSqsMessage($type, $identifier);
-        /* @var $queue WatchableQueue */
-        // Queue item.
         $this->queue->enqueue($item);
         $this->logger->info("Item ($type, $identifier) added successfully");
     }

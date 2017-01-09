@@ -8,6 +8,7 @@ use eLife\Search\Queue\InternalSqsMessage;
 use eLife\Search\Queue\QueueItem;
 use eLife\Search\Queue\QueueItemTransformer;
 use eLife\Search\Queue\WatchableQueue;
+use eLife\Search\Signals;
 use GearmanClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -47,6 +48,9 @@ class QueueCommand extends Command
         $this->logger = $logger;
         $this->monitoring = $monitoring;
         $this->limit = $limit;
+        // Signals.
+        Signals::register();
+
         parent::__construct(null);
     }
 
@@ -91,9 +95,13 @@ class QueueCommand extends Command
         // Loop.
         $limit = $this->limit;
         while (!$limit()) {
+            if (!Signals::isValid()) {
+                $this->logger->info('queue:watch: Stopping...');
+                return;
+            }
             $this->loop($input);
+            Signals::tick();
         }
-        // TODO: graceful handling of SIGTERM
         $this->logger->info('queue:watch: Stopped because of limits reached.');
     }
 
