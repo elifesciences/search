@@ -97,6 +97,7 @@ class QueueCommand extends Command
         while (!$limit()) {
             if (!Signals::isValid()) {
                 $this->logger->info('queue:watch: Stopping...');
+
                 return;
             }
             $this->loop($input);

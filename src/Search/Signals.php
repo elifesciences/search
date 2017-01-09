@@ -1,20 +1,17 @@
 <?php
 
-
 namespace eLife\Search;
-
 
 class Signals
 {
-
     private static $isValid = true;
 
     public static function register()
     {
         if (function_exists('pcntl_signal')) {
             // Signals
-            pcntl_signal(SIGTERM, [Signals::class, 'onTermination']);
-            pcntl_signal(SIGHUP, [Signals::class, 'onTermination']);
+            pcntl_signal(SIGTERM, [self::class, 'onTermination']);
+            pcntl_signal(SIGHUP, [self::class, 'onTermination']);
         }
     }
 
@@ -34,7 +31,4 @@ class Signals
     {
         return self::$isValid;
     }
-
-
-
 }
