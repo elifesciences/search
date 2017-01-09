@@ -8,12 +8,13 @@ if [ -z "$environment" ]; then
 fi;
 
 while true; do
-    workers=$(pgrep -cf gearman:worker)
+    # `|| true` avoid failing the script when there are no results
+    workers=$(pgrep -cf gearman:worker || true)
+    watches=$(pgrep -cf queue:watch || true)
     if [ "$workers" -eq "0" ]; then
         echo "No alive gearman:worker processes, failing"
         break
     fi
-    watches=$(pgrep -cf queue:watch)
     if [ "$watches" -eq "0" ]; then
         echo "No alive queue:watch processes, failing"
         break
