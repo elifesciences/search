@@ -15,20 +15,17 @@ class Signals
         }
     }
 
-    public static function tick()
+    public static function isValid() : bool
     {
         if (function_exists('pcntl_signal_dispatch')) {
             pcntl_signal_dispatch();
         }
+
+        return self::$isValid;
     }
 
     public static function onTermination()
     {
         self::$isValid = false;
-    }
-
-    public static function isValid()
-    {
-        return self::$isValid;
     }
 }

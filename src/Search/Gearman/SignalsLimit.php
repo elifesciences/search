@@ -18,8 +18,6 @@ class SignalsLimit
 
     public function __invoke() : bool
     {
-        Signals::tick();
-
         return !Signals::isValid();
     }
 }
