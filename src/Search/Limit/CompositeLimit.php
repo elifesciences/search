@@ -20,6 +20,7 @@ class CompositeLimit implements Limit
                 if ($failure) {
                     $this->reasons = array_merge($this->reasons, $fn->getReasons());
                 }
+
                 return $failure === true;
             });
     }

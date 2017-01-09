@@ -1,8 +1,6 @@
 <?php
 
-
 namespace eLife\Search\Limit;
-
 
 use Psr\Log\LoggerInterface;
 
@@ -28,6 +26,7 @@ class LoggingMiddleware implements Limit
                 $this->logger->error($reason);
             }
         }
+
         return $limitReached;
     }
 
