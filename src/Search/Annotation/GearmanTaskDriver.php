@@ -5,6 +5,7 @@ namespace eLife\Search\Annotation;
 use Closure;
 use Doctrine\Common\Annotations\Reader;
 use eLife\Search\Gearman\InvalidWorkflow;
+use eLife\Search\Monitoring;
 use eLife\Search\Workflow\Workflow;
 use GearmanClient;
 use GearmanJob;
@@ -19,13 +20,16 @@ final class GearmanTaskDriver
     private $reader;
     private $worker;
     private $logger;
+    private $monitoring;
+    private $limit;
 
-    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger, callable $limit)
+    public function __construct(Reader $reader, GearmanWorker $worker, GearmanClient $client, LoggerInterface $logger, Monitoring $monitoring, callable $limit)
     {
         $this->reader = $reader;
         $this->worker = $worker;
         $this->client = $client;
         $this->logger = $logger;
+        $this->monitoring = $monitoring;
         $this->limit = $limit;
     }
 
@@ -70,6 +74,8 @@ final class GearmanTaskDriver
     {
         $worker->addFunction($task->name, Closure::bind(function (GearmanJob $job) use ($task) {
             $this->logger->debug('GearmanTaskDriver task started', ['task' => $task->name]);
+            $this->monitoring->nameTransaction('gearman:worker '.$task->name);
+            $this->monitoring->startTransaction();
             try {
                 $data = $task->deserialize($job->workload());
             } catch (Throwable $e) {
@@ -82,6 +88,7 @@ final class GearmanTaskDriver
                         'exception' => $e,
                     ]
                 );
+                $this->monitoring->recordException($e, "Deserialization problem in $task->name");
                 throw new InvalidWorkflow(
                     "Cannot deserialize a {$task->getSdkClass()}",
                     0,
@@ -115,6 +122,8 @@ final class GearmanTaskDriver
                 }
             }
 
+            $this->monitoring->endTransaction();
+
             return GEARMAN_SUCCESS;
         }, $this));
     }
@@ -133,9 +142,11 @@ final class GearmanTaskDriver
                     return;
                 }
             } catch (InvalidWorkflow $e) {
-                $this->logger->warning('Recoverable error...', ['exception' => $e]);
+                $this->logger->warning('Invalid workflow', ['exception' => $e]);
+                $this->monitoring->recordException($e, 'gearman:worker invalid workflow');
             } catch (Throwable $e) {
                 $this->logger->critical('Unrecoverable error in worker, stopping', ['exception' => $e]);
+                $this->monitoring->recordException($e, 'gearman:worker unrecoverable error');
 
                 return;
             }

@@ -3,6 +3,7 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiClient\Exception\BadResponse;
+use eLife\Search\Monitoring;
 use eLife\Search\Queue\InternalSqsMessage;
 use eLife\Search\Queue\QueueItem;
 use eLife\Search\Queue\QueueItemTransformer;
@@ -25,6 +26,7 @@ class QueueCommand extends Command
     private $isMock;
     private $topic;
     private $logger;
+    private $monitoring;
     private $limit;
 
     public function __construct(
@@ -34,6 +36,7 @@ class QueueCommand extends Command
         bool $isMock,
         string $topic,
         LoggerInterface $logger,
+        Monitoring $monitoring,
         callable $limit
     ) {
         $this->queue = $queue;
@@ -42,6 +45,7 @@ class QueueCommand extends Command
         $this->isMock = $isMock;
         $this->topic = $topic;
         $this->logger = $logger;
+        $this->monitoring = $monitoring;
         $this->limit = $limit;
         parent::__construct(null);
     }
@@ -83,6 +87,7 @@ class QueueCommand extends Command
             $this->mock($output, $mocks);
         }
         $this->logger->info('queue:watch: Started listening.');
+        $this->monitoring->nameTransaction('queue:watch');
         // Loop.
         $limit = $this->limit;
         while (!$limit()) {
@@ -112,6 +117,7 @@ class QueueCommand extends Command
                 'exception' => $e,
                 'item' => $item,
             ]);
+            $this->monitoring->recordException($e, "Error in importing {$item->getType()} {$item->getId()}");
             // Remove from queue.
             $this->queue->commit($item);
         }
@@ -123,8 +129,10 @@ class QueueCommand extends Command
     {
         $this->logger->debug('queue:watch: Loop start, listening to queue', ['queue' => $this->topic]);
         $item = $this->queue->dequeue();
-        if ($item && ($entity = $this->transform($item))) {
-            // Grab the gearman task.
+        if ($item) {
+            $this->monitoring->startTransaction();
+            if ($entity = $this->transform($item)) {
+                // Grab the gearman task.
                 $gearmanTask = $this->transformer->getGearmanTask($item);
                 // Run the task.
                 $this->logger->info('queue:watch: Running gearman task', [
@@ -136,11 +144,13 @@ class QueueCommand extends Command
                 $this->client->doLowBackground($gearmanTask, $entity, md5($item->getReceipt()));
                 // Commit.
                 $this->queue->commit($item);
-            $this->logger->info('queue:watch: Committed task', [
+                $this->logger->info('queue:watch: Committed task', [
                     'gearmanTask' => $gearmanTask,
                     'type' => $item->getType(),
                     'id' => $item->getId(),
                 ]);
+            }
+            $this->monitoring->endTransaction();
         }
         $this->logger->debug('queue:watch: End of loop');
     }

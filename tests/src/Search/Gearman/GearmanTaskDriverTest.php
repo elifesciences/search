@@ -7,6 +7,7 @@ namespace tests\eLife\Search\Gearman {
     use eLife\Search\Annotation\GearmanTaskDriver;
     use eLife\Search\Annotation\GearmanTaskInstance;
     use eLife\Search\Annotation\Register;
+    use eLife\Search\Monitoring;
     use GearmanWorker;
     use MockAnnotations;
     use PHPUnit_Framework_TestCase;
@@ -28,11 +29,13 @@ namespace tests\eLife\Search\Gearman {
 
             $this->limitReached = false;
             $this->logger = $this->createMock(LoggerInterface::class);
+            $this->monitoring = $this->createMock(Monitoring::class);
             $this->taskDriver = new GearmanTaskDriver(
                 new AnnotationReader(),
                 new GearmanWorker(),
                 new GearmanClientMock(),
                 $this->logger,
+                $this->monitoring,
                 function () {
                     return $this->limitReached;
                 }

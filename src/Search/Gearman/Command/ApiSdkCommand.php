@@ -3,9 +3,9 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiSdk\ApiSdk;
+use eLife\Search\Monitoring;
 use eLife\Search\Queue\InternalSqsMessage;
 use Error;
-use GearmanClient;
 use Iterator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -19,24 +19,24 @@ final class ApiSdkCommand extends Command
 {
     private static $supports = ['all', 'BlogArticles', 'Events', 'Interviews', 'LabsExperiments', 'PodcastEpisodes', 'Collections', 'ResearchArticles'];
 
-    private $client;
     private $sdk;
     private $serializer;
     private $output;
     private $logger;
+    private $monitoring;
 
     public function __construct(
         ApiSdk $sdk,
-        GearmanClient $client,
         // TODO: type hint
         $queue,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Monitoring $monitoring
     ) {
         $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
-        $this->client = $client;
         $this->queue = $queue;
         $this->logger = $logger;
+        $this->monitoring = $monitoring;
 
         parent::__construct(null);
     }
@@ -44,9 +44,9 @@ final class ApiSdkCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('gearman:import')
+            ->setName('queue:import')
             ->setDescription('Import items from API.')
-            ->setHelp('Creates new Gearman client and imports entities from API')
+            ->setHelp('Lists entities from API and enqueues them')
             ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>');
     }
 
@@ -60,6 +60,8 @@ final class ApiSdkCommand extends Command
 
             return;
         }
+        $this->monitoring->nameTransaction('queue:import');
+        $this->monitoring->startTransaction();
         if ($entity === 'all') {
             foreach (self::$supports as $e) {
                 if ($e !== 'all') {
@@ -73,6 +75,7 @@ final class ApiSdkCommand extends Command
         }
         // Reporting.
         $this->logger->info("\nAll entities queued.");
+        $this->monitoring->endTransaction();
     }
 
     public function importPodcastEpisodes()
@@ -141,6 +144,7 @@ final class ApiSdkCommand extends Command
             } catch (Throwable $e) {
                 $item = $item ?? null;
                 $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
+                $this->monitoring->recordException($e, 'Skipping import on a '.get_class($item));
             }
             $items->next();
         }
