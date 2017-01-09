@@ -6,8 +6,6 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\Search\Monitoring;
 use eLife\Search\Queue\InternalSqsMessage;
 use eLife\Search\Queue\WatchableQueue;
-use eLife\Search\Signals;
-use Error;
 use Iterator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -42,8 +40,6 @@ final class ApiSdkCommand extends Command
         $this->logger = $logger;
         $this->monitoring = $monitoring;
         $this->limit = $limit;
-        // Signals
-        Signals::register();
 
         parent::__construct(null);
     }
