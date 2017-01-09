@@ -6,7 +6,6 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\Search\Monitoring;
 use eLife\Search\Queue\InternalSqsMessage;
 use Error;
-use GearmanClient;
 use Iterator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;

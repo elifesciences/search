@@ -132,7 +132,7 @@ class QueueCommand extends Command
         if ($item) {
             $this->monitoring->startTransaction();
             if ($entity = $this->transform($item)) {
-            // Grab the gearman task.
+                // Grab the gearman task.
                 $gearmanTask = $this->transformer->getGearmanTask($item);
                 // Run the task.
                 $this->logger->info('queue:watch: Running gearman task', [
@@ -144,7 +144,7 @@ class QueueCommand extends Command
                 $this->client->doLowBackground($gearmanTask, $entity, md5($item->getReceipt()));
                 // Commit.
                 $this->queue->commit($item);
-            $this->logger->info('queue:watch: Committed task', [
+                $this->logger->info('queue:watch: Committed task', [
                     'gearmanTask' => $gearmanTask,
                     'type' => $item->getType(),
                     'id' => $item->getId(),

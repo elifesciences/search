@@ -198,7 +198,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['monitoring'] = function (Application $app) {
-            return new Monitoring;
+            return new Monitoring();
         };
 
         $app['limit'] = function (Application $app) {

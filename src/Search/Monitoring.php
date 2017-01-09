@@ -7,20 +7,20 @@ use Throwable;
 
 /**
  * Backed by the newrelic PHP extension,
- * gracefully degrades to no-op when it's not present
+ * gracefully degrades to no-op when it's not present.
  */
 class Monitoring
 {
     private $extension;
     private $appName;
-    
+
     public function __construct()
     {
         $this->extension = extension_loaded('newrelic');
         if ($this->extension) {
             $appName = ini_get('newrelic.appname');
             if (!$appName) {
-                throw new RuntimeException("newrelic.appname must be configured in a PHP *.ini file");
+                throw new RuntimeException('newrelic.appname must be configured in a PHP *.ini file');
             }
             $this->appName = $appName;
         }
@@ -44,7 +44,7 @@ class Monitoring
     {
         if ($this->extension) {
             newrelic_start_transaction($this->appName);
-        } 
+        }
     }
 
     public function endTransaction()
@@ -59,7 +59,7 @@ class Monitoring
         if ($this->extension) {
             if ($message === null) {
                 $message = $exception->getMessage();
-            } 
+            }
             newrelic_notice_error($message, $exception);
         }
     }

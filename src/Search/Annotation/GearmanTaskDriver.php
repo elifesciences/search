@@ -123,6 +123,7 @@ final class GearmanTaskDriver
             }
 
             $this->monitoring->endTransaction();
+
             return GEARMAN_SUCCESS;
         }, $this));
     }
@@ -142,10 +143,10 @@ final class GearmanTaskDriver
                 }
             } catch (InvalidWorkflow $e) {
                 $this->logger->warning('Invalid workflow', ['exception' => $e]);
-                $this->monitoring->recordException($e, "gearman:worker invalid workflow");
+                $this->monitoring->recordException($e, 'gearman:worker invalid workflow');
             } catch (Throwable $e) {
                 $this->logger->critical('Unrecoverable error in worker, stopping', ['exception' => $e]);
-                $this->monitoring->recordException($e, "gearman:worker unrecoverable error");
+                $this->monitoring->recordException($e, 'gearman:worker unrecoverable error');
 
                 return;
             }
