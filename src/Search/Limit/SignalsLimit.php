@@ -24,7 +24,7 @@ class SignalsLimit implements Limit
         $this->valid = false;
     }
 
-    public static function sigterm(array $signals) : self
+    public static function stopOn(array $signals) : self
     {
         return new static($signals);
     }

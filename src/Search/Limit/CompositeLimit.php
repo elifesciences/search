@@ -14,16 +14,15 @@ class CompositeLimit implements Limit
 
     public function __invoke(): bool
     {
-        $failures = array_filter($this->functions, function (Limit $fn) {
+        $limitReached = false;
+        foreach ($this->functions as $fn) {
             $failure = $fn();
             if ($failure) {
                 $this->reasons = array_merge($this->reasons, $fn->getReasons());
+                $limitReached = true;
             }
-
-            return $failure === true;
-        });
-
-        return empty($failures) === false;
+        }
+        return $limitReached;
     }
 
     public function getReasons(): array

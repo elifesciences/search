@@ -28,7 +28,7 @@ waitingPid=$!
 wait "$waitingPid"
 waitingReturnCode=$?
 # clean up PHP processes
-kill "$workerPid" "$queueWatchPid" || true;
+kill "$workerPid" "$queueWatchPid";
 if [ ! "$waitingReturnCode" -eq "0" ]; then
     echo -e "\e[31mThe script './wait-for-empty-gearman-queue' timed out\e[39m"
     exit "$waitingReturnCode"

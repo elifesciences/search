@@ -208,7 +208,7 @@ final class Kernel implements MinimalKernel
             return new LoggingMiddleware(
                 new CompositeLimit(
                     MemoryLimit::mb($app['config']['process_memory_limit']),
-                    SignalsLimit::sigterm(['SIGINT', 'SIGTERM', 'SIGHUP'])
+                    SignalsLimit::stopOn(['SIGINT', 'SIGTERM', 'SIGHUP'])
                 ), $app['logger']);
         };
 
