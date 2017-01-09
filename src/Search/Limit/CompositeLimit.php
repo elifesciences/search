@@ -12,20 +12,21 @@ class CompositeLimit implements Limit
         $this->functions = $args;
     }
 
-    public function __invoke() : bool
+    public function __invoke(): bool
     {
-        return
-            [] === array_filter($this->functions, function (Limit $fn) {
-                $failure = $fn();
-                if ($failure) {
-                    $this->reasons = array_merge($this->reasons, $fn->getReasons());
-                }
+        $failures = array_filter($this->functions, function (Limit $fn) {
+            $failure = $fn();
+            if ($failure) {
+                $this->reasons = array_merge($this->reasons, $fn->getReasons());
+            }
 
-                return $failure === true;
-            });
+            return $failure === true;
+        });
+
+        return empty($failures) === false;
     }
 
-    public function getReasons() : array
+    public function getReasons(): array
     {
         return $this->reasons;
     }
