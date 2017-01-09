@@ -27,18 +27,21 @@ final class ApiSdkCommand extends Command
     private $logger;
     private $monitoring;
     private $queue;
+    private $valid;
 
     public function __construct(
         ApiSdk $sdk,
         WatchableQueue $queue,
         LoggerInterface $logger,
-        Monitoring $monitoring
+        Monitoring $monitoring,
+        callable $valid
     ) {
         $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
         $this->queue = $queue;
         $this->logger = $logger;
         $this->monitoring = $monitoring;
+        $this->valid = $valid;
         // Signals
         Signals::register();
 
@@ -134,9 +137,10 @@ final class ApiSdkCommand extends Command
     private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
         $progress = new ProgressBar($this->output, $count);
+        $valid = $this->valid;
 
         $items->rewind();
-        while ($items->valid() && Signals::isValid()) {
+        while ($items->valid() && $valid()) {
             $progress->advance();
             try {
                 $item = $items->current();
@@ -154,7 +158,6 @@ final class ApiSdkCommand extends Command
         }
         $progress->finish();
         $progress->clear();
-        Signals::tick();
     }
 
     private function enqueue($type, $identifier)

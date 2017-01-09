@@ -27,7 +27,9 @@ use eLife\Search\Api\SubjectStore;
 use eLife\Search\Gearman\Command\ApiSdkCommand;
 use eLife\Search\Gearman\Command\QueueCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
+use eLife\Search\Gearman\CompositeLimit;
 use eLife\Search\Gearman\MemoryLimit;
+use eLife\Search\Gearman\SignalsLimit;
 use eLife\Search\Queue\Mock\QueueItemTransformerMock;
 use eLife\Search\Queue\Mock\WatchableQueueMock;
 use eLife\Search\Queue\SqsMessageTransformer;
@@ -202,7 +204,10 @@ final class Kernel implements MinimalKernel
         };
 
         $app['limit'] = function (Application $app) {
-            return MemoryLimit::mb($app['config']['process_memory_limit']);
+            return new CompositeLimit(
+                MemoryLimit::mb($app['config']['process_memory_limit']),
+                SignalsLimit::sigterm()
+            );
         };
 
         //#####################################################
@@ -365,7 +370,8 @@ final class Kernel implements MinimalKernel
                 $app['api.sdk'],
                 $app['aws.queue'],
                 $app['logger'],
-                $app['monitoring']
+                $app['monitoring'],
+                $app['limit']
             );
         };
 
