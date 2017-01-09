@@ -129,6 +129,10 @@ final class Console
         $this->app = $app;
         $this->root = __DIR__.'/../..';
 
+        if (!defined('GEARMAN_INSTALLED')) {
+            define('GEARMAN_INSTALLED', class_exists('GearmanClient'));
+        }
+
         // Some annotations
         Register::registerLoader();
 
