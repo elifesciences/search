@@ -129,6 +129,7 @@ final class GearmanTaskDriver
                 $result = $this->worker->work();
                 if (!$result) {
                     $this->logger->critical('Uncaught failure, stopping', ['worker_error' => $this->worker->error()]);
+
                     return;
                 }
             } catch (InvalidWorkflow $e) {
