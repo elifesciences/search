@@ -2,22 +2,43 @@
 
 namespace eLife\Search\Gearman;
 
-use eLife\Search\Signals;
-
 class SignalsLimit
 {
-    public function __construct()
+    private static $validSignals;
+    private $valid;
+
+    public function __construct($signals)
     {
-        Signals::register();
+        if (function_exists('pcntl_signal')) {
+            self::$validSignals = [
+                'SIGINT' => SIGINT,
+                'SIGTERM' => SIGTERM,
+                'SIGHUP' => SIGHUP,
+            ];
+
+            foreach ($signals as $signal) {
+                // Signals
+                pcntl_signal(self::$validSignals[$signal], [$this, 'onTermination']);
+            }
+        }
     }
 
-    public static function sigterm() : self
+    public function onTermination()
     {
-        return new static();
+        $this->valid = false;
+    }
+
+    public static function sigterm(array $signals) : self
+    {
+        return new static($signals);
     }
 
     public function __invoke() : bool
     {
-        return !Signals::isValid();
+        if (function_exists('pcntl_signal_dispatch')) {
+            pcntl_signal_dispatch();
+        }
+
+        return $this->valid === false;
     }
 }

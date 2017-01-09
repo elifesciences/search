@@ -206,7 +206,7 @@ final class Kernel implements MinimalKernel
         $app['limit'] = function (Application $app) {
             return new CompositeLimit(
                 MemoryLimit::mb($app['config']['process_memory_limit']),
-                SignalsLimit::sigterm()
+                SignalsLimit::sigterm(['SIGINT', 'SIGTERM', 'SIGHUP'])
             );
         };
 
