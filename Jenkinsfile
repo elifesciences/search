@@ -19,7 +19,7 @@ elifePipeline {
                 builderSmokeTests 'search--end2end', '/srv/search'
                 builderCmd 'search--end2end', 'cd /srv/search; php bin/console queue:import all --env=end2end'
                 builderCmd 'search--end2end', 'cd /srv/search; ./bin/wait-for-empty-gearman-queue end2end'
-            }, 'two')
+            })
         }
 
         stage 'Approval', {
