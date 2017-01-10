@@ -132,6 +132,7 @@ final class ApiSdkCommand extends Command
 
     private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
+        $this->logger->info("Importing $count items of type $type");
         $progress = new ProgressBar($this->output, $count);
         $limit = $this->limit;
 
