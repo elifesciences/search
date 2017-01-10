@@ -21,21 +21,15 @@ final class SqsWatchableQueue implements WatchableQueue
     /**
      * Adds item to the queue.
      */
-    public function enqueue(QueueItem $item) : bool
+    public function enqueue(QueueItem $item)
     {
-        try {
-            $this->client->sendMessage([
-                'QueueUrl' => $this->url,
-                'MessageBody' => json_encode([
-                    'type' => $item->getType(),
-                    'id' => $item->getId(),
-                ]),
-            ]);
-        } catch (Throwable $e) {
-            return false;
-        }
-
-        return true;
+        $this->client->sendMessage([
+            'QueueUrl' => $this->url,
+            'MessageBody' => json_encode([
+                'type' => $item->getType(),
+                'id' => $item->getId(),
+            ]),
+        ]);
     }
 
     /**
