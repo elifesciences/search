@@ -11,6 +11,7 @@ use Doctrine\Common\Cache\FilesystemCache;
 use Elasticsearch\ClientBuilder;
 use eLife\ApiClient\HttpClient\BatchingHttpClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
+use eLife\ApiClient\HttpClient\NotifyingHttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
@@ -39,6 +40,7 @@ use GearmanClient;
 use GearmanWorker;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
@@ -221,6 +223,16 @@ final class Kernel implements MinimalKernel
         $app['guzzle'] = function (Application $app) {
             // Create default HandlerStack
             $stack = HandlerStack::create();
+            $logger = $app['logger'];
+            if ($app['config']['debug']) {
+                $stack->push(
+                    Middleware::mapRequest(function ($request) use ($logger) {
+                        $logger->debug("Request performed in Guzzle Middleware: {$request->getUri()}");
+
+                        return $request;
+                    })
+                );
+            }
             $stack->push(
                 new CacheMiddleware(
                     new PublicCacheStrategy(
@@ -239,7 +251,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['api.sdk'] = function (Application $app) {
-            return new ApiSdk(
+            $notifyingHttpClient = new NotifyingHttpClient(
                 new BatchingHttpClient(
                     new Guzzle6HttpClient(
                         $app['guzzle']
@@ -247,6 +259,14 @@ final class Kernel implements MinimalKernel
                     $app['config']['api_requests_batch']
                 )
             );
+            if ($app['config']['debug']) {
+                $logger = $app['logger'];
+                $notifyingHttpClient->addRequestListener(function ($request) use ($logger) {
+                    $logger->debug("Request performed in NotifyingHttpClient: {$request->getUri()}");
+                });
+            }
+
+            return new ApiSdk($notifyingHttpClient);
         };
 
         $app['api.subjects'] = function (Application $app) {
