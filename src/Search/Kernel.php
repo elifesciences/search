@@ -86,6 +86,7 @@ final class Kernel implements MinimalKernel
             'ttl' => 3600,
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
+            'elastic_force_sync' => false,
             'file_log_path' => self::ROOT.'/var/logs/all.log',
             'file_error_log_path' => self::ROOT.'/var/logs/error.log',
             'gearman_worker_timeout' => 20000,
@@ -283,7 +284,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['elastic.client'] = function (Application $app) {
-            return new ElasticsearchClient($app['elastic.elasticsearch'], $app['config']['elastic_index']);
+            return new ElasticsearchClient($app['elastic.elasticsearch'], $app['config']['elastic_index'], $app['config']['elastic_force_sync']);
         };
 
         $app['elastic.executor'] = function (Application $app) {

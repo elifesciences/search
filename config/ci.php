@@ -7,6 +7,7 @@ return [
     'validate' => true,
     'api_url' => 'http://localhost:8080',
     'ttl' => 0,
+    'elastic_force_sync' => true,
     'gearman_servers' => ['localhost'],
     'gearman_auto_restart' => false,
     'aws' => [

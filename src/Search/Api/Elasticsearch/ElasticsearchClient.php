@@ -11,10 +11,11 @@ class ElasticsearchClient
 {
     private $connection;
 
-    public function __construct(Client $connection, string $index)
+    public function __construct(Client $connection, string $index, bool $forceSync = false)
     {
         $this->connection = $connection;
         $this->index = $index;
+        $this->forceSync = $forceSync;
     }
 
     public function deleteIndexByName($index)
@@ -62,8 +63,8 @@ class ElasticsearchClient
         ];
 
         $con = $this->connection->index($params)['payload'] ?? null;
-        if ($flush) {
-            $this->connection->indices()->flushSynced(['index' => $this->index]);
+        if ($flush || $this->forceSync) {
+            $this->connection->indices()->refresh(['index' => $this->index]);
         }
 
         return $con;

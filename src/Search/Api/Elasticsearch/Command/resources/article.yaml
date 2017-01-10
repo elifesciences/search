@@ -129,8 +129,6 @@ article:
                           type: string
         published:
           type: string
-        statusDate:
-          type: string
         pdf:
           type: string
         researchOrganisms:
@@ -261,8 +259,6 @@ article:
                       type: string
                     '1800':
                       type: string
-#    statusDate:
-#      type: string
     pdf:
       type: string
     researchOrganisms:
