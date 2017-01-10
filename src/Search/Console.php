@@ -5,9 +5,6 @@ namespace eLife\Search;
 use Closure;
 use eLife\Search\Annotation\Register;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
-use eLife\Search\Api\Response\BlogArticleResponse;
 use eLife\Search\Queue\InternalSqsMessage;
 use eLife\Search\Queue\WatchableQueue;
 use Exception;
@@ -23,8 +20,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Process\Process;
-use ZipArchive;
 
 /**
  * @property LoggerInterface temp_logger
@@ -41,11 +36,7 @@ final class Console
      * This will hopefully cover most things.
      */
     public static $quick_commands = [
-        'hello' => ['description' => 'This is a quick hello world command'],
-        'echo' => ['description' => 'Example of asking a question'],
         'cache:clear' => ['description' => 'Clears cache'],
-        'debug:params' => ['description' => 'Lists current parameters'],
-        'debug:search' => ['description' => 'Test command for debugging elasticsearch'],
         'queue:interactive' => ['description' => 'Manually enqueue item into SQS. (interactive)'],
         'queue:push' => [
             'description' => 'Manually enqueue item into SQS.',
@@ -59,15 +50,6 @@ final class Console
         ],
         'queue:count' => [
             'description' => 'Counts (approximately) how many messages are in the queue',
-        ],
-        'debug:search:random' => ['description' => 'Test command for debugging elasticsearch'],
-        'spawn' => [
-            'description' => 'WARNING: Experimental, may create child processes.',
-            'args' => [
-                ['name' => 'cmd', 'default' => 'list'],
-                ['name' => 'amount', 'default' => 1],
-                ['name' => 'memory', 'default' => 40],
-            ],
         ],
     ];
 
@@ -160,187 +142,6 @@ final class Console
         return $this->app->get('elastic.client');
     }
 
-    /**
-     * @deprecated
-     */
-    public function ramlProgressCallback($download_size, $downloaded_size, $upload_size, $uploaded_size)
-    {
-        if ($download_size == 0) {
-            $progress = 0;
-        } else {
-            $progress = round($downloaded_size * 100 / $download_size);
-        }
-
-        if ($progress > $this->previousProgress) {
-            $this->progress->advance();
-            $this->previousProgress = $progress;
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    public function ramlCommand(InputInterface $input, OutputInterface $output)
-    {
-        $commit_ref = trim(file_get_contents(__DIR__.'/../../.apiversion'));
-        $zip = __DIR__.'/../../cache/raml--'.$commit_ref.'.zip';
-        $target = __DIR__.'/../../tests/raml/';
-
-        $this->progress = new ProgressBar($output, 100);
-
-        if (!file_exists($zip) && filesize($zip) > 0) {
-            $this->logger->debug('Downloading...');
-            $client = new Client([
-                'progress' => [$this, 'ramlProgressCallback'],
-                'save_to' => $zip,
-            ]);
-            $response = $client->get('https://github.com/elifesciences/api-raml/archive/'.$commit_ref.'.zip');
-            $response->getBody()->getSize();
-            $this->progress->finish();
-            // Fix progress bug.
-            $this->logger->info(' - '.$response->getBody()->getSize().' bytes downloaded.');
-        }
-
-        $this->logger->debug('Extracting JSON files...');
-        $archive = new ZipArchive();
-        if ($archive->open($zip) === true) {
-            // Grab folder name from first item in index.
-            $folderName = $archive->getNameIndex(0);
-            // Remove old target.
-            exec('rm -rf '.$target);
-            $progress = new ProgressBar($output, $archive->numFiles);
-            $json = 0;
-            // Loop through files in ZIP File.
-            for ($i = 0; $i < $archive->numFiles; ++$i) {
-                $progress->advance();
-                $filename = $archive->getNameIndex($i);
-                // Only unzip json files from dist and put them in place.
-                if (strpos($filename, '.json') !== false && strpos($filename, '/dist/') !== false) {
-                    ++$json;
-                    $archive->extractTo($target, array($archive->getNameIndex($i)));
-                }
-            }
-            // Fix progress bar bug.
-            $this->logger->info(' - copied '.$json.' files');
-            // Clean up folder structure.
-            exec('mv '.$target.$folderName.'dist/* '.$target.' && rm -rf '.$target.$folderName);
-            $archive->close();
-        } else {
-            $this->logger->error('Something went wrong while unzipping file.');
-        }
-    }
-
-    protected function responseFromArray($className, $data)
-    {
-        return $this->app->get('serializer')->deserialize(json_encode($data), $className, 'json');
-    }
-
-    public function debugSearchRandomCommand(InputInterface $input, OutputInterface $output)
-    {
-        $elastic = $this->getElasticClient();
-
-        $blog = $this->responseFromArray(BlogArticleResponse::class, [
-            'id' => '12456'.rand(0, 10000),
-            'title' => 'some blog article',
-            'impactStatement' => 'Something impacting in a statement like fashion.',
-            'published' => '2016-06-09T15:15:10+00:00',
-        ]);
-        $inserting = $elastic->indexDocument('test', rand(0, 10000), $blog);
-        if ($inserting instanceof SuccessResponse) {
-            $this->logger->info('Document inserted!');
-        }
-    }
-
-    public function debugSearchCommand(InputInterface $input, OutputInterface $output)
-    {
-        $elastic = $this->getElasticClient();
-
-        $insert = $elastic->createIndex();
-        if ($insert instanceof SuccessResponse) {
-            $this->logger->info('Index created');
-        } else {
-            $this->logger->info('Index was no created');
-        }
-
-        $blog = $this->responseFromArray(BlogArticleResponse::class, [
-            'id' => '12456',
-            'title' => 'some blog article',
-            'impactStatement' => 'Something impacting in a statement like fashion.',
-            'published' => '2016-06-09T15:15:10+00:00',
-        ]);
-        $inserting = $elastic->indexDocument('test', 1, $blog);
-        if ($inserting instanceof SuccessResponse) {
-            $this->logger->info('Document inserted!');
-        }
-
-        $doc = $elastic->getDocumentById('test', 1);
-        if ($doc instanceof DocumentResponse) {
-            $document = $doc->unwrap();
-            $this->logger->info('Document `'.$document->title.'` was requested!');
-        }
-
-        $del = $elastic->deleteDocument('test', 1);
-        if ($del instanceof SuccessResponse) {
-            $this->logger->info('Document was deleted!');
-        }
-    }
-
-    public function spawnCommand(InputInterface $input, OutputInterface $output)
-    {
-        $command = (string) $input->getArgument('cmd');
-        $amount = (int) $input->getArgument('amount');
-        // $memory = ((int)$input->getArgument('memory')) * 1024 * 1024; // Not working currently.
-        $processes = [];
-        for ($i = 0; $i < $amount; ++$i) {
-            $processes[] = new Process('exec php '.$this->path('/bin/console').' '.$command.' --ansi');
-        }
-        $pids = [];
-        $running = true;
-        while (count($processes) > 0) {
-            if ($running) {
-                foreach ($processes as $i => $process) {
-                    /** @var $process Process */
-                    if (!$process->isStarted()) {
-                        $process->start();
-                        $pids[$i] = $process->getPid();
-                        $this->logger->info('Process starts, PID:'.$process->getPid());
-                    }
-
-                    $output->write($process->getIncrementalOutput());
-                    $output->write($process->getIncrementalErrorOutput());
-
-                    if (!$process->isRunning()) {
-                        $process->restart();
-                        $this->logger->error('Process stopped (Memory: '.round(memory_get_usage() / 1024 / 1024, 2).'Mb)');
-                        $this->logger->info('Starting new process');
-                        $processes[] = new Process('exec php '.$this->path('/bin/console').' '.$command.' --ansi');
-                        unset($processes[$i]);
-                    }
-                }
-            }
-        }
-        sleep(1);
-    }
-
-    public function debugParamsCommand(InputInterface $input, OutputInterface $output)
-    {
-        foreach ($this->app->get('config') as $key => $config) {
-            if (is_array($config)) {
-                $this->logger->info($key);
-                $this->logger->info(json_encode($config, JSON_PRETTY_PRINT));
-                $this->logger->debug(' ');
-            } elseif (is_bool($config)) {
-                $this->logger->info($key);
-                $this->logger->info($config ? 'true' : 'false');
-                $this->logger->debug(' ');
-            } else {
-                $this->logger->info($key);
-                $this->logger->info($config);
-                $this->logger->debug(' ');
-            }
-        }
-    }
-
     public function cacheClearCommand(InputInterface $input, OutputInterface $output)
     {
         $this->logger->info('Clearing cache...');
@@ -350,25 +151,6 @@ final class Console
             $this->logger->error('Cannot clean var/cache/', ['exception' => $e]);
         }
         $this->logger->info('Cache cleared successfully.');
-    }
-
-    public function echoCommand(InputInterface $input, OutputInterface $output)
-    {
-        $question = new Question('<question>Are we there yet?</question> ');
-        $helper = new QuestionHelper();
-        while (true) {
-            $name = $helper->ask($input, $output, $question);
-            if ($name === 'yes') {
-                break;
-            }
-            $this->logger->error($name);
-        }
-    }
-
-    public function helloCommand(InputInterface $input, OutputInterface $output)
-    {
-        $this->logger->info('Hello from the outside (of the global scope)');
-        $this->logger->debug('This is working');
     }
 
     public function run($input = null, $output = null)
