@@ -159,8 +159,9 @@ final class ApiSdkCommand extends Command
 
     private function enqueue($type, $identifier)
     {
+        $this->logger->info("Item ($type, $identifier) being enqueued");
         $item = new InternalSqsMessage($type, $identifier);
         $this->queue->enqueue($item);
-        $this->logger->info("Item ($type, $identifier) added successfully");
+        $this->logger->info("Item ($type, $identifier) enqueued successfully");
     }
 }
