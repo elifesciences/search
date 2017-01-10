@@ -14,10 +14,10 @@ trap 'kill -INT -$waitingPid' INT
 sleep 5
 
 echo "Starting a gearman:worker"
-./bin/console gearman:worker --env="$environment" 2>&1 | tee /tmp/gearman-worker.log &
+./bin/console gearman:worker --env="$environment" >> /tmp/gearman-worker.log 2>&1 &
 workerPid=$!
 echo "Starting a queue:watch"
-./bin/console queue:watch --env="$environment" 2>&1 | tee /tmp/queue-watch.log &
+./bin/console queue:watch --env="$environment" >> /tmp/queue-watch.log 2>&1 &
 queueWatchPid=$!
 echo "Starting import"
 ./bin/console queue:import all --env="$environment"
