@@ -574,12 +574,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "54046974d33c56f6276df7d757fa39c4ed9de9d9"
+                "reference": "21724189d4806557cceb229ebbfec142732408cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/54046974d33c56f6276df7d757fa39c4ed9de9d9",
-                "reference": "54046974d33c56f6276df7d757fa39c4ed9de9d9",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/21724189d4806557cceb229ebbfec142732408cb",
+                "reference": "21724189d4806557cceb229ebbfec142732408cb",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "GPL-3.0+"
             ],
             "description": "eLife Sciences API client",
-            "time": "2016-12-16 15:16:20"
+            "time": "2017-01-10 15:17:00"
         },
         {
             "name": "elife/api-sdk",
