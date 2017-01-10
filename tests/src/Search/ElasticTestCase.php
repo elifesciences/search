@@ -109,7 +109,8 @@ abstract class ElasticTestCase extends WebTestCase
     {
         parent::setUp();
         $this->client = $this->getElasticSearchClient();
-        $lines = $this->runCommand('search:setup --delete');
+        $this->client->deleteIndex();
+        $lines = $this->runCommand('search:setup');
         if ($lines[0] === 'No alive nodes found in your cluster') {
             $this->fail('Elasticsearch may not be installed, skipping');
         }
