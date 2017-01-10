@@ -261,8 +261,8 @@ article:
                       type: string
                     '1800':
                       type: string
-    statusDate:
-      type: string
+#    statusDate:
+#      type: string
     pdf:
       type: string
     researchOrganisms:
