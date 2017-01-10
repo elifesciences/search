@@ -42,8 +42,8 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     private function sort($sort = [])
     {
-        $this->query['sort'] = $this->query['sort'] ?? [];
-        $this->query['sort'][] = $sort;
+        $this->query['body']['sort'] = $this->query['body']['sort'] ?? [];
+        $this->query['body']['sort'][] = $sort;
     }
 
     private function getSort($reverse = false)
@@ -92,16 +92,35 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function sortByRelevance($reverse = false): QueryBuilder
     {
-        $this->sort("_score:{$this->getSort($reverse)}");
+        $this->sort([
+            '_score' => [
+                'order' => $this->getSort($reverse),
+            ],
+        ]);
 
         return $this;
     }
 
     public function sortByDate($reverse = false): QueryBuilder
     {
-        $this->sort("statusDate:{$this->getSort($reverse)}");
-        $this->sort("published:{$this->getSort($reverse)}");
-        $this->sort("updated:{$this->getSort($reverse)}");
+        $this->sort([
+            'statusDate' => [
+                'order' => $this->getSort($reverse),
+                'missing' => '_last',
+            ],
+        ]);
+        $this->sort([
+            'published' => [
+                'order' => $this->getSort($reverse),
+                'missing' => '_last',
+            ],
+        ]);
+        $this->sort([
+            'updated' => [
+                'order' => $this->getSort($reverse),
+                'missing' => '_last',
+            ],
+        ]);
 
         return $this;
     }
