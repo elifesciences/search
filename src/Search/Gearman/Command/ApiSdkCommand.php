@@ -132,11 +132,12 @@ final class ApiSdkCommand extends Command
 
     private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
+        $this->logger->info("Importing $count items of type $type");
         $progress = new ProgressBar($this->output, $count);
         $limit = $this->limit;
 
         $items->rewind();
-        while ($items->valid() && $limit()) {
+        while ($items->valid() && !$limit()) {
             $progress->advance();
             try {
                 $item = $items->current();
@@ -158,8 +159,9 @@ final class ApiSdkCommand extends Command
 
     private function enqueue($type, $identifier)
     {
+        $this->logger->info("Item ($type, $identifier) being enqueued");
         $item = new InternalSqsMessage($type, $identifier);
         $this->queue->enqueue($item);
-        $this->logger->info("Item ($type, $identifier) added successfully");
+        $this->logger->info("Item ($type, $identifier) enqueued successfully");
     }
 }

@@ -20,11 +20,9 @@ final class WatchableQueueMock implements WatchableQueue
      *
      * Mock: Add item to queue.
      */
-    public function enqueue(QueueItem $item) : bool
+    public function enqueue(QueueItem $item)
     {
         array_push($this->items, $item);
-
-        return true;
     }
 
     /**

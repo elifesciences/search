@@ -9,7 +9,7 @@ interface WatchableQueue extends Countable
     /**
      * Adds item to the queue.
      */
-    public function enqueue(QueueItem $item) : bool;
+    public function enqueue(QueueItem $item);
 
     /**
      * Gets an item to process.
