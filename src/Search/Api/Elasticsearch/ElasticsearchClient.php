@@ -64,7 +64,7 @@ class ElasticsearchClient
 
         $con = $this->connection->index($params)['payload'] ?? null;
         if ($flush || $this->forceSync) {
-            $this->connection->indices()->flushSynced(['index' => $this->index]);
+            $this->connection->indices()->refresh(['index' => $this->index]);
         }
 
         return $con;
