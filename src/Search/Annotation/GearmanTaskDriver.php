@@ -131,28 +131,33 @@ final class GearmanTaskDriver
 
     public function work()
     {
-        $this->logger->info('Worker started.');
+        $this->logger->info('gearman:worker: Started listening.');
         $this->addTasksToWorker($this->worker);
         $limit = $this->limit;
         while (!$limit()) {
             try {
+                $this->logger->debug('gearman:worker: Loop start, listening for jobs');
                 $result = $this->worker->work();
+                if ($this->worker->returnCode() == GEARMAN_TIMEOUT) {
+                    $this->logger->debug('gearman:worker: No job after timeout, looping');
+                    continue;
+                }
                 if (!$result) {
-                    $this->logger->critical('Uncaught failure, stopping', ['worker_error' => $this->worker->error()]);
+                    $this->logger->critical('gearman:worker: Uncaught failure, stopping', ['worker_error' => $this->worker->error()]);
 
                     return;
                 }
             } catch (InvalidWorkflow $e) {
-                $this->logger->warning('Invalid workflow', ['exception' => $e]);
-                $this->monitoring->recordException($e, 'gearman:worker invalid workflow');
+                $this->logger->warning('gearman:worker: Invalid workflow', ['exception' => $e]);
+                $this->monitoring->recordException($e, 'gearman:worker: Invalid workflow');
             } catch (Throwable $e) {
-                $this->logger->critical('Unrecoverable error in worker, stopping', ['exception' => $e]);
-                $this->monitoring->recordException($e, 'gearman:worker unrecoverable error');
+                $this->logger->critical('gearman:worker: Unrecoverable error, stopping', ['exception' => $e]);
+                $this->monitoring->recordException($e, 'gearman:worker: Unrecoverable error');
 
                 return;
             }
         }
-        $this->logger->info('Worker stopped because of limits reached.');
+        $this->logger->info('gearman:worker: Stopped because of limits reached.');
     }
 
     public function map(callable $fn)

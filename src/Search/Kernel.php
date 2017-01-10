@@ -88,6 +88,7 @@ final class Kernel implements MinimalKernel
             'elastic_index' => 'elife_search',
             'file_log_path' => self::ROOT.'/var/logs/all.log',
             'file_error_log_path' => self::ROOT.'/var/logs/error.log',
+            'gearman_worker_timeout' => 20000,
             'process_memory_limit' => 256,
             'aws' => array_merge([
                 'credential_file' => false,
@@ -313,6 +314,7 @@ final class Kernel implements MinimalKernel
                 } catch (Throwable $e) {
                 }
             }
+            $worker->setTimeout($app['config']['gearman_worker_timeout']);
 
             return $worker;
         };

@@ -108,8 +108,8 @@ namespace tests\eLife\Search\Gearman {
 
             $this->assertEquals(
                 [
-                    'Worker started.',
-                    'Worker stopped because of limits reached.',
+                    'gearman:worker: Started listening.',
+                    'gearman:worker: Stopped because of limits reached.',
                 ],
                 $this->logLines
             );
