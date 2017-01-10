@@ -12,11 +12,8 @@ class ExampleWebTest extends ElasticTestCase
      */
     public function testCanRunCommand()
     {
-        // Run command
-        $lines = $this->runCommand('hello');
-        // And test.
-        $this->assertEquals('Hello from the outside (of the global scope)', $lines[0]);
-        $this->assertEquals('This is working', $lines[1]);
+        $logs = $this->runCommand('help');
+        $this->assertEquals(0, count($logs));
     }
 
     /**

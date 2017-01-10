@@ -3,7 +3,6 @@
 namespace eLife\Search\Queue;
 
 use Aws\Sqs\SqsClient;
-use Throwable;
 
 final class SqsWatchableQueue implements WatchableQueue
 {
@@ -60,24 +59,6 @@ final class SqsWatchableQueue implements WatchableQueue
             'QueueUrl' => $this->url,
             'ReceiptHandle' => $item->getReceipt(),
         ]);
-    }
-
-    /**
-     * This will happen when an error happens, we release the item back into the queue.
-     */
-    public function release(QueueItem $item) : bool
-    {
-        try {
-            $this->client->changeMessageVisibility([
-                'QueueUrl' => $this->url,
-                'ReceiptHandle' => $item->getReceipt(),
-                'VisibilityTimeout' => 0,
-            ]);
-        } catch (Throwable $e) {
-            return false;
-        }
-
-        return true;
     }
 
     public function clean()
