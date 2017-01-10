@@ -122,4 +122,9 @@ final class MockQueryBuilder implements QueryBuilder
     {
         return new MockQueryExecutor($this->data);
     }
+
+    public function getRawQuery(): array
+    {
+        return $this->data;
+    }
 }

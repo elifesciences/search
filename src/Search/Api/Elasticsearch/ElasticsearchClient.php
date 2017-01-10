@@ -75,10 +75,6 @@ class ElasticsearchClient
         return $this->indexJsonDocument($type, $id, $body);
     }
 
-    public function updateDocument()
-    {
-    }
-
     public function deleteDocument($type, $id)
     {
         $params = [

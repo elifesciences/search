@@ -73,7 +73,7 @@ final class SearchResponse implements ElasticResponse, QueryResponse
 
             return $types;
         }
-        // TODO: Implement getTypeTotals() method.
+
         return [];
     }
 
@@ -93,14 +93,8 @@ final class SearchResponse implements ElasticResponse, QueryResponse
 
             return $types;
         }
-        // TODO: Implement REAL getSubjects() method.
-        return [
-            [
-                'id' => 'biophysics-structural-biology',
-                'name' => 'Biology',
-                'results' => 1,
-            ],
-        ];
+
+        return [];
     }
 
     public function toArray() : array
