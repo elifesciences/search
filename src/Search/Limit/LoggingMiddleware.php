@@ -23,7 +23,7 @@ class LoggingMiddleware implements Limit
         if ($limitReached) {
             $this->reasons = $limit->getReasons();
             foreach ($this->reasons as $reason) {
-                $this->logger->error($reason);
+                $this->logger->info($reason);
             }
         }
 
