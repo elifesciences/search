@@ -53,7 +53,7 @@ final class InterviewWorkflow implements Workflow
         $isValid = $this->validator->validateSearchResult($searchInterview);
         if ($isValid === false) {
             $this->logger->error(
-                'Interview<'.$event->getId().'> cannot be transformed into a valid search result',
+                'Interview<'.$interview->getId().'> cannot be transformed into a valid search result',
                 [
                     'input' => [
                         'type' => 'interview',

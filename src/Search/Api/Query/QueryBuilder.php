@@ -19,4 +19,6 @@ interface QueryBuilder
     public function whereType(array $types = []) : QueryBuilder;
 
     public function getQuery() : QueryExecutor;
+
+    public function getRawQuery() : array;
 }

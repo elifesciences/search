@@ -49,7 +49,6 @@ use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\ProcessIdProcessor;
-use Psr\Log\NullLogger;
 use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
@@ -261,11 +260,6 @@ final class Kernel implements MinimalKernel
         // --------------------- Elastic ---------------------
         //#####################################################
 
-        // @todo give us some options.
-        $app['elastic.logger'] = function () {
-            return new NullLogger();
-        };
-
         $app['elastic.serializer'] = function (Application $app) {
             return new SearchResponseSerializer($app['serializer']);
         };
@@ -274,9 +268,9 @@ final class Kernel implements MinimalKernel
             $client = ClientBuilder::create();
             // Set hosts.
             $client->setHosts($app['config']['elastic_servers']);
-            // @todo change
+            // Logging for ElasticSearch.
             if ($app['config']['debug']) {
-                $client->setLogger($app['elastic.logger']);
+                $client->setLogger($app['logger']);
             }
             $client->setSerializer($app['elastic.serializer']);
 
