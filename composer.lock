@@ -629,12 +629,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "0091443438cabf211e4d5fce9f920261cfa0ad9e"
+                "reference": "ccdd04b54d3f96aa06861bd9d983774aca9c162f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/0091443438cabf211e4d5fce9f920261cfa0ad9e",
-                "reference": "0091443438cabf211e4d5fce9f920261cfa0ad9e",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/ccdd04b54d3f96aa06861bd9d983774aca9c162f",
+                "reference": "ccdd04b54d3f96aa06861bd9d983774aca9c162f",
                 "shasum": ""
             },
             "require": {
@@ -669,7 +669,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2016-12-22 14:59:50"
+            "time": "2017-01-10 10:00:22"
         },
         {
             "name": "elife/api-validator",
