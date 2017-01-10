@@ -137,7 +137,7 @@ final class ApiSdkCommand extends Command
         $limit = $this->limit;
 
         $items->rewind();
-        while ($items->valid() && $limit()) {
+        while ($items->valid() && !$limit()) {
             $progress->advance();
             try {
                 $item = $items->current();
