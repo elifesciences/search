@@ -8,6 +8,7 @@ use eLife\Search\Queue\InternalSqsMessage;
 use eLife\Search\Queue\WatchableQueue;
 use Iterator;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -137,7 +138,10 @@ final class ApiSdkCommand extends Command
         $limit = $this->limit;
 
         $items->rewind();
-        while ($items->valid() && !$limit()) {
+        while ($items->valid()) {
+            if ($limit()) {
+                throw new RuntimeException('Command cannot complete because: '.implode(', ', $limit->getReasons()));
+            }
             $progress->advance();
             try {
                 $item = $items->current();
