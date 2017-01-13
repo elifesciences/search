@@ -207,16 +207,16 @@ final class Kernel implements MinimalKernel
             return new Monitoring();
         };
 
-        /**
+        /*
          * @internal
          */
-        $app['limit._memory'] = function(Application $app) {
+        $app['limit._memory'] = function (Application $app) {
             return MemoryLimit::mb($app['config']['process_memory_limit']);
-        });
-        /**
+        };
+        /*
          * @internal
          */
-        $app['limit._signals'] = function(Application $app) {
+        $app['limit._signals'] = function (Application $app) {
             return SignalsLimit::stopOn(['SIGINT', 'SIGTERM', 'SIGHUP']);
         };
 
@@ -232,9 +232,7 @@ final class Kernel implements MinimalKernel
 
         $app['limit.interactive'] = function (Application $app) {
             return new LoggingMiddleware(
-                new CompositeLimit(
-                    $app['limit._signals']
-                ),
+                $app['limit._signals'],
                 $app['logger']
             );
         };
