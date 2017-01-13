@@ -25,7 +25,7 @@ use eLife\Search\Api\Elasticsearch\SearchResponseSerializer;
 use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Api\SubjectStore;
-use eLife\Search\Gearman\Command\ApiSdkCommand;
+use eLife\Search\Gearman\Command\ImportCommand;
 use eLife\Search\Gearman\Command\QueueCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
 use eLife\Search\Limit\CompositeLimit;
@@ -385,7 +385,7 @@ final class Kernel implements MinimalKernel
 
         // TODO: rename key
         $app['console.gearman.client'] = function (Application $app) {
-            return new ApiSdkCommand(
+            return new ImportCommand(
                 $app['api.sdk'],
                 $app['aws.queue'],
                 $app['logger'],
