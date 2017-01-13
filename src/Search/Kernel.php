@@ -207,12 +207,36 @@ final class Kernel implements MinimalKernel
             return new Monitoring();
         };
 
-        $app['limit'] = function (Application $app) {
+        /**
+         * @internal
+         */
+        $app['limit._memory'] = function(Application $app) {
+            return MemoryLimit::mb($app['config']['process_memory_limit']);
+        });
+        /**
+         * @internal
+         */
+        $app['limit._signals'] = function(Application $app) {
+            return SignalsLimit::stopOn(['SIGINT', 'SIGTERM', 'SIGHUP']);
+        };
+
+        $app['limit.long_running'] = function (Application $app) {
             return new LoggingMiddleware(
                 new CompositeLimit(
-                    MemoryLimit::mb($app['config']['process_memory_limit']),
-                    SignalsLimit::stopOn(['SIGINT', 'SIGTERM', 'SIGHUP'])
-                ), $app['logger']);
+                    $app['limit._memory'],
+                    $app['limit._signals']
+                ),
+                $app['logger']
+            );
+        };
+
+        $app['limit.interactive'] = function (Application $app) {
+            return new LoggingMiddleware(
+                new CompositeLimit(
+                    $app['limit._signals']
+                ),
+                $app['logger']
+            );
         };
 
         //#####################################################
@@ -341,7 +365,7 @@ final class Kernel implements MinimalKernel
                 $app['gearman.client'],
                 $app['logger'],
                 $app['monitoring'],
-                $app['limit']
+                $app['limit.long_running']
             );
         };
 
@@ -390,7 +414,7 @@ final class Kernel implements MinimalKernel
                 $app['aws.queue'],
                 $app['logger'],
                 $app['monitoring'],
-                $app['limit']
+                $app['limit.interactive']
             );
         };
 
@@ -405,7 +429,7 @@ final class Kernel implements MinimalKernel
                     $app['config']['aws']['queue_name'],
                     $app['logger'],
                     $app['monitoring'],
-                    $app['limit']
+                    $app['limit.long_running']
                 );
             }
 
@@ -417,7 +441,7 @@ final class Kernel implements MinimalKernel
                 $app['config']['aws']['queue_name'],
                 $app['logger'],
                 $app['monitoring'],
-                $app['limit']
+                $app['limit.long_running']
             );
         };
 
