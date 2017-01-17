@@ -48,10 +48,7 @@ use JMS\Serializer\SerializerBuilder;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
-use Monolog\Formatter\JsonFormatter;
-use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Monolog\Processor\ProcessIdProcessor;
 use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
@@ -185,6 +182,7 @@ final class Kernel implements MinimalKernel
 
         $app['logger'] = function (Application $app) {
             $factory = new LoggingFactory($app['config']['file_logs_path'], 'search-api');
+
             return $factory->logger();
         };
 
