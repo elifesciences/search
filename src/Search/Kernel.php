@@ -15,6 +15,7 @@ use eLife\ApiClient\HttpClient\NotifyingHttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
+use eLife\Logging\LoggingFactory;
 use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
@@ -88,8 +89,7 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
             'elastic_force_sync' => false,
-            'file_log_path' => self::ROOT.'/var/logs/all.log',
-            'file_error_log_path' => self::ROOT.'/var/logs/error.log',
+            'file_logs_path' => self::ROOT.'/var/logs',
             'gearman_worker_timeout' => 20000,
             'process_memory_limit' => 256,
             'aws' => array_merge([
@@ -184,23 +184,8 @@ final class Kernel implements MinimalKernel
         };
 
         $app['logger'] = function (Application $app) {
-            $logger = new Logger('search-api');
-            if ($app['config']['file_log_path']) {
-                $stream = new StreamHandler($app['config']['file_log_path'], Logger::DEBUG);
-                $stream->pushProcessor(new ProcessIdProcessor());
-                $stream->setFormatter(new JsonFormatter());
-                $logger->pushHandler($stream);
-            }
-            if ($app['config']['file_error_log_path']) {
-                $stream = new StreamHandler($app['config']['file_error_log_path'], Logger::ERROR);
-                $stream->pushProcessor(new ProcessIdProcessor());
-                $detailedFormatter = new JsonFormatter();
-                $detailedFormatter->includeStacktraces();
-                $stream->setFormatter($detailedFormatter);
-                $logger->pushHandler($stream);
-            }
-
-            return $logger;
+            $factory = new LoggingFactory($app['config']['file_logs_path'], 'search-api');
+            return $factory->logger();
         };
 
         $app['monitoring'] = function (Application $app) {
