@@ -14,7 +14,7 @@ elifePipeline {
 
     elifeMainlineOnly {
         stage 'End2end tests', {
-            elifeEnd2EndTest({
+            elifeEnd2endTest({
                 builderDeployRevision 'search--end2end', commit
                 builderSmokeTests 'search--end2end', '/srv/search'
                 builderCmd 'search--end2end', 'cd /srv/search; php bin/console queue:import all --env=end2end'
