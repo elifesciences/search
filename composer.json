@@ -19,7 +19,8 @@
         "webmozart/json": "^1.3@dev",
         "clue/block-react": "^1.1",
         "kevinrob/guzzle-cache-middleware": "^1.4",
-        "symfony/monolog-bridge": "^3.2"
+        "symfony/monolog-bridge": "^3.2",
+        "elife/logging-sdk": "dev-master"
     },
     "autoload": {
         "psr-4": {
