@@ -368,21 +368,21 @@ final class Kernel implements MinimalKernel
         };
 
         $app['aws.sqs'] = function (Application $app) {
-            if (isset($app['config']['aws']['credential_file']) && $app['config']['aws']['credential_file'] === true) {
-                return new SqsClient([
-                    'version' => '2012-11-05',
-                    'region' => $app['config']['aws']['region'],
-                ]);
-            }
-
-            return new SqsClient([
-                'credentials' => [
-                    'key' => $app['config']['aws']['key'],
-                    'secret' => $app['config']['aws']['secret'],
-                ],
+            $config = [
                 'version' => '2012-11-05',
                 'region' => $app['config']['aws']['region'],
-            ]);
+            ];
+            if (isset($app['config']['aws']['endpoint'])) {
+                $config['endpoint'] = $app['config']['aws']['endpoint'];
+            }
+            if (!isset($app['config']['aws']['credential_file']) || $app['config']['aws']['credential_file'] === false) {
+                $config['credentials'] = [
+                    'key' => $app['config']['aws']['key'],
+                    'secret' => $app['config']['aws']['secret'],
+                ];
+            }
+
+            return new SqsClient($config);
         };
 
         $app['aws.queue'] = function (Application $app) {
