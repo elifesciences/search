@@ -28,7 +28,6 @@ class VorArticleResponseTest extends SerializerTest
                     "version": 1,
                     "elocationId": "e09560",
                     "doi": "10.7554\/eLife.09560",
-                    "authorLine": "Lee R Berger et al",
                     "type": "research-article",
                     "published": "2015-09-10T00:00:00Z",
                     "id": "09560",

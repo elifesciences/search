@@ -26,7 +26,6 @@ class PoaArticleResponseTest extends SerializerTest
                     "version": 1,
                     "elocationId": "e14107",
                     "doi": "10.7554\/eLife.14107",
-                    "authorLine": "Yongjian Huang et al",
                     "type": "research-article",
                     "published": "2016-03-28T00:00:00Z",
                     "id": "14107",
