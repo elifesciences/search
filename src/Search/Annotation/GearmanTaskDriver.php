@@ -5,7 +5,7 @@ namespace eLife\Search\Annotation;
 use Closure;
 use Doctrine\Common\Annotations\Reader;
 use eLife\Search\Gearman\InvalidWorkflow;
-use eLife\Search\Monitoring;
+use eLife\Logging\Monitoring;
 use eLife\Search\Workflow\Workflow;
 use GearmanClient;
 use GearmanJob;

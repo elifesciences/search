@@ -20,7 +20,8 @@
         "clue/block-react": "^1.1",
         "kevinrob/guzzle-cache-middleware": "^1.4",
         "symfony/monolog-bridge": "^3.2",
-        "elife/logging-sdk": "dev-master"
+        "elife/logging-sdk": "dev-master",
+        "elife/bus-sdk": "dev-master"
     },
     "autoload": {
         "psr-4": {

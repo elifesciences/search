@@ -7,7 +7,7 @@ namespace tests\eLife\Search\Gearman {
     use eLife\Search\Annotation\GearmanTaskDriver;
     use eLife\Search\Annotation\GearmanTaskInstance;
     use eLife\Search\Annotation\Register;
-    use eLife\Search\Monitoring;
+    use eLife\Logging\Monitoring;
     use GearmanWorker;
     use MockAnnotations;
     use PHPUnit_Framework_TestCase;

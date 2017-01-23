@@ -3,11 +3,11 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiClient\Exception\BadResponse;
-use eLife\Search\Monitoring;
-use eLife\Search\Queue\InternalSqsMessage;
-use eLife\Search\Queue\QueueItem;
-use eLife\Search\Queue\QueueItemTransformer;
-use eLife\Search\Queue\WatchableQueue;
+use eLife\Logging\Monitoring;
+use eLife\Bus\Queue\InternalSqsMessage;
+use eLife\Bus\Queue\QueueItem;
+use eLife\Bus\Queue\QueueItemTransformer;
+use eLife\Bus\Queue\WatchableQueue;
 use GearmanClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
