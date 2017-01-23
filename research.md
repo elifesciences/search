@@ -1,6 +1,6 @@
 
 
-# Questions
+# Questions 
 - SOLR vs. ES
 - Facets vs. Redis
 - Storing subjects with either approach (generated config vs redis)
