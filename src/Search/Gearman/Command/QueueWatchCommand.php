@@ -46,10 +46,10 @@ class QueueWatchCommand extends QueueCommand
 
     protected function process(InputInterface $input, QueueItem $item)
     {
-        if (
-            $entity = $this->transform($item) &&
-            $gearmanTask = $this->gearmanTransformer->transform($item)
-        ) {
+        $entity = $this->transform($item);
+        $gearmanTask = $this->gearmanTransformer->transform($item);
+
+        if ($entity && $gearmanTask) {
             // Run the task.
             $this->logger->info($this->getName().' Running gearman task', [
                 'gearmanTask' => $gearmanTask,
