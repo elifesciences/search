@@ -128,10 +128,6 @@
             "installer": "composer",
             "env": "dev"
         },
-        "ocramius/package-versions": {
-            "install-path": "vendor/ocramius/package-versions",
-            "installer": "composer"
-        },
         "paragonie/random_compat": {
             "install-path": "vendor/paragonie/random_compat",
             "installer": "composer"
