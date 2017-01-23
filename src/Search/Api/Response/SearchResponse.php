@@ -40,9 +40,6 @@ final class SearchResponse implements HasHeaders
         ],
     ];
 
-    /**
-     * @SuppressWarnings(ForbiddenDateTime)
-     */
     public function __construct(array $items, $total, $subjects, TypesResponse $types)
     {
         $this->items = $items;
