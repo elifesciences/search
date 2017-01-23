@@ -1,6 +1,5 @@
 <?php
 
-
 namespace eLife\Search\Gearman\Command;
 
 use eLife\Bus\Command\QueueCommand;
