@@ -57,10 +57,6 @@
             "install-path": "vendor/elife/api-validator",
             "installer": "composer"
         },
-        "elife/bus-sdk": {
-            "install-path": "vendor/elife/bus-sdk",
-            "installer": "composer"
-        },
         "elife/logging-sdk": {
             "install-path": "vendor/elife/logging-sdk",
             "installer": "composer"
