@@ -2,9 +2,10 @@
     "name": "elife/search",
     "description": "Search API gateway",
     "require": {
-        "elife/api-validator": "dev-master#6dc70d71f5",
-        "elife/api-sdk": "dev-master#ccdd04b54d",
-        "elife/api": "dev-master#6ed114556d3",
+        "elife/api-validator": "dev-master#6dc70d71f5212588c3851b3b26e50474839bcffd",
+        "elife/api-sdk": "dev-master#ccdd04b54d3f96aa06861bd9d983774aca9c162f",
+        "elife/api-client": "dev-master#21724189d4806557cceb229ebbfec142732408cb",
+        "elife/api": "dev-master#6ed114556d3c0d8173d5ce9f164a2e64cf3f2467",
         "silex/silex": "^2.0",
         "jms/serializer": "^1.3",
         "symfony/psr-http-message-bridge": "^0.2.0",
