@@ -553,7 +553,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/c5a072d3006b66545cd395cb57d622d3fd69cd02",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/6ed114556d3c0d8173d5ce9f164a2e64cf3f2467",
                 "reference": "6ed114556d3c0d8173d5ce9f164a2e64cf3f2467",
                 "shasum": ""
             },
@@ -578,7 +578,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/3393705f8108084fee00d38b560f346b8a0ab49e",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/21724189d4806557cceb229ebbfec142732408cb",
                 "reference": "21724189d4806557cceb229ebbfec142732408cb",
                 "shasum": ""
             },
@@ -634,7 +634,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/d8fb35a2d1abf31be06e78d94620bf84f1789292",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/ccdd04b54d3f96aa06861bd9d983774aca9c162f",
                 "reference": "ccdd04b54d3f96aa06861bd9d983774aca9c162f",
                 "shasum": ""
             },
@@ -683,7 +683,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/cbbc73624f852fd899e73e2c83f51beb394bcdea",
+                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/6dc70d71f5212588c3851b3b26e50474839bcffd",
                 "reference": "6dc70d71f5212588c3851b3b26e50474839bcffd",
                 "shasum": ""
             },
