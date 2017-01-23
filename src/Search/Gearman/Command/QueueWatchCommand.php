@@ -38,7 +38,7 @@ class QueueWatchCommand extends QueueCommand
     protected function configure()
     {
         $this
-            ->setName('queue:watch:alternative')
+            ->setName('queue:watch')
             ->setDescription('Create queue watcher')
             ->setHelp('Creates process that will watch for incoming items on a queue')
             ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');

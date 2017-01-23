@@ -36,7 +36,7 @@ use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Api\SubjectStore;
 use eLife\Search\Gearman\Command\ImportCommand;
-use eLife\Search\Gearman\Command\QueueCommand;
+use eLife\Search\Gearman\Command\QueueWatchCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
 use GearmanClient;
 use GearmanWorker;
@@ -402,7 +402,7 @@ final class Kernel implements MinimalKernel
         $app['console.gearman.queue'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
-                return new QueueCommand(
+                return new QueueWatchCommand(
                     $app['mocks.queue'],
                     $app['mocks.queue_transformer'],
                     $app['gearman.client'],
@@ -414,7 +414,7 @@ final class Kernel implements MinimalKernel
                 );
             }
 
-            return new QueueCommand(
+            return new QueueWatchCommand(
                 $app['aws.queue'],
                 $app['aws.queue_transformer'],
                 $app['gearman.client'],
