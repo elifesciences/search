@@ -4,10 +4,10 @@ namespace tests\eLife\Search\Gearman {
 
     use Closure;
     use Doctrine\Common\Annotations\AnnotationReader;
+    use eLife\Logging\Monitoring;
     use eLife\Search\Annotation\GearmanTaskDriver;
     use eLife\Search\Annotation\GearmanTaskInstance;
     use eLife\Search\Annotation\Register;
-    use eLife\Logging\Monitoring;
     use GearmanWorker;
     use MockAnnotations;
     use PHPUnit_Framework_TestCase;
