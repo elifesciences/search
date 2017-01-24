@@ -15,7 +15,16 @@ use eLife\ApiClient\HttpClient\NotifyingHttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
+use eLife\Bus\Limit\CompositeLimit;
+use eLife\Bus\Limit\LoggingMiddleware;
+use eLife\Bus\Limit\MemoryLimit;
+use eLife\Bus\Limit\SignalsLimit;
+use eLife\Bus\Queue\Mock\QueueItemTransformerMock;
+use eLife\Bus\Queue\Mock\WatchableQueueMock;
+use eLife\Bus\Queue\SqsMessageTransformer;
+use eLife\Bus\Queue\SqsWatchableQueue;
 use eLife\Logging\LoggingFactory;
+use eLife\Logging\Monitoring;
 use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
@@ -27,16 +36,8 @@ use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Api\SubjectStore;
 use eLife\Search\Gearman\Command\ImportCommand;
-use eLife\Search\Gearman\Command\QueueCommand;
+use eLife\Search\Gearman\Command\QueueWatchCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
-use eLife\Search\Limit\CompositeLimit;
-use eLife\Search\Limit\LoggingMiddleware;
-use eLife\Search\Limit\MemoryLimit;
-use eLife\Search\Limit\SignalsLimit;
-use eLife\Search\Queue\Mock\QueueItemTransformerMock;
-use eLife\Search\Queue\Mock\WatchableQueueMock;
-use eLife\Search\Queue\SqsMessageTransformer;
-use eLife\Search\Queue\SqsWatchableQueue;
 use GearmanClient;
 use GearmanWorker;
 use GuzzleHttp\Client;
@@ -48,7 +49,6 @@ use JMS\Serializer\SerializerBuilder;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
-use Monolog\Logger;
 use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
@@ -402,7 +402,7 @@ final class Kernel implements MinimalKernel
         $app['console.gearman.queue'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
-                return new QueueCommand(
+                return new QueueWatchCommand(
                     $app['mocks.queue'],
                     $app['mocks.queue_transformer'],
                     $app['gearman.client'],
@@ -414,7 +414,7 @@ final class Kernel implements MinimalKernel
                 );
             }
 
-            return new QueueCommand(
+            return new QueueWatchCommand(
                 $app['aws.queue'],
                 $app['aws.queue_transformer'],
                 $app['gearman.client'],

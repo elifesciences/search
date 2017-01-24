@@ -3,9 +3,9 @@
 namespace eLife\Search\Gearman\Command;
 
 use eLife\ApiSdk\ApiSdk;
-use eLife\Search\Monitoring;
-use eLife\Search\Queue\InternalSqsMessage;
-use eLife\Search\Queue\WatchableQueue;
+use eLife\Bus\Queue\InternalSqsMessage;
+use eLife\Bus\Queue\WatchableQueue;
+use eLife\Logging\Monitoring;
 use Iterator;
 use Psr\Log\LoggerInterface;
 use RuntimeException;

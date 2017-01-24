@@ -4,6 +4,7 @@
     "require": {
         "elife/api-validator": "dev-master",
         "elife/api-sdk": "dev-master",
+        "elife/api-client": "dev-master",
         "elife/api": "dev-master",
         "silex/silex": "^2.0",
         "jms/serializer": "^1.5@dev",
@@ -20,7 +21,8 @@
         "clue/block-react": "^1.1",
         "kevinrob/guzzle-cache-middleware": "^1.4",
         "symfony/monolog-bridge": "^3.2",
-        "elife/logging-sdk": "dev-master"
+        "elife/logging-sdk": "dev-master",
+        "elife/bus-sdk": "dev-master"
     },
     "autoload": {
         "psr-4": {

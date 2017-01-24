@@ -3,14 +3,12 @@
 namespace eLife\Search;
 
 use Closure;
+use eLife\Bus\Queue\InternalSqsMessage;
+use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
-use eLife\Search\Queue\InternalSqsMessage;
-use eLife\Search\Queue\WatchableQueue;
 use Exception;
-use GuzzleHttp\Client;
 use LogicException;
-use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\ProgressBar;
