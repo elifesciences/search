@@ -9,6 +9,7 @@ return [
     'api_url' => 'http://0.0.0.0:1234',
     'elastic_servers' => ['http://elife_search_elasticsearch:9200'],
     'annotation_cache' => false,
+    'elastic_logging' => true,
     'ttl' => 0,
     'file_log_path' => __DIR__.'../var/logs/all.log',
     'file_error_log_path' => __DIR__.'../var/logs/error.log',
