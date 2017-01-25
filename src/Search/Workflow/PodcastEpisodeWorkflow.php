@@ -20,6 +20,7 @@ final class PodcastEpisodeWorkflow implements Workflow
     const WORKFLOW_FAILURE = -1;
 
     use JsonSerializeTransport;
+    use SortDate;
 
     /**
      * @var Serializer
@@ -82,8 +83,13 @@ final class PodcastEpisodeWorkflow implements Workflow
     {
         $this->logger->debug('indexing '.$podcastEpisode->getTitle());
 
+        // Normalized fields.
+        $podcastEpisodeObject = json_decode($this->serialize($podcastEpisode));
+        // Add sort date.
+        $this->addSortDate($podcastEpisodeObject, $podcastEpisode->getPublishedDate());
+
         return [
-            'json' => $this->serialize($podcastEpisode),
+            'json' => json_encode($podcastEpisodeObject),
             'type' => 'podcast-episode',
             'id' => $podcastEpisode->getNumber(),
         ];
@@ -128,6 +134,7 @@ final class PodcastEpisodeWorkflow implements Workflow
         } catch (Throwable $e) {
             $this->logger->error('PodcastEpisode<'.$id.'> rolling back', [
                 'exception' => $e,
+                'document' => $result ?? null,
             ]);
             $this->client->deleteDocument($type, $id);
             // We failed.
