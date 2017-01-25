@@ -34,7 +34,6 @@ use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
 use eLife\Search\Api\Elasticsearch\SearchResponseSerializer;
 use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
-use eLife\Search\Api\SubjectStore;
 use eLife\Search\Gearman\Command\ImportCommand;
 use eLife\Search\Gearman\Command\QueueWatchCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
@@ -273,12 +272,8 @@ final class Kernel implements MinimalKernel
             return new ApiSdk($notifyingHttpClient);
         };
 
-        $app['api.subjects'] = function (Application $app) {
-            return new SubjectStore($app['api.sdk']);
-        };
-
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['api.subjects'], $app['config']['elastic_index']);
+            return new SearchController($app['serializer'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['config']['elastic_index']);
         };
 
         //#####################################################
