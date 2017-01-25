@@ -6,11 +6,13 @@ use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
 use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
+use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
 use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResponse;
 use eLife\Search\Api\Response\TypesResponse;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
@@ -23,18 +25,21 @@ final class SearchController
     private $context;
     private $cache;
     private $elasticIndex;
+    private $logger;
 
     public function __construct(
         Serializer $serializer,
+        LoggerInterface $logger,
         SerializationContext $context,
         ElasticQueryExecutor $elastic,
         Cache $cache,
         string $apiUrl,
         string $elasticIndex
     ) {
-        $this->elastic = $elastic;
         $this->serializer = $serializer;
+        $this->logger = $logger;
         $this->context = $context;
+        $this->elastic = $elastic;
         $this->cache = $cache;
         $this->apiUrl = $apiUrl;
         $this->elasticIndex = $elasticIndex;
@@ -86,6 +91,17 @@ final class SearchController
             );
 
             return $this->serialize($result);
+        }
+        if ($data instanceof ErrorResponse) {
+            $this->logger->error('Error from elastic search during request', [
+                'request' => $request,
+                'error' => $data->error,
+            ]);
+        } else {
+            $this->logger->error('Unknown error from elastic search during request', [
+                'request' => $request,
+                'error' => $data,
+            ]);
         }
 
         throw new ServiceUnavailableHttpException(10);
