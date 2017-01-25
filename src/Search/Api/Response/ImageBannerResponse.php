@@ -34,7 +34,7 @@ final class ImageBannerResponse implements ImageVariant
         $sizes = [];
         foreach ($urls as $url) {
             foreach ($url as $k => $size) {
-                $sizes[$k] = str_replace(['http:/', 'internal_elife_dummy_api'], ['https:/', 'internal_elife_dummy_api.com'], $size);
+                $sizes[$k] = str_replace(['http:/', 'internal_elife_dummy_api'], ['https:/', 'internalelifedummyapi.com'], $size);
             }
         }
 

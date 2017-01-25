@@ -89,7 +89,7 @@ final class PodcastEpisodeWorkflow implements Workflow
         $this->addSortDate($podcastEpisodeObject, $podcastEpisode->getPublishedDate());
 
         return [
-            'json' => json_encode($podcastEpisode),
+            'json' => json_encode($podcastEpisodeObject),
             'type' => 'podcast-episode',
             'id' => $podcastEpisode->getNumber(),
         ];
@@ -134,6 +134,7 @@ final class PodcastEpisodeWorkflow implements Workflow
         } catch (Throwable $e) {
             $this->logger->error('PodcastEpisode<'.$id.'> rolling back', [
                 'exception' => $e,
+                'document' => $result ?? null,
             ]);
             $this->client->deleteDocument($type, $id);
             // We failed.
