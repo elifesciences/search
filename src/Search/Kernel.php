@@ -84,6 +84,7 @@ final class Kernel implements MinimalKernel
             'ttl' => 3600,
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
+            'elastic_logging' => false,
             'elastic_force_sync' => false,
             'file_logs_path' => self::ROOT.'/var/logs',
             'gearman_worker_timeout' => 20000,
@@ -273,7 +274,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['config']['elastic_index']);
+            return new SearchController($app['serializer'], $app['logger'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['config']['elastic_index']);
         };
 
         //#####################################################
@@ -289,7 +290,7 @@ final class Kernel implements MinimalKernel
             // Set hosts.
             $client->setHosts($app['config']['elastic_servers']);
             // Logging for ElasticSearch.
-            if ($app['config']['debug']) {
+            if ($app['config']['elastic_logging']) {
                 $client->setLogger($app['logger']);
             }
             $client->setSerializer($app['elastic.serializer']);

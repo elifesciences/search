@@ -9,6 +9,7 @@ return [
     'ttl' => 0,
     'elastic_force_sync' => true,
     'gearman_servers' => ['localhost'],
+    'elastic_logging' => true,
     'gearman_auto_restart' => false,
     'aws' => [
         'queue_name' => 'search--ci',

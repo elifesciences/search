@@ -10,6 +10,7 @@ return [
     'gearman_servers' => ['localhost'],
     'gearman_auto_restart' => false,
     'elastic_force_sync' => true,
+    'elastic_logging' => true,
     'aws' => [
         'queue_name' => 'search--dev',
         'credential_file' => true,
