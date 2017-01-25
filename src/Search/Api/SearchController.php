@@ -22,7 +22,6 @@ final class SearchController
     private $elastic;
     private $context;
     private $cache;
-    private $subjects;
     private $elasticIndex;
 
     public function __construct(
@@ -31,7 +30,6 @@ final class SearchController
         ElasticQueryExecutor $elastic,
         Cache $cache,
         string $apiUrl,
-        SubjectStore $subjects,
         string $elasticIndex
     ) {
         $this->elastic = $elastic;
@@ -39,7 +37,6 @@ final class SearchController
         $this->context = $context;
         $this->cache = $cache;
         $this->apiUrl = $apiUrl;
-        $this->subjects = $subjects;
         $this->elasticIndex = $elasticIndex;
     }
 
