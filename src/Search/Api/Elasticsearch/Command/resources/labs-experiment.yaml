@@ -66,6 +66,3 @@ labs-experiment:
       type: string
     number:
       type: long
-    type:
-      type: string
-      index: not_analyzed

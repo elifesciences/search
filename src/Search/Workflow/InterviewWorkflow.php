@@ -13,6 +13,7 @@ use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
+use function GuzzleHttp\json_encode;
 
 final class InterviewWorkflow implements Workflow
 {
@@ -80,11 +81,15 @@ final class InterviewWorkflow implements Workflow
      */
     public function index(Interview $interview) : array
     {
-        // This step is still not used very much.
         $this->logger->debug('Interview<'.$interview->getId().'> Indexing '.$interview->getTitle());
 
+        // Normalized fields.
+        $interviewObject = json_decode($this->serialize($interview));
+        $sortDate = $interview->getPublishedDate();
+        $interviewObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+
         return [
-            'json' => $this->serialize($interview),
+            'json' => json_encode($interviewObject),
             'type' => 'interview',
             'id' => $interview->getId(),
         ];

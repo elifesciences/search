@@ -13,6 +13,7 @@ use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
+use function GuzzleHttp\json_encode;
 
 final class EventWorkflow implements Workflow
 {
@@ -85,8 +86,13 @@ final class EventWorkflow implements Workflow
     {
         $this->logger->debug('Event<'.$event->getId().'> indexing with title '.$event->getTitle());
 
+        // Normalized fields.
+        $eventObject = json_decode($this->serialize($event));
+        $sortDate = $event->getStarts();
+        $eventObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+
         return [
-            'json' => $this->serialize($event),
+            'json' => json_encode($eventObject),
             'type' => 'event',
             'id' => $event->getId(),
         ];

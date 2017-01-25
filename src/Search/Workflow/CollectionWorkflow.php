@@ -13,6 +13,7 @@ use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
+use function GuzzleHttp\json_encode;
 
 final class CollectionWorkflow implements Workflow
 {
@@ -81,11 +82,14 @@ final class CollectionWorkflow implements Workflow
      */
     public function index(Collection $collection) : array
     {
-        // This step is still not used very much.
         $this->logger->debug('Collection<'.$collection->getId().'> Indexing '.$collection->getTitle());
+        // Normalized fields.
+        $collectionObject = json_decode($this->serialize($collection));
+        $sortDate = $collection->getPublishedDate();
+        $collectionObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
         // Return.
         return [
-            'json' => $this->serialize($collection),
+            'json' => json_encode($collectionObject),
             'type' => 'collection',
             'id' => $collection->getId(),
         ];

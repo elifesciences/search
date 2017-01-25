@@ -81,11 +81,15 @@ final class BlogArticleWorkflow implements Workflow
      */
     public function index(BlogArticle $blogArticle) : array
     {
-        // This step is still not used very much.
         $this->logger->debug('BlogArticle<'.$blogArticle->getId().'> Indexing '.$blogArticle->getTitle());
+        // Normalized fields.
+        $blogArticleObject = json_decode($this->serialize($blogArticle));
+        $sortDate = $blogArticle->getPublishedDate();
+        $blogArticleObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+
         // Return.
         return [
-            'json' => $this->serialize($blogArticle),
+            'json' => json_encode($blogArticleObject),
             'type' => 'blog-article',
             'id' => $blogArticle->getId(),
         ];

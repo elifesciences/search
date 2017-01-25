@@ -91,7 +91,6 @@ final class ResearchArticleWorkflow implements Workflow
      */
     public function index(ArticleVersion $article) : array
     {
-        // This step is still not used very much.
         $this->logger->debug('ResearchArticle<'.$article->getId().'> Indexing '.$article->getTitle());
 
         $articleObject = json_decode($this->serialize($article));
@@ -144,6 +143,9 @@ final class ResearchArticleWorkflow implements Workflow
             'format' => 'json',
             'value' => json_encode($articleObject->dataSets ?? '[]'),
         ];
+
+        $sortDate = $article->getPublishedDate() ? $article->getPublishedDate() : $article->getStatusDate();
+        $articleObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
 
         $this->logger->debug('Article<'.$article->getId().'> Detected type '.($article->getType() ?? 'research-article'));
 

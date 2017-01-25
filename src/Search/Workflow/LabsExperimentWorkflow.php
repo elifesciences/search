@@ -13,6 +13,7 @@ use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
+use function GuzzleHttp\json_encode;
 
 final class LabsExperimentWorkflow implements Workflow
 {
@@ -80,11 +81,15 @@ final class LabsExperimentWorkflow implements Workflow
      */
     public function index(LabsExperiment $labsExperiment) : array
     {
-        // This step is still not used very much.
         $this->logger->debug('LabsExperiment<'.$labsExperiment->getNumber().'> Indexing '.$labsExperiment->getTitle());
 
+        // Normalized fields.
+        $labsExperimentObject = json_decode($this->serialize($labsExperiment));
+        $sortDate = $labsExperiment->getPublishedDate();
+        $labsExperimentObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+
         return [
-            'json' => $this->serialize($labsExperiment),
+            'json' => json_encode($labsExperimentObject),
             'type' => 'labs-experiment',
             'id' => $labsExperiment->getNumber(),
         ];

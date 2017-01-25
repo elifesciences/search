@@ -106,19 +106,7 @@ final class ElasticQueryBuilder implements QueryBuilder
     public function sortByDate($reverse = false): QueryBuilder
     {
         $this->sort([
-            'statusDate' => [
-                'order' => $this->getSort($reverse),
-                'missing' => '_last',
-            ],
-        ]);
-        $this->sort([
-            'published' => [
-                'order' => $this->getSort($reverse),
-                'missing' => '_last',
-            ],
-        ]);
-        $this->sort([
-            'updated' => [
+            'sortDate' => [
                 'order' => $this->getSort($reverse),
                 'missing' => '_last',
             ],
@@ -152,6 +140,9 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function getQuery(): QueryExecutor
     {
+        //        echo "<pre>";
+//        var_dump(json_encode($this->query, JSON_PRETTY_PRINT));
+//        exit;
         $exec = clone $this->exec;
         $exec->setQuery($this);
 

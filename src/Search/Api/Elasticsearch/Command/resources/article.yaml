@@ -6,8 +6,6 @@ article:
       type: string
     doi:
       type: string
-    type:
-      type: string
     copyright:
       type: object
       properties:
@@ -272,4 +270,4 @@ article:
           type: string
         value:
           type: string
-  date_detection: true
+#  date_detection: true

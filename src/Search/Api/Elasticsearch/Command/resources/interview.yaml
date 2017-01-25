@@ -32,6 +32,3 @@ interview:
               type: string
             preferred:
               type: string
-    type:
-      type: string
-      index: not_analyzed

@@ -13,6 +13,7 @@ use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
+use function GuzzleHttp\json_encode;
 
 final class PodcastEpisodeWorkflow implements Workflow
 {
@@ -82,8 +83,13 @@ final class PodcastEpisodeWorkflow implements Workflow
     {
         $this->logger->debug('indexing '.$podcastEpisode->getTitle());
 
+        // Normalized fields.
+        $podcastEpisodeObject = json_decode($this->serialize($podcastEpisode));
+        $sortDate = $podcastEpisode->getPublishedDate();
+        $podcastEpisodeObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+
         return [
-            'json' => $this->serialize($podcastEpisode),
+            'json' => json_encode($podcastEpisode),
             'type' => 'podcast-episode',
             'id' => $podcastEpisode->getNumber(),
         ];

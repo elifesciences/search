@@ -12,8 +12,6 @@ blog-article:
           type: string
         title:
           type: string
-        type:
-          type: string
         uri:
           type: string
         width:

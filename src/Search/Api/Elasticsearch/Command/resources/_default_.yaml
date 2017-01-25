@@ -23,15 +23,24 @@ _default_:
     title:
       type: string
 
+    # The actual sort date
+    sortDate:
+      type: date
+      format: strict_date_optional_time
+      index: not_analyzed
+
     # Dates to sort on all fields.
     published:
       type: date
-      format: strict_date_optional_time||epoch_millis
+      format: strict_date_optional_time
+      index: not_analyzed
 
     updated:
       type: date
-      format: strict_date_optional_time||epoch_millis
+      format: strict_date_optional_time
+      index: not_analyzed
 
     statusDate:
       type: date
-      format: strict_date_optional_time||epoch_millis
+      format: strict_date_optional_time
+      index: not_analyzed
