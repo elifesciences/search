@@ -13,7 +13,6 @@ use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
-use function GuzzleHttp\json_encode;
 
 final class CollectionWorkflow implements Workflow
 {

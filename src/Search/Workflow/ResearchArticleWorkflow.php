@@ -144,7 +144,7 @@ final class ResearchArticleWorkflow implements Workflow
             'value' => json_encode($articleObject->dataSets ?? '[]'),
         ];
 
-        $sortDate = $article->getPublishedDate() ? $article->getPublishedDate() : $article->getStatusDate();
+        $sortDate = $article->getStatusDate() ? $article->getStatusDate() : $article->getPublishedDate();
         $articleObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
 
         $this->logger->debug('Article<'.$article->getId().'> Detected type '.($article->getType() ?? 'research-article'));
