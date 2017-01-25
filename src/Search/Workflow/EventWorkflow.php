@@ -17,6 +17,7 @@ use Throwable;
 final class EventWorkflow implements Workflow
 {
     use JsonSerializeTransport;
+    use SortDate;
 
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
@@ -87,8 +88,8 @@ final class EventWorkflow implements Workflow
 
         // Normalized fields.
         $eventObject = json_decode($this->serialize($event));
-        $sortDate = $event->getStarts();
-        $eventObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+        // Adds the start time of the event to sort on.
+        $this->addSortDate($eventObject, $event->getStarts());
 
         return [
             'json' => json_encode($eventObject),

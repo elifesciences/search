@@ -20,6 +20,7 @@ final class CollectionWorkflow implements Workflow
     const WORKFLOW_FAILURE = -1;
 
     use JsonSerializeTransport;
+    use SortDate;
 
     /**
      * @var Serializer
@@ -84,8 +85,7 @@ final class CollectionWorkflow implements Workflow
         $this->logger->debug('Collection<'.$collection->getId().'> Indexing '.$collection->getTitle());
         // Normalized fields.
         $collectionObject = json_decode($this->serialize($collection));
-        $sortDate = $collection->getPublishedDate();
-        $collectionObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+        $this->addSortDate($collectionObject, $collection->getPublishedDate());
         // Return.
         return [
             'json' => json_encode($collectionObject),

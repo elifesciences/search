@@ -20,6 +20,7 @@ final class PodcastEpisodeWorkflow implements Workflow
     const WORKFLOW_FAILURE = -1;
 
     use JsonSerializeTransport;
+    use SortDate;
 
     /**
      * @var Serializer
@@ -84,8 +85,8 @@ final class PodcastEpisodeWorkflow implements Workflow
 
         // Normalized fields.
         $podcastEpisodeObject = json_decode($this->serialize($podcastEpisode));
-        $sortDate = $podcastEpisode->getPublishedDate();
-        $podcastEpisodeObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+        // Add sort date.
+        $this->addSortDate($podcastEpisodeObject, $podcastEpisode->getPublishedDate());
 
         return [
             'json' => json_encode($podcastEpisode),

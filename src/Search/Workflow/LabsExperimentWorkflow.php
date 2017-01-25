@@ -20,6 +20,7 @@ final class LabsExperimentWorkflow implements Workflow
     const WORKFLOW_FAILURE = -1;
 
     use JsonSerializeTransport;
+    use SortDate;
 
     /**
      * @var Serializer
@@ -84,8 +85,7 @@ final class LabsExperimentWorkflow implements Workflow
 
         // Normalized fields.
         $labsExperimentObject = json_decode($this->serialize($labsExperiment));
-        $sortDate = $labsExperiment->getPublishedDate();
-        $labsExperimentObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+        $this->addSortDate($labsExperimentObject, $labsExperiment->getPublishedDate());
 
         return [
             'json' => json_encode($labsExperimentObject),

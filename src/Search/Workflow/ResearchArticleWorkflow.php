@@ -23,6 +23,7 @@ final class ResearchArticleWorkflow implements Workflow
     const WORKFLOW_FAILURE = -1;
 
     use JsonSerializeTransport;
+    use SortDate;
 
     /**
      * @var Serializer
@@ -145,7 +146,7 @@ final class ResearchArticleWorkflow implements Workflow
         ];
 
         $sortDate = $article->getStatusDate() ? $article->getStatusDate() : $article->getPublishedDate();
-        $articleObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+        $this->addSortDate($articleObject, $sortDate);
 
         $this->logger->debug('Article<'.$article->getId().'> Detected type '.($article->getType() ?? 'research-article'));
 

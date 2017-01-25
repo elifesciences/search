@@ -20,6 +20,7 @@ final class InterviewWorkflow implements Workflow
     const WORKFLOW_FAILURE = -1;
 
     use JsonSerializeTransport;
+    use SortDate;
 
     /**
      * @var Serializer
@@ -84,8 +85,8 @@ final class InterviewWorkflow implements Workflow
 
         // Normalized fields.
         $interviewObject = json_decode($this->serialize($interview));
-        $sortDate = $interview->getPublishedDate();
-        $interviewObject->sortDate = $sortDate->format('Y-m-d\TH:i:s\Z');
+        // Add publish date to sort on.
+        $this->addSortDate($interviewObject, $interview->getPublishedDate());
 
         return [
             'json' => json_encode($interviewObject),
