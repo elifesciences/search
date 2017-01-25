@@ -84,7 +84,7 @@ final class SearchController
             $result = new SearchResponse(
                 $data->toArray(),
                 $data->getTotalResults(),
-                $this->subjects->titlesFromList($data->getSubjects()),
+                $data->getSubjects(),
                 TypesResponse::fromArray($data->getTypeTotals())
             );
 
