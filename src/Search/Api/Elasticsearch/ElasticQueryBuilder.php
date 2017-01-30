@@ -57,6 +57,12 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this->order;
     }
 
+    private function postQuery(string $key, $value)
+    {
+        $this->query['body']['post_filter'] = $this->query['body']['post_filter'] ?? [];
+        $this->query['body']['post_filter']['terms'][$key] = $value;
+    }
+
     private function query($key, array $body)
     {
         $this->query['body']['query'] = $this->query['body']['query'] ?? [];
@@ -117,18 +123,14 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function whereSubjects(array $subjects = []): QueryBuilder
     {
-        $this->must([
-            'terms' => ['subjects.id' => $subjects],
-        ]);
+        $this->postQuery('subjects.id', $subjects);
 
         return $this;
     }
 
     public function whereType(array $types = []): QueryBuilder
     {
-        $this->must([
-            'terms' => ['_type' => $types],
-        ]);
+        $this->postQuery('_type', $types);
 
         return $this;
     }
