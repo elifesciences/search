@@ -3,7 +3,7 @@
 namespace tests\eLife\Search;
 
 /**
- * @group web2
+ * @group web
  */
 class FacetCountTest extends ElasticTestCase
 {
