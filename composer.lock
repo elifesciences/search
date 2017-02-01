@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4938c939706486db9b1414face637c5c",
-    "content-hash": "6ed1615dfcd903ced17436efaa44773b",
+    "hash": "4fd0a2fb69936af8323c4748b1bc064a",
+    "content-hash": "2381cd04c159f64f08d9e62b1bbc17aa",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -630,12 +630,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "d8fb35a2d1abf31be06e78d94620bf84f1789292"
+                "reference": "d33640f7627dacee243b222b4fe743bc3c343a9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/d8fb35a2d1abf31be06e78d94620bf84f1789292",
-                "reference": "d8fb35a2d1abf31be06e78d94620bf84f1789292",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/d33640f7627dacee243b222b4fe743bc3c343a9e",
+                "reference": "d33640f7627dacee243b222b4fe743bc3c343a9e",
                 "shasum": ""
             },
             "require": {
@@ -671,7 +671,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2017-01-19 08:32:48"
+            "time": "2017-02-01 09:45:15"
         },
         {
             "name": "elife/api-validator",
@@ -759,7 +759,7 @@
             "description": "eLife Sciences bus SDK",
             "time": "2017-01-20 15:17:32"
         },
-         {
+        {
             "name": "elife/logging-sdk",
             "version": "dev-master",
             "source": {
@@ -5618,6 +5618,7 @@
     "stability-flags": {
         "elife/api-validator": 20,
         "elife/api-sdk": 20,
+        "elife/api-client": 20,
         "elife/api": 20,
         "jms/serializer": 20,
         "propel/propel": 15,
