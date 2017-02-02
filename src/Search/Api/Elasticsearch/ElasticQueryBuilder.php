@@ -155,7 +155,7 @@ final class ElasticQueryBuilder implements QueryBuilder
             'sortDate' => [
                 'gte' => $fromDate->format('Y/m/d'),
                 'lt' => $toDate->format('Y/m/d'),
-                'format' => 'yyyy/MM/dd||yyyy/MM/dd',
+                'format' => 'yyyy/MM/dd',
             ],
         ]);
 
