@@ -2,6 +2,7 @@
 
 namespace eLife\Search\Api;
 
+use DateTimeImmutable;
 use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
@@ -15,6 +16,7 @@ use JMS\Serializer\Serializer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 final class SearchController
@@ -54,7 +56,27 @@ final class SearchController
         $sort = $request->query->get('sort', 'relevance');
         $subjects = $request->query->get('subject');
         $types = $request->query->get('type');
+        $fromDate = $request->query->get('fromDate');
+        $toDate = $request->query->get('toDate');
+        $toDateTime = null;
+        $fromDateTime = null;
 
+        if (
+            ($fromDate !== null && $toDate === null) ||
+            ($fromDate === null && $toDate !== null)
+        ) {
+            throw new BadRequestHttpException('You must provide both toDate and fromDate');
+        }
+
+        if ($toDate && $fromDate) {
+            $toDateTime = DateTimeImmutable::createFromFormat('Y-m-d', $toDate);
+            $fromDateTime = DateTimeImmutable::createFromFormat('Y-m-d', $fromDate);
+            if ($toDateTime === false || $fromDateTime === false) {
+                throw new BadRequestHttpException('Invalid date range provided');
+            }
+        }
+
+        /** @var ElasticQueryBuilder $query */
         $query = new ElasticQueryBuilder($this->elasticIndex, $this->elastic);
 
         $query = $query->searchFor($for);
@@ -64,6 +86,10 @@ final class SearchController
         }
         if ($types) {
             $query->whereType($types);
+        }
+
+        if ($toDateTime && $fromDateTime) {
+            $query->betweenDates($fromDateTime, $toDateTime);
         }
 
         $query = $query

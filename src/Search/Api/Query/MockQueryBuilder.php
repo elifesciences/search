@@ -2,6 +2,8 @@
 
 namespace eLife\Search\Api\Query;
 
+use DateTimeImmutable;
+
 final class MockQueryBuilder implements QueryBuilder
 {
     use RamlRequirement;
@@ -126,5 +128,10 @@ final class MockQueryBuilder implements QueryBuilder
     public function getRawQuery(): array
     {
         return $this->data;
+    }
+
+    public function betweenDates(DateTimeImmutable $fromDate, DateTimeImmutable $toDate): QueryBuilder
+    {
+        return $this;
     }
 }
