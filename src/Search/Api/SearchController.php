@@ -47,6 +47,33 @@ final class SearchController
         $this->elasticIndex = $elasticIndex;
     }
 
+    private function validateDateRange(DateTimeImmutable $fromDateTime = null, DateTimeImmutable $toDateTime = null)
+    {
+        if ($toDateTime === false || $fromDateTime === false) {
+            throw new BadRequestHttpException('Invalid date provided');
+        }
+        if (
+            ($toDateTime && $fromDateTime) &&
+            ($fromDateTime->diff($toDateTime)->invert === 1)
+        ) {
+            throw new BadRequestHttpException('fromDate must be before to date');
+        }
+    }
+
+    private function createValidDateTime(string $format, string $time, $strict = true)
+    {
+        $dateTime = DateTimeImmutable::createFromFormat($format, $time);
+        $errors = DateTimeImmutable::getLastErrors();
+        if (
+            ($strict && $errors['warning_count'] !== 0) ||
+            $errors['error_count'] !== 0
+        ) {
+            throw new BadRequestHttpException("Invalid date format provided ($format)");
+        }
+
+        return $dateTime;
+    }
+
     public function indexAction(Request $request)
     {
         $for = $request->query->get('for', '');
@@ -61,19 +88,10 @@ final class SearchController
         $toDateTime = null;
         $fromDateTime = null;
 
-        if (
-            ($fromDate !== null && $toDate === null) ||
-            ($fromDate === null && $toDate !== null)
-        ) {
-            throw new BadRequestHttpException('You must provide both toDate and fromDate');
-        }
-
-        if ($toDate && $fromDate) {
-            $toDateTime = DateTimeImmutable::createFromFormat('Y-m-d', $toDate);
-            $fromDateTime = DateTimeImmutable::createFromFormat('Y-m-d', $fromDate);
-            if ($toDateTime === false || $fromDateTime === false) {
-                throw new BadRequestHttpException('Invalid date range provided');
-            }
+        if ($toDate || $fromDate) {
+            $toDateTime = $toDate ? $this->createValidDateTime('Y-m-d', $toDate) : null;
+            $fromDateTime = $fromDate ? $this->createValidDateTime('Y-m-d', $fromDate) : null;
+            $this->validateDateRange($fromDateTime, $toDateTime);
         }
 
         /** @var ElasticQueryBuilder $query */
@@ -88,7 +106,7 @@ final class SearchController
             $query->whereType($types);
         }
 
-        if ($toDateTime && $fromDateTime) {
+        if ($toDateTime || $fromDateTime) {
             $query->betweenDates($fromDateTime, $toDateTime);
         }
 
