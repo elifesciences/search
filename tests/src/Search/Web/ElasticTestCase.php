@@ -139,7 +139,6 @@ abstract class ElasticTestCase extends WebTestCase
     {
         $response = $this->getResponse();
         if (!$response->isOk()) {
-            var_dump($response);
             $this->fail('Response returned was not 200');
         }
         $json = json_decode($response->getContent());
