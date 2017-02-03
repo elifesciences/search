@@ -159,7 +159,7 @@ final class ElasticQueryBuilder implements QueryBuilder
             $query['gte'] = $fromDate->format(self::ELASTIC_DATETIME_FORMAT);
         }
         if ($toDate) {
-            $query['lt'] = $toDate->format(self::ELASTIC_DATETIME_FORMAT);
+            $query['lte'] = $toDate->format(self::ELASTIC_DATETIME_FORMAT);
         }
         $this->query('range', [
             'sortDate' => $query,
