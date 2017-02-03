@@ -38,7 +38,7 @@ final class Console
     public static $quick_commands = [
         'cache:clear' => ['description' => 'Clears cache'],
         'queue:interactive' => ['description' => 'Manually enqueue item into SQS. (interactive)'],
-        'queue:create' => ['description' => 'Creates queue'],
+        'queue:create' => ['description' => 'Creates queue [development-only]'],
         'queue:push' => [
             'description' => 'Manually enqueue item into SQS.',
             'args' => [
@@ -56,10 +56,13 @@ final class Console
 
     public function queueCreateCommand()
     {
-        /** @var SqsClient $queue */
-        $queue = $this->app->get('aws.sqs');
+        if ($this->config['debug'] !== true) {
+            throw new LogicException('This method should not be called outside of development');
+        }
+        /* @var SqsClient $queue */
+        $sqs = $this->app->get('aws.sqs');
 
-        $queue->createQueue([
+        $sqs->createQueue([
             'Region' => $this->config['aws']['region'],
             'QueueName' => $this->config['aws']['queue_name'],
         ]);
