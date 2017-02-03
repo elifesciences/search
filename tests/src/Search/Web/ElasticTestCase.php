@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\eLife\Search;
+namespace tests\eLife\Search\Web;
 
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Console;
@@ -139,6 +139,7 @@ abstract class ElasticTestCase extends WebTestCase
     {
         $response = $this->getResponse();
         if (!$response->isOk()) {
+            var_dump($response);
             $this->fail('Response returned was not 200');
         }
         $json = json_decode($response->getContent());
@@ -171,12 +172,12 @@ abstract class ElasticTestCase extends WebTestCase
 
     public function createConfiguration()
     {
-        if (file_exists(__DIR__.'/../../../config/local.php')) {
+        if (file_exists(__DIR__.'/../../../../config/local.php')) {
             $this->isLocal = true;
-            $config = include __DIR__.'/../../../config/local.php';
+            $config = include __DIR__.'/../../../../config/local.php';
         } else {
             $this->isLocal = false;
-            $config = include __DIR__.'/../../../config/ci.php';
+            $config = include __DIR__.'/../../../../config/ci.php';
         }
 
         $config['elastic_index'] = 'elife_test';
