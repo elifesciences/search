@@ -11,6 +11,9 @@ final class ElasticQueryBuilder implements QueryBuilder
     private $order;
     private $exec;
 
+    const PHP_DATETIME_FORMAT = 'yyyy/MM/dd HH:mm:ss';
+    const ELASTIC_DATETIME_FORMAT = 'Y/m/d H:i:s';
+
     public function __construct(string $index, ElasticQueryExecutor $exec)
     {
         $this->query['index'] = $index;
@@ -151,12 +154,12 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function betweenDates(DateTimeImmutable $fromDate = null, DateTimeImmutable $toDate = null): QueryBuilder
     {
-        $query = ['format' => 'yyyy/MM/dd'];
+        $query = ['format' => self::PHP_DATETIME_FORMAT];
         if ($fromDate) {
-            $query['gte'] = $fromDate->format('Y/m/d');
+            $query['gte'] = $fromDate->format(self::ELASTIC_DATETIME_FORMAT);
         }
         if ($toDate) {
-            $query['lt'] = $toDate->format('Y/m/d');
+            $query['lt'] = $toDate->format(self::ELASTIC_DATETIME_FORMAT);
         }
         $this->query('range', [
             'sortDate' => $query,
