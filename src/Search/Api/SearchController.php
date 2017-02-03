@@ -3,6 +3,7 @@
 namespace eLife\Search\Api;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
@@ -62,7 +63,7 @@ final class SearchController
 
     private function createValidDateTime(string $format, string $time, $strict = true)
     {
-        $dateTime = DateTimeImmutable::createFromFormat($format, $time);
+        $dateTime = DateTimeImmutable::createFromFormat($format, $time, new DateTimeZone('UTC'));
         $errors = DateTimeImmutable::getLastErrors();
         if (
             ($strict && $errors['warning_count'] !== 0) ||
@@ -89,8 +90,8 @@ final class SearchController
         $fromDateTime = null;
 
         if ($toDate || $fromDate) {
-            $toDateTime = $toDate ? $this->createValidDateTime('Y-m-d', $toDate) : null;
-            $fromDateTime = $fromDate ? $this->createValidDateTime('Y-m-d', $fromDate) : null;
+            $toDateTime = $toDate ? $this->createValidDateTime('Y-m-d H:i:s', $toDate.' 00:00:00') : null;
+            $fromDateTime = $fromDate ? $this->createValidDateTime('Y-m-d H:i:s', $fromDate.' 23:59:59') : null;
             $this->validateDateRange($fromDateTime, $toDateTime);
         }
 
