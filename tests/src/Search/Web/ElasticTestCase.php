@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\eLife\Search;
+namespace tests\eLife\Search\Web;
 
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Console;
@@ -11,6 +11,7 @@ use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 abstract class ElasticTestCase extends WebTestCase
@@ -137,9 +138,10 @@ abstract class ElasticTestCase extends WebTestCase
 
     public function getJsonResponse()
     {
+        /** @var Response $response */
         $response = $this->getResponse();
         if (!$response->isOk()) {
-            $this->fail('Response returned was not 200');
+            $this->fail('Response returned was not 200: '.$response->getContent());
         }
         $json = json_decode($response->getContent());
 
@@ -171,12 +173,12 @@ abstract class ElasticTestCase extends WebTestCase
 
     public function createConfiguration()
     {
-        if (file_exists(__DIR__.'/../../../config/local.php')) {
+        if (file_exists(__DIR__.'/../../../../config/local.php')) {
             $this->isLocal = true;
-            $config = include __DIR__.'/../../../config/local.php';
+            $config = include __DIR__.'/../../../../config/local.php';
         } else {
             $this->isLocal = false;
-            $config = include __DIR__.'/../../../config/ci.php';
+            $config = include __DIR__.'/../../../../config/ci.php';
         }
 
         $config['elastic_index'] = 'elife_test';

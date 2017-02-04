@@ -2,6 +2,7 @@
 
 namespace eLife\Search\Api\Elasticsearch;
 
+use DateTimeImmutable;
 use eLife\Search\Api\Query\QueryBuilder;
 use eLife\Search\Api\Query\QueryExecutor;
 
@@ -9,6 +10,9 @@ final class ElasticQueryBuilder implements QueryBuilder
 {
     private $order;
     private $exec;
+
+    const PHP_DATETIME_FORMAT = 'yyyy/MM/dd HH:mm:ss';
+    const ELASTIC_DATETIME_FORMAT = 'Y/m/d H:i:s';
 
     public function __construct(string $index, ElasticQueryExecutor $exec)
     {
@@ -146,5 +150,21 @@ final class ElasticQueryBuilder implements QueryBuilder
         $exec->setQuery($this);
 
         return $exec;
+    }
+
+    public function betweenDates(DateTimeImmutable $fromDate = null, DateTimeImmutable $toDate = null): QueryBuilder
+    {
+        $query = ['format' => self::PHP_DATETIME_FORMAT];
+        if ($fromDate) {
+            $query['gte'] = $fromDate->format(self::ELASTIC_DATETIME_FORMAT);
+        }
+        if ($toDate) {
+            $query['lte'] = $toDate->format(self::ELASTIC_DATETIME_FORMAT);
+        }
+        $this->query('range', [
+            'sortDate' => $query,
+        ]);
+
+        return $this;
     }
 }

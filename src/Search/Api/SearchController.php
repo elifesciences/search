@@ -2,6 +2,8 @@
 
 namespace eLife\Search\Api;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
@@ -15,6 +17,7 @@ use JMS\Serializer\Serializer;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 final class SearchController
@@ -45,6 +48,33 @@ final class SearchController
         $this->elasticIndex = $elasticIndex;
     }
 
+    private function validateDateRange(DateTimeImmutable $fromDateTime = null, DateTimeImmutable $toDateTime = null)
+    {
+        if ($toDateTime === false || $fromDateTime === false) {
+            throw new BadRequestHttpException('Invalid date provided');
+        }
+        if (
+            ($toDateTime && $fromDateTime) &&
+            ($fromDateTime->diff($toDateTime)->invert === 1)
+        ) {
+            throw new BadRequestHttpException('fromDate must be before to date');
+        }
+    }
+
+    private function createValidDateTime(string $format, string $time, $strict = true)
+    {
+        $dateTime = DateTimeImmutable::createFromFormat($format, $time, new DateTimeZone('UTC'));
+        $errors = DateTimeImmutable::getLastErrors();
+        if (
+            ($strict && $errors['warning_count'] !== 0) ||
+            $errors['error_count'] !== 0
+        ) {
+            throw new BadRequestHttpException("Invalid date format provided ($format)");
+        }
+
+        return $dateTime;
+    }
+
     public function indexAction(Request $request)
     {
         $for = $request->query->get('for', '');
@@ -54,7 +84,18 @@ final class SearchController
         $sort = $request->query->get('sort', 'relevance');
         $subjects = $request->query->get('subject');
         $types = $request->query->get('type');
+        $fromDate = $request->query->get('fromDate');
+        $toDate = $request->query->get('toDate');
+        $toDateTime = null;
+        $fromDateTime = null;
 
+        if ($toDate || $fromDate) {
+            $toDateTime = $toDate ? $this->createValidDateTime('Y-m-d H:i:s', $toDate.' 00:00:00') : null;
+            $fromDateTime = $fromDate ? $this->createValidDateTime('Y-m-d H:i:s', $fromDate.' 23:59:59') : null;
+            $this->validateDateRange($fromDateTime, $toDateTime);
+        }
+
+        /** @var ElasticQueryBuilder $query */
         $query = new ElasticQueryBuilder($this->elasticIndex, $this->elastic);
 
         $query = $query->searchFor($for);
@@ -64,6 +105,10 @@ final class SearchController
         }
         if ($types) {
             $query->whereType($types);
+        }
+
+        if ($toDateTime || $fromDateTime) {
+            $query->betweenDates($fromDateTime, $toDateTime);
         }
 
         $query = $query

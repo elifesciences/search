@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\eLife\Search;
+namespace tests\eLife\Search\Web;
 
 /**
  * @group web

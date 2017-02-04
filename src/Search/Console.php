@@ -2,6 +2,8 @@
 
 namespace eLife\Search;
 
+use Aws\Sqs\Exception\SqsException;
+use Aws\Sqs\SqsClient;
 use Closure;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
@@ -36,6 +38,7 @@ final class Console
     public static $quick_commands = [
         'cache:clear' => ['description' => 'Clears cache'],
         'queue:interactive' => ['description' => 'Manually enqueue item into SQS. (interactive)'],
+        'queue:create' => ['description' => 'Creates queue [development-only]'],
         'queue:push' => [
             'description' => 'Manually enqueue item into SQS.',
             'args' => [
@@ -50,6 +53,20 @@ final class Console
             'description' => 'Counts (approximately) how many messages are in the queue',
         ],
     ];
+
+    public function queueCreateCommand()
+    {
+        if ($this->config['debug'] !== true) {
+            throw new LogicException('This method should not be called outside of development');
+        }
+        /* @var SqsClient $queue */
+        $sqs = $this->app->get('aws.sqs');
+
+        $sqs->createQueue([
+            'Region' => $this->config['aws']['region'],
+            'QueueName' => $this->config['aws']['queue_name'],
+        ]);
+    }
 
     public function queuePushCommand(InputInterface $input, OutputInterface $output)
     {
@@ -106,6 +123,8 @@ final class Console
     public function __construct(Application $console, Kernel $app)
     {
         $this->console = $console;
+        $this->config = $app->get('config');
+        $this->logger = $app->get('logger');
         $this->app = $app;
         $this->root = __DIR__.'/../..';
 
@@ -120,14 +139,17 @@ final class Console
 
         // Add commands from the DI container. (for more complex commands.)
         if (GEARMAN_INSTALLED) {
-            $this->console->addCommands([
-                $app->get('console.gearman.worker'),
-                $app->get('console.gearman.client'),
-                $app->get('console.gearman.queue'),
-                $app->get('console.build_index'),
-            ]);
+            try {
+                $this->console->addCommands([
+                    $app->get('console.gearman.worker'),
+                    $app->get('console.gearman.client'),
+                    $app->get('console.gearman.queue'),
+                    $app->get('console.build_index'),
+                ]);
+            } catch (SqsException $e) {
+                $this->logger->debug('Cannot connect to SQS so some commands are not available', ['exception' => $e]);
+            }
         }
-        $this->logger = $app->get('logger');
     }
 
     private function path($path = '')

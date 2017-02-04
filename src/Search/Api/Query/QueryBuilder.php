@@ -2,6 +2,8 @@
 
 namespace eLife\Search\Api\Query;
 
+use DateTimeImmutable;
+
 interface QueryBuilder
 {
     public function searchFor(string $string) : QueryBuilder;
@@ -17,6 +19,8 @@ interface QueryBuilder
     public function whereSubjects(array $subjects = []) : QueryBuilder;
 
     public function whereType(array $types = []) : QueryBuilder;
+
+    public function betweenDates(DateTimeImmutable $fromDate = null, DateTimeImmutable $toDate = null) : QueryBuilder;
 
     public function getQuery() : QueryExecutor;
 
