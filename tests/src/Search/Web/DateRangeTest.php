@@ -7,7 +7,7 @@ namespace tests\eLife\Search\Web;
  */
 class DateRangeTest extends ElasticTestCase
 {
-    public function test_date_range_from_only()
+    public function test_date_range_start_only()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -20,12 +20,12 @@ class DateRangeTest extends ElasticTestCase
         $response = $this->getJsonResponse();
         $this->assertEquals($response->total, 2);
 
-        $this->jsonRequest('GET', '/search', ['end-date' => '2016-11-01']);
+        $this->jsonRequest('GET', '/search', ['start-date' => '2016-11-01']);
         $response = $this->getJsonResponse();
         $this->assertEquals($response->total, 3);
     }
 
-    public function test_date_range_to_only()
+    public function test_date_range_end_only()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -43,7 +43,7 @@ class DateRangeTest extends ElasticTestCase
         $this->assertEquals($response->total, 0);
     }
 
-    public function test_date_range_to_and_from()
+    public function test_date_range_start_and_end()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
