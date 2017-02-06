@@ -20,7 +20,7 @@ interface QueryBuilder
 
     public function whereType(array $types = []) : QueryBuilder;
 
-    public function betweenDates(DateTimeImmutable $fromDate = null, DateTimeImmutable $toDate = null) : QueryBuilder;
+    public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null) : QueryBuilder;
 
     public function getQuery() : QueryExecutor;
 

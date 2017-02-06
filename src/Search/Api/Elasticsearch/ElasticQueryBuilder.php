@@ -152,14 +152,14 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $exec;
     }
 
-    public function betweenDates(DateTimeImmutable $fromDate = null, DateTimeImmutable $toDate = null): QueryBuilder
+    public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null): QueryBuilder
     {
         $query = ['format' => self::PHP_DATETIME_FORMAT];
-        if ($fromDate) {
-            $query['gte'] = $fromDate->format(self::ELASTIC_DATETIME_FORMAT);
+        if ($startDate) {
+            $query['gte'] = $startDate->format(self::ELASTIC_DATETIME_FORMAT);
         }
-        if ($toDate) {
-            $query['lte'] = $toDate->format(self::ELASTIC_DATETIME_FORMAT);
+        if ($endDate) {
+            $query['lte'] = $endDate->format(self::ELASTIC_DATETIME_FORMAT);
         }
         $this->query('range', [
             'sortDate' => $query,

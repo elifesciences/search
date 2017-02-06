@@ -48,16 +48,16 @@ final class SearchController
         $this->elasticIndex = $elasticIndex;
     }
 
-    private function validateDateRange(DateTimeImmutable $fromDateTime = null, DateTimeImmutable $toDateTime = null)
+    private function validateDateRange(DateTimeImmutable $startDateTime = null, DateTimeImmutable $endDateTime = null)
     {
-        if ($toDateTime === false || $fromDateTime === false) {
+        if ($endDateTime === false || $startDateTime === false) {
             throw new BadRequestHttpException('Invalid date provided');
         }
         if (
-            ($toDateTime && $fromDateTime) &&
-            ($fromDateTime->diff($toDateTime)->invert === 1)
+            ($endDateTime && $startDateTime) &&
+            ($startDateTime->diff($endDateTime)->invert === 1)
         ) {
-            throw new BadRequestHttpException('fromDate must be before to date');
+            throw new BadRequestHttpException('start-date must be the same or before end-date');
         }
     }
 
@@ -84,15 +84,15 @@ final class SearchController
         $sort = $request->query->get('sort', 'relevance');
         $subjects = $request->query->get('subject');
         $types = $request->query->get('type');
-        $fromDate = $request->query->get('fromDate');
-        $toDate = $request->query->get('toDate');
-        $toDateTime = null;
-        $fromDateTime = null;
+        $startDate = $request->query->get('start-date');
+        $endDate = $request->query->get('end-date');
+        $startDateTime = null;
+        $endDateTime = null;
 
-        if ($toDate || $fromDate) {
-            $toDateTime = $toDate ? $this->createValidDateTime('Y-m-d H:i:s', $toDate.' 00:00:00') : null;
-            $fromDateTime = $fromDate ? $this->createValidDateTime('Y-m-d H:i:s', $fromDate.' 23:59:59') : null;
-            $this->validateDateRange($fromDateTime, $toDateTime);
+        if ($endDate || $startDate) {
+            $startDateTime = $endDate ? $this->createValidDateTime('Y-m-d H:i:s', $endDate.' 00:00:00') : null;
+            $endDateTime = $startDate ? $this->createValidDateTime('Y-m-d H:i:s', $startDate.' 23:59:59') : null;
+            $this->validateDateRange($endDateTime, $startDateTime);
         }
 
         /** @var ElasticQueryBuilder $query */
@@ -107,8 +107,8 @@ final class SearchController
             $query->whereType($types);
         }
 
-        if ($toDateTime || $fromDateTime) {
-            $query->betweenDates($fromDateTime, $toDateTime);
+        if ($startDateTime || $endDateTime) {
+            $query->betweenDates($endDateTime, $startDateTime);
         }
 
         $query = $query
