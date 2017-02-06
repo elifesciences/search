@@ -130,7 +130,7 @@ final class MockQueryBuilder implements QueryBuilder
         return $this->data;
     }
 
-    public function betweenDates(DateTimeImmutable $fromDate = null, DateTimeImmutable $toDate = null): QueryBuilder
+    public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null): QueryBuilder
     {
         return $this;
     }

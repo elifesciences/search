@@ -7,7 +7,7 @@ namespace tests\eLife\Search\Web;
  */
 class DateRangeTest extends ElasticTestCase
 {
-    public function test_date_range_from_only()
+    public function test_date_range_start_only()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -16,16 +16,16 @@ class DateRangeTest extends ElasticTestCase
         ]);
 
         $this->newClient();
-        $this->jsonRequest('GET', '/search', ['fromDate' => '2016-12-01']);
+        $this->jsonRequest('GET', '/search', ['start-date' => '2016-12-01']);
         $response = $this->getJsonResponse();
         $this->assertEquals($response->total, 2);
 
-        $this->jsonRequest('GET', '/search', ['fromDate' => '2016-11-01']);
+        $this->jsonRequest('GET', '/search', ['start-date' => '2016-11-01']);
         $response = $this->getJsonResponse();
         $this->assertEquals($response->total, 3);
     }
 
-    public function test_date_range_to_only()
+    public function test_date_range_end_only()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -34,16 +34,16 @@ class DateRangeTest extends ElasticTestCase
         ]);
 
         $this->newClient();
-        $this->jsonRequest('GET', '/search', ['toDate' => '2016-12-01']);
+        $this->jsonRequest('GET', '/search', ['end-date' => '2016-12-01']);
         $response = $this->getJsonResponse();
         $this->assertEquals($response->total, 1);
 
-        $this->jsonRequest('GET', '/search', ['toDate' => '2016-10-01']);
+        $this->jsonRequest('GET', '/search', ['end-date' => '2016-10-01']);
         $response = $this->getJsonResponse();
         $this->assertEquals($response->total, 0);
     }
 
-    public function test_date_range_to_and_from()
+    public function test_date_range_start_and_end()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -52,7 +52,7 @@ class DateRangeTest extends ElasticTestCase
         ]);
 
         $this->newClient();
-        $this->jsonRequest('GET', '/search', ['fromDate' => '2016-11-01', 'toDate' => '2016-12-01']);
+        $this->jsonRequest('GET', '/search', ['start-date' => '2016-11-01', 'end-date' => '2016-12-01']);
         $response = $this->getJsonResponse();
         $this->assertEquals($response->total, 1);
     }
