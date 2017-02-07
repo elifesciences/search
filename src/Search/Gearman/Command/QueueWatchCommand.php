@@ -44,9 +44,8 @@ class QueueWatchCommand extends QueueCommand
             ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
     }
 
-    protected function process(InputInterface $input, QueueItem $item)
+    protected function process(InputInterface $input, QueueItem $item, $entity = null)
     {
-        $entity = $this->transform($item);
         $gearmanTask = $this->gearmanTransformer->transform($item);
 
         if ($entity && $gearmanTask) {
