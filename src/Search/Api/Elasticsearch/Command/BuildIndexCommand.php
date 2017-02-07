@@ -44,7 +44,6 @@ class BuildIndexCommand extends Command
                 Yaml::parse(file_get_contents(__DIR__.'/resources/_default_.yaml')),
                 Yaml::parse(file_get_contents(__DIR__.'/resources/article.yaml')),
                 Yaml::parse(file_get_contents(__DIR__.'/resources/blog-article.yaml')),
-                Yaml::parse(file_get_contents(__DIR__.'/resources/event.yaml')),
                 Yaml::parse(file_get_contents(__DIR__.'/resources/interview.yaml')),
                 Yaml::parse(file_get_contents(__DIR__.'/resources/labs-experiment.yaml'))
             ), 'json_encode');

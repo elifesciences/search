@@ -83,7 +83,6 @@ final class Console
         $choice = new ChoiceQuestion('<question>Which type would you like to import</question>', [
             'article',
             'blog-article',
-            'event',
             'interview',
             'labs-experiment',
             'podcast-episode',

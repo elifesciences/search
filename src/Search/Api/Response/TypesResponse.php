@@ -105,12 +105,6 @@ final class TypesResponse
      * @Type("integer")
      * @Since(version="1")
      */
-    public $event;
-
-    /**
-     * @Type("integer")
-     * @Since(version="1")
-     */
     public $interview;
 
     /**
@@ -142,7 +136,6 @@ final class TypesResponse
         $toolsResources = 0,
         $blogArticle = 0,
         $collection = 0,
-        $event = 0,
         $interview = 0,
         $labsExperiment = 0,
         $podcastEpisode = 0
@@ -161,7 +154,6 @@ final class TypesResponse
         $this->toolsResources = $toolsResources;
         $this->blogArticle = $blogArticle;
         $this->collection = $collection;
-        $this->event = $event;
         $this->interview = $interview;
         $this->labsExperiment = $labsExperiment;
         $this->podcastEpisode = $podcastEpisode;
@@ -184,7 +176,6 @@ final class TypesResponse
             $type_totals['tools-resources'] ?? 0,
             $type_totals['blog-article'] ?? 0,
             $type_totals['collection'] ?? 0,
-            $type_totals['event'] ?? 0,
             $type_totals['interview'] ?? 0,
             $type_totals['labs-experiment'] ?? 0,
             $type_totals['podcast-episode'] ?? 0
