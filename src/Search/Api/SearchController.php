@@ -12,6 +12,7 @@ use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
 use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResponse;
 use eLife\Search\Api\Response\TypesResponse;
+use function GuzzleHttp\json_encode;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Psr\Log\LoggerInterface;
@@ -131,7 +132,7 @@ final class SearchController
             $result = new SearchResponse(
                 $data->toArray(),
                 $data->getTotalResults(),
-                $data->getSubjects(),
+                $this->hydrateSubjects($data->getSubjects()),
                 TypesResponse::fromArray($data->getTypeTotals())
             );
 
@@ -150,6 +151,32 @@ final class SearchController
         }
 
         throw new ServiceUnavailableHttpException(10);
+    }
+
+    /**
+     * This will be replaced by call to cached subjects.
+     */
+    public function getSubjectName(string $id) : string
+    {
+        $words = explode('-', $id);
+        $words[0] = ucfirst($words[0]);
+        $words = array_map(function($word) {
+            if (in_array($word, ['and', 'the', 'a', 'of', 'in']) === false) {
+                return ucfirst($word);
+            }
+            return $word;
+        }, $words);
+        return implode(' ',$words);
+    }
+
+    public function hydrateSubjects(array $subjects)
+    {
+        return array_map(function($subject) {
+            if($subject['name'] === null) {
+                $subject['name'] = $this->getSubjectName($subject['id']);
+            }
+            return $subject;
+        }, $subjects);
     }
 
     public function pingAction()
