@@ -30,7 +30,7 @@ final class ElasticQueryBuilder implements QueryBuilder
                     'terms' => [
                         'field' => 'subjects.id',
                         'size' => 15,
-                        'min_doc_count' => 0
+                        'min_doc_count' => 0,
                     ],
                     'aggs' => [
                         'name' => [
@@ -83,7 +83,7 @@ final class ElasticQueryBuilder implements QueryBuilder
             unset($this->query['body']['post_filter']['terms']);
             $this->query['body']['post_filter']['query']['bool']['must'] = [
                 ['terms' => $firstFilter],
-                ['terms' => $secondFilter]
+                ['terms' => $secondFilter],
             ];
         } elseif (isset($this->query['body']['post_filter']['query']['bool']['must'])) {
             $nthFilter = [];

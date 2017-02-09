@@ -12,7 +12,6 @@ use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
 use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResponse;
 use eLife\Search\Api\Response\TypesResponse;
-use function GuzzleHttp\json_encode;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Psr\Log\LoggerInterface;
@@ -160,21 +159,24 @@ final class SearchController
     {
         $words = explode('-', $id);
         $words[0] = ucfirst($words[0]);
-        $words = array_map(function($word) {
+        $words = array_map(function ($word) {
             if (in_array($word, ['and', 'the', 'a', 'of', 'in']) === false) {
                 return ucfirst($word);
             }
+
             return $word;
         }, $words);
-        return implode(' ',$words);
+
+        return implode(' ', $words);
     }
 
     public function hydrateSubjects(array $subjects)
     {
-        return array_map(function($subject) {
-            if($subject['name'] === null) {
+        return array_map(function ($subject) {
+            if ($subject['name'] === null) {
                 $subject['name'] = $this->getSubjectName($subject['id']);
             }
+
             return $subject;
         }, $subjects);
     }
