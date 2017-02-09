@@ -160,7 +160,7 @@ final class SearchController
         $words = explode('-', $id);
         $words[0] = ucfirst($words[0]);
         $words = array_map(function ($word) {
-            if (in_array($word, ['and', 'the', 'a', 'of', 'in']) === false) {
+            if (in_array($word, ['the', 'a', 'of', 'in']) === false) {
                 return ucfirst($word);
             }
 
