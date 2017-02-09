@@ -117,7 +117,7 @@ class TypeSubjectFilterTest extends ElasticTestCase
         array_walk($response->subjects, function ($subject) use (&$foundImmunology) {
             if ($subject->id === 'immunology') {
                 $foundImmunology = true;
-                $this->assertEquals($subject->count, 0);
+                $this->assertEquals($subject->results, 0);
             }
         });
 
