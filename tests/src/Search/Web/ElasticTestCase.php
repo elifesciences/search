@@ -40,7 +40,7 @@ abstract class ElasticTestCase extends WebTestCase
                         'statement' => 'This article is distributed under the terms of the Creative Commons Attribution License permitting unrestricted use and redistribution provided that the original author and source are credited.',
                         'license' => 'CC-BY-4.0',
                     ],
-                    'title' => 'Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
+                    'title' => 'BUZZWORD ONLY FOUND HERE Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
                     'authorLine' => 'Heather L Smith et al',
                     'versionDate' => '2016-12-19T00:00:00Z',
                     'researchOrganisms' => [
@@ -129,6 +129,43 @@ abstract class ElasticTestCase extends WebTestCase
                     ],
                     'elocationId' => 'e15276',
                     'id' => '15276',
+                    'stage' => 'published',
+                ];
+                break;
+            case 3:
+                return [
+                    'status' => 'poa',
+                    'volume' => 6,
+                    'doi' => '10.7554/eLife.15278',
+                    'type' => 'correction',
+                    'version' => 2,
+                    'copyright' => [
+                        'holder' => 'Smith et al',
+                        'statement' => 'This article is distributed under the terms of the Creative Commons Attribution License permitting unrestricted use and redistribution provided that the original author and source are credited.',
+                        'license' => 'CC-BY-4.0',
+                    ],
+                    'title' => 'Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
+                    'authorLine' => 'Heather L Smith et al',
+                    'versionDate' => '2016-12-19T00:00:00Z',
+                    'researchOrganisms' => [
+                        'Rat',
+                    ],
+                    'published' => '2017-01-19T00:00:00Z',
+                    'sortDate' => '2017-01-19T00:00:00Z',
+                    'statusDate' => '2017-01-19T00:00:00Z',
+                    'pdf' => 'https://publishing-cdn.elifesciences.org/15276/elife-15276-v1.pdf',
+                    'subjects' => [
+                        [
+                            'id' => 'neuroscience',
+                            'name' => 'Neuroscience',
+                        ],
+                        [
+                            'id' => 'immunology',
+                            'name' => 'Immunology',
+                        ],
+                    ],
+                    'elocationId' => 'e15278',
+                    'id' => '15278',
                     'stage' => 'published',
                 ];
                 break;

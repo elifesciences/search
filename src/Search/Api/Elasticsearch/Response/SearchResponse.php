@@ -82,13 +82,11 @@ final class SearchResponse implements ElasticResponse, QueryResponse
         if (isset($this->aggregations['subject_agg']['name']['buckets'])) {
             $types = [];
             foreach ($this->aggregations['subject_agg']['name']['buckets'] as $bucket) {
-                if (isset($bucket['name']['buckets'][0]['key'])) {
-                    $types[] = [
-                        'id' => $bucket['key'],
-                        'name' => $bucket['name']['buckets'][0]['key'],
-                        'results' => $bucket['doc_count'],
-                    ];
-                }
+                $types[] = [
+                    'id' => $bucket['key'],
+                    'name' => $bucket['name']['buckets'][0]['key'] ?? null,
+                    'results' => $bucket['doc_count'],
+                ];
             }
 
             return $types;

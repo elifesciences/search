@@ -30,6 +30,7 @@ final class ElasticQueryBuilder implements QueryBuilder
                     'terms' => [
                         'field' => 'subjects.id',
                         'size' => 15,
+                        'min_doc_count' => 0,
                     ],
                     'aggs' => [
                         'name' => [
@@ -63,8 +64,35 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     private function postQuery(string $key, $value)
     {
-        $this->query['body']['post_filter'] = $this->query['body']['post_filter'] ?? [];
-        $this->query['body']['post_filter']['terms'][$key] = $value;
+        /*
+         "post_filter": {
+                "query": {
+                   "bool" : {
+                        "must" : [
+                            {"terms": {"subjects.id": ["cell-biology"]}},
+                            {"terms": { "_type": ["research-article"]}}
+                        ]
+                    }
+                }
+            },
+         */
+        if (isset($this->query['body']['post_filter']['terms'])) {
+            $firstFilter = $this->query['body']['post_filter']['terms'];
+            $secondFilter = [];
+            $secondFilter[$key] = $value;
+            unset($this->query['body']['post_filter']['terms']);
+            $this->query['body']['post_filter']['query']['bool']['must'] = [
+                ['terms' => $firstFilter],
+                ['terms' => $secondFilter],
+            ];
+        } elseif (isset($this->query['body']['post_filter']['query']['bool']['must'])) {
+            $nthFilter = [];
+            $nthFilter[$key] = $value;
+            $this->query['body']['post_filter']['query']['bool']['must'][] = ['terms' => $nthFilter];
+        } else {
+            $this->query['body']['post_filter'] = $this->query['body']['post_filter'] ?? [];
+            $this->query['body']['post_filter']['terms'][$key] = $value;
+        }
     }
 
     private function query($key, array $body)
