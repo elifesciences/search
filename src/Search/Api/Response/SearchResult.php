@@ -12,7 +12,6 @@ use JMS\Serializer\Annotation\Discriminator;
  *    "labs-experiment": LabsExperimentResponse::class,
  *    "podcast-episode": PodcastEpisodeResponse::class,
  *    "interview": InterviewResponse::class,
- *    "event": EventResponse::class,
  *    "research-article--poa": PoaArticle::class,
  *    "research-article--vor": VorArticle::class,
  *    "collection": CollectionResponse::class

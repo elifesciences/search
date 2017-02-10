@@ -8,7 +8,6 @@ use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use eLife\Search\Workflow\CollectionWorkflow;
-use eLife\Search\Workflow\EventWorkflow;
 use eLife\Search\Workflow\InterviewWorkflow;
 use eLife\Search\Workflow\LabsExperimentWorkflow;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
@@ -60,7 +59,6 @@ final class WorkerCommand extends Command
     {
         // Working..
         $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new EventWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new LabsExperimentWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));

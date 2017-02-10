@@ -21,7 +21,7 @@ class SearchResponseTest extends SerializerTest
             [
                 $this->getFixture('search/v1/first-page.json'), '
                 {
-                    "total": 8,
+                    "total": 7,
                     "items": [
                         {
                             "status": "poa",
@@ -137,15 +137,6 @@ class SearchResponseTest extends SerializerTest
                             }
                         },
                         {
-                            "starts": "2016-04-22T20:00:00Z",
-                            "ends": "2016-04-22T21:00:00Z",
-                            "timezone": "America\/Seattle",
-                            "type": "event",
-                            "id": "1",
-                            "title": "Changing peer review in cancer research: a seminar at Fred Hutch",
-                            "impactStatement": "How eLife is influencing the culture of peer review"
-                        },
-                        {
                             "updated": "2015-09-16T11:19:26Z",
                             "selectedCurator": {
                                 "id": "pjha",
@@ -204,7 +195,6 @@ class SearchResponseTest extends SerializerTest
                         "tools-resources": 0,
                         "blog-article": 3,
                         "collection": 2,
-                        "event": 1,
                         "interview": 2,
                         "labs-experiment": 2,
                         "podcast-episode": 1

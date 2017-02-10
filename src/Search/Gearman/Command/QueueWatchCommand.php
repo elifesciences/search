@@ -44,7 +44,7 @@ class QueueWatchCommand extends QueueCommand
             ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
     }
 
-    protected function process(InputInterface $input, QueueItem $item)
+    protected function process(InputInterface $input, QueueItem $item, $entity = null)
     {
         $entity = $this->transform($item);
         $gearmanTask = $this->gearmanTransformer->transform($item);
@@ -58,8 +58,6 @@ class QueueWatchCommand extends QueueCommand
             ]);
             // Set the task to go.
             $this->client->doLowBackground($gearmanTask, $entity, md5($item->getReceipt()));
-            // Commit.
-            $this->queue->commit($item);
             $this->logger->info($this->getName().' Committed task', [
                 'gearmanTask' => $gearmanTask,
                 'type' => $item->getType(),
