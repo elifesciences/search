@@ -12,11 +12,11 @@ while true; do
     workers=$(pgrep -cf gearman:worker || true)
     watches=$(pgrep -cf queue:watch || true)
     if [ "$workers" -eq "0" ]; then
-        echo "No alive gearman:worker processes, failing"
+        echo "No alive gearman:worker processes"
         break
     fi
     if [ "$watches" -eq "0" ]; then
-        echo "No alive queue:watch processes, failing"
+        echo "No alive queue:watch processes"
         break
     fi
     sqs_queue=$(bin/console --env=$environment queue:count)
@@ -25,7 +25,10 @@ while true; do
     echo "Job in Gearman queue: $gearman_queue"
     if [ "$sqs_queue" -eq 0 ] && [ "$gearman_queue" -eq "0" ]; then
         echo "No more jobs, finished waiting"
-        break
+        exit 0
     fi
     sleep 1
 done
+
+echo "Failing"
+exit 2
