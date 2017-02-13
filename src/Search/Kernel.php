@@ -251,6 +251,9 @@ final class Kernel implements MinimalKernel
             return new Client([
                 'base_uri' => $app['config']['api_url'],
                 'handler' => $stack,
+                'headers' => [
+                    'User-Agent' => 'elifesciences/search',
+                ],
             ]);
         };
 
