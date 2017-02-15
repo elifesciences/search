@@ -81,6 +81,7 @@ final class SearchController
         $order = $request->query->get('order', 'desc');
         $page = $request->query->get('page', 1);
         $perPage = $request->query->get('per-page', 10);
+        $useDate = $request->query->get('use-date', 'default');
         $sort = $request->query->get('sort', 'relevance');
         $subjects = $request->query->get('subject');
         $types = $request->query->get('type');
@@ -99,6 +100,8 @@ final class SearchController
         $query = new ElasticQueryBuilder($this->elasticIndex, $this->elastic);
 
         $query = $query->searchFor($for);
+
+        $query->setDateType($useDate);
 
         if ($subjects) {
             $query->whereSubjects($subjects);

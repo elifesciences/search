@@ -14,6 +14,11 @@ final class ElasticQueryBuilder implements QueryBuilder
     const PHP_DATETIME_FORMAT = 'yyyy/MM/dd HH:mm:ss';
     const ELASTIC_DATETIME_FORMAT = 'Y/m/d H:i:s';
 
+    const DATE_DEFAULT = 'sortDate';
+    const DATE_PUBLISHED = 'published';
+
+    private $dateType;
+
     public function __construct(string $index, ElasticQueryExecutor $exec)
     {
         $this->query['index'] = $index;
@@ -62,6 +67,20 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this->order;
     }
 
+    public function setDateType(string $field): QueryBuilder
+    {
+        // No need to do any fancy enum checks.
+        if ($field === self::DATE_PUBLISHED) {
+            $this->dateType = $field;
+
+            return $this;
+        }
+        // Defaults to.. the default. (sortDate)
+        $this->dateType = self::DATE_DEFAULT;
+
+        return $this;
+    }
+
     private function postQuery(string $key, $value)
     {
         /*
@@ -101,11 +120,6 @@ final class ElasticQueryBuilder implements QueryBuilder
         $this->query['body']['query'][$key] = $body;
     }
 
-    private function must($query)
-    {
-        $this->query['body']['query']['bool']['must'][] = $query;
-    }
-
     public function searchFor(string $string): QueryBuilder
     {
         if ($string !== '') {
@@ -143,12 +157,10 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function sortByDate($reverse = false): QueryBuilder
     {
-        $this->sort([
-            'sortDate' => [
-                'order' => $this->getSort($reverse),
-                'missing' => '_last',
-            ],
-        ]);
+        $this->sort($this->dateQuery([
+            'order' => $this->getSort($reverse),
+            'missing' => '_last',
+        ]));
 
         return $this;
     }
@@ -180,6 +192,14 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $exec;
     }
 
+    private function dateQuery($query)
+    {
+        $arr = [];
+        $arr[$this->dateType] = $query;
+
+        return $arr;
+    }
+
     public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null): QueryBuilder
     {
         $query = ['format' => self::PHP_DATETIME_FORMAT];
@@ -189,9 +209,8 @@ final class ElasticQueryBuilder implements QueryBuilder
         if ($endDate) {
             $query['lte'] = $endDate->format(self::ELASTIC_DATETIME_FORMAT);
         }
-        $this->query('range', [
-            'sortDate' => $query,
-        ]);
+
+        $this->query('range', $this->dateQuery($query));
 
         return $this;
     }
