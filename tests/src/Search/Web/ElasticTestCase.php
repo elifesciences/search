@@ -25,6 +25,71 @@ abstract class ElasticTestCase extends WebTestCase
     /** @var Client */
     protected $api;
 
+    public function getCollectionFixture(int $num)
+    {
+        switch ($num) {
+            default:
+            case 0:
+                return json_decode('
+                {
+                      "updated": "2017-02-08T10:32:46Z",
+                      "sortDate": "2017-02-08T10:32:46Z",
+                      "published": "2014-02-08T10:32:46Z",
+                      "selectedCurator": {
+                        "image": {
+                          "alt": "Prabhat Jha",
+                          "sizes": {
+                            "16:9": {
+                              "250": "https:\/\/prod--journal-cms.elifesciences.org\/sites\/default\/files\/styles\/crop_16x9_250x141\/public\/kegley120208elife0213b.jpg?itok=I2PJDFby",
+                              "500": "https:\/\/prod--journal-cms.elifesciences.org\/sites\/default\/files\/styles\/crop_16x9_500x281\/public\/kegley120208elife0213b.jpg?itok=S1RRgnDP"
+                            },
+                            "1:1": {
+                              "70": "https:\/\/prod--journal-cms.elifesciences.org\/sites\/default\/files\/styles\/crop_1x1_70x70\/public\/kegley120208elife0213b.jpg?itok=BYsPAa24",
+                              "140": "https:\/\/prod--journal-cms.elifesciences.org\/sites\/default\/files\/styles\/crop_1x1_140x140\/public\/kegley120208elife0213b.jpg?itok=-4iG5ORx"
+                            }
+                          }
+                        },
+                        "id": "da020f46",
+                        "type": "senior-editor",
+                        "name": {
+                          "preferred": "Prabhat Jha",
+                          "index": "Jha, Prabhat"
+                        },
+                        "etAl": true
+                      },
+                      "type": "collection",
+                      "id": "3a8bbf09",
+                      "title": "Tropical disease: A selection of papers",
+                      "impactStatement": "eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness. The articles below have been selected by eLife editors to give a flavour of the breadth of research on tropical diseases published by the journal.\n\nMore articles can be found on our subject pages for\u00a0<a href=\"http:\/\/elifesciences.org\/category\/epidemiology-and-global-health\">Epidemiology and Global Health<\/a>\u00a0and\u00a0<a href=\"http:\/\/elifesciences.org\/category\/microbiology-and-infectious-disease\">Microbiology and Infectious Disease<\/a>.",
+                      "image": {
+                        "banner": {
+                          "alt": "Tropical disease: A selection of papers",
+                          "sizes": {
+                            "2:1": {
+                              "900": "https:\/\/prod--journal-cms.elifesciences.org\/sites\/default\/files\/styles\/crop_2x1_900x450\/public\/mosquito_for_kora.png?itok=RAK1r5yS",
+                              "1800": "https:\/\/prod--journal-cms.elifesciences.org\/sites\/default\/files\/styles\/crop_2x1_1800x900\/public\/mosquito_for_kora.png?itok=zZFoLCNI"
+                            }
+                          }
+                        },
+                        "thumbnail": {
+                          "alt": "Tropical disease: A selection of papers",
+                          "sizes": {
+                            "16:9": {
+                              "250": "https:\/\/prod--journal-cms.elifesciences.org\/sites\/default\/files\/styles\/crop_16x9_250x141\/public\/mosquito_for_kora.png?itok=G8kcWGwM",
+                              "500": "https:\/\/prod--journal-cms.elifesciences.org\/sites\/default\/files\/styles\/crop_16x9_500x281\/public\/mosquito_for_kora.png?itok=wfgDzikg"
+                            },
+                            "1:1": {
+                              "70": "https:\/\/prod--journal-cms.elifesciences.org\/sites\/default\/files\/styles\/crop_1x1_70x70\/public\/mosquito_for_kora.png?itok=kpbOhOUh",
+                              "140": "https:\/\/prod--journal-cms.elifesciences.org\/sites\/default\/files\/styles\/crop_1x1_140x140\/public\/mosquito_for_kora.png?itok=uya7vCiQ"
+                            }
+                          }
+                        }
+                      }
+                    }
+                ', true);
+        }
+    }
+
     public function getArticleFixture(int $num)
     {
         switch ($num) {

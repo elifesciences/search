@@ -134,4 +134,9 @@ final class MockQueryBuilder implements QueryBuilder
     {
         return $this;
     }
+
+    public function setDateType(string $field): QueryBuilder
+    {
+        return $this;
+    }
 }
