@@ -79,7 +79,7 @@ class CollectionResponseTest extends SerializerTest
             [
                 $this->getFixture('collection/v1/minimum.json'), '
                 {
-                    "updated": "2015-09-16T11:19:26Z",
+                    "published": "2015-09-16T11:19:26Z",
                     "selectedCurator": {
                         "id": "pjha",
                         "type": "senior-editor",
@@ -121,7 +121,8 @@ class CollectionResponseTest extends SerializerTest
             [
                 $this->getFixture('collection/v1/complete.json'), '
                 {
-                    "updated": "2015-09-16T11:19:26Z",
+                    "updated": "2015-09-17T11:19:26Z",
+                    "published": "2015-09-16T11:19:26Z",
                     "selectedCurator": {
                         "id": "pjha",
                         "type": "senior-editor",
