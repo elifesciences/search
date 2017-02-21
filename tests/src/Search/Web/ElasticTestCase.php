@@ -33,6 +33,7 @@ abstract class ElasticTestCase extends WebTestCase
                 return json_decode('
                 {
                       "updated": "2017-02-08T10:32:46Z",
+                      "sortDate": "2017-02-08T10:32:46Z",
                       "published": "2014-02-08T10:32:46Z",
                       "selectedCurator": {
                         "image": {
