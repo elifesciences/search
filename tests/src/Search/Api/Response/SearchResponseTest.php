@@ -137,8 +137,6 @@ class SearchResponseTest extends SerializerTest
                             }
                         },
                         {
-                            "updated": "2015-09-16T11:19:26Z",
-                            "published": "2015-09-16T11:19:26Z",
                             "selectedCurator": {
                                 "id": "pjha",
                                 "type": "senior-editor",
