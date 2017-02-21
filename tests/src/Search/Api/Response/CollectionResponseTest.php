@@ -16,7 +16,6 @@ class CollectionResponseTest extends SerializerTest
             'id' => '1',
             'title' => 'Tropical disease',
             'impactStatement' => 'eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness. The articles below have been selected by eLife editors to give a flavour of the breadth of research on tropical diseases published by the journal.',
-            'updated' => '2015-09-16T11:19:26Z',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -41,6 +40,7 @@ class CollectionResponseTest extends SerializerTest
                     ],
                 ],
             ],
+            'published' => '2015-09-16T11:19:26Z',
             'selectedCurator' => [
                 'etAl' => true,
                 'id' => 'pjha',
@@ -58,7 +58,7 @@ class CollectionResponseTest extends SerializerTest
         $this->assertSame('Tropical disease', $collection->title);
         $this->assertSame($data['image']['thumbnail'], (array) $collection->image->thumbnail);
         $this->assertSame($data['image']['banner'], (array) $collection->image->banner);
-        $this->assertSame('2015-09-16T11:19:26Z', $collection->updated->format('Y-m-d\TH:i:s\Z'));
+        $this->assertSame('2015-09-16T11:19:26Z', $collection->published->format('Y-m-d\TH:i:s\Z'));
         $this->assertEquals($data['selectedCurator'], (array) $collection->selectedCurator);
         $this->assertSame($data['selectedCurator']['id'], $collection->selectedCurator->id);
         $this->assertSame($data['selectedCurator']['type'], $collection->selectedCurator->type);
@@ -79,7 +79,6 @@ class CollectionResponseTest extends SerializerTest
             [
                 $this->getFixture('collection/v1/minimum.json'), '
                 {
-                    "updated": "2015-09-16T11:19:26Z",
                     "selectedCurator": {
                         "id": "pjha",
                         "type": "senior-editor",
@@ -115,13 +114,13 @@ class CollectionResponseTest extends SerializerTest
                                 }
                             }
                         }
-                    }
+                    },
+                    "published": "2015-09-16T11:19:26Z"
                 }',
             ],
             [
                 $this->getFixture('collection/v1/complete.json'), '
                 {
-                    "updated": "2015-09-16T11:19:26Z",
                     "selectedCurator": {
                         "id": "pjha",
                         "type": "senior-editor",
@@ -168,7 +167,9 @@ class CollectionResponseTest extends SerializerTest
                                 }
                             }
                         }
-                    }
+                    },
+                    "published": "2015-09-16T11:19:26Z",
+                    "updated": "2015-09-17T11:19:26Z"
                 }',
             ],
         ];
