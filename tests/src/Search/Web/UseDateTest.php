@@ -2,7 +2,6 @@
 
 namespace tests\eLife\Search\Web;
 
-
 class UseDateTest extends ElasticTestCase
 {
     public function test_use_date()
