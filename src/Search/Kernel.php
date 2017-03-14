@@ -4,6 +4,7 @@ namespace eLife\Search;
 
 use Aws\Sqs\SqsClient;
 use Closure;
+use ComposerLocator;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
@@ -14,7 +15,7 @@ use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiClient\HttpClient\NotifyingHttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
-use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
+use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
 use eLife\Bus\Limit\CompositeLimit;
 use eLife\Bus\Limit\LoggingMiddleware;
 use eLife\Bus\Limit\MemoryLimit;
@@ -45,6 +46,7 @@ use GuzzleHttp\Middleware;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
+use JsonSchema\Validator;
 use Kevinrob\GuzzleCache\CacheMiddleware;
 use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
 use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
@@ -56,7 +58,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
-use Webmozart\Json\JsonDecoder;
 
 final class Kernel implements MinimalKernel
 {
@@ -138,16 +139,6 @@ final class Kernel implements MinimalKernel
         $app['serializer.context'] = function () {
             return SerializationContext::create();
         };
-        // Puli.
-        $app['puli.factory'] = function () {
-            $factoryClass = PULI_FACTORY_CLASS;
-
-            return new $factoryClass();
-        };
-        // Puli repo.
-        $app['puli.repository'] = function (Application $app) {
-            return $app['puli.factory']->createRepository();
-        };
         // General cache.
         $app['cache'] = function () {
             return new FilesystemCache(self::CACHE_DIR);
@@ -169,15 +160,15 @@ final class Kernel implements MinimalKernel
             return new DiactorosFactory();
         };
         // Validator.
-        $app['puli.validator'] = function (Application $app) {
+        $app['message-validator'] = function (Application $app) {
             return new JsonMessageValidator(
-                new PuliSchemaFinder($app['puli.repository']),
-                new JsonDecoder()
+                new PathBasedSchemaFinder(ComposerLocator::getPath('elife/api').'/dist/model'),
+                new Validator()
             );
         };
 
         $app['validator'] = function (Application $app) {
-            return new ApiValidator($app['serializer'], $app['serializer.context'], $app['puli.validator'], $app['psr7.bridge']);
+            return new ApiValidator($app['serializer'], $app['serializer.context'], $app['message-validator'], $app['psr7.bridge']);
         };
 
         $app['logger'] = function (Application $app) {
@@ -492,7 +483,7 @@ final class Kernel implements MinimalKernel
                 strpos($response->headers->get('Content-Type'), 'json') &&
                 !$response instanceof JsonResponse
             ) {
-                $this->app['puli.validator']->validate(
+                $this->app['message-validator']->validate(
                     $this->app['psr7.bridge']->createResponse($response)
                 );
             }

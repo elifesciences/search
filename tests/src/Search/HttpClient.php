@@ -2,33 +2,29 @@
 
 namespace tests\eLife\Search;
 
+use ComposerLocator;
 use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
-use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
+use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use JsonSchema\Validator;
 use test\eLife\ApiSdk\ValidatingStorageAdapter;
-use Webmozart\Json\JsonDecoder;
 
 trait HttpClient
 {
-    use PuliAware;
-
     /** @var ValidatingStorageAdapter */
     public $storage;
     public $httpClient;
 
     final protected function getHttpClient() : \eLife\ApiClient\HttpClient
     {
-        if (self::$puli === null) {
-            self::setUpPuli();
-        }
         if (null === $this->httpClient) {
             $storage = new InMemoryStorageAdapter();
             $validator = new JsonMessageValidator(
-                new PuliSchemaFinder(self::$puli),
-                new JsonDecoder()
+                new PathBasedSchemaFinder(ComposerLocator::getPath('elife/api').'/dist/model'),
+                new Validator()
             );
 
             $this->storage = new ValidatingStorageAdapter($storage, $validator);
