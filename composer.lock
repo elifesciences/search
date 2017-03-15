@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a90b41a143f63b7d91ef5f710aaf26dc",
+    "content-hash": "0ceb266d9819ca0d12f1388267bc7375",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -544,30 +544,28 @@
         },
         {
             "name": "elife/api",
-            "version": "dev-puli",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/thewilkybarkid/api-raml.git",
-                "reference": "aa6bad67d937b73ed7bf572cade487c187891bea"
+                "url": "https://github.com/elifesciences/api-raml.git",
+                "reference": "58a328e447ad09fba076da95899e91b5dca9bb8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thewilkybarkid/api-raml/zipball/aa6bad67d937b73ed7bf572cade487c187891bea",
-                "reference": "aa6bad67d937b73ed7bf572cade487c187891bea",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/58a328e447ad09fba076da95899e91b5dca9bb8e",
+                "reference": "58a328e447ad09fba076da95899e91b5dca9bb8e",
                 "shasum": ""
             },
             "conflict": {
                 "justinrainbow/json-schema": "<3.0.0"
             },
             "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "eLife Sciences API specification",
-            "support": {
-                "source": "https://github.com/thewilkybarkid/api-raml/tree/puli"
-            },
-            "time": "2017-03-14 09:12:06"
+            "time": "2017-03-15 12:50:40"
         },
         {
             "name": "elife/api-client",
@@ -627,16 +625,16 @@
         },
         {
             "name": "elife/api-sdk",
-            "version": "dev-puli",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/thewilkybarkid/api-sdk-php.git",
-                "reference": "7ab4ac5725df20e20fdd35e46ea81fc08ea74492"
+                "url": "https://github.com/elifesciences/api-sdk-php.git",
+                "reference": "6d4c10a68a6c7060a20117cabcc27c9454a0fadf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thewilkybarkid/api-sdk-php/zipball/7ab4ac5725df20e20fdd35e46ea81fc08ea74492",
-                "reference": "7ab4ac5725df20e20fdd35e46ea81fc08ea74492",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/6d4c10a68a6c7060a20117cabcc27c9454a0fadf",
+                "reference": "6d4c10a68a6c7060a20117cabcc27c9454a0fadf",
                 "shasum": ""
             },
             "require": {
@@ -647,8 +645,8 @@
                 "symfony/serializer": "^2.8.2 || ^3.0.2"
             },
             "require-dev": {
-                "elife/api": "dev-puli",
-                "elife/api-validator": "dev-puli",
+                "elife/api": "dev-master",
+                "elife/api-validator": "^1.0@dev",
                 "guzzlehttp/guzzle": "^6.0",
                 "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
                 "mindplay/composer-locator": "^2.1.1",
@@ -666,33 +664,25 @@
                     "eLife\\ApiSdk\\": "./src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Csa\\Bundle\\GuzzleBundle\\": "./vendor-extra/Csa/GuzzleBundle",
-                    "test\\eLife\\ApiSdk\\": "./test"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "support": {
-                "source": "https://github.com/thewilkybarkid/api-sdk-php/tree/puli"
-            },
-            "time": "2017-03-14 09:54:59"
+            "time": "2017-03-15 12:58:27"
         },
         {
             "name": "elife/api-validator",
-            "version": "dev-puli",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/thewilkybarkid/api-validator-php.git",
-                "reference": "eadb231355ad16a552c40e7d0c272a88108e5173"
+                "url": "https://github.com/elifesciences/api-validator-php.git",
+                "reference": "4307a752a29e8e98a305358d991d755c26f07063"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thewilkybarkid/api-validator-php/zipball/eadb231355ad16a552c40e7d0c272a88108e5173",
-                "reference": "eadb231355ad16a552c40e7d0c272a88108e5173",
+                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/4307a752a29e8e98a305358d991d755c26f07063",
+                "reference": "4307a752a29e8e98a305358d991d755c26f07063",
                 "shasum": ""
             },
             "require": {
@@ -718,38 +708,31 @@
                     "eLife\\ApiValidator\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "test\\eLife\\ApiValidator\\": "test/src/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "eLife Sciences API validator",
-            "support": {
-                "source": "https://github.com/thewilkybarkid/api-validator-php/tree/puli"
-            },
-            "time": "2017-03-14 08:55:10"
+            "time": "2017-03-15 12:52:36"
         },
         {
             "name": "elife/bus-sdk",
-            "version": "dev-puli",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/thewilkybarkid/bus-sdk-php.git",
-                "reference": "aa28d6e3ab992cf30cc296cfda5d8ca467fc48a5"
+                "url": "https://github.com/elifesciences/bus-sdk-php.git",
+                "reference": "08402d82f43f9c7d1a7e591d5301f0a6950353f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thewilkybarkid/bus-sdk-php/zipball/aa28d6e3ab992cf30cc296cfda5d8ca467fc48a5",
-                "reference": "aa28d6e3ab992cf30cc296cfda5d8ca467fc48a5",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/08402d82f43f9c7d1a7e591d5301f0a6950353f1",
+                "reference": "08402d82f43f9c7d1a7e591d5301f0a6950353f1",
                 "shasum": ""
             },
             "require": {
                 "aws/aws-sdk-php": "^3.19",
                 "doctrine/cache": "^1.6",
-                "elife/api-sdk": "dev-puli",
+                "elife/api-sdk": "dev-master",
                 "elife/logging-sdk": "dev-master",
                 "jms/serializer": "^1.4",
                 "psr/log": "1.0.*"
@@ -767,28 +750,12 @@
                     "eLife\\Bus\\": "./src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "eLife\\Bus\\": "./src",
-                    "tests\\eLife\\Bus\\": "./tests/src"
-                }
-            },
-            "scripts": {
-                "post-install-cmd": [
-                    "./bin/build-hook"
-                ],
-                "post-update-cmd": [
-                    "./bin/build-hook"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "eLife Sciences bus SDK",
-            "support": {
-                "source": "https://github.com/thewilkybarkid/bus-sdk-php/tree/puli"
-            },
-            "time": "2017-03-14 13:58:48"
+            "time": "2017-03-15 13:04:41"
         },
         {
             "name": "elife/logging-sdk",

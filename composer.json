@@ -2,10 +2,10 @@
     "name": "elife/search",
     "description": "Search API gateway",
     "require": {
-        "elife/api-validator": "dev-puli",
-        "elife/api-sdk": "dev-puli",
+        "elife/api-validator": "dev-master",
+        "elife/api-sdk": "dev-master",
         "elife/api-client": "dev-master",
-        "elife/api": "dev-puli",
+        "elife/api": "dev-master",
         "silex/silex": "^2.0",
         "jms/serializer": "^1.5@dev",
         "symfony/psr-http-message-bridge": "^0.2.0",
@@ -21,7 +21,7 @@
         "kevinrob/guzzle-cache-middleware": "^1.4",
         "symfony/monolog-bridge": "^3.2",
         "elife/logging-sdk": "dev-master",
-        "elife/bus-sdk": "dev-puli",
+        "elife/bus-sdk": "dev-master",
         "justinrainbow/json-schema": "^5.1",
         "mindplay/composer-locator": "^2.1"
     },
@@ -45,23 +45,5 @@
         "mockery/mockery": "^0.9.5",
         "symfony/var-dumper": "^3.1",
         "silex/web-profiler": "^2.0"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:thewilkybarkid/api-raml.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:thewilkybarkid/api-sdk-php.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:thewilkybarkid/api-validator-php.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:thewilkybarkid/bus-sdk-php.git"
-        }
-    ]
+    }
 }
