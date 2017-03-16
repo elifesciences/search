@@ -2,9 +2,10 @@
 
 namespace tests\eLife\Search;
 
+use ComposerLocator;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
-use eLife\ApiValidator\SchemaFinder\PuliSchemaFinder;
+use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Response\SearchResponse;
 use eLife\Search\Api\Response\SearchResult;
@@ -12,10 +13,10 @@ use eLife\Search\Api\SearchResultDiscriminator;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
+use JsonSchema\Validator;
 use PHPUnit_Framework_TestCase;
 use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Throwable;
-use Webmozart\Json\JsonDecoder;
 
 abstract class SerializerTest extends PHPUnit_Framework_TestCase
 {
@@ -67,9 +68,15 @@ abstract class SerializerTest extends PHPUnit_Framework_TestCase
             })
             ->build();
         $this->context = SerializationContext::create();
-        $puli = PULI_FACTORY_CLASS;
-        $puli = (new $puli())->createRepository();
-        $this->validator = new ApiValidator($this->serializer, $this->context, new JsonMessageValidator(new PuliSchemaFinder($puli), new JsonDecoder()), new DiactorosFactory());
+        $this->validator = new ApiValidator(
+            $this->serializer,
+            $this->context,
+            new JsonMessageValidator(
+                new PathBasedSchemaFinder(ComposerLocator::getPath('elife/api').'/dist/model'),
+                new Validator()
+            ),
+            new DiactorosFactory()
+        );
 
         parent::__construct($name, $data, $dataName);
     }
