@@ -285,22 +285,36 @@ abstract class ElasticTestCase extends WebTestCase
 
         $config['elastic_index'] = 'elife_test';
 
+
+
+        return $this->modifyConfiguration($config);
+    }
+
+    public function modifyConfiguration($config) {
         return $config;
     }
 
-    protected function jsonRequest(string $verb, string $endpoint, array $params = array())
+    protected function mapHeaders($headers) {
+        $httpHeaders = [];
+        array_walk(array_keys($headers), function($key) use ($headers, &$httpHeaders) {
+            return $httpHeaders['HTTP_' . $key] = $headers[$key];
+        }, $httpHeaders);
+        return $httpHeaders;
+    }
+
+    protected function jsonRequest(string $verb, string $endpoint, array $params = array(), array $headers = array())
     {
-        $headers = array(
+        $server = array_merge(array(
             'HTTP_ACCEPT' => 'application/json',
             'CONTENT_TYPE' => 'application/json',
-        );
+        ), $this->mapHeaders($headers));
 
         return $this->api->request(
             $verb,
             $endpoint,
             $params,
             [],
-            $headers
+            $server
         );
     }
 
