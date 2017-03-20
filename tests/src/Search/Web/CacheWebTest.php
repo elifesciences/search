@@ -2,9 +2,6 @@
 
 namespace tests\eLife\Search\Web;
 
-/**
- * @group failing
- */
 class CacheWebTest extends ElasticTestCase
 {
     public function testETag()
@@ -18,14 +15,17 @@ class CacheWebTest extends ElasticTestCase
         $response = $this->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $eTag = $response->headers->get('ETag');
+        $this->assertEquals('max-age=300, public', $response->headers->get('Cache-Control'));
 
         $this->jsonRequest('GET', '/search', [], ['If-None-Match' => $eTag]);
         $response = $this->getResponse();
         $this->assertEquals(304, $response->getStatusCode());
+        $this->assertEquals('max-age=300, public', $response->headers->get('Cache-Control'));
 
         $this->jsonRequest('GET', '/search', [], ['If-None-Match' => 'NOT REAL ETAG']);
         $response = $this->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('max-age=300, public', $response->headers->get('Cache-Control'));
     }
 
     public function modifyConfiguration($config)
