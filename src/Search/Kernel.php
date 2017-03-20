@@ -82,7 +82,7 @@ final class Kernel implements MinimalKernel
             'annotation_cache' => true,
             'api_url' => '',
             'api_requests_batch' => 10,
-            'ttl' => 3600,
+            'ttl' => 300,
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_index' => 'elife_search',
             'elastic_logging' => false,
@@ -496,5 +496,14 @@ final class Kernel implements MinimalKernel
 
     public function cache(Request $request, Response $response)
     {
+        $response->setMaxAge($this->app['config']['ttl']);
+        $response->headers->addCacheControlDirective('stale-while-revalidate', $this->app['config']['ttl']);
+        $response->headers->addCacheControlDirective('stale-if-error', 86400);
+        $response->setVary('Accept');
+        $response->setEtag(md5($response->getContent()));
+        $response->setPublic();
+        $response->isNotModified($request);
+
+        return $response;
     }
 }
