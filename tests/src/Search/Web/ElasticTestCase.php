@@ -296,9 +296,9 @@ abstract class ElasticTestCase extends WebTestCase
     protected function mapHeaders($headers)
     {
         $httpHeaders = [];
-        array_walk(array_keys($headers), function ($key) use ($headers, &$httpHeaders) {
-            return $httpHeaders['HTTP_'.$key] = $headers[$key];
-        }, $httpHeaders);
+        foreach ($headers as $key => $header) {
+            $httpHeaders['HTTP_'.$key] = $headers[$key];
+        }
 
         return $httpHeaders;
     }
