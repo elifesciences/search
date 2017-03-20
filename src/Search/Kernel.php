@@ -497,8 +497,8 @@ final class Kernel implements MinimalKernel
     public function cache(Request $request, Response $response)
     {
         $response->setMaxAge($this->app['config']['ttl']);
-        $response->headers->set('stale-while-revalidate', $this->app['config']['ttl']);
-        $response->headers->set('stale-if-error', 86400);
+        $response->headers->addCacheControlDirective('stale-while-revalidate', $this->app['config']['ttl']);
+        $response->headers->addCacheControlDirective('stale-if-error', 86400);
         $response->setVary('Accept');
         $response->setEtag(md5($response->getContent()));
         $response->setPublic();
