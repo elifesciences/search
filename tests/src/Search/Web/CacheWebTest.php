@@ -1,6 +1,5 @@
 <?php
 
-
 namespace tests\eLife\Search\Web;
 
 /**
@@ -8,7 +7,8 @@ namespace tests\eLife\Search\Web;
  */
 class CacheWebTest extends ElasticTestCase
 {
-    public function testETag() {
+    public function testETag()
+    {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
             $this->getArticleFixture(1),
@@ -26,12 +26,12 @@ class CacheWebTest extends ElasticTestCase
         $this->jsonRequest('GET', '/search', [], ['If-None-Match' => 'NOT REAL ETAG']);
         $response = $this->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
-
     }
 
-    public function modifyConfiguration($config) {
+    public function modifyConfiguration($config)
+    {
         $config['ttl'] = 300;
+
         return $config;
     }
-
 }

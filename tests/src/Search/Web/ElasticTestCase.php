@@ -285,20 +285,21 @@ abstract class ElasticTestCase extends WebTestCase
 
         $config['elastic_index'] = 'elife_test';
 
-
-
         return $this->modifyConfiguration($config);
     }
 
-    public function modifyConfiguration($config) {
+    public function modifyConfiguration($config)
+    {
         return $config;
     }
 
-    protected function mapHeaders($headers) {
+    protected function mapHeaders($headers)
+    {
         $httpHeaders = [];
-        array_walk(array_keys($headers), function($key) use ($headers, &$httpHeaders) {
-            return $httpHeaders['HTTP_' . $key] = $headers[$key];
+        array_walk(array_keys($headers), function ($key) use ($headers, &$httpHeaders) {
+            return $httpHeaders['HTTP_'.$key] = $headers[$key];
         }, $httpHeaders);
+
         return $httpHeaders;
     }
 
