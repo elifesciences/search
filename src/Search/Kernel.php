@@ -47,9 +47,6 @@ use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JsonSchema\Validator;
-use Kevinrob\GuzzleCache\CacheMiddleware;
-use Kevinrob\GuzzleCache\Storage\DoctrineCacheStorage;
-use Kevinrob\GuzzleCache\Strategy\PublicCacheStrategy;
 use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
@@ -228,16 +225,6 @@ final class Kernel implements MinimalKernel
                     })
                 );
             }
-            $stack->push(
-                new CacheMiddleware(
-                    new PublicCacheStrategy(
-                        new DoctrineCacheStorage(
-                            $app['cache']
-                        )
-                    )
-                ),
-                'cache'
-            );
 
             return new Client([
                 'base_uri' => $app['config']['api_url'],
