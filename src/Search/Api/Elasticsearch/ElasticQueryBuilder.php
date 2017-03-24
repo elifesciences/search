@@ -47,6 +47,32 @@ final class ElasticQueryBuilder implements QueryBuilder
                 ],
             ],
         ];
+
+        $this->query['body']['query']['function_score']['functions'] = [
+            ['field' => 'title','weight' => 9],
+            ['field' => 'author', 'weight' => 10],
+            ['field' => 'eLocation ID', 'weight' => 2],
+            ['field' => 'DOI', 'weight' => 2],
+            ['field' => 'person_authorname', 'weight' => 10],
+            ['field' => 'institution', 'weight' => 10],
+            ['field' => 'group_author', 'weight' => 10],
+            ['field' => 'author_in_group', 'weight' => 10],
+            ['field' => 'on_behalf_of_group', 'weight' => 10],
+            ['field' => 'reviewers', 'weight' => 7],
+            ['field' => 'orcid', 'weight' => 2],
+            ['field' => 'subject', 'weight' => 4],
+            ['field' => 'keywords', 'weight' => 4],
+            ['field' => 'organism', 'weight' => 4],
+            ['field' => 'impact_statment', 'weight' => 3],
+            ['field' => 'abstract', 'weight' => 3],
+            ['field' => 'digest', 'weight' => 3],
+            ['field' => 'body', 'weight' => 2],
+            ['field' => 'appendix', 'weight' => 2],
+            ['field' => 'dataset', 'weight' => 8],
+            ['field' => 'curator', 'weight' => 8],
+            ['field' => 'funding', 'weight' => 6],
+
+        ];
         $this->exec = $exec;
     }
 
