@@ -186,7 +186,14 @@ final class SearchController
 
     public function pingAction()
     {
-        return new Response('pong', 200);
+        return new Response(
+            'pong',
+            200,
+            [
+                'Cache-Control' => 'must-revalidate, no-cache, no-store, private',
+                'Content-Type' => 'text/plain; charset=UTF-8',
+            ]
+        );
     }
 
     private function serialize($data, int $version = null, $group = null)
