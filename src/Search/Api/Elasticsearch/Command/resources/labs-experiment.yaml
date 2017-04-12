@@ -33,35 +33,65 @@ labs-experiment:
     image:
       properties:
         banner:
+          type: object
           properties:
             alt:
               type: string
-            sizes:
+            uri:
+              type: string
+            source:
+              type: object
               properties:
-                '2:1':
-                  properties:
-                    '900':
-                      type: string
-                    '1800':
-                      type: string
+                mediaType:
+                  type: string
+                uri:
+                  type: string
+                filename:
+                  type: string
+            size:
+              type: object
+              properties:
+                width:
+                  type: integer
+                height:
+                  type: integer
+            focalPoint:
+              type: object
+              properties:
+                x:
+                  type: integer
+                y:
+                  type: integer
         thumbnail:
+          type: object
           properties:
             alt:
               type: string
-            sizes:
+            uri:
+              type: string
+            source:
+              type: object
               properties:
-                '16:9':
-                  properties:
-                    '250':
-                      type: string
-                    '500':
-                      type: string
-                '1:1':
-                  properties:
-                    '70':
-                      type: string
-                    '140':
-                      type: string
+                mediaType:
+                  type: string
+                uri:
+                  type: string
+                filename:
+                  type: string
+            size:
+              type: object
+              properties:
+                width:
+                  type: integer
+                height:
+                  type: integer
+            focalPoint:
+              type: object
+              properties:
+                x:
+                  type: integer
+                y:
+                  type: integer
     impactStatement:
       type: string
     number:

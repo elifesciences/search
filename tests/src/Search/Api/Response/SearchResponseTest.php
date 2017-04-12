@@ -59,15 +59,19 @@ class SearchResponseTest extends SerializerTest
                             "image": {
                                 "thumbnail": {
                                     "alt": "",
-                                    "sizes": {
-                                        "16:9": {
-                                            "250": "https:\/\/placehold.it\/250x141",
-                                            "500": "https:\/\/placehold.it\/500x281"
-                                        },
-                                        "1:1": {
-                                            "70": "https:\/\/placehold.it\/70x70",
-                                            "140": "https:\/\/placehold.it\/140x140"
-                                        }
+                                    "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif",
+                                    "source": {
+                                        "mediaType": "image/jpeg",
+                                        "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif/full/full/0/default.jpg",
+                                        "filename": "an-image.jpg"
+                                    },
+                                    "size": {
+                                        "width": 4194,
+                                        "height": 4714
+                                    },
+                                    "focalPoint": {
+                                        "x": 25,
+                                        "y": 75
                                     }
                                 }
                             },
@@ -95,15 +99,15 @@ class SearchResponseTest extends SerializerTest
                             "image": {
                                 "thumbnail": {
                                     "alt": "",
-                                    "sizes": {
-                                        "16:9": {
-                                            "250": "https:\/\/placehold.it\/250x141",
-                                            "500": "https:\/\/placehold.it\/500x281"
-                                        },
-                                        "1:1": {
-                                            "70": "https:\/\/placehold.it\/70x70",
-                                            "140": "https:\/\/placehold.it\/140x140"
-                                        }
+                                    "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif",
+                                    "source": {
+                                        "mediaType": "image/jpeg",
+                                        "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif/full/full/0/default.jpg",
+                                        "filename": "an-image.jpg"
+                                    },
+                                    "size": {
+                                        "width": 4194,
+                                        "height": 4714
                                     }
                                 }
                             },
@@ -123,15 +127,15 @@ class SearchResponseTest extends SerializerTest
                             "image": {
                                 "thumbnail": {
                                     "alt": "",
-                                    "sizes": {
-                                        "16:9": {
-                                            "250": "https:\/\/placehold.it\/250x141",
-                                            "500": "https:\/\/placehold.it\/500x281"
-                                        },
-                                        "1:1": {
-                                            "70": "https:\/\/placehold.it\/70x70",
-                                            "140": "https:\/\/placehold.it\/140x140"
-                                        }
+                                    "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif",
+                                    "source": {
+                                        "mediaType": "image/jpeg",
+                                        "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif/full/full/0/default.jpg",
+                                        "filename": "an-image.jpg"
+                                    },
+                                    "size": {
+                                        "width": 4194,
+                                        "height": 4714
                                     }
                                 }
                             }
@@ -152,15 +156,15 @@ class SearchResponseTest extends SerializerTest
                             "image": {
                                 "thumbnail": {
                                     "alt": "",
-                                    "sizes": {
-                                        "16:9": {
-                                            "250": "https:\/\/placehold.it\/250x141",
-                                            "500": "https:\/\/placehold.it\/500x281"
-                                        },
-                                        "1:1": {
-                                            "70": "https:\/\/placehold.it\/70x70",
-                                            "140": "https:\/\/placehold.it\/140x140"
-                                        }
+                                    "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif",
+                                    "source": {
+                                        "mediaType": "image/jpeg",
+                                        "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif/full/full/0/default.jpg",
+                                        "filename": "an-image.jpg"
+                                    },
+                                    "size": {
+                                        "width": 4194,
+                                        "height": 4714
                                     }
                                 }
                             },
