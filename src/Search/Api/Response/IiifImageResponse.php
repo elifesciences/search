@@ -2,7 +2,6 @@
 
 namespace eLife\Search\Api\Response;
 
-use Assert\Assertion;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
