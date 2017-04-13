@@ -19,25 +19,31 @@ class CollectionResponseTest extends SerializerTest
             'image' => [
                 'banner' => [
                     'alt' => '',
-                    'sizes' => [
-                        '2:1' => [
-                            900 => 'https://placehold.it/900x450',
-                            1800 => 'https://placehold.it/1800x900',
-                        ],
+                    'uri' => 'https://iiif.elifesciences.org/banner.jpg',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg',
+                        'filename' => 'banner.jpg',
                     ],
+                    'size' => [
+                        'width' => 800,
+                        'height' => 400,
+                    ],
+                    'focalPoint' => null,
                 ],
                 'thumbnail' => [
                     'alt' => '',
-                    'sizes' => [
-                        '16:9' => [
-                            250 => 'https://placehold.it/250x141',
-                            500 => 'https://placehold.it/500x281',
-                        ],
-                        '1:1' => [
-                            70 => 'https://placehold.it/70x70',
-                            140 => 'https://placehold.it/140x140',
-                        ],
+                    'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg',
+                    'source' => [
+                        'mediaType' => 'image/jpeg',
+                        'uri' => 'https://iiif.elifesciences.org/thumbnail.jpg/full/full/0/default.jpg',
+                        'filename' => 'thumbnail.jpg',
                     ],
+                    'size' => [
+                        'width' => 140,
+                        'height' => 140,
+                    ],
+                    'focalPoint' => null,
                 ],
             ],
             'published' => '2015-09-16T11:19:26Z',
@@ -94,24 +100,28 @@ class CollectionResponseTest extends SerializerTest
                     "image": {
                         "banner": {
                             "alt": "",
-                            "sizes": {
-                                "2:1": {
-                                    "900": "https:\/\/placehold.it\/900x450",
-                                    "1800": "https:\/\/placehold.it\/1800x900"
-                                }
+                            "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif",
+                            "source": {
+                                "mediaType": "image/jpeg",
+                                "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif/full/full/0/default.jpg",
+                                "filename": "an-image.jpg"
+                            },
+                            "size": {
+                                "width": 4194,
+                                "height": 4714
                             }
                         },
                         "thumbnail": {
                             "alt": "",
-                            "sizes": {
-                                "16:9": {
-                                    "250": "https:\/\/placehold.it\/250x141",
-                                    "500": "https:\/\/placehold.it\/500x281"
-                                },
-                                "1:1": {
-                                    "70": "https:\/\/placehold.it\/70x70",
-                                    "140": "https:\/\/placehold.it\/140x140"
-                                }
+                            "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif",
+                            "source": {
+                                "mediaType": "image/jpeg",
+                                "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif/full/full/0/default.jpg",
+                                "filename": "an-image.jpg"
+                            },
+                            "size": {
+                                "width": 4194,
+                                "height": 4714
                             }
                         }
                     },
@@ -119,7 +129,8 @@ class CollectionResponseTest extends SerializerTest
                 }',
             ],
             [
-                $this->getFixture('collection/v1/complete.json'), '
+                $this->getFixture('collection/v1/complete.json'),
+                '
                 {
                     "selectedCurator": {
                         "id": "pjha",
@@ -147,24 +158,36 @@ class CollectionResponseTest extends SerializerTest
                     "image": {
                         "banner": {
                             "alt": "",
-                            "sizes": {
-                                "2:1": {
-                                    "900": "https:\/\/placehold.it\/900x450",
-                                    "1800": "https:\/\/placehold.it\/1800x900"
-                                }
+                            "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif",
+                            "source": {
+                                "mediaType": "image/jpeg",
+                                "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif/full/full/0/default.jpg",
+                                "filename": "an-image.jpg"
+                            },
+                            "size": {
+                                "width": 4194,
+                                "height": 4714
+                            },
+                            "focalPoint": {
+                                "x": 25,
+                                "y": 75
                             }
                         },
                         "thumbnail": {
                             "alt": "",
-                            "sizes": {
-                                "16:9": {
-                                    "250": "https:\/\/placehold.it\/250x141",
-                                    "500": "https:\/\/placehold.it\/500x281"
-                                },
-                                "1:1": {
-                                    "70": "https:\/\/placehold.it\/70x70",
-                                    "140": "https:\/\/placehold.it\/140x140"
-                                }
+                            "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif",
+                            "source": {
+                                "mediaType": "image/jpeg",
+                                "uri": "https://iiif.elifesciences.org/lax:09560/elife-09560-fig1-v1.tif/full/full/0/default.jpg",
+                                "filename": "an-image.jpg"
+                            },
+                            "size": {
+                                "width": 4194,
+                                "height": 4714
+                            },
+                            "focalPoint": {
+                                "x": 25,
+                                "y": 75
                             }
                         }
                     },

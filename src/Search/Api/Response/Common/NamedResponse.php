@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation\Type;
 abstract class NamedResponse
 {
     /**
-     * @Type(eLife\Search\Api\Response\ImageThumbnailResponse::class)
+     * @Type(eLife\Search\Api\Response\IiifImageResponse::class)
      * @Since(version="1")
      * @Accessor(getter="getHttpsImage")
      */
