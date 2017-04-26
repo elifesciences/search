@@ -1,0 +1,14 @@
+#!/bin/bash
+set -e
+
+while true;
+do
+    nodes=$(curl localhost:9200/_nodes/_local | jq ".nodes | length")
+    if [ "$nodes" -eq 1 ]; then
+        echo "ElasticSearch is ready, seeing 1 node through _nodes API"
+        exit 0
+    else
+        echo "ElasticSearch API not responding yet"
+        sleep 1
+    fi
+done
