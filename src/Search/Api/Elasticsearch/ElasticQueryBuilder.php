@@ -177,10 +177,9 @@ final class ElasticQueryBuilder implements QueryBuilder
 
             /* Query all fields for the actaul query term*/
             $this->query['body']['query']['bool']['must'][] = ['query' => ['match' => ['_all' => $string]]];
+            $this->setBoostings($string);
         }
-
-        $this->setBoostings($string);
-
+        
         return $this;
     }
 
