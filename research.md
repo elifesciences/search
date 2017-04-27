@@ -17,5 +17,3 @@
 Elasticsearch 2 + upgrade path for logging vis
 Storing outside facets
 
-
-
