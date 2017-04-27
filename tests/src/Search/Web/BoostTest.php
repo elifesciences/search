@@ -22,12 +22,10 @@ class BoostTest extends ElasticTestCase
         $response = $this->getJsonResponse();
         $this->assertEquals($response->items[0]->id, '15278');
         $this->assertEquals($response->items[1]->id, '15276');
-
-
     }
 
-    public function test_boost_by_field(){
-
+    public function test_boost_by_field()
+    {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(4),
             $this->getArticleFixture(0),
@@ -35,11 +33,10 @@ class BoostTest extends ElasticTestCase
 
         $this->newClient();
         $this->jsonRequest('GET', '/search', [
-                'for' => 'BUZZWORD',]
+                'for' => 'BUZZWORD', ]
         );
         $response = $this->getJsonResponse();
         $this->assertEquals($response->items[0]->id, '15279');
         $this->assertEquals($response->items[1]->id, '15275');
-
     }
 }
