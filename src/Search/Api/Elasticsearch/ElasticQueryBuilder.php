@@ -174,7 +174,6 @@ final class ElasticQueryBuilder implements QueryBuilder
     public function searchFor(string $string): QueryBuilder
     {
         if ($string !== '') {
-
             /* Query all fields for the actaul query term*/
             $this->query['body']['query']['bool']['must'][] = ['query' => ['match' => ['_all' => $string]]];
             $this->setBoostings($string);
