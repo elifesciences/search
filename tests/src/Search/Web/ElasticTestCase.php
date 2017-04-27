@@ -251,7 +251,7 @@ abstract class ElasticTestCase extends WebTestCase
                         'license' => 'CC-BY-4.0',
                     ],
                     'title' => 'ONLY FOUND HERE Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
-                    'authorLine' => 'BUZZING Heather L Smith et al',
+                    'authorLine' => 'BUZZWORD Heather L Smith et al',
                     'versionDate' => '2016-12-19T00:00:00Z',
                     'researchOrganisms' => [
                         'Rat',
