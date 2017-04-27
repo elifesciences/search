@@ -47,6 +47,7 @@ final class ElasticQueryBuilder implements QueryBuilder
                 ],
             ],
         ];
+
         $this->exec = $exec;
     }
 
@@ -120,10 +121,62 @@ final class ElasticQueryBuilder implements QueryBuilder
         $this->query['body']['query'][$key] = $body;
     }
 
+    private function setBoostings($string = '')
+    {
+
+        /* Boost results based on 'type' */
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'collection']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['type' => 'podcast-episode']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'interview']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['type' => 'correction']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'insight']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'feature']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'labs-experiment']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'editorial']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['type' => 'retraction']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'blog-article']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'research-advance']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'research-article']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'research-exchange']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'registered-report']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'replication-study']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'short-report']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'tools-resources']]]];
+
+        if (!(empty($string))) {
+            /* Boost results based on which field(s) match the query term */
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 9, 'query' => ['match' => ['title' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['authorLine' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['elocationId' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['doi' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['Person Author Name' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['Institution' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['Group Author' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['Author in group' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['On behalf of group' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'query' => ['match' => ['reviewers' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['orcid' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 4, 'query' => ['match' => ['subject' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 4, 'query' => ['match' => ['keywords' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 4, 'query' => ['match' => ['organism' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'query' => ['match' => ['impactStatement' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'query' => ['match' => ['abstract' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'query' => ['match' => ['digest' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['body' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['appendix' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['letters' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'query' => ['match' => ['dataset' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'query' => ['match' => ['curator' => $string]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 6, 'query' => ['match' => ['funding' => $string]]]];
+        }
+    }
+
     public function searchFor(string $string): QueryBuilder
     {
         if ($string !== '') {
-            $this->query('match', ['_all' => $string]);
+            /* Query all fields for the actaul query term*/
+            $this->query['body']['query']['bool']['must'][] = ['query' => ['match' => ['_all' => $string]]];
+            $this->setBoostings($string);
         }
 
         return $this;
@@ -210,7 +263,7 @@ final class ElasticQueryBuilder implements QueryBuilder
             $query['lte'] = $endDate->format(self::ELASTIC_DATETIME_FORMAT);
         }
 
-        $this->query('range', $this->dateQuery($query));
+        $this->query['body']['query']['bool']['must'][] = ['query' => ['range' => $this->dateQuery($query)]];
 
         return $this;
     }

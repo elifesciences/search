@@ -238,6 +238,43 @@ abstract class ElasticTestCase extends WebTestCase
                     'stage' => 'published',
                 ];
                 break;
+            case 4:
+                return [
+                    'status' => 'poa',
+                    'volume' => 5,
+                    'doi' => '10.7554/eLife.15275',
+                    'type' => 'research-article',
+                    'version' => 1,
+                    'copyright' => [
+                        'holder' => 'Smith et al',
+                        'statement' => 'This article is distributed under the terms of the Creative Commons Attribution License permitting unrestricted use and redistribution provided that the original author and source are credited.',
+                        'license' => 'CC-BY-4.0',
+                    ],
+                    'title' => 'ONLY FOUND HERE Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
+                    'authorLine' => 'BUZZWORD Heather L Smith et al',
+                    'versionDate' => '2016-12-19T00:00:00Z',
+                    'researchOrganisms' => [
+                        'Rat',
+                    ],
+                    'published' => '2016-12-19T00:00:00Z',
+                    'sortDate' => '2016-12-19T00:00:00Z',
+                    'statusDate' => '2016-12-19T00:00:00Z',
+                    'pdf' => 'https://publishing-cdn.elifesciences.org/15275/elife-15275-v1.pdf',
+                    'subjects' => [
+                        [
+                            'id' => 'cell-biology',
+                            'name' => 'Cell Biology',
+                        ],
+                        [
+                            'id' => 'neuroscience',
+                            'name' => 'Neuroscience',
+                        ],
+                    ],
+                    'elocationId' => 'e15275',
+                    'id' => '15279',
+                    'stage' => 'published',
+                ];
+                break;
 
         }
     }
