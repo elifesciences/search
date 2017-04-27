@@ -3,7 +3,7 @@
 return [
     'debug' => true,
     'gearman_servers' => ['localhost'],
-    'api_url' => 'http://end2end--gateway.elifesciences.org/',
+    'api_url' => 'http://end2end--gateway.elife.internal/',
     'api_requests_batch' => 20,
     'aws' => [
         'queue_name' => 'search--end2end',

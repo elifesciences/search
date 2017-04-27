@@ -3,7 +3,7 @@
 return [
     'debug' => true,
     'gearman_servers' => ['localhost'],
-    'api_url' => 'http://continuumtest--gateway.elifesciences.org/',
+    'api_url' => 'http://continuumtest--gateway.elife.internal/',
     'api_requests_batch' => 20,
     'aws' => [
         'queue_name' => 'search--continuumtest',

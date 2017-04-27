@@ -14,12 +14,20 @@ elifePipeline {
 
     elifeMainlineOnly {
         stage 'End2end tests', {
-            elifeEnd2endTest({
-                builderDeployRevision 'search--end2end', commit
-                builderSmokeTests 'search--end2end', '/srv/search'
-                builderCmd 'search--end2end', 'cd /srv/search; php bin/console queue:import all --env=end2end'
-                builderCmd 'search--end2end', 'cd /srv/search; ./bin/wait-for-empty-gearman-queue end2end'
-            }, "search")
+            elifeSpectrum(
+                deploy: [
+                    stackname: 'search--end2end',
+                    revision: commit,
+                    folder: '/srv/search',
+                    preliminaryStep: {
+                        builderDeployRevision 'search--end2end', commit
+                        builderSmokeTests 'search--end2end', '/srv/search'
+                        builderCmd 'search--end2end', 'cd /srv/search; php bin/console queue:import all --env=end2end'
+                        builderCmd 'search--end2end', 'cd /srv/search; ./bin/wait-for-empty-gearman-queue end2end'
+                    }
+                ],
+                marker: 'search'
+            )
         }
 
         stage 'Approval', {

@@ -108,23 +108,31 @@ article:
               properties:
                 alt:
                   type: string
-                sizes:
+                uri:
+                  type: string
+                source:
                   type: object
                   properties:
-                    '1:1':
-                      type: object
-                      properties:
-                        '70':
-                          type: string
-                        '140':
-                          type: string
-                    '16:9':
-                      type: object
-                      properties:
-                        '250':
-                          type: string
-                        '500':
-                          type: string
+                    mediaType:
+                      type: string
+                    uri:
+                      type: string
+                    filename:
+                      type: string
+                size:
+                  type: object
+                  properties:
+                    width:
+                      type: integer
+                    height:
+                      type: integer
+                focalPoint:
+                  type: object
+                  properties:
+                    x:
+                      type: integer
+                    y:
+                      type: integer
         published:
           type: string
         pdf:
@@ -247,16 +255,31 @@ article:
           properties:
             alt:
               type: string
-            sizes:
+            uri:
+              type: string
+            source:
               type: object
               properties:
-                '2:1':
-                  type: object
-                  properties:
-                    '900':
-                      type: string
-                    '1800':
-                      type: string
+                mediaType:
+                  type: string
+                uri:
+                  type: string
+                filename:
+                  type: string
+            size:
+              type: object
+              properties:
+                width:
+                  type: integer
+                height:
+                  type: integer
+            focalPoint:
+              type: object
+              properties:
+                x:
+                  type: integer
+                y:
+                  type: integer
     pdf:
       type: string
     researchOrganisms:
