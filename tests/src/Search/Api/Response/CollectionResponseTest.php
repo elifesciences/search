@@ -15,7 +15,7 @@ class CollectionResponseTest extends SerializerTest
         $data = [
             'id' => '1',
             'title' => 'Tropical disease',
-            'impactStatement' => 'eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness. The articles below have been selected by eLife editors to give a flavour of the breadth of research on tropical diseases published by the journal.',
+            'impactStatement' => 'eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness.',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -144,7 +144,7 @@ class CollectionResponseTest extends SerializerTest
                     "type": "collection",
                     "id": "1",
                     "title": "Tropical disease",
-                    "impactStatement": "eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness. The articles below have been selected by eLife editors to give a flavour of the breadth of research on tropical diseases published by the journal.",
+                    "impactStatement": "eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness.",
                     "subjects": [
                         {
                             "id": "epidemiology-global-health",
