@@ -62,10 +62,10 @@ final class MockQueryResponse implements QueryResponse
         $type_totals['insight'] = 0;
         $type_totals['research-advance'] = 0;
         $type_totals['research-article'] = 0;
-        $type_totals['research-exchange'] = 0;
         $type_totals['retraction'] = 0;
         $type_totals['registered-report'] = 0;
         $type_totals['replication-study'] = 0;
+        $type_totals['scientific-correspondence'] = 0;
         $type_totals['short-report'] = 0;
         $type_totals['tools-resources'] = 0;
         $type_totals['blog-article'] = 0;

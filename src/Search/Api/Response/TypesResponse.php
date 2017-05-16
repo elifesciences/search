@@ -48,13 +48,6 @@ final class TypesResponse
     public $researchArticle;
 
     /**
-     * @SerializedName("research-exchange")
-     * @Type("integer")
-     * @Since(version="1")
-     */
-    public $researchExchange;
-
-    /**
      * @Type("integer")
      * @Since(version="1")
      */
@@ -73,6 +66,13 @@ final class TypesResponse
      * @Since(version="1")
      */
     public $replicationStudy;
+
+    /**
+     * @SerializedName("scientific-correspondence")
+     * @Type("integer")
+     * @Since(version="1")
+     */
+    public $scientificCorrespondence;
 
     /**
      * @SerializedName("short-report")
@@ -128,10 +128,10 @@ final class TypesResponse
         $insight = 0,
         $researchAdvance = 0,
         $researchArticle = 0,
-        $researchExchange = 0,
         $retraction = 0,
         $registeredReport = 0,
         $replicationStudy = 0,
+        $scientificCorrespondence = 0,
         $shortReport = 0,
         $toolsResources = 0,
         $blogArticle = 0,
@@ -146,10 +146,10 @@ final class TypesResponse
         $this->insight = $insight;
         $this->researchAdvance = $researchAdvance;
         $this->researchArticle = $researchArticle;
-        $this->researchExchange = $researchExchange;
         $this->retraction = $retraction;
         $this->registeredReport = $registeredReport;
         $this->replicationStudy = $replicationStudy;
+        $this->scientificCorrespondence = $scientificCorrespondence;
         $this->shortReport = $shortReport;
         $this->toolsResources = $toolsResources;
         $this->blogArticle = $blogArticle;
@@ -168,10 +168,10 @@ final class TypesResponse
             $type_totals['insight'] ?? 0,
             $type_totals['research-advance'] ?? 0,
             $type_totals['research-article'] ?? 0,
-            $type_totals['research-exchange'] ?? 0,
             $type_totals['retraction'] ?? 0,
             $type_totals['registered-report'] ?? 0,
             $type_totals['replication-study'] ?? 0,
+            $type_totals['scientific-correspondence'] ?? 0,
             $type_totals['short-report'] ?? 0,
             $type_totals['tools-resources'] ?? 0,
             $type_totals['blog-article'] ?? 0,
