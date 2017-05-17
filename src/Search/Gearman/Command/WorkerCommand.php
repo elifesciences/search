@@ -52,11 +52,16 @@ final class WorkerCommand extends Command
             ->setName('gearman:worker')
             ->setDescription('Creates new Gearman workers.')
             ->setHelp('This command will spin up a new gearman worker based on the options you provide. By default this will be with all jobs available')
-            ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
+            ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other')
+            ->addArgument('index', InputArgument::OPTIONAL, 'Index gearman worder should use');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        if (!empty($input->getArgument('index'))) {
+            $this->client->setIndex($input->getArgument('index'));
+        }
         // Working..
         $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));

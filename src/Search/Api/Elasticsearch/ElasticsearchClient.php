@@ -18,6 +18,12 @@ class ElasticsearchClient
         $this->forceSync = $forceSync;
     }
 
+    public function setIndex($indexName){
+
+        $this->index = $indexName;
+
+    }
+
     public function deleteIndexByName($index)
     {
         $params = [
@@ -28,9 +34,22 @@ class ElasticsearchClient
         return $this->connection->indices()->delete($params);
     }
 
-    public function deleteIndex()
+    public function createIndex($indexName){
+
+        $params = [
+            'index' => $indexName
+
+        ];
+        return $this->connection->indices()->create($params);
+
+    }
+
+    public function deleteIndex($indexName ='')
     {
-        return $this->deleteIndexByName($this->index);
+        if (empty($indexName)){
+            $indexName = $this->index;
+        }
+        return $this->deleteIndexByName($indexName);
     }
 
     public function indexExists()
@@ -53,7 +72,7 @@ class ElasticsearchClient
         return $this->connection->indices()->create($params);
     }
 
-    public function indexJsonDocument($type, $id, $body, $flush = false)
+    public function indexJsonDocument($type, $id, $body, $flush = false, $index = '')
     {
         $params = [
             'index' => $this->index,
@@ -101,5 +120,32 @@ class ElasticsearchClient
         ];
 
         return $this->connection->get($params)['payload'] ?? null;
+    }
+
+    public function count($index){
+
+        $params= [
+            'index'=>$index,
+        ];
+
+        return $this->connection->count($params);
+
+    }
+
+    public function moveIndex($source, $destination){
+
+        $params = array(
+            'body' => array(
+                'source' => array(
+                    'index'  => $source
+                ),
+                'dest' => array(
+                    'index' => $destination
+                )
+            )
+        );
+
+        return $this->connection->reindex($params);
+
     }
 }
