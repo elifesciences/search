@@ -22,6 +22,11 @@ namespace {
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/LabsExperimentNormalizerTest.php';
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/SubjectNormalizerTest.php';
 
+    Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
+        'JMS\Serializer\Annotation', __DIR__.'/../vendor/jms/serializer/src'
+    );
+
+
     if (!class_exists('GearmanClient')) {
         class GearmanClient
         {
