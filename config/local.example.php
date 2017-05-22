@@ -4,7 +4,7 @@
 require_once __DIR__.'/extra/gearman_shim.php';
 
 return [
-    'debug' => true,
+    'debug' => false,
     'validate' => true,
     'api_url' => 'http://0.0.0.0:1234',
     'elastic_servers' => ['http://elife_search_elasticsearch:9200'],
