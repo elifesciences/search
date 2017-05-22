@@ -143,7 +143,10 @@ class SearchResponseTest extends SerializerTest
                         {
                             "selectedCurator": {
                                 "id": "pjha",
-                                "type": "senior-editor",
+                                "type": {
+                                    "id": "senior-editor",
+                                    "label": "Senior Editor"
+                                },
                                 "name": {
                                     "preferred": "Prabhat Jha",
                                     "index": "Jha, Prabhat"

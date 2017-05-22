@@ -50,7 +50,10 @@ class CollectionResponseTest extends SerializerTest
             'selectedCurator' => [
                 'etAl' => true,
                 'id' => 'pjha',
-                'type' => 'senior-editor',
+                'type' => [
+                    'id' => 'senior-editor',
+                    'label' => 'Senior Editor',
+                ],
                 'name' => [
                     'preferred' => 'Prabhat Jha',
                     'index' => 'Jha, Prabhat',
@@ -67,7 +70,7 @@ class CollectionResponseTest extends SerializerTest
         $this->assertSame('2015-09-16T11:19:26Z', $collection->published->format('Y-m-d\TH:i:s\Z'));
         $this->assertEquals($data['selectedCurator'], (array) $collection->selectedCurator);
         $this->assertSame($data['selectedCurator']['id'], $collection->selectedCurator->id);
-        $this->assertSame($data['selectedCurator']['type'], $collection->selectedCurator->type);
+        $this->assertSame($data['selectedCurator']['type'], (array) $collection->selectedCurator->type);
         $this->assertSame($data['selectedCurator']['etAl'], $collection->selectedCurator->etAl);
         $this->assertSame($data['selectedCurator']['name']['index'], $collection->selectedCurator->name['index']);
         $this->assertSame($data['selectedCurator']['name']['preferred'], $collection->selectedCurator->name['preferred']);
@@ -87,7 +90,10 @@ class CollectionResponseTest extends SerializerTest
                 {
                     "selectedCurator": {
                         "id": "pjha",
-                        "type": "senior-editor",
+                        "type": {
+                            "id": "senior-editor",
+                            "label": "Senior Editor"
+                        },
                         "name": {
                             "preferred": "Prabhat Jha",
                             "index": "Jha, Prabhat"
@@ -134,7 +140,10 @@ class CollectionResponseTest extends SerializerTest
                 {
                     "selectedCurator": {
                         "id": "pjha",
-                        "type": "senior-editor",
+                        "type": {
+                            "id": "senior-editor",
+                            "label": "Senior Editor"
+                        },
                         "name": {
                             "preferred": "Prabhat Jha",
                             "index": "Jha, Prabhat"

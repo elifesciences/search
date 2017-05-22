@@ -75,16 +75,6 @@ class PodcastEpisodeResponseTest extends SerializerTest
                     "type": "podcast-episode",
                     "title": "July 2016",
                     "impactStatement": "In this episode of the eLife podcast we hear about drug production, early career researchers, honeybees, human migrations and pain.",
-                    "subjects": [
-                        {
-                            "id": "biochemistry",
-                            "name": "Biochemistry"
-                        },
-                        {
-                            "id": "ecology",
-                            "name": "Ecology"
-                        }
-                    ],
                     "published": "2016-07-01T08:30:15Z",
                     "image": {
                         "banner": {

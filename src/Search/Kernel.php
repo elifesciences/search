@@ -90,7 +90,7 @@ final class Kernel implements MinimalKernel
             'aws' => array_merge([
                 'credential_file' => false,
                 'mock_queue' => true,
-                'queue_name' => 'eLife-search',
+                'queue_name' => 'search--dev',
                 'key' => '-----------------------',
                 'secret' => '-------------------------------',
                 'region' => '---------',
