@@ -3,18 +3,18 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
-use eLife\ApiSdk\Model\LabsExperiment;
+use eLife\ApiSdk\Model\LabsPost;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Api\Response\LabsExperimentResponse;
+use eLife\Search\Api\Response\LabsPostResponse;
 use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class LabsExperimentWorkflow implements Workflow
+final class LabsPostWorkflow implements Workflow
 {
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
@@ -40,67 +40,67 @@ final class LabsExperimentWorkflow implements Workflow
 
     /**
      * @GearmanTask(
-     *     name="labs_experiment_validate",
-     *     next="labs_experiment_index",
+     *     name="labs_post_validate",
+     *     next="labs_post_index",
      *     deserialize="deserialize",
      *     serialize="serialize"
      * )
      */
-    public function validate(LabsExperiment $labsExperiment) : LabsExperiment
+    public function validate(LabsPost $labsPost) : LabsPost
     {
         // Create response to validate.
-        $searchLabsExperiment = $this->validator->deserialize($this->serialize($labsExperiment), LabsExperimentResponse::class);
+        $searchLabsPost = $this->validator->deserialize($this->serialize($labsPost), LabsPostResponse::class);
         // Validate that response.
-        $isValid = $this->validator->validateSearchResult($searchLabsExperiment);
+        $isValid = $this->validator->validateSearchResult($searchLabsPost);
         if ($isValid === false) {
             $this->logger->error(
-                'LabsExperiment<'.$labsExperiment->getNumber().'> cannot be transformed into a valid search result',
+                'LabsPost<'.$labsPost->getNumber().'> cannot be transformed into a valid search result',
                 [
                     'input' => [
-                        'type' => 'labs-experiment',
-                        'number' => $labsExperiment->getNumber(),
+                        'type' => 'labs-post',
+                        'number' => $labsPost->getNumber(),
                     ],
-                    'search_result' => $this->validator->serialize($searchLabsExperiment),
+                    'search_result' => $this->validator->serialize($searchLabsPost),
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
-            throw new InvalidWorkflow('LabsExperiment<'.$labsExperiment->getNumber().'> cannot be trasformed into a valid search result.');
+            throw new InvalidWorkflow('LabsPost<'.$labsPost->getNumber().'> cannot be trasformed into a valid search result.');
         }
         // Log results.
-        $this->logger->info('LabsExperiment<'.$labsExperiment->getNumber().'> validated against current schema.');
+        $this->logger->info('LabsPost<'.$labsPost->getNumber().'> validated against current schema.');
         // Pass it on.
-        return $labsExperiment;
+        return $labsPost;
     }
 
     /**
      * @GearmanTask(
-     *     name="labs_experiment_index",
-     *     next="labs_experiment_insert",
+     *     name="labs_post_index",
+     *     next="labs_post_insert",
      *     deserialize="deserialize"
      * )
      */
-    public function index(LabsExperiment $labsExperiment) : array
+    public function index(LabsPost $labsPost) : array
     {
-        $this->logger->debug('LabsExperiment<'.$labsExperiment->getNumber().'> Indexing '.$labsExperiment->getTitle());
+        $this->logger->debug('LabsPost<'.$labsPost->getNumber().'> Indexing '.$labsPost->getTitle());
 
         // Normalized fields.
-        $labsExperimentObject = json_decode($this->serialize($labsExperiment));
-        $this->addSortDate($labsExperimentObject, $labsExperiment->getPublishedDate());
+        $labspostObject = json_decode($this->serialize($labsPost));
+        $this->addSortDate($labspostObject, $labsPost->getPublishedDate());
 
         return [
-            'json' => json_encode($labsExperimentObject),
-            'type' => 'labs-experiment',
-            'id' => $labsExperiment->getNumber(),
+            'json' => json_encode($labspostObject),
+            'type' => 'labs-post',
+            'id' => $labsPost->getNumber(),
         ];
     }
 
     /**
-     * @GearmanTask(name="labs_experiment_insert", next="labs_experiment_post_validate", parameters={"json", "type", "id"})
+     * @GearmanTask(name="labs_post_insert", next="labs_post_post_validate", parameters={"json", "type", "id"})
      */
     public function insert(string $json, string $type, string  $id)
     {
         // Insert the document.
-        $this->logger->debug('LabsExperiment<'.$id.'> importing into Elasticsearch.');
+        $this->logger->debug('LabsPost<'.$id.'> importing into Elasticsearch.');
         $this->client->indexJsonDocument($type, $id, $json);
 
         return [
@@ -110,7 +110,7 @@ final class LabsExperimentWorkflow implements Workflow
     }
 
     /**
-     * @GearmanTask(name="labs_experiment_post_validate", parameters={"type", "id"})
+     * @GearmanTask(name="labs_post_post_validate", parameters={"type", "id"})
      */
     public function postValidate(string $type, string $id)
     {
@@ -120,11 +120,11 @@ final class LabsExperimentWorkflow implements Workflow
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
             // That document contains a blog article.
-            Assertion::isInstanceOf($result, LabsExperimentResponse::class);
+            Assertion::isInstanceOf($result, LabsPostResponse::class);
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
-            $this->logger->error('LabsExperiment<'.$id.'> rolling back', [
+            $this->logger->error('LabsPost<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);
@@ -132,13 +132,13 @@ final class LabsExperimentWorkflow implements Workflow
             return self::WORKFLOW_FAILURE;
         }
 
-        $this->logger->info('LabsExperiment<'.$id.'> successfully imported.');
+        $this->logger->info('LabsPost<'.$id.'> successfully imported.');
 
         return self::WORKFLOW_SUCCESS;
     }
 
     public function getSdkClass() : string
     {
-        return LabsExperiment::class;
+        return LabsPost::class;
     }
 }

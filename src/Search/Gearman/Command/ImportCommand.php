@@ -18,7 +18,7 @@ use Throwable;
 
 final class ImportCommand extends Command
 {
-    private static $supports = ['all', 'BlogArticles', 'Interviews', 'LabsExperiments', 'PodcastEpisodes', 'Collections', 'ResearchArticles'];
+    private static $supports = ['all', 'BlogArticles', 'Interviews', 'LabsPost', 'PodcastEpisodes', 'Collections', 'ResearchArticles'];
 
     private $sdk;
     private $serializer;
@@ -96,11 +96,11 @@ final class ImportCommand extends Command
         $this->iterateSerializeTask($collections, 'collection', 'getId', $collections->count());
     }
 
-    public function importLabsExperiments()
+    public function importLabsPosts()
     {
-        $this->logger->info('Importing Labs Experiments');
-        $events = $this->sdk->labsExperiments();
-        $this->iterateSerializeTask($events, 'labs-experiment', 'getNumber', $events->count());
+        $this->logger->info('Importing Labs Posts');
+        $events = $this->sdk->labsPosts();
+        $this->iterateSerializeTask($events, 'labs-post', 'getNumber', $events->count());
     }
 
     public function importResearchArticles()

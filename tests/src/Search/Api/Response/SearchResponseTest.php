@@ -94,7 +94,7 @@ class SearchResponseTest extends SerializerTest
                         },
                         {
                             "number": 1,
-                            "type": "labs-experiment",
+                            "type": "labs-post",
                             "title": "Experimental eLife Lens search page",
                             "image": {
                                 "thumbnail": {
@@ -204,7 +204,7 @@ class SearchResponseTest extends SerializerTest
                         "blog-article": 3,
                         "collection": 2,
                         "interview": 2,
-                        "labs-experiment": 2,
+                        "labs-post": 2,
                         "podcast-episode": 1
                     },
                     "subjects": [

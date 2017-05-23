@@ -71,7 +71,7 @@ final class MockQueryResponse implements QueryResponse
         $type_totals['blog-article'] = 0;
         $type_totals['collection'] = 0;
         $type_totals['interview'] = 0;
-        $type_totals['labs-experiment'] = 0;
+        $type_totals['labs-post'] = 0;
         $type_totals['podcast-episode'] = 0;
 
         return $type_totals;

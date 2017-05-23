@@ -84,7 +84,7 @@ final class Console
             'article',
             'blog-article',
             'interview',
-            'labs-experiment',
+            'labs-post',
             'podcast-episode',
             'collection',
         ], 0);

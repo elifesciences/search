@@ -108,11 +108,11 @@ final class TypesResponse
     public $interview;
 
     /**
-     * @SerializedName("labs-experiment")
+     * @SerializedName("labs-post")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $labsExperiment;
+    public $labsPost;
 
     /**
      * @SerializedName("podcast-episode")
@@ -137,7 +137,7 @@ final class TypesResponse
         $blogArticle = 0,
         $collection = 0,
         $interview = 0,
-        $labsExperiment = 0,
+        $labsPost = 0,
         $podcastEpisode = 0
     ) {
         $this->correction = $correction;
@@ -155,7 +155,7 @@ final class TypesResponse
         $this->blogArticle = $blogArticle;
         $this->collection = $collection;
         $this->interview = $interview;
-        $this->labsExperiment = $labsExperiment;
+        $this->labsPost = $labsPost;
         $this->podcastEpisode = $podcastEpisode;
     }
 
@@ -177,7 +177,7 @@ final class TypesResponse
             $type_totals['blog-article'] ?? 0,
             $type_totals['collection'] ?? 0,
             $type_totals['interview'] ?? 0,
-            $type_totals['labs-experiment'] ?? 0,
+            $type_totals['labs-post'] ?? 0,
             $type_totals['podcast-episode'] ?? 0
         );
     }
