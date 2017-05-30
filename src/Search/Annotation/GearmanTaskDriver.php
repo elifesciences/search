@@ -96,16 +96,27 @@ final class GearmanTaskDriver
                     $e
                 );
             }
-            $object = $task->instance;
-            $method = $task->method;
-            $params = [];
-            if ($task->parameters) {
-                foreach ($task->parameters as $param) {
-                    $params[] = $data[$param] ?? null;
+            try {
+                $object = $task->instance;
+                $method = $task->method;
+                $params = [];
+                if ($task->parameters) {
+                    foreach ($task->parameters as $param) {
+                        $params[] = $data[$param] ?? null;
+                    }
+                    $value = $object->{$method}(...$params);
+                } else {
+                    $value = $object->{$method}($data);
                 }
-                $value = $object->{$method}(...$params);
-            } else {
-                $value = $object->{$method}($data);
+            } catch (Throwable $e) {
+                $this->logger->error(
+                    'Cannot perform Gearman task',
+                    [
+                        'exception' => $e,
+                        'task' => $task->dump(),
+                    ]
+                );
+                throw $e;
             }
             $this->logger->debug('GearmanTaskDriver task completed', ['task' => $task->name]);
             if ($task->next) {
