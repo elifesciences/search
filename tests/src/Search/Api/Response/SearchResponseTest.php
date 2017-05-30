@@ -93,7 +93,7 @@ class SearchResponseTest extends SerializerTest
                             ]
                         },
                         {
-                            "number": 1,
+                            "id": "80000001",
                             "type": "labs-post",
                             "title": "Experimental eLife Lens search page",
                             "image": {

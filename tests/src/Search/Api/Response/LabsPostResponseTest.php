@@ -6,7 +6,7 @@ use eLife\Search\Api\Response\LabsPostResponse;
 use tests\eLife\Search\RamlRequirement;
 use tests\eLife\Search\SerializerTest;
 
-class LabPostResponseTest extends SerializerTest
+class LabsPostResponseTest extends SerializerTest
 {
     use RamlRequirement;
 
@@ -21,9 +21,9 @@ class LabPostResponseTest extends SerializerTest
             [
                 $this->getFixture('labs-post/v1/minimum.json'), '
                 {
-                    "number": 1,
+                    "id": "80000001",
                     "type": "labs-post",
-                    "title": "Postal eLife Lens search page",
+                    "title": "Experimental eLife Lens search page",
                     "published": "2015-04-01T11:32:47Z",
                     "image": {
                         "thumbnail": {
@@ -45,9 +45,9 @@ class LabPostResponseTest extends SerializerTest
             [
                 $this->getFixture('labs-post/v1/complete.json'), '
                 {
-                    "number": 1,
+                    "id": "80000001",
                     "type": "labs-post",
-                    "title": "Postal eLife Lens search page",
+                    "title": "Experimental eLife Lens search page",
                     "impactStatement": "Today on eLife Labs we are launching a small demo of a search interface that brings together some elements of eLife Lens and some of the native power of a technology called elasticsearch. Head over to the demo to try it out now.",
                     "published": "2015-04-01T11:32:47Z",
                     "image": {

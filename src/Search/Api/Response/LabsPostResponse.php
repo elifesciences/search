@@ -16,10 +16,10 @@ final class LabsPostResponse implements SearchResult
     use Published;
 
     /**
-     * @Type("integer")
+     * @Type("string")
      * @Since(version="1")
      */
-    public $number;
+    public $id;
 
     /**
      * @Type("string")
