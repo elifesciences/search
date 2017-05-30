@@ -54,20 +54,20 @@ final class LabsPostWorkflow implements Workflow
         $isValid = $this->validator->validateSearchResult($searchLabsPost);
         if ($isValid === false) {
             $this->logger->error(
-                'LabsPost<'.$labsPost->getNumber().'> cannot be transformed into a valid search result',
+                'LabsPost<'.$labsPost->getId().'> cannot be transformed into a valid search result',
                 [
                     'input' => [
                         'type' => 'labs-post',
-                        'number' => $labsPost->getNumber(),
+                        'id' => $labsPost->getId(),
                     ],
                     'search_result' => $this->validator->serialize($searchLabsPost),
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
-            throw new InvalidWorkflow('LabsPost<'.$labsPost->getNumber().'> cannot be trasformed into a valid search result.');
+            throw new InvalidWorkflow('LabsPost<'.$labsPost->getId().'> cannot be trasformed into a valid search result.');
         }
         // Log results.
-        $this->logger->info('LabsPost<'.$labsPost->getNumber().'> validated against current schema.');
+        $this->logger->info('LabsPost<'.$labsPost->getId().'> validated against current schema.');
         // Pass it on.
         return $labsPost;
     }
@@ -81,7 +81,7 @@ final class LabsPostWorkflow implements Workflow
      */
     public function index(LabsPost $labsPost) : array
     {
-        $this->logger->debug('LabsPost<'.$labsPost->getNumber().'> Indexing '.$labsPost->getTitle());
+        $this->logger->debug('LabsPost<'.$labsPost->getId().'> Indexing '.$labsPost->getTitle());
 
         // Normalized fields.
         $labspostObject = json_decode($this->serialize($labsPost));
@@ -90,7 +90,7 @@ final class LabsPostWorkflow implements Workflow
         return [
             'json' => json_encode($labspostObject),
             'type' => 'labs-post',
-            'id' => $labsPost->getNumber(),
+            'id' => $labsPost->getId(),
         ];
     }
 
