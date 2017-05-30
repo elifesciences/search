@@ -21,7 +21,7 @@ class GearmanTransformer implements QueueItemTransformer
     private static $typeMap = [
         'blog-article' => 'blog_article_validate',
         'interview' => 'interview_validate',
-        'labs-experiment' => 'labs_experiment_validate',
+        'labs-post' => 'labs_post_validate',
         'podcast-episode' => 'podcast_episode_validate',
         'collection' => 'collection_validate',
         'article' => 'research_article_validate',
