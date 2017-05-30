@@ -18,7 +18,7 @@ use Throwable;
 
 final class ImportCommand extends Command
 {
-    private static $supports = ['all', 'BlogArticles', 'Interviews', 'LabsPost', 'PodcastEpisodes', 'Collections', 'ResearchArticles'];
+    private static $supports = ['all', 'BlogArticles', 'Interviews', 'LabsPosts', 'PodcastEpisodes', 'Collections', 'ResearchArticles'];
 
     private $sdk;
     private $serializer;
