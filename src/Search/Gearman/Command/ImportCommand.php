@@ -100,7 +100,7 @@ final class ImportCommand extends Command
     {
         $this->logger->info('Importing Labs Posts');
         $events = $this->sdk->labsPosts();
-        $this->iterateSerializeTask($events, 'labs-post', 'getNumber', $events->count());
+        $this->iterateSerializeTask($events, 'labs-post', 'getId', $events->count());
     }
 
     public function importResearchArticles()
