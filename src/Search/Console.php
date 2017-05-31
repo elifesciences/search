@@ -20,6 +20,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
+use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
 
 /**
  * @property LoggerInterface temp_logger
@@ -131,19 +133,19 @@ final class Console
         echo "checking if an old 'elife_search_tmp' index exists \n";
         $response = $client->deleteIndex($newIndexName);
 
-        if ($response['payload'] instanceof \eLife\Search\Api\Elasticsearch\Response\SuccessResponse){
+        if ($response['payload'] instanceof SuccessResponse){
 
-            echo "Found an old 'elife_search_tmp' index, Deleted it \n";
+            $this->logger->debug("Found an old 'elife_search_tmp' index, Deleted it");
 
-        } else if ($response['payload'] instanceof \eLife\Search\Api\Elasticsearch\Response\ErrorResponse){
+        } else if ($response['payload'] instanceof ErrorResponse){
 
             if ($response['payload']->error['type'] == 'index_not_found_exception'){
 
-                echo "Did not find an old 'elife_search_tmp' index, This is okay .. continuing \n";
+                $this->logger->debug("Did not find an old 'elife_search_tmp' index, This is okay .. continuing");
 
             }else{
 
-                echo "Something went wrong, we got an exception we were not expecting \n";
+                $this->logger->debug("Something went wrong, we got an exception we were not expecting");
 
             }
         }
@@ -151,14 +153,14 @@ final class Console
         echo "Creating a new (empty) 'elife_search_tmp' index  \n";
         $response = $client->createIndex($newIndexName);
 
-        if ($response['payload'] instanceof \eLife\Search\Api\Elasticsearch\Response\SuccessResponse){
+        if ($response['payload'] instanceof SuccessResponse){
 
-            echo "Successfully created the new index \n";
+            $this->logger->debug("Successfully created the new index");
 
         }else {
 
-            echo "Could not create the new index ... exiting \n";
-            die();
+            $this->logger->error("Could not create the new index ... exiting");
+            return 1;
 
         }
 
@@ -185,8 +187,8 @@ final class Console
 
         }else{
 
-            echo "Error: New index count wasn't greater than old index. Restart the gearman workers on the old index to bring it back form being stale \n";
-            die();
+            $this->logger->error("Error: New index count wasn't greater than old index. Restart the gearman workers on the old index to bring it back form being stale");
+            return 1;
         }
 
     }
