@@ -763,12 +763,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/logging-sdk-php.git",
-                "reference": "ddc23ec75b58a4fe2692e4cfae395bc03a49955d"
+                "reference": "9b3c06f5302c191b227cb653043f200872deb848"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/logging-sdk-php/zipball/ddc23ec75b58a4fe2692e4cfae395bc03a49955d",
-                "reference": "ddc23ec75b58a4fe2692e4cfae395bc03a49955d",
+                "url": "https://api.github.com/repos/elifesciences/logging-sdk-php/zipball/9b3c06f5302c191b227cb653043f200872deb848",
+                "reference": "9b3c06f5302c191b227cb653043f200872deb848",
                 "shasum": ""
             },
             "require": {
@@ -791,7 +791,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences logging SDK",
-            "time": "2017-01-18 09:24:06"
+            "time": "2017-06-12 09:28:05"
         },
         {
             "name": "guzzlehttp/guzzle",

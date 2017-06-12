@@ -1,4 +1,5 @@
 <?php
+use Monolog\Logger;
 
 return [
     'gearman_servers' => ['localhost'],
@@ -9,4 +10,5 @@ return [
         'credential_file' => true,
         'region' => 'us-east-1',
     ],
+    'logging_level' => Logger::INFO,
 ];
