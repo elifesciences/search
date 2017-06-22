@@ -18,10 +18,9 @@ class ElasticsearchClient
         $this->forceSync = $forceSync;
     }
 
-    public function defaultIndex(string $indexName){
-
+    public function defaultIndex(string $indexName)
+    {
         $this->index = $indexName;
-
     }
 
     public function deleteIndexByName(string $index)
