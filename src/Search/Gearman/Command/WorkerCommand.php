@@ -9,7 +9,7 @@ use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use eLife\Search\Workflow\CollectionWorkflow;
 use eLife\Search\Workflow\InterviewWorkflow;
-use eLife\Search\Workflow\LabsExperimentWorkflow;
+use eLife\Search\Workflow\LabsPostWorkflow;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
 use JMS\Serializer\Serializer;
@@ -66,7 +66,7 @@ final class WorkerCommand extends Command
         $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new LabsExperimentWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
+        $this->gearman->registerWorkflow(new LabsPostWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new PodcastEpisodeWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new CollectionWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->work();

@@ -48,13 +48,6 @@ final class TypesResponse
     public $researchArticle;
 
     /**
-     * @SerializedName("research-exchange")
-     * @Type("integer")
-     * @Since(version="1")
-     */
-    public $researchExchange;
-
-    /**
      * @Type("integer")
      * @Since(version="1")
      */
@@ -73,6 +66,13 @@ final class TypesResponse
      * @Since(version="1")
      */
     public $replicationStudy;
+
+    /**
+     * @SerializedName("scientific-correspondence")
+     * @Type("integer")
+     * @Since(version="1")
+     */
+    public $scientificCorrespondence;
 
     /**
      * @SerializedName("short-report")
@@ -108,11 +108,11 @@ final class TypesResponse
     public $interview;
 
     /**
-     * @SerializedName("labs-experiment")
+     * @SerializedName("labs-post")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $labsExperiment;
+    public $labsPost;
 
     /**
      * @SerializedName("podcast-episode")
@@ -128,16 +128,16 @@ final class TypesResponse
         $insight = 0,
         $researchAdvance = 0,
         $researchArticle = 0,
-        $researchExchange = 0,
         $retraction = 0,
         $registeredReport = 0,
         $replicationStudy = 0,
+        $scientificCorrespondence = 0,
         $shortReport = 0,
         $toolsResources = 0,
         $blogArticle = 0,
         $collection = 0,
         $interview = 0,
-        $labsExperiment = 0,
+        $labsPost = 0,
         $podcastEpisode = 0
     ) {
         $this->correction = $correction;
@@ -146,16 +146,16 @@ final class TypesResponse
         $this->insight = $insight;
         $this->researchAdvance = $researchAdvance;
         $this->researchArticle = $researchArticle;
-        $this->researchExchange = $researchExchange;
         $this->retraction = $retraction;
         $this->registeredReport = $registeredReport;
         $this->replicationStudy = $replicationStudy;
+        $this->scientificCorrespondence = $scientificCorrespondence;
         $this->shortReport = $shortReport;
         $this->toolsResources = $toolsResources;
         $this->blogArticle = $blogArticle;
         $this->collection = $collection;
         $this->interview = $interview;
-        $this->labsExperiment = $labsExperiment;
+        $this->labsPost = $labsPost;
         $this->podcastEpisode = $podcastEpisode;
     }
 
@@ -168,16 +168,16 @@ final class TypesResponse
             $type_totals['insight'] ?? 0,
             $type_totals['research-advance'] ?? 0,
             $type_totals['research-article'] ?? 0,
-            $type_totals['research-exchange'] ?? 0,
             $type_totals['retraction'] ?? 0,
             $type_totals['registered-report'] ?? 0,
             $type_totals['replication-study'] ?? 0,
+            $type_totals['scientific-correspondence'] ?? 0,
             $type_totals['short-report'] ?? 0,
             $type_totals['tools-resources'] ?? 0,
             $type_totals['blog-article'] ?? 0,
             $type_totals['collection'] ?? 0,
             $type_totals['interview'] ?? 0,
-            $type_totals['labs-experiment'] ?? 0,
+            $type_totals['labs-post'] ?? 0,
             $type_totals['podcast-episode'] ?? 0
         );
     }

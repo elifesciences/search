@@ -47,6 +47,7 @@ use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JsonSchema\Validator;
+use Monolog\Logger;
 use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
@@ -85,12 +86,13 @@ final class Kernel implements MinimalKernel
             'elastic_logging' => false,
             'elastic_force_sync' => false,
             'file_logs_path' => self::ROOT.'/var/logs',
+            'logging_level' => null,
             'gearman_worker_timeout' => 20000,
             'process_memory_limit' => 256,
             'aws' => array_merge([
                 'credential_file' => false,
                 'mock_queue' => true,
-                'queue_name' => 'eLife-search',
+                'queue_name' => 'search--dev',
                 'key' => '-----------------------',
                 'secret' => '-------------------------------',
                 'region' => '---------',
@@ -169,7 +171,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['logger'] = function (Application $app) {
-            $factory = new LoggingFactory($app['config']['file_logs_path'], 'search-api');
+            $factory = new LoggingFactory($app['config']['file_logs_path'], 'search-api', $app['config']['logging_level']);
 
             return $factory->logger();
         };

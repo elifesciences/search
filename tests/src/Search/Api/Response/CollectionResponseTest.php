@@ -15,7 +15,7 @@ class CollectionResponseTest extends SerializerTest
         $data = [
             'id' => '1',
             'title' => 'Tropical disease',
-            'impactStatement' => 'eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness. The articles below have been selected by eLife editors to give a flavour of the breadth of research on tropical diseases published by the journal.',
+            'impactStatement' => 'eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness.',
             'image' => [
                 'banner' => [
                     'alt' => '',
@@ -50,7 +50,10 @@ class CollectionResponseTest extends SerializerTest
             'selectedCurator' => [
                 'etAl' => true,
                 'id' => 'pjha',
-                'type' => 'senior-editor',
+                'type' => [
+                    'id' => 'senior-editor',
+                    'label' => 'Senior Editor',
+                ],
                 'name' => [
                     'preferred' => 'Prabhat Jha',
                     'index' => 'Jha, Prabhat',
@@ -67,7 +70,7 @@ class CollectionResponseTest extends SerializerTest
         $this->assertSame('2015-09-16T11:19:26Z', $collection->published->format('Y-m-d\TH:i:s\Z'));
         $this->assertEquals($data['selectedCurator'], (array) $collection->selectedCurator);
         $this->assertSame($data['selectedCurator']['id'], $collection->selectedCurator->id);
-        $this->assertSame($data['selectedCurator']['type'], $collection->selectedCurator->type);
+        $this->assertSame($data['selectedCurator']['type'], (array) $collection->selectedCurator->type);
         $this->assertSame($data['selectedCurator']['etAl'], $collection->selectedCurator->etAl);
         $this->assertSame($data['selectedCurator']['name']['index'], $collection->selectedCurator->name['index']);
         $this->assertSame($data['selectedCurator']['name']['preferred'], $collection->selectedCurator->name['preferred']);
@@ -87,7 +90,10 @@ class CollectionResponseTest extends SerializerTest
                 {
                     "selectedCurator": {
                         "id": "pjha",
-                        "type": "senior-editor",
+                        "type": {
+                            "id": "senior-editor",
+                            "label": "Senior Editor"
+                        },
                         "name": {
                             "preferred": "Prabhat Jha",
                             "index": "Jha, Prabhat"
@@ -134,7 +140,10 @@ class CollectionResponseTest extends SerializerTest
                 {
                     "selectedCurator": {
                         "id": "pjha",
-                        "type": "senior-editor",
+                        "type": {
+                            "id": "senior-editor",
+                            "label": "Senior Editor"
+                        },
                         "name": {
                             "preferred": "Prabhat Jha",
                             "index": "Jha, Prabhat"
@@ -144,7 +153,7 @@ class CollectionResponseTest extends SerializerTest
                     "type": "collection",
                     "id": "1",
                     "title": "Tropical disease",
-                    "impactStatement": "eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness. The articles below have been selected by eLife editors to give a flavour of the breadth of research on tropical diseases published by the journal.",
+                    "impactStatement": "eLife has published papers on many tropical diseases, including malaria, Ebola, leishmaniases, Dengue and African sleeping sickness.",
                     "subjects": [
                         {
                             "id": "epidemiology-global-health",

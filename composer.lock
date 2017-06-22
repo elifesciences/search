@@ -548,12 +548,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "d1eae121c00bbde4514a85788af2a8e880cba9a8"
+                "reference": "fd82228c581ae76317b47597796a7031939bc1bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/d1eae121c00bbde4514a85788af2a8e880cba9a8",
-                "reference": "d1eae121c00bbde4514a85788af2a8e880cba9a8",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/fd82228c581ae76317b47597796a7031939bc1bd",
+                "reference": "fd82228c581ae76317b47597796a7031939bc1bd",
                 "shasum": ""
             },
             "conflict": {
@@ -565,7 +565,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2017-04-12 09:21:18"
+            "time": "2017-05-30 07:53:37"
         },
         {
             "name": "elife/api-client",
@@ -573,12 +573,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "567a9b5caf97a4dffcc4d604a5a3c4347978aadd"
+                "reference": "78b520553f5bad64c3b75fcc1015d594f1f508fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/567a9b5caf97a4dffcc4d604a5a3c4347978aadd",
-                "reference": "567a9b5caf97a4dffcc4d604a5a3c4347978aadd",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/78b520553f5bad64c3b75fcc1015d594f1f508fe",
+                "reference": "78b520553f5bad64c3b75fcc1015d594f1f508fe",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API client",
-            "time": "2017-03-16 13:32:19"
+            "time": "2017-05-30 08:23:04"
         },
         {
             "name": "elife/api-sdk",
@@ -629,12 +629,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "1167ee71a75d4e9c76eb5657ea2e6e95e0f6e900"
+                "reference": "516497a82652a5de19537f674e90c6cc3b45feb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/1167ee71a75d4e9c76eb5657ea2e6e95e0f6e900",
-                "reference": "1167ee71a75d4e9c76eb5657ea2e6e95e0f6e900",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/516497a82652a5de19537f674e90c6cc3b45feb0",
+                "reference": "516497a82652a5de19537f674e90c6cc3b45feb0",
                 "shasum": ""
             },
             "require": {
@@ -669,7 +669,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2017-04-12 14:55:37"
+            "time": "2017-05-30 08:15:02"
         },
         {
             "name": "elife/api-validator",
@@ -721,12 +721,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "58d2ad06b5c111361e03218544c1bff708133454"
+                "reference": "e21f01100b5c398fe07a8a685aeef50d103ab056"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/58d2ad06b5c111361e03218544c1bff708133454",
-                "reference": "58d2ad06b5c111361e03218544c1bff708133454",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/e21f01100b5c398fe07a8a685aeef50d103ab056",
+                "reference": "e21f01100b5c398fe07a8a685aeef50d103ab056",
                 "shasum": ""
             },
             "require": {
@@ -755,7 +755,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences bus SDK",
-            "time": "2017-03-20 13:05:09"
+            "time": "2017-05-30 08:12:29"
         },
         {
             "name": "elife/logging-sdk",
@@ -763,12 +763,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/logging-sdk-php.git",
-                "reference": "ddc23ec75b58a4fe2692e4cfae395bc03a49955d"
+                "reference": "9b3c06f5302c191b227cb653043f200872deb848"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/logging-sdk-php/zipball/ddc23ec75b58a4fe2692e4cfae395bc03a49955d",
-                "reference": "ddc23ec75b58a4fe2692e4cfae395bc03a49955d",
+                "url": "https://api.github.com/repos/elifesciences/logging-sdk-php/zipball/9b3c06f5302c191b227cb653043f200872deb848",
+                "reference": "9b3c06f5302c191b227cb653043f200872deb848",
                 "shasum": ""
             },
             "require": {
@@ -791,7 +791,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences logging SDK",
-            "time": "2017-01-18 09:24:06"
+            "time": "2017-06-12 09:28:05"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3143,12 +3143,12 @@
             "version": "0.9.9",
             "source": {
                 "type": "git",
-                "url": "https://github.com/padraic/mockery.git",
+                "url": "https://github.com/mockery/mockery.git",
                 "reference": "6fdb61243844dc924071d3404bb23994ea0b6856"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/6fdb61243844dc924071d3404bb23994ea0b6856",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/6fdb61243844dc924071d3404bb23994ea0b6856",
                 "reference": "6fdb61243844dc924071d3404bb23994ea0b6856",
                 "shasum": ""
             },

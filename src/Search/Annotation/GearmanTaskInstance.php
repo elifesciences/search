@@ -63,4 +63,14 @@ final class GearmanTaskInstance
     {
         return $this->instance->getSdkClass();
     }
+
+    public function dump() : array
+    {
+        return [
+            'instance' => $this->instance,
+            'method' => $this->method,
+            'name' => $this->name,
+            'parameters' => $this->parameters,
+        ];
+    }
 }

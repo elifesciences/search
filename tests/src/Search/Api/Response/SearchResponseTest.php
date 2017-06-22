@@ -93,8 +93,8 @@ class SearchResponseTest extends SerializerTest
                             ]
                         },
                         {
-                            "number": 1,
-                            "type": "labs-experiment",
+                            "id": "80000001",
+                            "type": "labs-post",
                             "title": "Experimental eLife Lens search page",
                             "image": {
                                 "thumbnail": {
@@ -143,7 +143,10 @@ class SearchResponseTest extends SerializerTest
                         {
                             "selectedCurator": {
                                 "id": "pjha",
-                                "type": "senior-editor",
+                                "type": {
+                                    "id": "senior-editor",
+                                    "label": "Senior Editor"
+                                },
                                 "name": {
                                     "preferred": "Prabhat Jha",
                                     "index": "Jha, Prabhat"
@@ -192,16 +195,16 @@ class SearchResponseTest extends SerializerTest
                         "insight": 0,
                         "research-advance": 1,
                         "research-article": 2,
-                        "research-exchange": 0,
                         "retraction": 0,
                         "registered-report": 0,
                         "replication-study": 0,
+                        "scientific-correspondence": 0,
                         "short-report": 0,
                         "tools-resources": 0,
                         "blog-article": 3,
                         "collection": 2,
                         "interview": 2,
-                        "labs-experiment": 2,
+                        "labs-post": 2,
                         "podcast-episode": 1
                     },
                     "subjects": [

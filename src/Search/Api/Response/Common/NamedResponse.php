@@ -27,7 +27,7 @@ abstract class NamedResponse
     public $id;
 
     /**
-     * @Type("string")
+     * @Type("array")
      * @Since(version="1")
      */
     public $type;

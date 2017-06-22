@@ -50,7 +50,10 @@ abstract class ElasticTestCase extends WebTestCase
                           }
                         },
                         "id": "da020f46",
-                        "type": "senior-editor",
+                        "type": {
+                            "id": "senior-editor",
+                            "label": "Senior Editor"
+                        },
                         "name": {
                           "preferred": "Prabhat Jha",
                           "index": "Jha, Prabhat"
@@ -284,7 +287,11 @@ abstract class ElasticTestCase extends WebTestCase
         /** @var Response $response */
         $response = $this->getResponse();
         if (!$response->isOk()) {
-            $this->fail('Response returned was not 200: '.$response->getContent());
+            $decodedResponse = json_decode($response->getContent(), true);
+            if (!$decodedResponse) {
+                $decodedResponse = $response->getContent();
+            }
+            $this->fail('Response returned was not 200 but '.$response->getStatusCode().': '.var_export($decodedResponse, true));
         }
         $json = json_decode($response->getContent());
 
@@ -383,6 +390,9 @@ abstract class ElasticTestCase extends WebTestCase
         $this->client = $this->getElasticSearchClient();
         $this->client->deleteIndex();
         $lines = $this->runCommand('search:setup');
+        if (!$lines) {
+            $this->fail('Could not run search:setup, try running it manually');
+        }
         if ($lines[0] === 'No alive nodes found in your cluster') {
             $this->fail('Elasticsearch may not be installed, skipping');
         }

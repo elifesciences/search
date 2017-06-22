@@ -9,22 +9,22 @@ use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
 
-final class LabsExperimentResponse implements SearchResult
+final class LabsPostResponse implements SearchResult
 {
     use SnippetFields;
     use Image;
     use Published;
 
     /**
-     * @Type("integer")
+     * @Type("string")
      * @Since(version="1")
      */
-    public $number;
+    public $id;
 
     /**
      * @Type("string")
      * @Since(version="1")
      * @Accessor(getter="getType")
      */
-    public $type = 'labs-experiment';
+    public $type = 'labs-post';
 }
