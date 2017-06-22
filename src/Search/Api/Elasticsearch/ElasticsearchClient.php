@@ -33,19 +33,20 @@ class ElasticsearchClient
         return $this->connection->indices()->delete($params);
     }
 
-    public function createIndex(string $indexName){
-
+    public function createIndex(string $indexName)
+    {
         $params = [
-            'index' => $indexName
+            'index' => $indexName,
 
         ];
-        return $this->connection->indices()->create($params);
 
+        return $this->connection->indices()->create($params);
     }
 
     public function deleteIndex(string $indexName = null)
     {
-       $indexName = $indexName ?? $this->index;
+        $indexName = $indexName ?? $this->index;
+
         return $this->deleteIndexByName($indexName);
     }
 
@@ -120,31 +121,28 @@ class ElasticsearchClient
         return $this->connection->get($params)['payload'] ?? null;
     }
 
-    public function count($index){
-
-        $params= [
-            'index'=>$index,
+    public function count($index)
+    {
+        $params = [
+            'index' => $index,
         ];
 
         return $this->connection->count($params);
-
     }
 
-    public function moveIndex(string $source, string $destination){
-
-
+    public function moveIndex(string $source, string $destination)
+    {
         $params = [
             'body' => [
                 'source' => [
-                    'index'  => $source
+                    'index' => $source,
                 ],
                 'dest' => [
-                    'index' => $destination
-                ]
-            ]
+                    'index' => $destination,
+                ],
+            ],
         ];
 
         return $this->connection->reindex($params);
-
     }
 }

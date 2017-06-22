@@ -9,6 +9,8 @@ use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
+use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use Exception;
 use LogicException;
 use Psr\Log\LoggerInterface;
@@ -20,8 +22,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
-use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
 
 /**
  * @property LoggerInterface temp_logger
@@ -124,8 +124,8 @@ final class Console
         $this->logger->info('Item added successfully.');
     }
 
-    public function indexRebuildCommand(){
-
+    public function indexRebuildCommand()
+    {
         $newIndexName = 'elife_search_tmp';
         $client = $this->getElasticClient();
 
@@ -133,35 +133,25 @@ final class Console
         echo "checking if an old 'elife_search_tmp' index exists \n";
         $response = $client->deleteIndex($newIndexName);
 
-        if ($response['payload'] instanceof SuccessResponse){
-
+        if ($response['payload'] instanceof SuccessResponse) {
             $this->logger->debug("Found an old 'elife_search_tmp' index, Deleted it");
-
-        } else if ($response['payload'] instanceof ErrorResponse){
-
-            if ($response['payload']->error['type'] == 'index_not_found_exception'){
-
+        } elseif ($response['payload'] instanceof ErrorResponse) {
+            if ($response['payload']->error['type'] == 'index_not_found_exception') {
                 $this->logger->debug("Did not find an old 'elife_search_tmp' index, This is okay .. continuing");
-
-            }else{
-
-                $this->logger->debug("Something went wrong, we got an exception we were not expecting");
-
+            } else {
+                $this->logger->debug('Something went wrong, we got an exception we were not expecting');
             }
         }
 
         echo "Creating a new (empty) 'elife_search_tmp' index  \n";
         $response = $client->createIndex($newIndexName);
 
-        if ($response['payload'] instanceof SuccessResponse){
+        if ($response['payload'] instanceof SuccessResponse) {
+            $this->logger->debug('Successfully created the new index');
+        } else {
+            $this->logger->error('Could not create the new index ... exiting');
 
-            $this->logger->debug("Successfully created the new index");
-
-        }else {
-
-            $this->logger->error("Could not create the new index ... exiting");
             return 1;
-
         }
 
         // Kill all existing Gearnman workers
@@ -174,23 +164,21 @@ final class Console
         exec('./bin/console queue:watch  >> /tmp/queue-watch.log 2>&1 &');
         exec('./bin/console queue:import all ');
 
-        if ($client->count("elife_search_tmp") > $client->count("elife_search")){
+        if ($client->count('elife_search_tmp') > $client->count('elife_search')) {
 
             // switch index
             $client->createIndex('elife_search_old');
-            $client->moveIndex('elife_search','elife_search_old');
+            $client->moveIndex('elife_search', 'elife_search_old');
             $client->deleteIndex('elife_search');
             $client->createIndex('elife_search');
-            $client->moveIndex('elife_search_tmp','elife_search');
+            $client->moveIndex('elife_search_tmp', 'elife_search');
 
             // We should kill the workers we started that goto elife_search_tmp as it no longer exists
-
-        }else{
-
+        } else {
             $this->logger->error("Error: New index count wasn't greater than old index. Restart the gearman workers on the old index to bring it back form being stale");
+
             return 1;
         }
-
     }
 
     public function __construct(Application $console, Kernel $app)
@@ -277,5 +265,4 @@ final class Console
         }
         $this->console->run($input, $output);
     }
-
 }
