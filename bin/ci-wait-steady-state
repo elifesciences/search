@@ -1,0 +1,11 @@
+# will return also on failing conditions such as dead processes
+timeout 60 ./bin/wait-for-empty-gearman-queue "$environment" &
+waitingPid=$!
+wait "$waitingPid"
+waitingReturnCode=$?
+# clean up PHP processes
+kill "$workerPid" "$queueWatchPid";
+if [ ! "$waitingReturnCode" -eq "0" ]; then
+    echo -e "\e[31mThe script './wait-for-empty-gearman-queue' timed out\e[39m"
+    exit "$waitingReturnCode"
+fi

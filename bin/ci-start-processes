@@ -1,0 +1,8 @@
+echo "Starting a gearman:worker"
+./bin/console gearman:worker --env="$environment" $additionalWorkerArgs >> /tmp/gearman-worker.log 2>&1 &
+workerPid=$!
+echo "gearman:worker PID $workerPid"
+echo "Starting a queue:watch"
+./bin/console queue:watch --env="$environment" >> /tmp/queue-watch.log 2>&1 &
+queueWatchPid=$!
+echo "queue:watch PID $queueWatchPid"

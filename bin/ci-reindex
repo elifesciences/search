@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+. bin/ci-process-bootstrap
+
+./bin/console queue:clean --env="$environment"
+# TODO: poll for queue:count == 0, with timeout
+sleep 5
+
+./bin/console search:setup --index=elife_search_tmp --delete
+
+additionalWorkerArgs='--index=elife_search_tmp'
+. bin/ci-start-processes
+
+echo "Starting reindexing"
+./bin/console queue:import all --env="$environment"
+echo "Finished launching reindexing"
+
+. bin/ci-wait-steady-state

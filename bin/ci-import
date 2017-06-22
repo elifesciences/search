@@ -1,42 +1,17 @@
 #!/usr/bin/env bash
-environment=$1
-
-if [ -z "$environment" ]; then
-    echo "environment needs to be passed as first argument";
-    exit 2;
-fi;
-
-# propagate SIGINT to waiting process
-trap 'kill -INT -$waitingPid' INT
+. bin/ci-process-bootstrap
 
 ./bin/console queue:clean --env="$environment"
 # TODO: poll for queue:count == 0, with timeout
 sleep 5
 
-echo "Starting a gearman:worker"
-./bin/console gearman:worker --env="$environment" >> /tmp/gearman-worker.log 2>&1 &
-workerPid=$!
-echo "gearman:worker PID $workerPid"
-echo "Starting a queue:watch"
-./bin/console queue:watch --env="$environment" >> /tmp/queue-watch.log 2>&1 &
-queueWatchPid=$!
-echo "queue:watch PID $queueWatchPid"
+. bin/ci-start-processes
 
 echo "Starting import"
 ./bin/console queue:import all --env="$environment"
 echo "Finished launching import"
 
-# will return also on failing conditions such as dead processes
-timeout 60 ./bin/wait-for-empty-gearman-queue "$environment" &
-waitingPid=$!
-wait "$waitingPid"
-waitingReturnCode=$?
-# clean up PHP processes
-kill "$workerPid" "$queueWatchPid";
-if [ ! "$waitingReturnCode" -eq "0" ]; then
-    echo -e "\e[31mThe script './wait-for-empty-gearman-queue' timed out\e[39m"
-    exit "$waitingReturnCode"
-fi
+. bin/ci-wait-steady-state
 
 # final verification
 # we start from an empty index

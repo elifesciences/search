@@ -60,11 +60,10 @@ final class WorkerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         if (!empty($input->getOption('index'))) {
             $this->client->defaultIndex($input->getOption('index'));
         }
-        // Working..
+
         $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
