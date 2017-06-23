@@ -19,7 +19,7 @@ while true; do
         echo "No alive queue:watch processes"
         break
     fi
-    sqs_queue=$(bin/console --env=$environment queue:count)
+    sqs_queue=$(bin/console --env="$environment" queue:count)
     echo "Job in SQS queue (approximate): $sqs_queue"
     gearman_queue=$(gearadmin --status | cut -f 2 | paste -sd+ | bc)
     echo "Job in Gearman queue: $gearman_queue"
