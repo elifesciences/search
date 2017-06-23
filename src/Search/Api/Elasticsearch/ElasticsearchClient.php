@@ -18,7 +18,12 @@ class ElasticsearchClient
         $this->forceSync = $forceSync;
     }
 
-    public function deleteIndexByName($index)
+    public function defaultIndex(string $indexName)
+    {
+        $this->index = $indexName;
+    }
+
+    public function deleteIndexByName(string $index)
     {
         $params = [
             'index' => $index,
@@ -28,9 +33,21 @@ class ElasticsearchClient
         return $this->connection->indices()->delete($params);
     }
 
-    public function deleteIndex()
+    public function createIndex(string $indexName)
     {
-        return $this->deleteIndexByName($this->index);
+        $params = [
+            'index' => $indexName,
+
+        ];
+
+        return $this->connection->indices()->create($params);
+    }
+
+    public function deleteIndex(string $indexName = null)
+    {
+        $indexName = $indexName ?? $this->index;
+
+        return $this->deleteIndexByName($indexName);
     }
 
     public function indexExists()
@@ -53,10 +70,11 @@ class ElasticsearchClient
         return $this->connection->indices()->create($params);
     }
 
-    public function indexJsonDocument($type, $id, $body, $flush = false)
+    public function indexJsonDocument($type, $id, $body, $flush = false, string $index = null)
     {
+        $index = $index ?? $this->index;
         $params = [
-            'index' => $this->index,
+            'index' => $index,
             'type' => $type,
             'id' => $id,
             'body' => $body,
@@ -101,5 +119,30 @@ class ElasticsearchClient
         ];
 
         return $this->connection->get($params)['payload'] ?? null;
+    }
+
+    public function count($index)
+    {
+        $params = [
+            'index' => $index,
+        ];
+
+        return $this->connection->count($params);
+    }
+
+    public function moveIndex(string $source, string $destination)
+    {
+        $params = [
+            'body' => [
+                'source' => [
+                    'index' => $source,
+                ],
+                'dest' => [
+                    'index' => $destination,
+                ],
+            ],
+        ];
+
+        return $this->connection->reindex($params);
     }
 }

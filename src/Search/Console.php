@@ -9,6 +9,8 @@ use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
+use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use Exception;
 use LogicException;
 use Psr\Log\LoggerInterface;
@@ -51,6 +53,9 @@ final class Console
         ],
         'queue:count' => [
             'description' => 'Counts (approximately) how many messages are in the queue',
+        ],
+        'index:rebuild' => [
+            'description' => 'Creates a new search index migrates content over them does a hot-swap',
         ],
     ];
 
@@ -117,6 +122,63 @@ final class Console
         // Queue item.
         $queue->enqueue($item);
         $this->logger->info('Item added successfully.');
+    }
+
+    public function indexRebuildCommand()
+    {
+        $newIndexName = 'elife_search_tmp';
+        $client = $this->getElasticClient();
+
+        // Delete the existing 'elife_search_tmp' index if we have one
+        echo "checking if an old 'elife_search_tmp' index exists \n";
+        $response = $client->deleteIndex($newIndexName);
+
+        if ($response['payload'] instanceof SuccessResponse) {
+            $this->logger->debug("Found an old 'elife_search_tmp' index, Deleted it");
+        } elseif ($response['payload'] instanceof ErrorResponse) {
+            if ($response['payload']->error['type'] == 'index_not_found_exception') {
+                $this->logger->debug("Did not find an old 'elife_search_tmp' index, This is okay .. continuing");
+            } else {
+                $this->logger->debug('Something went wrong, we got an exception we were not expecting');
+            }
+        }
+
+        echo "Creating a new (empty) 'elife_search_tmp' index  \n";
+        $response = $client->createIndex($newIndexName);
+
+        if ($response['payload'] instanceof SuccessResponse) {
+            $this->logger->debug('Successfully created the new index');
+        } else {
+            $this->logger->error('Could not create the new index ... exiting');
+
+            return 1;
+        }
+
+        // Kill all existing Gearnman workers
+        // Giorgio perhaps some linux command
+
+        // start some new ones using our new index
+        // Populate exiting items
+        //subsribe to SQS queue
+        exec('./bin/console gearman:worker  --index="elife_search_tmp" >> /tmp/gearman-worker.log 2>&1 &');
+        exec('./bin/console queue:watch  >> /tmp/queue-watch.log 2>&1 &');
+        exec('./bin/console queue:import all ');
+
+        if ($client->count('elife_search_tmp') > $client->count('elife_search')) {
+
+            // switch index
+            $client->createIndex('elife_search_old');
+            $client->moveIndex('elife_search', 'elife_search_old');
+            $client->deleteIndex('elife_search');
+            $client->createIndex('elife_search');
+            $client->moveIndex('elife_search_tmp', 'elife_search');
+
+            // We should kill the workers we started that goto elife_search_tmp as it no longer exists
+        } else {
+            $this->logger->error("Error: New index count wasn't greater than old index. Restart the gearman workers on the old index to bring it back form being stale");
+
+            return 1;
+        }
     }
 
     public function __construct(Application $console, Kernel $app)

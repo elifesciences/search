@@ -31,11 +31,16 @@ class BuildIndexCommand extends Command
             ->setName('search:setup')
             ->setDescription('Re-index elasticsearch <comment>WARNING: DROPS CONTENT WITH -d</comment>')
             ->addOption('delete', 'd', InputOption::VALUE_NONE, 'Drop content')
+            ->addOption('index', 'i', InputOption::VALUE_OPTIONAL, 'Index that should be (re)created')
             ->setHelp('Creates new Gearman client and imports entities from API');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (!empty($input->getOption('index'))) {
+            $this->client->defaultIndex($input->getOption('index'));
+        }
+
         $toDelete = $input->getOption('delete');
 
         $mapping = array_filter(

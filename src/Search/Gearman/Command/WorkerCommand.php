@@ -17,6 +17,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class WorkerCommand extends Command
@@ -52,12 +53,17 @@ final class WorkerCommand extends Command
             ->setName('gearman:worker')
             ->setDescription('Creates new Gearman workers.')
             ->setHelp('This command will spin up a new gearman worker based on the options you provide. By default this will be with all jobs available')
-            ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
+            ->addOption('index', 'i', InputOption::VALUE_OPTIONAL, 'Index Gearman worker should point to')
+            ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // Working..
+        if (!empty($input->getOption('index'))) {
+            $this->client->defaultIndex($input->getOption('index'));
+        }
+
         $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
