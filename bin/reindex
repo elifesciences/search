@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -e
+
+if [ "$#" -gt 1 ]; then
+    echo "Usage: bin/reindex INDEX_NAME"
+    echo "Example: bin/reindex elife_search_67"
+    exit 1
+fi
+
+index_name="$1"
+
+# 1. stop gearman workers (I1)
+# 2. start new gearman workers I2
+# 3. launch import
+# 4. wait for empty SQS and Gearman queues
+# 5. switch index
+# 6. smoke test it
