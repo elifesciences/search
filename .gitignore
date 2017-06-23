@@ -2,6 +2,7 @@
 /vendor/
 /cache/
 /config/local.php
+/index.txt
 /tests/raml/
 !/tests/raml/.gitkeep
 
