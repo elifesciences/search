@@ -40,7 +40,7 @@ final class IndexMetadata
     /**
      * @return self
      */
-    public static function fromContents(string $write, string $read, string $lastImport)
+    public static function fromContents(string $write, string $read, string $lastImport = '19700101000000')
     {
         return new self($write, $read, $lastImport);
     }
@@ -82,6 +82,11 @@ final class IndexMetadata
     public function read()
     {
         return $this->read;
+    }
+
+    public function lastImport()
+    {
+        return $this->lastImport;
     }
 
     public function __toString()
