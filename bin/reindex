@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+if [ "$#" -lt 2 ]; then
+    echo "Usage: bin/reindex ENVIRONMENT INDEX_NAME"
+    echo "Example: bin/reindex end2end elife_search_67"
+    exit 1
+fi
+
+environment="$1"
+index_name="$2"
+
+sudo start search-gearman-worker-stop-all
+
+./bin/console search:setup --index="$index_name" --delete
+./bin/console index:switch:write "$index_name"
+
+sudo start search-processes
+
+./bin/console queue:import all --env="$environment"
+
+./bin/wait-for-empty-queues "$environment"
+
+./bin/console index:switch:read "$index_name"
+# we should restart processes, but they never should use IndexMetadata::READ
+
+./smoke_tests.sh

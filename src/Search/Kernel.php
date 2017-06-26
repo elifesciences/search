@@ -83,6 +83,8 @@ final class Kernel implements MinimalKernel
             'api_requests_batch' => 10,
             'ttl' => 300,
             'elastic_servers' => ['http://localhost:9200'],
+            // TODO: after backward compatibility with index.txt is not necessary,
+            // transition to indexMetadata()
             'elastic_index' => $this->indexName(),
             'elastic_logging' => false,
             'elastic_force_sync' => false,
@@ -119,8 +121,22 @@ final class Kernel implements MinimalKernel
         $this->app = $this->applicationFlow($app);
     }
 
-    private function indexName()
+    /**
+     * @param string $operation IndexMetadata::READ or IndexMetadata::WRITE
+     *
+     * @return string
+     *                TODO: remove duplication with indexMetadata() once stable
+     */
+    private function indexName($operation = IndexMetadata::READ)
     {
+        $filename = realpath(__DIR__.'/../../index.json');
+        if (file_exists($filename)) {
+            $indexMetadata = IndexMetadata::fromFile($filename);
+
+            return $indexMetadata->operation($operation);
+        }
+
+        // deprecated
         $filename = realpath(__DIR__.'/../../index.txt');
         if (file_exists($filename)) {
             $lines = file($filename, FILE_IGNORE_NEW_LINES);
@@ -131,7 +147,18 @@ final class Kernel implements MinimalKernel
             return $lines[0];
         }
 
+        // default
         return 'elife_search';
+    }
+
+    public function indexMetadata() : IndexMetadata
+    {
+        $filename = realpath(__DIR__.'/../../index.json');
+        if (file_exists($filename)) {
+            return IndexMetadata::fromFile($filename);
+        }
+
+        return IndexMetadata::fromVersions('elife_search', 'elife_search');
     }
 
     public function dependencies(Application $app)
@@ -294,12 +321,33 @@ final class Kernel implements MinimalKernel
             return $client->build();
         };
 
+        // TODO: deprecate and remove
         $app['elastic.client'] = function (Application $app) {
-            return new ElasticsearchClient($app['elastic.elasticsearch'], $app['config']['elastic_index'], $app['config']['elastic_force_sync']);
+            return new ElasticsearchClient(
+                $app['elastic.elasticsearch'],
+                $app['config']['elastic_index'],
+                $app['config']['elastic_force_sync']
+            );
+        };
+
+        $app['elastic.client.write'] = function (Application $app) {
+            return new ElasticsearchClient(
+                $app['elastic.elasticsearch'],
+                $this->indexMetadata()->operation(IndexMetadata::WRITE),
+                $app['config']['elastic_force_sync']
+            );
+        };
+
+        $app['elastic.client.read'] = function (Application $app) {
+            return new ElasticsearchClient(
+                $app['elastic.elasticsearch'],
+                $this->indexMetadata()->operation(IndexMetadata::READ),
+                $app['config']['elastic_force_sync']
+            );
         };
 
         $app['elastic.executor'] = function (Application $app) {
-            return new ElasticQueryExecutor($app['elastic.client']);
+            return new ElasticQueryExecutor($app['elastic.client.read']);
         };
 
         //#####################################################
@@ -377,7 +425,14 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.gearman.worker'] = function (Application $app) {
-            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator'], $app['logger']);
+            return new WorkerCommand(
+                $app['api.sdk'],
+                $app['serializer'],
+                $app['console.gearman.task_driver'],
+                $app['elastic.client.write'],
+                $app['validator'],
+                $app['logger']
+            );
         };
 
         // TODO: rename key
