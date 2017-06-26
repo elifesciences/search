@@ -74,6 +74,16 @@ final class IndexMetadata
         return $this->$operation;
     }
 
+    public function write()
+    {
+        return $this->write;
+    }
+
+    public function read()
+    {
+        return $this->read;
+    }
+
     public function __toString()
     {
         return json_encode([

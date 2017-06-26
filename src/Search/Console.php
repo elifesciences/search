@@ -134,6 +134,7 @@ final class Console
     {
         $indexName = $input->getArgument('index_name');
         $metadata = $this->app->indexMetadata();
+        $this->logger->info("Switching index writes from {$metadata->write()} to $indexName");
         $metadata->switchWrite($indexName)->toFile('index.json');
     }
 
@@ -141,6 +142,7 @@ final class Console
     {
         $indexName = $input->getArgument('index_name');
         $metadata = $this->app->indexMetadata();
+        $this->logger->info("Switching index reads from {$metadata->read()} to $indexName");
         $metadata->switchRead($indexName)->toFile('index.json');
     }
 
