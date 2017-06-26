@@ -1,4 +1,5 @@
 <?php
+
 namespace eLife\Search;
 
 use Assert\Assertion;
@@ -15,7 +16,7 @@ final class IndexMetadata
     private $read;
     const WRITE = 'write';
     const READ = 'read';
-    
+
     /**
      * @return self
      */
@@ -24,6 +25,7 @@ final class IndexMetadata
         $contents = json_decode(file_get_contents($filename), true);
         Assertion::keyExists($contents, self::WRITE);
         Assertion::keyExists($contents, self::READ);
+
         return new self($contents[self::WRITE], $contents[self::READ]);
     }
 
@@ -34,7 +36,7 @@ final class IndexMetadata
     {
         return new self(json_decode(file_get_contents($filename)));
     }
-    
+
     public function __construct(string $write, string $read)
     {
         $this->write = $write;
@@ -54,9 +56,10 @@ final class IndexMetadata
     public function operation($operation)
     {
         Assertion::propertyExists($this, $operation);
+
         return $this->$operation;
     }
-    
+
     public function __toString()
     {
         return json_encode([
@@ -68,6 +71,7 @@ final class IndexMetadata
     public function toFile(string $filename)
     {
         file_put_contents($filename, $this->__toString());
+
         return $this;
     }
 }

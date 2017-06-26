@@ -22,5 +22,6 @@ sudo start search-processes
 ./bin/wait-for-empty-queues "$environment"
 
 ./bin/console index:switch:read "$index_name"
+# we should restart processes, but they never should use IndexMetadata::READ
 
 ./smoke_tests.sh

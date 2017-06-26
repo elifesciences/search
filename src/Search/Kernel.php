@@ -43,7 +43,6 @@ use GearmanWorker;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use InvalidArgumentException;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
@@ -121,9 +120,10 @@ final class Kernel implements MinimalKernel
     }
 
     /**
-     * @param string $operation  IndexMetadata::READ or IndexMetadata::WRITE
+     * @param string $operation IndexMetadata::READ or IndexMetadata::WRITE
+     *
      * @return string
-     * TODO: remove duplication with indexMetadata() once stable
+     *                TODO: remove duplication with indexMetadata() once stable
      */
     private function indexName($operation = IndexMetadata::READ)
     {
@@ -418,9 +418,9 @@ final class Kernel implements MinimalKernel
             return new WorkerCommand(
                 $app['api.sdk'],
                 $app['serializer'],
-                $app['console.gearman.task_driver'], 
+                $app['console.gearman.task_driver'],
                 $app['elastic.client.write'],
-                $app['validator'], 
+                $app['validator'],
                 $app['logger']
             );
         };

@@ -9,8 +9,6 @@ use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
-use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use Exception;
 use LogicException;
 use Psr\Log\LoggerInterface;
