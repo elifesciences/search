@@ -16,5 +16,5 @@ echo "Starting reindexing"
 echo "Finished launching reindexing"
 
 . bin/ci-wait-steady-state
-echo "$index_name" > index.txt
+echo '{"write":"'$index_name'", "read":"'$index_name'"}' > index.json
 . bin/ci-expected-results

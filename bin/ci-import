@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 . bin/ci-process-bootstrap
 
-echo "elife_search" > index.txt
+echo '{"write":"elife_search", "read":"elife_search"}' > index.json
 
 ./bin/console queue:clean --env="$environment"
 # TODO: poll for queue:count == 0, with timeout
