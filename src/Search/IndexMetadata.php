@@ -34,7 +34,7 @@ final class IndexMetadata
      */
     public static function fromVersions(string $write, string $read)
     {
-        return new self(json_decode(file_get_contents($filename)));
+        return new self($write, $read);
     }
 
     public function __construct(string $write, string $read)
