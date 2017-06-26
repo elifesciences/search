@@ -319,8 +319,21 @@ final class Kernel implements MinimalKernel
             return $client->build();
         };
 
+        // TODO: deprecate and remove
         $app['elastic.client'] = function (Application $app) {
-            return new ElasticsearchClient($app['elastic.elasticsearch'], $app['config']['elastic_index'], $app['config']['elastic_force_sync']);
+            return new ElasticsearchClient(
+                $app['elastic.elasticsearch'],
+                $app['config']['elastic_index'],
+                $app['config']['elastic_force_sync']
+            );
+        };
+
+        $app['elastic.client.write'] = function (Application $app) {
+            return new ElasticsearchClient(
+                $app['elastic.elasticsearch'],
+                $this->indexMetadata()->operation(IndexMetadata::WRITE),
+                $app['config']['elastic_force_sync']
+            );
         };
 
         $app['elastic.executor'] = function (Application $app) {
@@ -402,7 +415,14 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.gearman.worker'] = function (Application $app) {
-            return new WorkerCommand($app['api.sdk'], $app['serializer'], $app['console.gearman.task_driver'], $app['elastic.client'], $app['validator'], $app['logger']);
+            return new WorkerCommand(
+                $app['api.sdk'],
+                $app['serializer'],
+                $app['console.gearman.task_driver'], 
+                $app['elastic.client.write'],
+                $app['validator'], 
+                $app['logger']
+            );
         };
 
         // TODO: rename key
