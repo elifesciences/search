@@ -8,7 +8,6 @@ use Closure;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use Exception;
 use LogicException;
 use Psr\Log\LoggerInterface;
@@ -180,11 +179,6 @@ final class Console
     private function path($path = '')
     {
         return $this->root.$path;
-    }
-
-    public function getElasticClient() : ElasticsearchClient
-    {
-        return $this->app->get('elastic.client');
     }
 
     public function cacheClearCommand(InputInterface $input, OutputInterface $output)

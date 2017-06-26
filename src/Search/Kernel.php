@@ -336,8 +336,16 @@ final class Kernel implements MinimalKernel
             );
         };
 
+        $app['elastic.client.read'] = function (Application $app) {
+            return new ElasticsearchClient(
+                $app['elastic.elasticsearch'],
+                $this->indexMetadata()->operation(IndexMetadata::READ),
+                $app['config']['elastic_force_sync']
+            );
+        };
+
         $app['elastic.executor'] = function (Application $app) {
-            return new ElasticQueryExecutor($app['elastic.client']);
+            return new ElasticQueryExecutor($app['elastic.client.read']);
         };
 
         //#####################################################
