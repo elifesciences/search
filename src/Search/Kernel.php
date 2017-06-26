@@ -63,8 +63,6 @@ final class Kernel implements MinimalKernel
 {
     const ROOT = __DIR__.'/../..';
     const CACHE_DIR = __DIR__.'/../../var/cache';
-    const INDEX_READ = 'read';
-    const INDEX_WRITE = 'write';
 
     public static $routes = [
         '/search' => 'indexAction',
@@ -123,19 +121,16 @@ final class Kernel implements MinimalKernel
     }
 
     /**
-     * @param string $operation  self::INDEX_READ or self::INDEX_WRITE
+     * @param string $operation  IndexMetadata::READ or IndexMetadata::WRITE
      * @return string
      */
-    private function indexName($operation = self::INDEX_READ)
+    private function indexName($operation = IndexMetadata::READ)
     {
         $filename = realpath(__DIR__.'/../../index.json');
         if (file_exists($filename)) {
-            $indexMetadata = json_decode(file_get_contents($filename), true);
-            if (!array_key_exists($operation, $indexMetadata)) {
-                throw new InvalidArgumentException("Invalid index operation: '$operation'");
-            }
+            $indexMetadata = IndexMetadata::fromFile($filename);
 
-            return $indexMetadata[$operation];
+            return $indexMetadata->operation($operation);
         }
 
         // deprecated
