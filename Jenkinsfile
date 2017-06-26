@@ -24,6 +24,7 @@ elifePipeline {
                         builderSmokeTests 'search--end2end', '/srv/search'
                         builderCmd 'search--end2end', 'cd /srv/search; php bin/console queue:import all --env=end2end'
                         builderCmd 'search--end2end', 'cd /srv/search; ./bin/wait-for-empty-queues end2end'
+                        builderCmd 'search--end2end', "cd /srv/search; ./bin/reindex end2end elife_search_${env.BUILD_NUMBER}"
                     }
                 ],
                 marker: 'search'
