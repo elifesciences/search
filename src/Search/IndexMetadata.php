@@ -41,6 +41,16 @@ final class IndexMetadata
         $this->read = $read;
     }
 
+    public function switchWrite(string $indexName)
+    {
+        return new self($indexName, $this->read);
+    }
+
+    public function switchRead(string $indexName)
+    {
+        return new self($this->write, $indexName);
+    }
+
     public function operation($operation)
     {
         Assertion::propertyExists($this, $operation);
@@ -55,7 +65,7 @@ final class IndexMetadata
         ]);
     }
 
-    public function write(string $filename)
+    public function toFile(string $filename)
     {
         file_put_contents($filename, $this->__toString());
         return $this;

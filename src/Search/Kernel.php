@@ -123,6 +123,7 @@ final class Kernel implements MinimalKernel
     /**
      * @param string $operation  IndexMetadata::READ or IndexMetadata::WRITE
      * @return string
+     * TODO: remove duplication with indexMetadata() once stable
      */
     private function indexName($operation = IndexMetadata::READ)
     {
@@ -146,6 +147,16 @@ final class Kernel implements MinimalKernel
 
         // default
         return 'elife_search';
+    }
+
+    public function indexMetadata() : IndexMetadata
+    {
+        $filename = realpath(__DIR__.'/../../index.json');
+        if (file_exists($filename)) {
+            return IndexMetadata::fromFile($filename);
+        }
+
+        return IndexMetadata::fromVersions('elife_search', 'elife_search');
     }
 
     public function dependencies(Application $app)

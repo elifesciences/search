@@ -57,6 +57,18 @@ final class Console
         'index:rebuild' => [
             'description' => 'Creates a new search index migrates content over them does a hot-swap',
         ],
+        'index:switch:read' => [
+            'description' => 'Switches the index we are reading from in the API',
+            'args' => [
+                ['name' => 'index_name'],
+            ],
+        ],
+        'index:switch:write' => [
+            'description' => 'Switches the index we are writing new data to',
+            'args' => [
+                ['name' => 'index_name'],
+            ],
+        ],
     ];
 
     public function queueCreateCommand()
@@ -179,6 +191,20 @@ final class Console
 
             return 1;
         }
+    }
+
+    public function indexSwitchWriteCommand(InputInterface $input, OutputInterface $output)
+    {
+        $indexName = $input->getArgument('index_name');
+        $metadata = $this->app->indexMetadata();
+        $metadata->switchWrite($indexName)->toFile('index.json');
+    }
+
+    public function indexSwitchReadCommand(InputInterface $input, OutputInterface $output)
+    {
+        $indexName = $input->getArgument('index_name');
+        $metadata = $this->app->indexMetadata();
+        $metadata->switchRead($indexName)->toFile('index.json');
     }
 
     public function __construct(Application $console, Kernel $app)
