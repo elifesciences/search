@@ -43,6 +43,7 @@ use GearmanWorker;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
+use InvalidArgumentException;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
@@ -62,6 +63,8 @@ final class Kernel implements MinimalKernel
 {
     const ROOT = __DIR__.'/../..';
     const CACHE_DIR = __DIR__.'/../../var/cache';
+    const INDEX_READ = 'read';
+    const INDEX_WRITE = 'write';
 
     public static $routes = [
         '/search' => 'indexAction',
@@ -119,8 +122,23 @@ final class Kernel implements MinimalKernel
         $this->app = $this->applicationFlow($app);
     }
 
-    private function indexName()
+    /**
+     * @param string $operation  self::INDEX_READ or self::INDEX_WRITE
+     * @return string
+     */
+    private function indexName($operation = self::INDEX_READ)
     {
+        $filename = realpath(__DIR__.'/../../index.json');
+        if (file_exists($filename)) {
+            $indexMetadata = json_decode(file_get_contents($filename), true);
+            if (!array_key_exists($operation, $indexMetadata)) {
+                throw new InvalidArgumentException("Invalid index operation: '$operation'");
+            }
+
+            return $indexMetadata[$operation];
+        }
+
+        // deprecated
         $filename = realpath(__DIR__.'/../../index.txt');
         if (file_exists($filename)) {
             $lines = file($filename, FILE_IGNORE_NEW_LINES);
@@ -131,6 +149,7 @@ final class Kernel implements MinimalKernel
             return $lines[0];
         }
 
+        // default
         return 'elife_search';
     }
 
