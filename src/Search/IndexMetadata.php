@@ -14,8 +14,13 @@ final class IndexMetadata
      * @var string
      */
     private $read;
+    /**
+     * @var string
+     */
+    private $lastImport;
     const WRITE = 'write';
     const READ = 'read';
+    const LAST_IMPORT = 'last_import';
 
     /**
      * @return self
@@ -25,32 +30,41 @@ final class IndexMetadata
         $contents = json_decode(file_get_contents($filename), true);
         Assertion::keyExists($contents, self::WRITE);
         Assertion::keyExists($contents, self::READ);
+        if (!array_key_exists(self::LAST_IMPORT, $contents)) {
+            $contents[self::LAST_IMPORT] = '19700101000000';
+        }
 
-        return new self($contents[self::WRITE], $contents[self::READ]);
+        return new self($contents[self::WRITE], $contents[self::READ], $contents[self::LAST_IMPORT]);
     }
 
     /**
      * @return self
      */
-    public static function fromVersions(string $write, string $read)
+    public static function fromContents(string $write, string $read, string $lastImport)
     {
-        return new self($write, $read);
+        return new self($write, $read, $lastImport);
     }
 
-    public function __construct(string $write, string $read)
+    private function __construct(string $write, string $read, string $lastImport = '19700101000000')
     {
         $this->write = $write;
         $this->read = $read;
+        $this->lastImport = $lastImport;
     }
 
     public function switchWrite(string $indexName)
     {
-        return new self($indexName, $this->read);
+        return new self($indexName, $this->read, $this->lastImport);
     }
 
     public function switchRead(string $indexName)
     {
-        return new self($this->write, $indexName);
+        return new self($this->write, $indexName, $this->lastImport);
+    }
+
+    public function updateLastImport(string $lastImport)
+    {
+        return new self($this->write, $this->read, $lastImport);
     }
 
     public function operation($operation)
@@ -65,6 +79,7 @@ final class IndexMetadata
         return json_encode([
             self::WRITE => $this->write,
             self::READ => $this->read,
+            self::LAST_IMPORT => $this->lastImport,
         ]);
     }
 

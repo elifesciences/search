@@ -158,7 +158,7 @@ final class Kernel implements MinimalKernel
             return IndexMetadata::fromFile($filename);
         }
 
-        return IndexMetadata::fromVersions('elife_search', 'elife_search');
+        return IndexMetadata::fromContents('elife_search', 'elife_search');
     }
 
     public function dependencies(Application $app)
