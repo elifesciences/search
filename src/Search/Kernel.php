@@ -83,6 +83,8 @@ final class Kernel implements MinimalKernel
             'api_requests_batch' => 10,
             'ttl' => 300,
             'elastic_servers' => ['http://localhost:9200'],
+            // TODO: after backward compatibility with index.txt is not necessary,
+            // transition to indexMetadata()
             'elastic_index' => $this->indexName(),
             'elastic_logging' => false,
             'elastic_force_sync' => false,
