@@ -63,6 +63,15 @@ final class Console
                 ['name' => 'index_name'],
             ],
         ],
+        'index:lastimport:get' => [
+            'description' => 'Returns the last import date',
+        ],
+        'index:lastimport:update' => [
+            'description' => 'Returns the last import date',
+            'args' => [
+                ['name' => 'date'],
+            ],
+        ],
     ];
 
     public function queueCreateCommand()
@@ -134,6 +143,7 @@ final class Console
     {
         $indexName = $input->getArgument('index_name');
         $metadata = $this->app->indexMetadata();
+        $this->logger->info("Switching index writes from {$metadata->write()} to $indexName");
         $metadata->switchWrite($indexName)->toFile('index.json');
     }
 
@@ -141,7 +151,21 @@ final class Console
     {
         $indexName = $input->getArgument('index_name');
         $metadata = $this->app->indexMetadata();
+        $this->logger->info("Switching index reads from {$metadata->read()} to $indexName");
         $metadata->switchRead($indexName)->toFile('index.json');
+    }
+
+    public function indexLastImportGetCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->app->indexMetadata();
+        $output->writeln($metadata->lastImport());
+    }
+
+    public function indexLastImportUpdateCommand(InputInterface $input, OutputInterface $output)
+    {
+        $newLastImport = $input->getArgument('date');
+        $metadata = $this->app->indexMetadata();
+        $metadata->updateLastImport($newLastImport)->toFile('index.json');
     }
 
     public function __construct(Application $console, Kernel $app)

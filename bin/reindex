@@ -10,17 +10,25 @@ fi
 environment="$1"
 index_name="$2"
 
+echo "Stopping gearman;worker instances"
 sudo start search-gearman-worker-stop-all
 
+echo "Creating new index $index_name"
 ./bin/console search:setup --index="$index_name" --delete --env="$environment"
+
+echo "Switching writes to new index $index_name"
 ./bin/console index:switch:write "$index_name" --env="$environment"
 
+echo "Restarting processes"
 sudo start search-processes
 
+echo "Importing all API content"
 ./bin/console queue:import all --env="$environment"
 
+echo "Waiting for empty queues"
 ./bin/wait-for-empty-queues "$environment"
 
+echo "Switching reads to new index $index_name"
 ./bin/console index:switch:read "$index_name" --env="$environment"
 # we should restart processes, but they never should use IndexMetadata::READ
 
