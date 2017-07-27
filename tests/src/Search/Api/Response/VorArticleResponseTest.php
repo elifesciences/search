@@ -47,7 +47,7 @@ class VorArticleResponseTest extends SerializerTest
                     "titlePrefix": "Title prefix",
                     "elocationId": "e09560",
                     "doi": "10.7554\/eLife.09560",
-                    "authorLine": "Lee R Berger et al",
+                    "authorLine": "Lee R Berger et al.",
                     "pdf": "https:\/\/elifesciences.org\/content\/4\/e09560.pdf",
                     "type": "research-article",
                     "published": "2015-09-10T00:00:00Z",
