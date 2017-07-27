@@ -44,7 +44,7 @@ class PoaArticleResponseTest extends SerializerTest
                     "stage": "published",
                     "elocationId": "e14107",
                     "doi": "10.7554\/eLife.14107",
-                    "authorLine": "Yongjian Huang et al",
+                    "authorLine": "Yongjian Huang et al.",
                     "pdf": "https:\/\/elifesciences.org\/content\/5\/e14107.pdf",
                     "type": "research-article",
                     "published": "2016-03-28T00:00:00Z",
