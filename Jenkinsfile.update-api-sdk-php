@@ -1,15 +1,7 @@
-elifeUpdatePipeline(
-    { commit ->
-        lock('search--ci') {
-            builderDeployRevision 'search--ci', commit
-            builderCmd "search--ci", "composer update elife/api elife/api-sdk --with-dependencies --no-suggest --no-interaction", "/srv/search"
-            builderSync "ci--search.elife.internal", "/srv/search/"
-            sh "git add composer.lock"
-        }
-    },
-    {
-        def subrepositorySummary = elifeGitSubrepositorySummary 'vendor/elife/api-sdk'
-        return "Updated elife/api-sdk to ${subrepositorySummary}"
-    },
-    'update_api_sdk/'
+elifeUpdatePipelineComposerPackage(
+    packageName: 'elife/api-sdk',
+    additionalPackageNames: ['elife/api'],
+    stackname: 'search--ci',
+    folder: '/srv/search',
+    hostname: 'ci--search.elife.internal'
 )
