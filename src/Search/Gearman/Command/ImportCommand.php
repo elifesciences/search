@@ -64,22 +64,30 @@ final class ImportCommand extends Command
 
             return;
         }
-        $this->monitoring->nameTransaction('queue:import');
-        $this->monitoring->startTransaction();
-        if ($entity === 'all') {
-            foreach (self::$supports as $e) {
-                if ($e !== 'all') {
-                    // Run the item.
-                    $this->{'import'.$e}();
+
+        try {
+            $this->monitoring->nameTransaction('queue:import');
+            $this->monitoring->startTransaction();
+            if ($entity === 'all') {
+                foreach (self::$supports as $e) {
+                    if ($e !== 'all') {
+                        // Run the item.
+
+                        $this->{'import'.$e}();
+                    }
                 }
+            } else {
+                // Run the item.
+                $this->{'import'.$entity}();
             }
-        } else {
-            // Run the item.
-            $this->{'import'.$entity}();
+            // Reporting.
+            $this->logger->info("\nAll entities queued.");
+            $this->monitoring->endTransaction();
+        } catch (Throwable $e) {
+            $this->logger->error('Error in import', ['exception' => $e]);
+            $this->monitoring->recordException($e, 'Error in import');
+            throw $e;
         }
-        // Reporting.
-        $this->logger->info("\nAll entities queued.");
-        $this->monitoring->endTransaction();
     }
 
     public function importPodcastEpisodes()

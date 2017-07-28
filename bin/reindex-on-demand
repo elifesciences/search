@@ -10,15 +10,17 @@ fi
 environment="$1"
 possible_index_name="$2"
 
-current_last_import=$(php bin/console index:lastimport:get --env="$environment")
+existing_index_name=$(php bin/console index:read --env="$environment")
+existing_last_import=$(php bin/console index:lastimport:get --env="$environment")
 desired_last_import=$(cat index.import)
-echo "Current last import: $current_last_import"
+echo "Current last import: $existing_last_import"
 echo "Desired last import: $desired_last_import"
 
-if [ "$current_last_import" != "$desired_last_import" ]; then
+if [ "$existing_last_import" != "$desired_last_import" ]; then
     echo "Reindexing"
     bin/reindex "$environment" "$possible_index_name"
     bin/console index:lastimport:update "$desired_last_import" --env="$environment"
+    bin/console index:delete "$existing_index_name" --env="$environment"
 else
     echo "Not reindexing"
 fi

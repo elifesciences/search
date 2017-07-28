@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -50,6 +51,18 @@ final class Console
         ],
         'queue:count' => [
             'description' => 'Counts (approximately) how many messages are in the queue',
+        ],
+        'index:read' => [
+            'description' => 'The name of the index we are reading from in the API',
+        ],
+        'index:delete' => [
+            'description' => 'Delete an index using its name',
+            'args' => [
+                [
+                    'name' => 'index_name',
+                    'mode' => InputArgument::REQUIRED,
+                ],
+            ],
         ],
         'index:switch:read' => [
             'description' => 'Switches the index we are reading from in the API',
@@ -166,6 +179,20 @@ final class Console
         $newLastImport = $input->getArgument('date');
         $metadata = $this->app->indexMetadata();
         $metadata->updateLastImport($newLastImport)->toFile('index.json');
+    }
+
+    public function indexReadCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->app->indexMetadata();
+        $output->writeln($metadata->read());
+    }
+
+    public function indexDeleteCommand(InputInterface $input, OutputInterface $output)
+    {
+        $client = $this->app->get('elastic.client');
+        $indexName = $input->getArgument('index_name');
+        $this->logger->info("Deleting index {$indexName}");
+        $client->deleteIndex($indexName);
     }
 
     public function __construct(Application $console, Kernel $app)
