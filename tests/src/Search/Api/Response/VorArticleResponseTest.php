@@ -73,7 +73,10 @@ class VorArticleResponseTest extends SerializerTest
                             "focalPoint": {
                                 "x": 25,
                                 "y": 75
-                            }
+                            },
+                            "attribution": [
+                                "By some person."
+                            ]
                         }
                     },
                     "id": "09560",

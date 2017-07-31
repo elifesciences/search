@@ -30,6 +30,7 @@ class CollectionResponseTest extends SerializerTest
                         'height' => 400,
                     ],
                     'focalPoint' => null,
+                    'attribution' => ['by Picasso'],
                 ],
                 'thumbnail' => [
                     'alt' => '',
@@ -44,6 +45,7 @@ class CollectionResponseTest extends SerializerTest
                         'height' => 140,
                     ],
                     'focalPoint' => null,
+                    'attribution' => [],
                 ],
             ],
             'published' => '2015-09-16T11:19:26Z',
@@ -115,7 +117,10 @@ class CollectionResponseTest extends SerializerTest
                             "size": {
                                 "width": 4194,
                                 "height": 4714
-                            }
+                            },
+                            "attribution": [
+                                "By some person."
+                            ]
                         },
                         "thumbnail": {
                             "alt": "",
