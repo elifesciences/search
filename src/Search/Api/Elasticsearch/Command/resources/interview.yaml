@@ -18,6 +18,39 @@ interview:
       type: string
     impactStatement:
       type: string
+    image:
+      type: object
+      properties:
+        thumbnail:
+          type: object
+          properties:
+            alt:
+              type: string
+            uri:
+              type: string
+            source:
+              type: object
+              properties:
+                mediaType:
+                  type: string
+                uri:
+                  type: string
+                filename:
+                  type: string
+            size:
+              type: object
+              properties:
+                width:
+                  type: integer
+                height:
+                  type: integer
+            focalPoint:
+              type: object
+              properties:
+                x:
+                  type: integer
+                y:
+                  type: integer
     interviewee:
       properties:
         cv:
