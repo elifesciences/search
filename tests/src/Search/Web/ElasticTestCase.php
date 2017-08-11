@@ -113,7 +113,7 @@ abstract class ElasticTestCase extends WebTestCase
                         'license' => 'CC-BY-4.0',
                     ],
                     'title' => 'BUZZWORD ONLY FOUND HERE Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
-                    'authorLine' => 'Heather L Smith et al',
+                    'authorLine' => 'Heather L Smith et al.',
                     'versionDate' => '2016-12-19T00:00:00Z',
                     'researchOrganisms' => [
                         'Rat',
@@ -150,7 +150,7 @@ abstract class ElasticTestCase extends WebTestCase
                     ],
                     'impactStatement' => 'Extracellular actin is an evolutionarily-conserved signal of tissue injury that is recognised in the fruit fly via similar machinery as reported in vertebrates.',
                     'title' => 'Actin is an evolutionarily-conserved damage-associated molecular pattern that signals tissue injury in <i>Drosophila melanogaster</i>',
-                    'authorLine' => 'Naren Srinivasan et al',
+                    'authorLine' => 'Naren Srinivasan et al.',
                     'versionDate' => '2016-12-19T12:31:04Z',
                     'researchOrganisms' => [
                         'D. melanogaster',
@@ -184,7 +184,7 @@ abstract class ElasticTestCase extends WebTestCase
                         'license' => 'CC-BY-4.0',
                     ],
                     'title' => 'Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
-                    'authorLine' => 'Heather L Smith et al',
+                    'authorLine' => 'Heather L Smith et al.',
                     'versionDate' => '2016-12-19T00:00:00Z',
                     'researchOrganisms' => [
                         'Rat',
@@ -217,7 +217,7 @@ abstract class ElasticTestCase extends WebTestCase
                         'license' => 'CC-BY-4.0',
                     ],
                     'title' => 'Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
-                    'authorLine' => 'Heather L Smith et al',
+                    'authorLine' => 'Heather L Smith et al.',
                     'versionDate' => '2016-12-19T00:00:00Z',
                     'researchOrganisms' => [
                         'Rat',
@@ -254,7 +254,7 @@ abstract class ElasticTestCase extends WebTestCase
                         'license' => 'CC-BY-4.0',
                     ],
                     'title' => 'ONLY FOUND HERE Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
-                    'authorLine' => 'BUZZWORD Heather L Smith et al',
+                    'authorLine' => 'BUZZWORD Heather L Smith et al.',
                     'versionDate' => '2016-12-19T00:00:00Z',
                     'researchOrganisms' => [
                         'Rat',

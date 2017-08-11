@@ -33,7 +33,7 @@ class ExampleWebTest extends ElasticTestCase
                 ],
             'impactStatement' => 'Extracellular actin is an evolutionarily-conserved signal of tissue injury that is recognised in the fruit fly via similar machinery as reported in vertebrates.',
             'title' => 'Actin is an evolutionarily-conserved damage-associated molecular pattern that signals tissue injury in <i>Drosophila melanogaster</i>',
-            'authorLine' => 'Naren Srinivasan et al',
+            'authorLine' => 'Naren Srinivasan et al.',
             'versionDate' => '2016-12-19T12:31:04Z',
             'researchOrganisms' => [
                     'D. melanogaster',
