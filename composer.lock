@@ -378,7 +378,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2017-03-06 14:38:51"
+            "time": "2017-03-06T14:38:51+00:00"
         },
         {
             "name": "doctrine/instantiator",
@@ -565,7 +565,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2017-08-04 13:42:09"
+            "time": "2017-08-04T13:42:09+00:00"
         },
         {
             "name": "elife/api-client",
@@ -621,7 +621,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API client",
-            "time": "2017-05-30 08:23:04"
+            "time": "2017-05-30T08:23:04+00:00"
         },
         {
             "name": "elife/api-sdk",
@@ -629,12 +629,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "6b1b5dcb46bb52d79833e01295ac7065c8371c14"
+                "reference": "64df7365e03b75aa1812e68c9758b7f6fa9625c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/6b1b5dcb46bb52d79833e01295ac7065c8371c14",
-                "reference": "6b1b5dcb46bb52d79833e01295ac7065c8371c14",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/64df7365e03b75aa1812e68c9758b7f6fa9625c5",
+                "reference": "64df7365e03b75aa1812e68c9758b7f6fa9625c5",
                 "shasum": ""
             },
             "require": {
@@ -669,7 +669,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2017-08-04 13:50:38"
+            "time": "2017-08-11T12:03:47+00:00"
         },
         {
             "name": "elife/api-validator",
@@ -713,7 +713,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API validator",
-            "time": "2017-03-15 12:52:36"
+            "time": "2017-03-15T12:52:36+00:00"
         },
         {
             "name": "elife/bus-sdk",
@@ -755,7 +755,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences bus SDK",
-            "time": "2017-05-30 08:12:29"
+            "time": "2017-05-30T08:12:29+00:00"
         },
         {
             "name": "elife/logging-sdk",
@@ -791,7 +791,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences logging SDK",
-            "time": "2017-06-12 09:28:05"
+            "time": "2017-06-12T09:28:05+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -2287,7 +2287,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-21 21:44:47"
+            "time": "2017-03-21T21:44:47+00:00"
         },
         {
             "name": "symfony/filesystem",
