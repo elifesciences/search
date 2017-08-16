@@ -29,6 +29,13 @@ elifePipeline {
             )
         }
 
+        stage 'Deploy on continuumtest', {
+            lock('search--continuumtest') {
+                builderDeployRevision 'search--continuumtest', commit
+                builderSmokeTests 'search--continuumtest', '/srv/search'
+            }
+        }
+
         stage 'Approval', {
             elifeGitMoveToBranch commit, 'approved'
         }
