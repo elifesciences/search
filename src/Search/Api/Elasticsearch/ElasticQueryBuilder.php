@@ -175,7 +175,7 @@ final class ElasticQueryBuilder implements QueryBuilder
     {
         if ($string !== '') {
             /* Query all fields for the actual query term*/
-            $query= [
+            $query = [
                 'query' => $string,
                 'operator' => 'and',
                 'fuzziness' => 'auto',
