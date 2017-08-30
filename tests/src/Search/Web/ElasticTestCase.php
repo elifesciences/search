@@ -184,7 +184,7 @@ abstract class ElasticTestCase extends WebTestCase
                         'license' => 'CC-BY-4.0',
                     ],
                     'title' => 'Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
-                    'authorLine' => 'Heather L Smith et al.',
+                    'authorLine' => 'Robert L Smith et al.',
                     'versionDate' => '2016-12-19T00:00:00Z',
                     'researchOrganisms' => [
                         'Rat',
@@ -217,7 +217,7 @@ abstract class ElasticTestCase extends WebTestCase
                         'license' => 'CC-BY-4.0',
                     ],
                     'title' => 'Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
-                    'authorLine' => 'Heather L Smith et al.',
+                    'authorLine' => 'Robert L Smith et al.',
                     'versionDate' => '2016-12-19T00:00:00Z',
                     'researchOrganisms' => [
                         'Rat',
@@ -255,6 +255,7 @@ abstract class ElasticTestCase extends WebTestCase
                     ],
                     'title' => 'ONLY FOUND HERE Mitochondrial support of persistent presynaptic vesicle mobilization with age-dependent synaptic growth after LTP',
                     'authorLine' => 'BUZZWORD Heather L Smith et al.',
+                    'impactStatement' => 'Impact Robert L Smith statement.',
                     'versionDate' => '2016-12-19T00:00:00Z',
                     'researchOrganisms' => [
                         'Rat',
