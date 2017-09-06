@@ -146,7 +146,7 @@ final class ResearchArticleWorkflow implements Workflow
                         $content->caption->text ?? null,
                     ]);
                 }, $authorResponseItem->content ?? [])];
-            }, $articleObject->authorResponse ?? [])
+            }, $articleObject->authorResponse->content ?? [])
         )), false);
         // But maintain original content.
         $articleObject->authorResponse = [
