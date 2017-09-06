@@ -134,6 +134,25 @@ final class ResearchArticleWorkflow implements Workflow
             'format' => 'json',
             'value' => json_encode($articleObject->body ?? '[]'),
         ];
+        // Flatten authorResponse complexity.
+        $articleObject->authorResponse_keywords = iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator(
+            array_map(function ($authorResponseItem) {
+                return [$authorResponseItem->title ?? null, array_map(function ($content) {
+                    return array_filter([
+                        $content->id ?? null,
+                        $content->label ?? null,
+                        $content->alt ?? null,
+                        $content->text ?? null,
+                        $content->caption->text ?? null,
+                    ]);
+                }, $authorResponseItem->content ?? [])];
+            }, $articleObject->authorResponse ?? [])
+        )), false);
+        // But maintain original content.
+        $articleObject->authorResponse = [
+            'format' => 'json',
+            'value' => json_encode($articleObject->authorResponse ?? '[]'),
+        ];
         // Completely serialize funding
         $articleObject->funding = [
             'format' => 'json',
