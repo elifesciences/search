@@ -2,7 +2,7 @@
 # we start from an empty index
 total=$(curl -v localhost/search | jq ".total")
 echo "Total results in the index: $total"
-expected_results_api_dummy=31
+expected_results_api_dummy=32
 if [ ! "$total" -eq "$expected_results_api_dummy" ]; then
     echo "There should be exactly $expected_results_api_dummy results in the index"
     exit 2
