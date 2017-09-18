@@ -118,15 +118,18 @@ final class ResearchArticleWorkflow implements Workflow
         // Flatten body complexity.
         $articleObject->body_keywords = iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator(
             array_map(function ($bodyItem) {
-                return [$bodyItem->title ?? null, array_map(function ($content) {
-                    return array_filter([
-                        $content->id ?? null,
-                        $content->label ?? null,
-                        $content->alt ?? null,
-                        $content->text ?? null,
-                        $content->caption->text ?? null,
-                    ]);
-                }, $bodyItem->content ?? [])];
+                return [
+                    $bodyItem->title ?? null,
+                    array_map(function ($content) {
+                        return array_filter([
+                            $content->id ?? null,
+                            $content->label ?? null,
+                            $content->alt ?? null,
+                            $content->text ?? null,
+                            $content->caption->text ?? null,
+                        ]);
+                    }, $bodyItem->content ?? []),
+                ];
             }, $articleObject->body ?? [])
         )), false);
         // But maintain original content.
@@ -137,15 +140,18 @@ final class ResearchArticleWorkflow implements Workflow
         // Flatten authorResponse complexity.
         $articleObject->authorResponse_keywords = iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator(
             array_map(function ($authorResponseItem) {
-                return [$authorResponseItem->title ?? null, array_map(function ($content) {
-                    return array_filter([
-                        $content->id ?? null,
-                        $content->label ?? null,
-                        $content->alt ?? null,
-                        $content->text ?? null,
-                        $content->caption->text ?? null,
-                    ]);
-                }, $authorResponseItem->content ?? [])];
+                return [
+                    $authorResponseItem->title ?? null,
+                    array_map(function ($content) {
+                        return array_filter([
+                            $content->id ?? null,
+                            $content->label ?? null,
+                            $content->alt ?? null,
+                            $content->text ?? null,
+                            $content->caption->text ?? null,
+                        ]);
+                    }, $authorResponseItem->content ?? []),
+                ];
             }, $articleObject->authorResponse->content ?? [])
         )), false);
         // But maintain original content.
@@ -211,6 +217,7 @@ final class ResearchArticleWorkflow implements Workflow
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);
+
             // We failed.
             return self::WORKFLOW_FAILURE;
         }

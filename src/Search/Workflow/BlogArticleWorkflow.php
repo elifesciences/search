@@ -69,6 +69,7 @@ final class BlogArticleWorkflow implements Workflow
         }
         // Log results.
         $this->logger->info('BlogArticle<'.$blogArticle->getId().'> validated against current schema.');
+
         // Pass it on.
         return $blogArticle;
     }
@@ -129,6 +130,7 @@ final class BlogArticleWorkflow implements Workflow
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);
+
             // We failed.
             return self::WORKFLOW_FAILURE;
         }

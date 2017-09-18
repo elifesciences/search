@@ -38,8 +38,8 @@ class BlogArticleResponseTest extends SerializerTest
     {
         return [
             [
-                $this->getFixture('blog-article/v1/minimum.json'), '
-                {
+                $this->getFixture('blog-article/v1/minimum.json'),
+                '{
                     "id": "2",
                     "type": "blog-article",
                     "title": "More eLife authors are linking submissions to their ORCID iDs",
@@ -48,8 +48,8 @@ class BlogArticleResponseTest extends SerializerTest
                 }',
             ],
             [
-                $this->getFixture('blog-article/v1/complete.json'), '
-                {
+                $this->getFixture('blog-article/v1/complete.json'),
+                '{
                     "published": "2016-07-08T08:33:25Z",
                     "type": "blog-article",
                     "id": "1",
@@ -61,8 +61,7 @@ class BlogArticleResponseTest extends SerializerTest
                             "name": "Biophysics and Structural Biology"
                         }
                     ]
-                }
-                ',
+                }',
             ],
         ];
     }

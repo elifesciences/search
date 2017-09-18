@@ -68,6 +68,7 @@ final class LabsPostWorkflow implements Workflow
         }
         // Log results.
         $this->logger->info('LabsPost<'.$labsPost->getId().'> validated against current schema.');
+
         // Pass it on.
         return $labsPost;
     }
@@ -97,7 +98,7 @@ final class LabsPostWorkflow implements Workflow
     /**
      * @GearmanTask(name="labs_post_insert", next="labs_post_post_validate", parameters={"json", "type", "id"})
      */
-    public function insert(string $json, string $type, string  $id)
+    public function insert(string $json, string $type, string $id)
     {
         // Insert the document.
         $this->logger->debug('LabsPost<'.$id.'> importing into Elasticsearch.');
@@ -128,6 +129,7 @@ final class LabsPostWorkflow implements Workflow
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);
+
             // We failed.
             return self::WORKFLOW_FAILURE;
         }

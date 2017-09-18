@@ -19,7 +19,8 @@ class InterviewResponseTest extends SerializerTest
     {
         return [
             [
-                $this->getFixture('interview/v1/minimum.json'), '
+                $this->getFixture('interview/v1/minimum.json'),
+                '
                 {
                     "id": "2",
                     "type": "interview",
@@ -34,7 +35,8 @@ class InterviewResponseTest extends SerializerTest
                 }',
             ],
             [
-                $this->getFixture('interview/v1/complete.json'), '
+                $this->getFixture('interview/v1/complete.json'),
+                '
                 {
                     "id": "1",
                     "type": "interview",

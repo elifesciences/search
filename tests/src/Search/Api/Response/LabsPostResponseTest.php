@@ -19,7 +19,8 @@ class LabsPostResponseTest extends SerializerTest
     {
         return [
             [
-                $this->getFixture('labs-post/v1/minimum.json'), '
+                $this->getFixture('labs-post/v1/minimum.json'),
+                '
                 {
                     "id": "80000001",
                     "type": "labs-post",
@@ -43,7 +44,8 @@ class LabsPostResponseTest extends SerializerTest
                 }',
             ],
             [
-                $this->getFixture('labs-post/v1/complete.json'), '
+                $this->getFixture('labs-post/v1/complete.json'),
+                '
                 {
                     "id": "80000001",
                     "type": "labs-post",

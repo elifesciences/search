@@ -69,6 +69,7 @@ final class CollectionWorkflow implements Workflow
         }
         // Log results.
         $this->logger->info('Collection<'.$collection->getId().'> validated against current schema.');
+
         // Pass it on.
         return $collection;
     }
@@ -86,6 +87,7 @@ final class CollectionWorkflow implements Workflow
         // Normalized fields.
         $collectionObject = json_decode($this->serialize($collection));
         $this->addSortDate($collectionObject, $collection->getPublishedDate());
+
         // Return.
         return [
             'json' => json_encode($collectionObject),
@@ -128,6 +130,7 @@ final class CollectionWorkflow implements Workflow
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);
+
             // We failed.
             return self::WORKFLOW_FAILURE;
         }

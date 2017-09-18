@@ -22,8 +22,8 @@ final class InterviewResponse implements SearchResult
      */
     public $type = 'interview';
 
-     /**
-      * @Type(PersonResponse::class)
-      */
-     public $interviewee;
+    /**
+     * @Type(PersonResponse::class)
+     */
+    public $interviewee;
 }

@@ -68,6 +68,7 @@ final class PodcastEpisodeWorkflow implements Workflow
         }
         // Log results.
         $this->logger->info('PodcastEpisode<'.$podcastEpisode->getNumber().'> validated against current schema.');
+
         // Pass it on.
         return $podcastEpisode;
     }
@@ -102,7 +103,7 @@ final class PodcastEpisodeWorkflow implements Workflow
      *     next="podcast_episode_post_validate"
      * )
      */
-    public function insert(string $json, string $type, string  $id)
+    public function insert(string $json, string $type, string $id)
     {
         // Insert the document.
         $this->logger->debug('PodcastEpisode<'.$id.'> importing into Elasticsearch.');
@@ -137,6 +138,7 @@ final class PodcastEpisodeWorkflow implements Workflow
                 'document' => $result ?? null,
             ]);
             $this->client->deleteDocument($type, $id);
+
             // We failed.
             return self::WORKFLOW_FAILURE;
         }

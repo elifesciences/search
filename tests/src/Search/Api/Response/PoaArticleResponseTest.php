@@ -9,6 +9,7 @@ use tests\eLife\Search\SerializerTest;
 class PoaArticleResponseTest extends SerializerTest
 {
     use RamlRequirement;
+
     public function getResponseClass() : string
     {
         return PoaArticle::class;
@@ -18,7 +19,8 @@ class PoaArticleResponseTest extends SerializerTest
     {
         return [
             [
-                $this->getFixture('article-poa/v1/minimum.json'), '{
+                $this->getFixture('article-poa/v1/minimum.json'),
+                '{
                     "stage": "published",
                     "status": "poa",
                     "statusDate": "2016-03-28T00:00:00Z",
@@ -33,7 +35,8 @@ class PoaArticleResponseTest extends SerializerTest
                 }',
             ],
             [
-                $this->getFixture('article-poa/v1/complete.json'), '
+                $this->getFixture('article-poa/v1/complete.json'),
+                '
                 {
                     "status": "poa",
                     "statusDate": "2016-03-28T00:00:00Z",

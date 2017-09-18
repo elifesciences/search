@@ -88,8 +88,8 @@ class CollectionResponseTest extends SerializerTest
     {
         return [
             [
-                $this->getFixture('collection/v1/minimum.json'), '
-                {
+                $this->getFixture('collection/v1/minimum.json'),
+                '{
                     "selectedCurator": {
                         "id": "pjha",
                         "type": {
@@ -141,8 +141,7 @@ class CollectionResponseTest extends SerializerTest
             ],
             [
                 $this->getFixture('collection/v1/complete.json'),
-                '
-                {
+                '{
                     "selectedCurator": {
                         "id": "pjha",
                         "type": {

@@ -6,12 +6,12 @@ final class GearmanBatch
 {
     private $commands;
 
-    public function __construct($commands)
+    public function __construct(array $commands)
     {
         $this->commands = $commands;
     }
 
-    public function getCommands()
+    public function getCommands() : array
     {
         return $this->commands;
     }

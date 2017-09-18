@@ -103,17 +103,17 @@ final class Kernel implements MinimalKernel
         ], $config);
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation', self::ROOT.'/vendor/jms/serializer/src'
+            'JMS\Serializer\Annotation', ComposerLocator::getPath('jms/serializer').'/src'
         );
         if ($app['config']['debug']) {
             $app->register(new VarDumperServiceProvider());
             $app->register(new Provider\HttpFragmentServiceProvider());
             $app->register(new Provider\ServiceControllerServiceProvider());
             $app->register(new Provider\TwigServiceProvider());
-            $app->register(new Provider\WebProfilerServiceProvider(), array(
+            $app->register(new Provider\WebProfilerServiceProvider(), [
                 'profiler.cache_dir' => self::CACHE_DIR.'/profiler',
                 'profiler.mount_prefix' => '/_profiler', // this is the default
-            ));
+            ]);
         }
         // DI.
         $this->dependencies($app);
@@ -478,7 +478,7 @@ final class Kernel implements MinimalKernel
         };
     }
 
-    public function applicationFlow(Application $app): Application
+    public function applicationFlow(Application $app) : Application
     {
         // Routes
         $this->routes($app);
@@ -494,6 +494,7 @@ final class Kernel implements MinimalKernel
         if (!$app['config']['debug']) {
             $app->error([$this, 'handleException']);
         }
+
         // Return
         return $app;
     }
@@ -505,7 +506,7 @@ final class Kernel implements MinimalKernel
         }
     }
 
-    public function handleException(Throwable $e): Response
+    public function handleException(Throwable $e) : Response
     {
         return new JsonResponse([
             'error' => $e->getMessage(),
@@ -513,7 +514,7 @@ final class Kernel implements MinimalKernel
         ]);
     }
 
-    public function withApp(callable $fn, $scope = null)
+    public function withApp(callable $fn, $scope = null) : Kernel
     {
         $boundFn = Closure::bind($fn, $scope ? $scope : $this);
         $boundFn($this->app);
@@ -531,7 +532,7 @@ final class Kernel implements MinimalKernel
         return $this->app[$d];
     }
 
-    public function getApp()
+    public function getApp() : Application
     {
         return $this->app;
     }
@@ -554,7 +555,7 @@ final class Kernel implements MinimalKernel
         }
     }
 
-    public function cache(Request $request, Response $response)
+    public function cache(Request $request, Response $response) : Response
     {
         $response->setMaxAge($this->app['config']['ttl']);
         $response->headers->addCacheControlDirective('stale-while-revalidate', $this->app['config']['ttl']);

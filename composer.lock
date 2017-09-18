@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d171c3ed89ae5dc94390939ef9f1514e",
+    "content-hash": "ee5ea105798e4cbac855578a73e44a63",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -5011,19 +5011,21 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "elife/api-validator": 20,
-        "elife/api-sdk": 20,
-        "elife/api-client": 20,
+        "doctrine/cache": 20,
         "elife/api": 20,
+        "elife/api-client": 20,
+        "elife/api-sdk": 20,
+        "elife/api-validator": 20,
+        "elife/bus-sdk": 20,
+        "elife/logging-sdk": 20,
         "jms/serializer": 20,
         "propel/propel": 15,
-        "doctrine/cache": 20,
-        "symfony/event-dispatcher": 20,
-        "elife/logging-sdk": 20,
-        "elife/bus-sdk": 20
+        "symfony/event-dispatcher": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": "^7.0"
+    },
     "platform-dev": []
 }

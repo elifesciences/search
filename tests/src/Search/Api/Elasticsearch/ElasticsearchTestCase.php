@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Api\Elasticsearch;
 
+use ComposerLocator;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
 use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
@@ -39,7 +40,7 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
     {
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation', __DIR__.'/../../../../../vendor/jms/serializer/src'
+            'JMS\Serializer\Annotation', ComposerLocator::getPath('jms/serializer').'/src'
         );
         // Serializer.
         $this->serializer = SerializerBuilder::create()

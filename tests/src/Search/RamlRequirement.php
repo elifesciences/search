@@ -2,12 +2,11 @@
 
 namespace tests\eLife\Search;
 
+use ComposerLocator;
 use LogicException;
 
 trait RamlRequirement
 {
-    public static $root = __DIR__.'/../../../vendor/elife/api/dist/samples/';
-
     public function getFixtureWithType(string $name, string $type) : string
     {
         $fixture = $this->getFixture($name);
@@ -19,7 +18,7 @@ trait RamlRequirement
 
     public function getFixture(string $name) : string
     {
-        $file = self::$root.$name;
+        $file = ComposerLocator::getPath('elife/api').'/dist/samples/'.$name;
         if (file_exists($file)) {
             return file_get_contents($file);
         } else {

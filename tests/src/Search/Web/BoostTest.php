@@ -32,9 +32,7 @@ class BoostTest extends ElasticTestCase
         ]);
 
         $this->newClient();
-        $this->jsonRequest('GET', '/search', [
-                'for' => 'BUZZWORD', ]
-        );
+        $this->jsonRequest('GET', '/search', ['for' => 'BUZZWORD']);
         $response = $this->getJsonResponse();
         $this->assertEquals($response->items[0]->id, '15279');
         $this->assertEquals($response->items[1]->id, '15275');
