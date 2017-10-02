@@ -19,7 +19,8 @@ class PodcastEpisodeResponseTest extends SerializerTest
     {
         return [
             [
-                $this->getFixture('podcast-episode/v1/minimum.json'), '
+                $this->getFixture('podcast-episode/v1/minimum.json'),
+                '
                 {
                     "number": 30,
                     "type": "podcast-episode",

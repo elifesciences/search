@@ -7,6 +7,7 @@ if (!class_exists('GearmanClient')) {
         {
         }
     }
+
     class GearmanWorker
     {
         public function addServer($server)

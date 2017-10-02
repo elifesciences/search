@@ -23,8 +23,8 @@ use Symfony\Component\Console\Question\Question;
 
 /**
  * @property LoggerInterface temp_logger
- * @property float|int previousProgress
- * @property ProgressBar progress
+ * @property float|int       previousProgress
+ * @property ProgressBar     progress
  */
 final class Console
 {

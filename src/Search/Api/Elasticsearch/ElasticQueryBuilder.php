@@ -68,7 +68,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this->order;
     }
 
-    public function setDateType(string $field): QueryBuilder
+    public function setDateType(string $field) : QueryBuilder
     {
         // No need to do any fancy enum checks.
         if ($field === self::DATE_PUBLISHED) {
@@ -84,18 +84,6 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     private function postQuery(string $key, $value)
     {
-        /*
-         "post_filter": {
-                "query": {
-                   "bool" : {
-                        "must" : [
-                            {"terms": {"subjects.id": ["cell-biology"]}},
-                            {"terms": { "_type": ["research-article"]}}
-                        ]
-                    }
-                }
-            },
-         */
         if (isset($this->query['body']['post_filter']['terms'])) {
             $firstFilter = $this->query['body']['post_filter']['terms'];
             $secondFilter = [];
@@ -171,7 +159,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         }
     }
 
-    public function searchFor(string $string): QueryBuilder
+    public function searchFor(string $string) : QueryBuilder
     {
         if ($string !== '') {
             /* Query all fields for the actual query term*/
@@ -189,14 +177,14 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
-    public function order(string $direction = 'desc'): QueryBuilder
+    public function order(string $direction = 'desc') : QueryBuilder
     {
         $this->order = $direction === 'desc' ? 'desc' : 'asc';
 
         return $this;
     }
 
-    public function paginate(int $page = 1, int $perPage = 10): QueryBuilder
+    public function paginate(int $page = 1, int $perPage = 10) : QueryBuilder
     {
         $this->query['from'] = ($page - 1) * $perPage;
         $this->query['size'] = $perPage;
@@ -204,7 +192,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
-    public function sortByRelevance($reverse = false): QueryBuilder
+    public function sortByRelevance($reverse = false) : QueryBuilder
     {
         $this->sort([
             '_score' => [
@@ -215,7 +203,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
-    public function sortByDate($reverse = false): QueryBuilder
+    public function sortByDate($reverse = false) : QueryBuilder
     {
         $this->sort($this->dateQuery([
             'order' => $this->getSort($reverse),
@@ -225,26 +213,26 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
-    public function whereSubjects(array $subjects = []): QueryBuilder
+    public function whereSubjects(array $subjects = []) : QueryBuilder
     {
         $this->postQuery('subjects.id', $subjects);
 
         return $this;
     }
 
-    public function whereType(array $types = []): QueryBuilder
+    public function whereType(array $types = []) : QueryBuilder
     {
         $this->postQuery('_type', $types);
 
         return $this;
     }
 
-    public function getRawQuery(): array
+    public function getRawQuery() : array
     {
         return $this->query;
     }
 
-    public function getQuery(): QueryExecutor
+    public function getQuery() : QueryExecutor
     {
         $exec = clone $this->exec;
         $exec->setQuery($this);
@@ -260,7 +248,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $arr;
     }
 
-    public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null): QueryBuilder
+    public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null) : QueryBuilder
     {
         $query = ['format' => self::PHP_DATETIME_FORMAT];
         if ($startDate) {

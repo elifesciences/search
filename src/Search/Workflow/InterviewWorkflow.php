@@ -68,6 +68,7 @@ final class InterviewWorkflow implements Workflow
         }
         // Log results.
         $this->logger->info('Interview<'.$interview->getId().'> validated against current schema.');
+
         // Pass it on.
         return $interview;
     }
@@ -129,6 +130,7 @@ final class InterviewWorkflow implements Workflow
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($type, $id);
+
             // We failed.
             return self::WORKFLOW_FAILURE;
         }

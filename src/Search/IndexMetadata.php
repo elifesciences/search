@@ -6,26 +6,14 @@ use Assert\Assertion;
 
 final class IndexMetadata
 {
-    /**
-     * @var string
-     */
     private $write;
-    /**
-     * @var string
-     */
     private $read;
-    /**
-     * @var string
-     */
     private $lastImport;
     const WRITE = 'write';
     const READ = 'read';
     const LAST_IMPORT = 'last_import';
 
-    /**
-     * @return self
-     */
-    public static function fromFile(string $filename)
+    public static function fromFile(string $filename) : IndexMetadata
     {
         $contents = json_decode(file_get_contents($filename), true);
         Assertion::keyExists($contents, self::WRITE);
@@ -37,10 +25,7 @@ final class IndexMetadata
         return new self($contents[self::WRITE], $contents[self::READ], $contents[self::LAST_IMPORT]);
     }
 
-    /**
-     * @return self
-     */
-    public static function fromContents(string $write, string $read, string $lastImport = '19700101000000')
+    public static function fromContents(string $write, string $read, string $lastImport = '19700101000000') : IndexMetadata
     {
         return new self($write, $read, $lastImport);
     }
@@ -52,44 +37,44 @@ final class IndexMetadata
         $this->lastImport = $lastImport;
     }
 
-    public function switchWrite(string $indexName)
+    public function switchWrite(string $indexName) : IndexMetadata
     {
         return new self($indexName, $this->read, $this->lastImport);
     }
 
-    public function switchRead(string $indexName)
+    public function switchRead(string $indexName) : IndexMetadata
     {
         return new self($this->write, $indexName, $this->lastImport);
     }
 
-    public function updateLastImport(string $lastImport)
+    public function updateLastImport(string $lastImport) : IndexMetadata
     {
         return new self($this->write, $this->read, $lastImport);
     }
 
-    public function operation($operation)
+    public function operation($operation) : string
     {
         Assertion::propertyExists($this, $operation);
 
         return $this->$operation;
     }
 
-    public function write()
+    public function write() : string
     {
         return $this->write;
     }
 
-    public function read()
+    public function read() : string
     {
         return $this->read;
     }
 
-    public function lastImport()
+    public function lastImport() : string
     {
         return $this->lastImport;
     }
 
-    public function __toString()
+    public function __toString() : string
     {
         return json_encode([
             self::WRITE => $this->write,
@@ -98,7 +83,7 @@ final class IndexMetadata
         ]);
     }
 
-    public function toFile(string $filename)
+    public function toFile(string $filename) : IndexMetadata
     {
         file_put_contents($filename, $this->__toString());
 

@@ -352,12 +352,12 @@ abstract class ElasticTestCase extends WebTestCase
         return $httpHeaders;
     }
 
-    protected function jsonRequest(string $verb, string $endpoint, array $params = array(), array $headers = array())
+    protected function jsonRequest(string $verb, string $endpoint, array $params = [], array $headers = [])
     {
-        $server = array_merge(array(
+        $server = array_merge([
             'HTTP_ACCEPT' => 'application/json',
             'CONTENT_TYPE' => 'application/json',
-        ), $this->mapHeaders($headers));
+        ], $this->mapHeaders($headers));
 
         return $this->api->request(
             $verb,
@@ -380,7 +380,7 @@ abstract class ElasticTestCase extends WebTestCase
         return $this->kernel->getApp();
     }
 
-    public function getElasticSearchClient(callable $fn = null): ElasticsearchClient
+    public function getElasticSearchClient(callable $fn = null) : ElasticsearchClient
     {
         return $fn ? $fn($this->kernel->get('elastic.client')) : $this->kernel->get('elastic.client');
     }

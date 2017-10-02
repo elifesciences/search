@@ -59,7 +59,7 @@ abstract class SerializerTest extends PHPUnit_Framework_TestCase
     {
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation', __DIR__.'/../../../vendor/jms/serializer/src'
+            'JMS\Serializer\Annotation', ComposerLocator::getPath('jms/serializer').'/src'
         );
         // Serializer.
         $this->serializer = SerializerBuilder::create()

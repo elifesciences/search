@@ -19,7 +19,8 @@ class SearchResponseTest extends SerializerTest
     {
         return [
             [
-                $this->getFixture('search/v1/first-page.json'), '
+                $this->getFixture('search/v1/first-page.json'),
+                '
                 {
                     "total": 7,
                     "items": [

@@ -19,7 +19,8 @@ class VorArticleResponseTest extends SerializerTest
     {
         return [
             [
-                $this->getFixture('article-vor/v1/minimum.json'), '
+                $this->getFixture('article-vor/v1/minimum.json'),
+                '
                 {
                     "status": "vor",
                     "statusDate": "2015-09-10T00:00:00Z",
@@ -36,7 +37,8 @@ class VorArticleResponseTest extends SerializerTest
                 ',
             ],
             [
-                $this->getFixture('article-vor/v1/complete.json'), '
+                $this->getFixture('article-vor/v1/complete.json'),
+                '
                 {
                     "status": "vor",
                     "statusDate": "2015-09-10T00:00:00Z",

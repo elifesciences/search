@@ -52,8 +52,7 @@ final class WorkerCommand extends Command
             ->setName('gearman:worker')
             ->setDescription('Creates new Gearman workers.')
             ->setHelp('This command will spin up a new gearman worker based on the options you provide. By default this will be with all jobs available')
-            ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other')
-        ;
+            ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

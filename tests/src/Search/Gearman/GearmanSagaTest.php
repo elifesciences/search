@@ -66,6 +66,7 @@ class GearmanSagaTest extends PHPUnit_Framework_TestCase
     {
         // Bind up.
         $callable = ($fn instanceof Closure) ? $fn->bindTo($this) : $fn;
+
         // Return scoped closure.
         return Closure::bind(function (...$args) use ($callable) {
             try {
@@ -95,11 +96,11 @@ class GearmanSagaTest extends PHPUnit_Framework_TestCase
         $this->saga->addSaga(
             $this->generator(function () {
                 $data = yield new GearmanBatch([
-                   ['reverse', 'testing 1'],
-                   ['reverse', 'testing 2'],
-                   ['reverse', 'testing 3'],
-                   ['reverse', 'testing 4'],
-                   ['reverse', 'testing 5'],
+                    ['reverse', 'testing 1'],
+                    ['reverse', 'testing 2'],
+                    ['reverse', 'testing 3'],
+                    ['reverse', 'testing 4'],
+                    ['reverse', 'testing 5'],
                 ]);
 
                 $this->assertContains('1 gnitset', $data);
