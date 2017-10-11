@@ -24,6 +24,7 @@
         "elife/api-validator": "dev-master",
         "elife/bus-sdk": "dev-master",
         "elife/logging-sdk": "dev-master",
+        "elife/ping": "^1.0",
         "guzzlehttp/guzzle": "^6.2",
         "jms/serializer": "^1.5@dev",
         "justinrainbow/json-schema": "^5.1",
