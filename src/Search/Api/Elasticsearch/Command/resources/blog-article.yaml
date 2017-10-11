@@ -1,21 +1,12 @@
 blog-article:
   properties:
     content:
+      type: object
       properties:
-        alt:
+        format:
           type: string
-        height:
-          type: long
-        id:
+        value:
           type: string
-        text:
-          type: string
-        title:
-          type: string
-        uri:
-          type: string
-        width:
-          type: long
     id:
       type: string
     impactStatement:

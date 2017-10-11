@@ -1,18 +1,11 @@
 interview:
   properties:
     content:
+      type: object
       properties:
-        answer:
-          properties:
-            text:
-              type: string
-            type:
-              type: string
-        question:
+        format:
           type: string
-        text:
-          type: string
-        type:
+        value:
           type: string
     id:
       type: string

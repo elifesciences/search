@@ -1,34 +1,11 @@
 labs-post:
   properties:
     content:
+      type: object
       properties:
-        alt:
+        format:
           type: string
-        content:
-          properties:
-            alt:
-              type: string
-            height:
-              type: long
-            id:
-              type: string
-            text:
-              type: string
-            title:
-              type: string
-            type:
-              type: string
-            uri:
-              type: string
-            width:
-              type: long
-        text:
-          type: string
-        title:
-          type: string
-        type:
-          type: string
-        uri:
+        value:
           type: string
     image:
       properties:
