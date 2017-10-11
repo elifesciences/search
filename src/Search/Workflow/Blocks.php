@@ -2,29 +2,27 @@
 
 namespace eLife\Search\Workflow;
 
-use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
 use stdClass;
 
 trait Blocks
 {
-    final private function flattenBlocks(array $blocks) : array
+    final private function flattenBlocks(array $blocks) : string
     {
-        return iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator(
-            array_map(function (stdClass $block) {
-                return [
-                    $block->title ?? null,
-                    array_map(function ($content) {
-                        return array_filter([
-                            $content->id ?? null,
-                            $content->label ?? null,
-                            $content->alt ?? null,
-                            $content->text ?? null,
-                            $content->caption->text ?? null,
-                        ]);
-                    }, $block->content ?? []),
-                ];
-            }, $blocks)
-        )), false);
+        return implode(' ', array_filter(array_map([$this, 'flattenBlock'], $blocks)));
+    }
+
+    final private function flattenBlock(stdClass $block) : string
+    {
+        return implode(' ', array_filter([
+            $block->id ?? null,
+            $block->label ?? null,
+            $block->title ?? null,
+            $block->alt ?? null,
+            $block->text ?? null,
+            $block->caption->text ?? null,
+            $block->question ?? null,
+            $this->flattenBlocks($block->answer ?? []),
+            $this->flattenBlocks($block->content ?? []),
+        ]));
     }
 }

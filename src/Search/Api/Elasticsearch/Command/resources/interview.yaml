@@ -1,12 +1,5 @@
 interview:
   properties:
-    content:
-      type: object
-      properties:
-        format:
-          type: string
-        value:
-          type: string
     id:
       type: string
     impactStatement:

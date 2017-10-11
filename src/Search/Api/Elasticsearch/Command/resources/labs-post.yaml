@@ -1,12 +1,5 @@
 labs-post:
   properties:
-    content:
-      type: object
-      properties:
-        format:
-          type: string
-        value:
-          type: string
     image:
       properties:
         banner:

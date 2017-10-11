@@ -87,7 +87,8 @@ final class BlogArticleWorkflow implements Workflow
         $this->logger->debug('BlogArticle<'.$blogArticle->getId().'> Indexing '.$blogArticle->getTitle());
         // Normalized fields.
         $blogArticleObject = json_decode($this->serialize($blogArticle));
-        $blogArticleObject->content = $this->flattenBlocks($blogArticleObject->content ?? []);
+        $blogArticleObject->body = $this->flattenBlocks($blogArticleObject->content ?? []);
+        unset($blogArticleObject->content);
         $this->addSortDate($blogArticleObject, $blogArticle->getPublishedDate());
 
         // Return.
