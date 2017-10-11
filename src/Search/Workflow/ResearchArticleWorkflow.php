@@ -12,8 +12,6 @@ use eLife\Search\Api\Response\ArticleResponse;
 use eLife\Search\Api\Response\SearchResult;
 use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
-use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
@@ -22,6 +20,7 @@ final class ResearchArticleWorkflow implements Workflow
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
 
+    use Blocks;
     use JsonSerializeTransport;
     use SortDate;
 
@@ -115,50 +114,13 @@ final class ResearchArticleWorkflow implements Workflow
 
             return $reference;
         }, $articleObject->authors);
-        // Flatten body complexity.
-        $articleObject->body_keywords = iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator(
-            array_map(function ($bodyItem) {
-                return [
-                    $bodyItem->title ?? null,
-                    array_map(function ($content) {
-                        return array_filter([
-                            $content->id ?? null,
-                            $content->label ?? null,
-                            $content->alt ?? null,
-                            $content->text ?? null,
-                            $content->caption->text ?? null,
-                        ]);
-                    }, $bodyItem->content ?? []),
-                ];
-            }, $articleObject->body ?? [])
-        )), false);
-        // But maintain original content.
-        $articleObject->body = [
-            'format' => 'json',
-            'value' => json_encode($articleObject->body ?? '[]'),
-        ];
-        // Flatten authorResponse complexity.
-        $articleObject->authorResponse_keywords = iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator(
-            array_map(function ($authorResponseItem) {
-                return [
-                    $authorResponseItem->title ?? null,
-                    array_map(function ($content) {
-                        return array_filter([
-                            $content->id ?? null,
-                            $content->label ?? null,
-                            $content->alt ?? null,
-                            $content->text ?? null,
-                            $content->caption->text ?? null,
-                        ]);
-                    }, $authorResponseItem->content ?? []),
-                ];
-            }, $articleObject->authorResponse->content ?? [])
-        )), false);
-        // But maintain original content.
-        $articleObject->authorResponse = [
-            'format' => 'json',
-            'value' => json_encode($articleObject->authorResponse ?? '[]'),
-        ];
+        $articleObject->body = $this->flattenBlocks($articleObject->body ?? []);
+        foreach ($articleObject->appendices ?? [] as $appendix) {
+            $appendix->content = $this->flattenBlocks($appendix->content ?? []);
+        }
+        $articleObject->acknowledgements = $this->flattenBlocks($articleObject->acknowledgements ?? []);
+        $articleObject->decisionLetter = $this->flattenBlocks($articleObject->decisionLetter->content ?? []);
+        $articleObject->authorResponse = $this->flattenBlocks($articleObject->authorResponse->content ?? []);
         // Completely serialize funding
         $articleObject->funding = [
             'format' => 'json',
