@@ -19,6 +19,7 @@ final class LabsPostWorkflow implements Workflow
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
 
+    use Blocks;
     use JsonSerializeTransport;
     use SortDate;
 
@@ -85,11 +86,13 @@ final class LabsPostWorkflow implements Workflow
         $this->logger->debug('LabsPost<'.$labsPost->getId().'> Indexing '.$labsPost->getTitle());
 
         // Normalized fields.
-        $labspostObject = json_decode($this->serialize($labsPost));
-        $this->addSortDate($labspostObject, $labsPost->getPublishedDate());
+        $labsPostObject = json_decode($this->serialize($labsPost));
+        $labsPostObject->body = $this->flattenBlocks($labsPostObject->content ?? []);
+        unset($labsPostObject->content);
+        $this->addSortDate($labsPostObject, $labsPost->getPublishedDate());
 
         return [
-            'json' => json_encode($labspostObject),
+            'json' => json_encode($labsPostObject),
             'type' => 'labs-post',
             'id' => $labsPost->getId(),
         ];
