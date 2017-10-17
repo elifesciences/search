@@ -16,7 +16,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 abstract class ElasticTestCase extends WebTestCase
 {
-    protected $isLocal;
     protected $console;
     /** @var Kernel */
     protected $kernel;
@@ -324,12 +323,12 @@ abstract class ElasticTestCase extends WebTestCase
 
     public function createConfiguration()
     {
-        if (file_exists(__DIR__.'/../../../../config/local.php')) {
-            $this->isLocal = true;
+        if ($environment = getenv('ENVIRONMENT_NAME')) {
+            $config = include __DIR__."/../../../../config/{$environment}.php";
+        } elseif (file_exists(__DIR__.'/../../../../config/local.php')) {
             $config = include __DIR__.'/../../../../config/local.php';
         } else {
-            $this->isLocal = false;
-            $config = include __DIR__.'/../../../../config/ci.php';
+            throw new RuntimeException('No ENVIRONMENT_NAME is specified and no config/local.php has been provided to use a local enviroment');
         }
 
         $config['elastic_index'] = 'elife_test';
@@ -408,10 +407,10 @@ abstract class ElasticTestCase extends WebTestCase
 
     public function runCommand(string $command)
     {
+        $logs = [];
         $log = $this->returnCallback(function ($message) use (&$logs) {
             $logs[] = $message;
         });
-        $logs = [];
         $logger = $this->createMock(NullLogger::class);
 
         foreach (['debug', 'info', 'warning', 'critical', 'emergency', 'alert', 'log', 'notice', 'error'] as $level) {
