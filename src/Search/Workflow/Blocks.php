@@ -23,6 +23,18 @@ trait Blocks
             $block->question ?? null,
             $this->flattenBlocks($block->answer ?? []),
             $this->flattenBlocks($block->content ?? []),
+            $this->flattenItems($block->items ?? []),
         ]));
+    }
+
+    final private function flattenItems(array $items) : string
+    {
+        return implode(' ', array_map(function ($item) {
+            if (is_string($item)) {
+                return $item;
+            }
+
+            return $this->flattenBlocks($item);
+        }, $items));
     }
 }
