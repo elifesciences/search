@@ -13,6 +13,7 @@ use Elasticsearch\ClientBuilder;
 use eLife\ApiClient\HttpClient\BatchingHttpClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiClient\HttpClient\NotifyingHttpClient;
+use eLife\ApiProblem\Silex\ApiProblemProvider;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
@@ -101,6 +102,7 @@ final class Kernel implements MinimalKernel
                 'region' => '---------',
             ], $config['aws'] ?? []),
         ], $config);
+        $app->register(new ApiProblemProvider());
         $app->register(new PingControllerProvider());
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
@@ -491,10 +493,6 @@ final class Kernel implements MinimalKernel
         if ($app['config']['ttl'] > 0) {
             $app->after([$this, 'cache'], 3);
         }
-        // Error handling.
-        if (!$app['config']['debug']) {
-            $app->error([$this, 'handleException']);
-        }
 
         // Return
         return $app;
@@ -505,14 +503,6 @@ final class Kernel implements MinimalKernel
         foreach (self::$routes as $route => $action) {
             $app->get($route, [$app['default_controller'], $action]);
         }
-    }
-
-    public function handleException(Throwable $e) : Response
-    {
-        return new JsonResponse([
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-        ]);
     }
 
     public function withApp(callable $fn, $scope = null) : Kernel

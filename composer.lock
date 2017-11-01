@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "96484fd5a6f20784c3815fec9dfa8e20",
+    "content-hash": "dcdba7b4ae66404cff44939f8f99f61b",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -548,12 +548,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "63f6d74c0f21374c2bede27de281404547e198e2"
+                "reference": "9eb7202be465f38b315a9c10bbbd622254f0ef57"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/63f6d74c0f21374c2bede27de281404547e198e2",
-                "reference": "63f6d74c0f21374c2bede27de281404547e198e2",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/9eb7202be465f38b315a9c10bbbd622254f0ef57",
+                "reference": "9eb7202be465f38b315a9c10bbbd622254f0ef57",
                 "shasum": ""
             },
             "conflict": {
@@ -565,7 +565,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2017-10-25T08:34:06+00:00"
+            "time": "2017-11-01T15:02:19+00:00"
         },
         {
             "name": "elife/api-client",
@@ -622,6 +622,53 @@
             ],
             "description": "eLife Sciences API client",
             "time": "2017-10-23T09:04:22+00:00"
+        },
+        {
+            "name": "elife/api-problem",
+            "version": "dev-silex",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elifesciences/api-problem-php.git",
+                "reference": "527a40ecf4b6087154a568a965a5f9d9f9e1d4f4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/elifesciences/api-problem-php/zipball/527a40ecf4b6087154a568a965a5f9d9f9e1d4f4",
+                "reference": "527a40ecf4b6087154a568a965a5f9d9f9e1d4f4",
+                "shasum": ""
+            },
+            "require": {
+                "crell/api-problem": "^2.0",
+                "php": "^7.0",
+                "symfony/http-foundation": "^2.7 || ^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7.7 || ^6.0",
+                "pimple/pimple": "^3.0",
+                "silex/silex": "^2.0",
+                "symfony/browser-kit": "^2.7 || ^3.0",
+                "symfony/http-kernel": "^2.7 || ^3.0"
+            },
+            "suggest": {
+                "silex/silex": "^2.0, to use ApiProblemProvider"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "eLife\\ApiProblem\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "eLife Sciences RFC 7807 handler",
+            "time": "2017-11-01T14:11:28+00:00"
         },
         {
             "name": "elife/api-sdk",
@@ -5065,6 +5112,7 @@
         "doctrine/cache": 20,
         "elife/api": 20,
         "elife/api-client": 20,
+        "elife/api-problem": 20,
         "elife/api-sdk": 20,
         "elife/api-validator": 20,
         "elife/bus-sdk": 20,
