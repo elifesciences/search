@@ -16,6 +16,7 @@ final class PageTest extends ElasticTestCase
         $this->api->request('GET', "/search?page={$page}");
         $response = $this->getResponse();
         $this->assertEquals('application/problem+json', $response->headers->get('Content-Type'));
+        // TODO $this->assertSame(404, $response->getStatusCode());
     }
 
     public function invalidPageProvider() : Traversable
