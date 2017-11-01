@@ -26,6 +26,7 @@ use eLife\Bus\Queue\SqsMessageTransformer;
 use eLife\Bus\Queue\SqsWatchableQueue;
 use eLife\Logging\LoggingFactory;
 use eLife\Logging\Monitoring;
+use eLife\Ping\Silex\PingControllerProvider;
 use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
@@ -65,7 +66,6 @@ final class Kernel implements MinimalKernel
 
     public static $routes = [
         '/search' => 'indexAction',
-        '/ping' => 'pingAction',
     ];
 
     private $app;
@@ -101,6 +101,7 @@ final class Kernel implements MinimalKernel
                 'region' => '---------',
             ], $config['aws'] ?? []),
         ], $config);
+        $app->register(new PingControllerProvider());
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
             'JMS\Serializer\Annotation', ComposerLocator::getPath('jms/serializer').'/src'
