@@ -1,5 +1,6 @@
 /build/
 /config/local.php
+/index.json
 /var/
 /vendor/
 !.gitkeep

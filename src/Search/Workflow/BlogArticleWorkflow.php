@@ -19,6 +19,7 @@ final class BlogArticleWorkflow implements Workflow
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
 
+    use Blocks;
     use JsonSerializeTransport;
     use SortDate;
 
@@ -86,6 +87,8 @@ final class BlogArticleWorkflow implements Workflow
         $this->logger->debug('BlogArticle<'.$blogArticle->getId().'> Indexing '.$blogArticle->getTitle());
         // Normalized fields.
         $blogArticleObject = json_decode($this->serialize($blogArticle));
+        $blogArticleObject->body = $this->flattenBlocks($blogArticleObject->content ?? []);
+        unset($blogArticleObject->content);
         $this->addSortDate($blogArticleObject, $blogArticle->getPublishedDate());
 
         // Return.

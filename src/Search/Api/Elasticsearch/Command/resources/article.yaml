@@ -286,10 +286,3 @@ article:
       type: string
     elocationId:
       type: string
-    body:
-      type: object
-      properties:
-        format:
-          type: string
-        value:
-          type: string

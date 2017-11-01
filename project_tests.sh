@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-env="${1:-ci}"
+env="${ENVIRONMENT_NAME:-ci}"
 
 rm -f build/*.xml
 proofreader src/ tests/ web/

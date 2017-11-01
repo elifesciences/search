@@ -1,6 +1,6 @@
 elifeUpdatePipelineComposerPackage(
     packageName: 'elife/api-sdk',
-    additionalPackageNames: ['elife/api'],
+    additionalPackageNames: ['elife/api', 'elife/api-client'],
     stackname: 'search--ci',
     folder: '/srv/search',
     hostname: 'ci--search.elife.internal'
