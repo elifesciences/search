@@ -354,8 +354,8 @@ abstract class ElasticTestCase extends WebTestCase
     protected function jsonRequest(string $verb, string $endpoint, array $params = [], array $headers = [])
     {
         $server = array_merge([
-            'HTTP_ACCEPT' => 'application/json',
-            'CONTENT_TYPE' => 'application/json',
+            'HTTP_ACCEPT' => 'application/vnd.elife.search+json; version=1',
+            'CONTENT_TYPE' => 'application/vnd.elife.search+json; version=1',
         ], $this->mapHeaders($headers));
 
         return $this->api->request(
