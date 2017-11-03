@@ -23,6 +23,7 @@
         "elife/api-sdk": "dev-master",
         "elife/api-validator": "dev-master",
         "elife/bus-sdk": "dev-master",
+        "elife/content-negotiator": "dev-silex",
         "elife/logging-sdk": "dev-master",
         "elife/ping": "^1.0",
         "guzzlehttp/guzzle": "^6.2",

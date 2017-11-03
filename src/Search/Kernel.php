@@ -24,6 +24,7 @@ use eLife\Bus\Queue\Mock\QueueItemTransformerMock;
 use eLife\Bus\Queue\Mock\WatchableQueueMock;
 use eLife\Bus\Queue\SqsMessageTransformer;
 use eLife\Bus\Queue\SqsWatchableQueue;
+use eLife\ContentNegotiator\Silex\ContentNegotiationProvider;
 use eLife\Logging\LoggingFactory;
 use eLife\Logging\Monitoring;
 use eLife\Ping\Silex\PingControllerProvider;
@@ -64,10 +65,6 @@ final class Kernel implements MinimalKernel
     const ROOT = __DIR__.'/../..';
     const CACHE_DIR = __DIR__.'/../../var/cache';
 
-    public static $routes = [
-        '/search' => 'indexAction',
-    ];
-
     private $app;
 
     public function __construct($config = [])
@@ -101,6 +98,7 @@ final class Kernel implements MinimalKernel
                 'region' => '---------',
             ], $config['aws'] ?? []),
         ], $config);
+        $app->register(new ContentNegotiationProvider());
         $app->register(new PingControllerProvider());
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
@@ -502,9 +500,10 @@ final class Kernel implements MinimalKernel
 
     public function routes(Application $app)
     {
-        foreach (self::$routes as $route => $action) {
-            $app->get($route, [$app['default_controller'], $action]);
-        }
+        $app->get('/search', [$app['default_controller'], 'indexAction'])
+            ->before($app['negotiate.accept'](
+                'application/vnd.elife.search+json; version=1'
+            ));
     }
 
     public function handleException(Throwable $e) : Response
