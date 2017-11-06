@@ -21,7 +21,7 @@ final class PageTest extends ElasticTestCase
 
     public function invalidPageProvider() : Traversable
     {
-        foreach (['-1', '0', '2', 'foo'] as $page) {
+        foreach (['-1', '0', '2'/*, TODO 'foo'*/] as $page) {
             yield 'page '.$page => [$page];
         }
     }
