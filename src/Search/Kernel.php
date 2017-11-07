@@ -17,7 +17,7 @@ use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
 use eLife\Bus\Limit\CompositeLimit;
-use eLife\Bus\Limit\LoggingMiddleware;
+use eLife\Bus\Limit\LoggingLimit;
 use eLife\Bus\Limit\MemoryLimit;
 use eLife\Bus\Limit\SignalsLimit;
 use eLife\Bus\Queue\Mock\QueueItemTransformerMock;
@@ -49,6 +49,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JsonSchema\Validator;
 use Monolog\Logger;
+use Psr\Log\LogLevel;
 use RuntimeException;
 use Silex\Application;
 use Silex\Provider;
@@ -89,7 +90,7 @@ final class Kernel implements MinimalKernel
             'elastic_logging' => false,
             'elastic_force_sync' => false,
             'file_logs_path' => self::ROOT.'/var/logs',
-            'logging_level' => null,
+            'logging_level' => LogLevel::INFO,
             'gearman_worker_timeout' => 20000,
             'process_memory_limit' => 256,
             'aws' => array_merge([
@@ -215,7 +216,11 @@ final class Kernel implements MinimalKernel
         };
 
         $app['logger'] = function (Application $app) {
-            $factory = new LoggingFactory($app['config']['file_logs_path'], 'search-api', $app['config']['logging_level']);
+            $factory = new LoggingFactory(
+                $app['config']['file_logs_path'],
+                'search', 
+                $app['config']['logging_level']
+            );
 
             return $factory->logger();
         };
@@ -238,7 +243,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['limit.long_running'] = function (Application $app) {
-            return new LoggingMiddleware(
+            return new LoggingLimit(
                 new CompositeLimit(
                     $app['limit._memory'],
                     $app['limit._signals']
@@ -248,7 +253,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['limit.interactive'] = function (Application $app) {
-            return new LoggingMiddleware(
+            return new LoggingLimit(
                 $app['limit._signals'],
                 $app['logger']
             );
