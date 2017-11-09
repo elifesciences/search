@@ -48,7 +48,7 @@ final class PageTest extends ElasticTestCase
         $this->api->request('GET', "/search?per-page={$perPage}");
         $response = $this->getResponse();
         $this->assertEquals('application/problem+json', $response->headers->get('Content-Type'));
-        $this->assertSame(404, $response->getStatusCode());
+        $this->assertSame(400, $response->getStatusCode());
     }
 
     public function invalidPerPageProvider() : Traversable
