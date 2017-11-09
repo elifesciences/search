@@ -80,8 +80,8 @@ final class SearchController
     {
         $for = $request->query->get('for', '');
         $order = $request->query->get('order', 'desc');
-        $page = $request->query->get('page', 1);
-        $perPage = $request->query->get('per-page', 10);
+        $page = $request->query->getInt('page', 1);
+        $perPage = $request->query->getInt('per-page', 10);
         $useDate = $request->query->get('use-date', 'default');
         $sort = $request->query->get('sort', 'relevance');
         $subjects = $request->query->get('subject');
@@ -90,6 +90,14 @@ final class SearchController
         $endDate = $request->query->get('end-date');
         $startDateTime = null;
         $endDateTime = null;
+
+        if ($page < 1) {
+            throw new BadRequestHttpException('Invalid page parameter');
+        }
+
+        if ($perPage < 1 || $perPage > 100) {
+            throw new BadRequestHttpException('Invalid per-page parameter');
+        }
 
         if ($endDate || $startDate) {
             $startDateTime = $endDate ? $this->createValidDateTime('Y-m-d H:i:s', $endDate.' 00:00:00') : null;
