@@ -258,7 +258,7 @@ final class Console
         // Some annotations
         Register::registerLoader();
 
-        $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', 'dev'));
+        $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_OPTIONAL, 'The Environment name. Deprecated and not used', 'dev'));
 
         // Add commands from the DI container. (for more complex commands.)
         if (GEARMAN_INSTALLED) {
