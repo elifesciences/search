@@ -18,6 +18,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 final class SearchController
@@ -131,6 +132,10 @@ final class SearchController
         $data = $query->getQuery()->execute();
 
         if ($data instanceof QueryResponse) {
+            if ($page > 1 && 0 === count($data->toArray())) {
+                throw new NotFoundHttpException("No page {$page}");
+            }
+
             $result = new SearchResponse(
                 $data->toArray(),
                 $data->getTotalResults(),
