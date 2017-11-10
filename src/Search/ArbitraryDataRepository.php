@@ -42,4 +42,13 @@ final class ArbitraryDataRepository
             self::INDEX_NAME
         );
     }
+
+    public function load(string $key) : array
+    {
+        return $this->client->getPlainDocumentById(
+            self::DOCUMENT_TYPE,
+            $key,
+            self::INDEX_NAME
+        );
+    }
 }

@@ -68,6 +68,15 @@ final class Console
                 ],
             ],
         ],
+        'arbitrary:load' => [
+            'description' => 'Loads an arbitrary key-value pair',
+            'args' => [
+                [
+                    'name' => 'key',
+                    'mode' => InputArgument::REQUIRED,
+                ],
+            ],
+        ],
         'index:read' => [
             'description' => 'The name of the index we are reading from in the API',
         ],
@@ -179,6 +188,16 @@ final class Console
             $input->getArgument('key'),
             json_decode($input->getArgument('value'), true)
         );
+    }
+
+    public function arbitraryLoadCommand(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln(var_export(
+            $this->app->arbitraryDataRepository()->load(
+                $input->getArgument('key')
+            ),
+            true
+        ));
     }
 
     public function indexSwitchWriteCommand(InputInterface $input, OutputInterface $output)

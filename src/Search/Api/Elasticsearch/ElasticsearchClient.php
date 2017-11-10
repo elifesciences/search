@@ -110,15 +110,26 @@ class ElasticsearchClient
         return $this->connection->search($query)['payload'] ?? null;
     }
 
-    public function getDocumentById($type, $id)
+    public function getDocumentById($type, $id, $index = null)
     {
         $params = [
-            'index' => $this->index,
+            'index' => $index ?? $this->index,
             'type' => $type,
             'id' => $id,
         ];
 
         return $this->connection->get($params)['payload'] ?? null;
+    }
+
+    public function getPlainDocumentById($type, $id, $index = null)
+    {
+        $params = [
+            'index' => $index ?? $this->index,
+            'type' => $type,
+            'id' => $id,
+        ];
+
+        return $this->connection->get($params);
     }
 
     public function count($index)

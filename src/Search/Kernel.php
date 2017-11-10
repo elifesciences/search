@@ -155,7 +155,13 @@ final class Kernel implements MinimalKernel
 
     public function arbitraryDataRepository()
     {
-        return new ArbitraryDataRepository($this->app['elastic.client']);
+        return new ArbitraryDataRepository(
+            new ElasticsearchClient(
+                $this->app['elastic.elasticsearch.plain'],
+                $this->app['config']['elastic_index'],
+                $this->app['config']['elastic_force_sync']
+            )
+        );
     }
 
     public function indexMetadata() : IndexMetadata
@@ -328,6 +334,18 @@ final class Kernel implements MinimalKernel
                 $client->setLogger($app['logger']);
             }
             $client->setSerializer($app['elastic.serializer']);
+
+            return $client->build();
+        };
+
+        $app['elastic.elasticsearch.plain'] = function (Application $app) {
+            $client = ClientBuilder::create();
+            // Set hosts.
+            $client->setHosts($app['config']['elastic_servers']);
+            // Logging for ElasticSearch.
+            if ($app['config']['elastic_logging']) {
+                $client->setLogger($app['logger']);
+            }
 
             return $client->build();
         };
