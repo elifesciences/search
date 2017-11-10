@@ -55,6 +55,19 @@ final class Console
         'arbitrary:setup' => [
             'description' => 'Sets up a specific index in ElasticSearch to store arbitrary data as key-value',
         ],
+        'arbitrary:store' => [
+            'description' => 'Stores an arbitrary key-value pair',
+            'args' => [
+                [
+                    'name' => 'key',
+                    'mode' => InputArgument::REQUIRED,
+                ],
+                [
+                    'name' => 'value',
+                    'mode' => InputArgument::REQUIRED,
+                ],
+            ],
+        ],
         'index:read' => [
             'description' => 'The name of the index we are reading from in the API',
         ],
@@ -158,6 +171,14 @@ final class Console
     public function arbitrarySetupCommand(InputInterface $input, OutputInterface $output)
     {
         $this->app->arbitraryDataRepository()->setup();
+    }
+
+    public function arbitraryStoreCommand(InputInterface $input, OutputInterface $output)
+    {
+        $this->app->arbitraryDataRepository()->store(
+            $input->getArgument('key'),
+            json_decode($input->getArgument('value'), true)
+        );
     }
 
     public function indexSwitchWriteCommand(InputInterface $input, OutputInterface $output)

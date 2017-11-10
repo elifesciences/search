@@ -10,6 +10,7 @@ final class ArbitraryDataRepository
 {
     private $client;
     const INDEX_NAME = 'arbitrary';
+    const DOCUMENT_TYPE = 'json_object';
     
     public function __construct(ElasticsearchClient $client)
     {
@@ -29,9 +30,16 @@ final class ArbitraryDataRepository
     }
 
     /**
-     *
+     * @param mixed $value
      */
-    public function load(string $key) : array
+    public function store(string $key, array $value)
     {
+        $this->client->indexJsonDocument(
+            self::DOCUMENT_TYPE,
+            $key,
+            json_encode($value),
+            $flush = true,
+            self::INDEX_NAME
+        );
     }
 }
