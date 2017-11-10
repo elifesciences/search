@@ -153,6 +153,11 @@ final class Kernel implements MinimalKernel
         return 'elife_search';
     }
 
+    public function arbitraryDataRepository()
+    {
+        return new ArbitraryDataRepository($this->app['elastic.client']);
+    }
+
     public function indexMetadata() : IndexMetadata
     {
         $filename = realpath(__DIR__.'/../../index.json');

@@ -52,6 +52,9 @@ final class Console
         'queue:count' => [
             'description' => 'Counts (approximately) how many messages are in the queue',
         ],
+        'arbitrary:setup' => [
+            'description' => 'Sets up a specific index in ElasticSearch to store arbitrary data as key-value',
+        ],
         'index:read' => [
             'description' => 'The name of the index we are reading from in the API',
         ],
@@ -150,6 +153,11 @@ final class Console
         // Queue item.
         $queue->enqueue($item);
         $this->logger->info('Item added successfully.');
+    }
+
+    public function arbitrarySetupCommand(InputInterface $input, OutputInterface $output)
+    {
+        $this->app->arbitraryDataRepository()->setup();
     }
 
     public function indexSwitchWriteCommand(InputInterface $input, OutputInterface $output)
