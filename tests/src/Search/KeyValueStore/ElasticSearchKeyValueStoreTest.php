@@ -1,6 +1,6 @@
 <?php
 
-namespace eLife\Search\KeyValueStore;
+namespace test\eLife\Search\KeyValueStore;
 
 use tests\eLife\Search\Web\ElasticTestCase;
 
