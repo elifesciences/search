@@ -39,6 +39,7 @@ use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Gearman\Command\ImportCommand;
 use eLife\Search\Gearman\Command\QueueWatchCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
+use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
 use GearmanClient;
 use GearmanWorker;
 use GuzzleHttp\Client;
@@ -50,7 +51,6 @@ use JMS\Serializer\SerializerBuilder;
 use JsonSchema\Validator;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
-use RuntimeException;
 use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
@@ -84,9 +84,7 @@ final class Kernel implements MinimalKernel
             'api_requests_batch' => 10,
             'ttl' => 300,
             'elastic_servers' => ['http://localhost:9200'],
-            // TODO: after backward compatibility with index.txt is not necessary,
-            // transition to indexMetadata()
-            'elastic_index' => $this->indexName(),
+            'elastic_index' => $this->indexMetadata()->read(),
             'elastic_logging' => false,
             'elastic_force_sync' => false,
             'file_logs_path' => self::ROOT.'/var/logs',
@@ -123,44 +121,36 @@ final class Kernel implements MinimalKernel
         $this->app = $this->applicationFlow($app);
     }
 
-    /**
-     * @param string $operation IndexMetadata::READ or IndexMetadata::WRITE
-     *
-     * @return string
-     *                TODO: remove duplication with indexMetadata() once stable
-     */
-    private function indexName($operation = IndexMetadata::READ)
+    public function keyValueStore($indexName = null)
     {
-        $filename = realpath(__DIR__.'/../../index.json');
-        if (file_exists($filename)) {
-            $indexMetadata = IndexMetadata::fromFile($filename);
-
-            return $indexMetadata->operation($operation);
-        }
-
-        // deprecated
-        $filename = realpath(__DIR__.'/../../index.txt');
-        if (file_exists($filename)) {
-            $lines = file($filename, FILE_IGNORE_NEW_LINES);
-            if (count($lines) > 1) {
-                throw new RuntimeException('Invalid index name: '.var_export($lines, true));
-            }
-
-            return $lines[0];
-        }
-
-        // default
-        return 'elife_search';
+        return new ElasticsearchKeyValueStore(
+            new ElasticsearchClient(
+                $this->app['elastic.elasticsearch.plain'],
+                $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
+                true
+            )
+        );
     }
 
     public function indexMetadata() : IndexMetadata
     {
+        // FUTURE:
+        // return IndexMetadata::fromDocument($this->keyValueStore->load('index-metadata'));
         $filename = realpath(__DIR__.'/../../index.json');
         if (file_exists($filename)) {
-            return IndexMetadata::fromFile($filename);
+            $metadata = IndexMetadata::fromFile($filename);
+
+            return $metadata;
         }
 
         return IndexMetadata::fromContents('elife_search', 'elife_search');
+    }
+
+    public function updateIndexMetadata(IndexMetadata $updated)
+    {
+        $updated->toFile('index.json');
+        // FUTURE:
+        // $this->keyValueStore->store('index-metadata', $metadata->toDocument());
     }
 
     public function dependencies(Application $app)
@@ -323,6 +313,18 @@ final class Kernel implements MinimalKernel
                 $client->setLogger($app['logger']);
             }
             $client->setSerializer($app['elastic.serializer']);
+
+            return $client->build();
+        };
+
+        $app['elastic.elasticsearch.plain'] = function (Application $app) {
+            $client = ClientBuilder::create();
+            // Set hosts.
+            $client->setHosts($app['config']['elastic_servers']);
+            // Logging for ElasticSearch.
+            if ($app['config']['elastic_logging']) {
+                $client->setLogger($app['logger']);
+            }
 
             return $client->build();
         };

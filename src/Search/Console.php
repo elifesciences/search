@@ -52,6 +52,31 @@ final class Console
         'queue:count' => [
             'description' => 'Counts (approximately) how many messages are in the queue',
         ],
+        'keyvalue:setup' => [
+            'description' => 'Sets up a specific index in ElasticSearch to store arbitrary data as key-value',
+        ],
+        'keyvalue:store' => [
+            'description' => 'Stores an arbitrary key-value pair',
+            'args' => [
+                [
+                    'name' => 'key',
+                    'mode' => InputArgument::REQUIRED,
+                ],
+                [
+                    'name' => 'value',
+                    'mode' => InputArgument::REQUIRED,
+                ],
+            ],
+        ],
+        'keyvalue:load' => [
+            'description' => 'Loads an arbitrary key-value pair',
+            'args' => [
+                [
+                    'name' => 'key',
+                    'mode' => InputArgument::REQUIRED,
+                ],
+            ],
+        ],
         'index:read' => [
             'description' => 'The name of the index we are reading from in the API',
         ],
@@ -152,12 +177,35 @@ final class Console
         $this->logger->info('Item added successfully.');
     }
 
+    public function keyvalueSetupCommand(InputInterface $input, OutputInterface $output)
+    {
+        $this->app->keyValueStore()->setup();
+    }
+
+    public function keyvalueStoreCommand(InputInterface $input, OutputInterface $output)
+    {
+        $this->app->keyValueStore()->store(
+            $input->getArgument('key'),
+            json_decode($input->getArgument('value'), true)
+        );
+    }
+
+    public function keyvalueLoadCommand(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln(var_export(
+            $this->app->keyValueStore()->load(
+                $input->getArgument('key')
+            ),
+            true
+        ));
+    }
+
     public function indexSwitchWriteCommand(InputInterface $input, OutputInterface $output)
     {
         $indexName = $input->getArgument('index_name');
         $metadata = $this->app->indexMetadata();
         $this->logger->info("Switching index writes from {$metadata->write()} to $indexName");
-        $metadata->switchWrite($indexName)->toFile('index.json');
+        $this->app->updateIndexMetadata($metadata->switchWrite($indexName));
     }
 
     public function indexSwitchReadCommand(InputInterface $input, OutputInterface $output)
@@ -165,7 +213,7 @@ final class Console
         $indexName = $input->getArgument('index_name');
         $metadata = $this->app->indexMetadata();
         $this->logger->info("Switching index reads from {$metadata->read()} to $indexName");
-        $metadata->switchRead($indexName)->toFile('index.json');
+        $this->app->updateIndexMetadata($metadata->switchRead($indexName));
     }
 
     public function indexLastImportGetCommand(InputInterface $input, OutputInterface $output)
@@ -178,7 +226,7 @@ final class Console
     {
         $newLastImport = $input->getArgument('date');
         $metadata = $this->app->indexMetadata();
-        $metadata->updateLastImport($newLastImport)->toFile('index.json');
+        $this->app->updateIndexMetadata($metadata->updateLastImport($newLastImport));
     }
 
     public function indexReadCommand(InputInterface $input, OutputInterface $output)
