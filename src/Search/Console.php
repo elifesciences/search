@@ -81,7 +81,7 @@ final class Console
             'description' => 'The name of the index we are reading from in the API',
         ],
         'index:delete' => [
-            'description' => 'Delete an index using its name',
+            'description' => 'Delete an index, explicitly using its name',
             'args' => [
                 [
                     'name' => 'index_name',
@@ -237,7 +237,7 @@ final class Console
 
     public function indexDeleteCommand(InputInterface $input, OutputInterface $output)
     {
-        $client = $this->app->get('elastic.client');
+        $client = $this->app->get('elastic.client.read');
         $indexName = $input->getArgument('index_name');
         $this->logger->info("Deleting index {$indexName}");
         $client->deleteIndex($indexName);

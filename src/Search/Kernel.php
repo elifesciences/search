@@ -293,7 +293,15 @@ final class Kernel implements MinimalKernel
         };
 
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['logger'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['config']['elastic_index']);
+            return new SearchController(
+                $app['serializer'],
+                $app['logger'],
+                $app['serializer.context'],
+                $app['elastic.executor'],
+                $app['cache'],
+                $app['config']['api_url'],
+                $this->indexMetadata()->read()
+            );
         };
 
         //#####################################################
@@ -327,15 +335,6 @@ final class Kernel implements MinimalKernel
             }
 
             return $client->build();
-        };
-
-        // TODO: deprecate and remove
-        $app['elastic.client'] = function (Application $app) {
-            return new ElasticsearchClient(
-                $app['elastic.elasticsearch'],
-                $app['config']['elastic_index'],
-                $app['config']['elastic_force_sync']
-            );
         };
 
         $app['elastic.client.write'] = function (Application $app) {
@@ -482,7 +481,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.build_index'] = function (Application $app) {
-            return new BuildIndexCommand($app['elastic.client'], $app['logger']);
+            return new BuildIndexCommand($app['elastic.client.read'], $app['logger']);
         };
     }
 

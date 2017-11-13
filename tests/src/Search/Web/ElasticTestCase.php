@@ -379,9 +379,13 @@ abstract class ElasticTestCase extends WebTestCase
         return $this->kernel->getApp();
     }
 
-    public function getElasticSearchClient(callable $fn = null) : ElasticsearchClient
+    /**
+     * This client can actually be used for writes during tests.
+     * 'read' means the modifications will be immediately visible to the API during reads, rather than being performed on a separate, offline index.
+     */
+    private function getElasticSearchClient(callable $fn = null) : ElasticsearchClient
     {
-        return $fn ? $fn($this->kernel->get('elastic.client')) : $this->kernel->get('elastic.client');
+        return $fn ? $fn($this->kernel->get('elastic.client.read')) : $this->kernel->get('elastic.client.read');
     }
 
     public function setUp()
