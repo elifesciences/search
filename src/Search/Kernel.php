@@ -135,7 +135,7 @@ final class Kernel implements MinimalKernel
     public function indexMetadata() : IndexMetadata
     {
         // FUTURE:
-        // return IndexMetadata::fromDocument($this->keyValueStore->load('index-metadata'));
+        // return IndexMetadata::fromDocument($this->keyValueStore()->load('index-metadata'));
         $filename = realpath(__DIR__.'/../../index.json');
         if (file_exists($filename)) {
             $metadata = IndexMetadata::fromFile($filename);
@@ -148,7 +148,7 @@ final class Kernel implements MinimalKernel
 
     public function updateIndexMetadata(IndexMetadata $updated)
     {
-        $this->keyValueStore->store('index-metadata', $metadata->toDocument());
+        $this->keyValueStore()->store('index-metadata', $updated->toDocument());
         // deprecated, remove when not read anymore:
         $updated->toFile('index.json');
     }
