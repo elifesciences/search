@@ -8,7 +8,6 @@ interface KeyValueStore
 
     /**
      * @param mixed $value
-     * @return void
      */
     public function store(string $key, array $value);
 

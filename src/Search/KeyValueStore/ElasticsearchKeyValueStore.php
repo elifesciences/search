@@ -9,7 +9,7 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
     private $client;
     const INDEX_NAME = 'key-value-store';
     const DOCUMENT_TYPE = 'json_object';
-    
+
     public function __construct(ElasticsearchClient $client)
     {
         $this->client = $client;

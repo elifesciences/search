@@ -51,7 +51,6 @@ use JMS\Serializer\SerializerBuilder;
 use JsonSchema\Validator;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
-use RuntimeException;
 use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
@@ -140,6 +139,7 @@ final class Kernel implements MinimalKernel
         $filename = realpath(__DIR__.'/../../index.json');
         if (file_exists($filename)) {
             $metadata = IndexMetadata::fromFile($filename);
+
             return $metadata;
         }
 

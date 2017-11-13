@@ -16,6 +16,7 @@ final class IndexMetadata
     public static function fromFile(string $filename) : IndexMetadata
     {
         $document = json_decode(file_get_contents($filename), true);
+
         return self::fromDocument($document);
     }
 
