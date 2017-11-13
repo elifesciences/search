@@ -148,9 +148,9 @@ final class Kernel implements MinimalKernel
 
     public function updateIndexMetadata(IndexMetadata $updated)
     {
+        $this->keyValueStore->store('index-metadata', $metadata->toDocument());
+        // deprecated, remove when not read anymore:
         $updated->toFile('index.json');
-        // FUTURE:
-        // $this->keyValueStore->store('index-metadata', $metadata->toDocument());
     }
 
     public function dependencies(Application $app)
