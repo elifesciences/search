@@ -39,6 +39,7 @@ use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Gearman\Command\ImportCommand;
 use eLife\Search\Gearman\Command\QueueWatchCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
+use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
 use GearmanClient;
 use GearmanWorker;
 use GuzzleHttp\Client;

@@ -1,6 +1,6 @@
 <?php
 
-namespace eLife\Search;
+namespace eLife\Search\KeyValueStore;
 
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 
