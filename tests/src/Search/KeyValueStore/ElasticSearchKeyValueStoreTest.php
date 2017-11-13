@@ -13,7 +13,7 @@ class ElasticSearchKeyValueStoreTest extends ElasticTestCase
     {
         $store = $this->kernel->keyValueStore('test_key_value_store_index');
         $store->setup();
-        $store->store('my_id', $document = ['field' => 'value']);
+        $store->store('my-id', $document = ['field' => 'value']);
         $this->assertEquals(
             $document,
             $store->load('my_id')

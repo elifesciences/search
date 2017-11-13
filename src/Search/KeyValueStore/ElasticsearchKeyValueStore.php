@@ -7,8 +7,8 @@ use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 final class ElasticsearchKeyValueStore implements KeyValueStore
 {
     private $client;
-    const INDEX_NAME = 'key-value-store';
-    const DOCUMENT_TYPE = 'json_object';
+    const INDEX_NAME = 'key_value_store'; // analogue to elife_search
+    const DOCUMENT_TYPE = 'json-object'; // analogue to podcast-episode
 
     public function __construct(ElasticsearchClient $client)
     {
@@ -17,11 +17,22 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
 
     public function setup()
     {
-        if ($this->client->indexExists()) {
-            // TODO: nothing for now, but we will have to PUT the mapping
-        } else {
-            // TODO: add enable: false to mapping of its objects
-            $this->client->createIndex();
+        if (!$this->client->indexExists()) {
+            $this->client->createIndex(
+                $indexName = null, // use the default configured in $this->client
+                $additionalParams = [
+                    'body' => [
+                        'settings' => [
+                            'number_of_shards' => 1,
+                        ],
+                        'mappings' => [
+                            self::DOCUMENT_TYPE => [
+                                'enabled' => false,
+                            ],
+                        ],
+                    ],
+                ]
+            );
         }
     }
 

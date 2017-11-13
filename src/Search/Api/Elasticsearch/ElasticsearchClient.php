@@ -33,12 +33,14 @@ class ElasticsearchClient
         return $this->connection->indices()->delete($params);
     }
 
-    public function createIndex(string $indexName = null)
+    public function createIndex(string $indexName = null, $additionalParams = [])
     {
-        $params = [
-            'index' => $indexName ?? $this->index,
-
-        ];
+        $params = array_merge(
+            [
+                'index' => $indexName ?? $this->index,
+            ],
+            $additionalParams
+        );
 
         return $this->connection->indices()->create($params);
     }
