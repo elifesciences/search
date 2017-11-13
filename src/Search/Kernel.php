@@ -155,7 +155,7 @@ final class Kernel implements MinimalKernel
 
     public function keyValueStore()
     {
-        return new KeyValueStore(
+        return new ElasticsearchKeyValueStore(
             new ElasticsearchClient(
                 $this->app['elastic.elasticsearch.plain'],
                 $this->app['config']['elastic_index'],
