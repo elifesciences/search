@@ -205,7 +205,7 @@ final class Console
         $indexName = $input->getArgument('index_name');
         $metadata = $this->app->indexMetadata();
         $this->logger->info("Switching index writes from {$metadata->write()} to $indexName");
-        $metadata->switchWrite($indexName)->toFile('index.json');
+        $this->app->updateIndexMetadata($metadata->switchWrite($indexName));
     }
 
     public function indexSwitchReadCommand(InputInterface $input, OutputInterface $output)
@@ -213,7 +213,7 @@ final class Console
         $indexName = $input->getArgument('index_name');
         $metadata = $this->app->indexMetadata();
         $this->logger->info("Switching index reads from {$metadata->read()} to $indexName");
-        $metadata->switchRead($indexName)->toFile('index.json');
+        $this->app->updateIndexMetadata($metadata->switchRead($indexName));
     }
 
     public function indexLastImportGetCommand(InputInterface $input, OutputInterface $output)
@@ -226,7 +226,7 @@ final class Console
     {
         $newLastImport = $input->getArgument('date');
         $metadata = $this->app->indexMetadata();
-        $metadata->updateLastImport($newLastImport)->toFile('index.json');
+        $this->app->updateIndexMetadata($metadata->updateLastImport($newLastImport));
     }
 
     public function indexReadCommand(InputInterface $input, OutputInterface $output)

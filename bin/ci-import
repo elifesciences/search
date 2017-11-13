@@ -2,6 +2,8 @@
 . bin/ci-process-bootstrap
 
 echo '{"write":"elife_search", "read":"elife_search"}' > index.json
+# FUTURE:
+# php bin/console keyvalue:store index-metadata '{"write":"elife_search", "read":"elife_search"}' --env="$environment"
 
 ./bin/console queue:clean --env="$environment"
 # TODO: poll for queue:count == 0, with timeout

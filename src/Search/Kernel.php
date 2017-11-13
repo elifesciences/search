@@ -135,12 +135,22 @@ final class Kernel implements MinimalKernel
 
     public function indexMetadata() : IndexMetadata
     {
+        // FUTURE:
+        // return IndexMetadata::fromDocument($this->keyValueStore->load('index-metadata'));
         $filename = realpath(__DIR__.'/../../index.json');
         if (file_exists($filename)) {
-            return IndexMetadata::fromFile($filename);
+            $metadata = IndexMetadata::fromFile($filename);
+            return $metadata;
         }
 
         return IndexMetadata::fromContents('elife_search', 'elife_search');
+    }
+
+    public function updateIndexMetadata(IndexMetadata $updated)
+    {
+        $updated->toFile('index.json');
+        // FUTURE:
+        // $this->keyValueStore->store('index-metadata', $metadata->toDocument());
     }
 
     public function dependencies(Application $app)
