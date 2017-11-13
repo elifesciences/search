@@ -10,7 +10,7 @@ fi
 environment="$1"
 index_name="$2"
 
-echo "Stopping gearman;worker instances"
+echo "Stopping gearman:worker instances"
 sudo start search-gearman-worker-stop-all
 
 echo "Creating new index $index_name"
