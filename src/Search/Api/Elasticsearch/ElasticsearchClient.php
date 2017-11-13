@@ -50,11 +50,11 @@ class ElasticsearchClient
         return $this->deleteIndexByName($indexName);
     }
 
-    public function indexExists()
+    public function indexExists(string $indexName = null)
     {
         try {
             $this->connection->indices()->getSettings([
-                'index' => $this->index,
+                'index' => $indexName ?? $this->index,
             ]);
 
             return true;

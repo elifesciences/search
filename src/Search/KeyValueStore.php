@@ -4,12 +4,12 @@ namespace eLife\Search;
 
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 
-// TODO: rename to ElasticsearchArbitraryDataRepository
+// TODO: rename to ElasticsearchKeyValueStore
 // TODO: Extract Interface with the current name
-final class ArbitraryDataRepository
+final class KeyValueStore
 {
     private $client;
-    const INDEX_NAME = 'arbitrary';
+    const INDEX_NAME = 'key-value-store';
     const DOCUMENT_TYPE = 'json_object';
     
     public function __construct(ElasticsearchClient $client)
@@ -19,6 +19,7 @@ final class ArbitraryDataRepository
 
     public function setup()
     {
+        var_dump(self::INDEX_NAME);
         if ($this->client->indexExists(self::INDEX_NAME)) {
             // TODO: nothing for now, but we will have to PUT the mapping
         } else {

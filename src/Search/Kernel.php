@@ -153,9 +153,9 @@ final class Kernel implements MinimalKernel
         return 'elife_search';
     }
 
-    public function arbitraryDataRepository()
+    public function keyValueStore()
     {
-        return new ArbitraryDataRepository(
+        return new KeyValueStore(
             new ElasticsearchClient(
                 $this->app['elastic.elasticsearch.plain'],
                 $this->app['config']['elastic_index'],

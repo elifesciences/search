@@ -52,10 +52,10 @@ final class Console
         'queue:count' => [
             'description' => 'Counts (approximately) how many messages are in the queue',
         ],
-        'arbitrary:setup' => [
+        'keyvalue:setup' => [
             'description' => 'Sets up a specific index in ElasticSearch to store arbitrary data as key-value',
         ],
-        'arbitrary:store' => [
+        'keyvalue:store' => [
             'description' => 'Stores an arbitrary key-value pair',
             'args' => [
                 [
@@ -68,7 +68,7 @@ final class Console
                 ],
             ],
         ],
-        'arbitrary:load' => [
+        'keyvalue:load' => [
             'description' => 'Loads an arbitrary key-value pair',
             'args' => [
                 [
@@ -177,23 +177,23 @@ final class Console
         $this->logger->info('Item added successfully.');
     }
 
-    public function arbitrarySetupCommand(InputInterface $input, OutputInterface $output)
+    public function keyvalueSetupCommand(InputInterface $input, OutputInterface $output)
     {
-        $this->app->arbitraryDataRepository()->setup();
+        $this->app->keyValueStore()->setup();
     }
 
-    public function arbitraryStoreCommand(InputInterface $input, OutputInterface $output)
+    public function keyvalueStoreCommand(InputInterface $input, OutputInterface $output)
     {
-        $this->app->arbitraryDataRepository()->store(
+        $this->app->keyValueStore()->store(
             $input->getArgument('key'),
             json_decode($input->getArgument('value'), true)
         );
     }
 
-    public function arbitraryLoadCommand(InputInterface $input, OutputInterface $output)
+    public function keyvalueLoadCommand(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(var_export(
-            $this->app->arbitraryDataRepository()->load(
+            $this->app->keyValueStore()->load(
                 $input->getArgument('key')
             ),
             true
