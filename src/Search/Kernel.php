@@ -154,13 +154,13 @@ final class Kernel implements MinimalKernel
         return 'elife_search';
     }
 
-    public function keyValueStore()
+    public function keyValueStore($indexName = null)
     {
         return new ElasticsearchKeyValueStore(
             new ElasticsearchClient(
                 $this->app['elastic.elasticsearch.plain'],
-                $this->app['config']['elastic_index'],
-                $this->app['config']['elastic_force_sync']
+                $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
+                true
             )
         );
     }

@@ -17,13 +17,11 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
 
     public function setup()
     {
-        if ($this->client->indexExists(self::INDEX_NAME)) {
+        if ($this->client->indexExists()) {
             // TODO: nothing for now, but we will have to PUT the mapping
         } else {
-            $this->client->createIndex(
-                self::INDEX_NAME
-                // TODO: add enable: false to mapping of its objects
-            );
+            // TODO: add enable: false to mapping of its objects
+            $this->client->createIndex();
         }
     }
 
@@ -36,8 +34,7 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
             self::DOCUMENT_TYPE,
             $key,
             json_encode($value),
-            $flush = true,
-            self::INDEX_NAME
+            $flush = true
         );
     }
 
@@ -45,8 +42,7 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
     {
         return $this->client->getPlainDocumentById(
             self::DOCUMENT_TYPE,
-            $key,
-            self::INDEX_NAME
-        );
+            $key
+        )['_source'];
     }
 }
