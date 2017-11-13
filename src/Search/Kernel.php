@@ -85,9 +85,7 @@ final class Kernel implements MinimalKernel
             'api_requests_batch' => 10,
             'ttl' => 300,
             'elastic_servers' => ['http://localhost:9200'],
-            // TODO: after backward compatibility with index.txt is not necessary,
-            // transition to indexMetadata()
-            'elastic_index' => $this->indexName(),
+            'elastic_index' => $this->indexMetadata()->read(),
             'elastic_logging' => false,
             'elastic_force_sync' => false,
             'file_logs_path' => self::ROOT.'/var/logs',
@@ -122,36 +120,6 @@ final class Kernel implements MinimalKernel
         $this->dependencies($app);
         // Add to class once set up.
         $this->app = $this->applicationFlow($app);
-    }
-
-    /**
-     * @param string $operation IndexMetadata::READ or IndexMetadata::WRITE
-     *
-     * @return string
-     *                TODO: remove duplication with indexMetadata() once stable
-     */
-    private function indexName($operation = IndexMetadata::READ)
-    {
-        $filename = realpath(__DIR__.'/../../index.json');
-        if (file_exists($filename)) {
-            $indexMetadata = IndexMetadata::fromFile($filename);
-
-            return $indexMetadata->operation($operation);
-        }
-
-        // deprecated
-        $filename = realpath(__DIR__.'/../../index.txt');
-        if (file_exists($filename)) {
-            $lines = file($filename, FILE_IGNORE_NEW_LINES);
-            if (count($lines) > 1) {
-                throw new RuntimeException('Invalid index name: '.var_export($lines, true));
-            }
-
-            return $lines[0];
-        }
-
-        // default
-        return 'elife_search';
     }
 
     public function keyValueStore($indexName = null)
