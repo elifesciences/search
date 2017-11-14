@@ -123,10 +123,11 @@ final class Kernel implements MinimalKernel
     public function indexMetadata() : IndexMetadata
     {
         return IndexMetadata::fromDocument(
-            $this->app['keyvaluestore']->load('index-metadata')
+            $this->app['keyvaluestore']->load(
+                'index-metadata',
+                IndexMetadata::fromContents('elife_search', 'elife_search')->toDocument()
+            )
         );
-
-        return IndexMetadata::fromContents('elife_search', 'elife_search');
     }
 
     public function updateIndexMetadata(IndexMetadata $updated)
