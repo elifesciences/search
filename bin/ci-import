@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+set -e
 . bin/ci-process-bootstrap
 
 echo '{"write":"elife_search", "read":"elife_search"}' > index.json
-./bin/console search:setup --index="elife_search" --delete
+./bin/console search:setup --index="elife_search" --delete --env="$environment"
 # FUTURE:
 # php bin/console keyvalue:store index-metadata '{"write":"elife_search", "read":"elife_search"}' --env="$environment"
 

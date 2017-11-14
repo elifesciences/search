@@ -6,7 +6,7 @@
 sleep 5
 
 index_name=elife_search_$(date +%Y%m%d%H%M%S)
-./bin/console search:setup --index="$index_name" --delete
+./bin/console search:setup --index="$index_name" --delete --env="$environment"
 
 ./bin/console index:switch:write "$index_name"
 . bin/ci-start-processes
