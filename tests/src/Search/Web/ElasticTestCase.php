@@ -4,6 +4,7 @@ namespace tests\eLife\Search\Web;
 
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Console;
+use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
 use Psr\Log\NullLogger;
 use Silex\WebTestCase;
@@ -331,8 +332,6 @@ abstract class ElasticTestCase extends WebTestCase
             throw new RuntimeException('No ENVIRONMENT_NAME is specified and no config/local.php has been provided to use a local enviroment');
         }
 
-        $config['elastic_index'] = 'elife_test';
-
         return $this->modifyConfiguration($config);
     }
 
@@ -391,6 +390,12 @@ abstract class ElasticTestCase extends WebTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->kernel = new Kernel($this->createConfiguration());
+        $this->kernel->updateIndexMetadata(IndexMetadata::fromContents(
+            'elife_test',
+            'elife_test'
+        ));
+
         $this->client = $this->getElasticSearchClient();
         $this->client->deleteIndex();
         $lines = $this->runCommand('search:setup');
