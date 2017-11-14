@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ec5cbeb1d0099ee7608d606cc0ceb96",
+    "content-hash": "aedad603e01c50971c1522718b5d8671",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -721,12 +721,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "b0a13f8eef83fe761771b3ce186bf5a8127a9a66"
+                "reference": "5750a149fabf6487a53f09b1137afa97653edc9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/b0a13f8eef83fe761771b3ce186bf5a8127a9a66",
-                "reference": "b0a13f8eef83fe761771b3ce186bf5a8127a9a66",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/5750a149fabf6487a53f09b1137afa97653edc9e",
+                "reference": "5750a149fabf6487a53f09b1137afa97653edc9e",
                 "shasum": ""
             },
             "require": {
@@ -761,20 +761,20 @@
                 "MIT"
             ],
             "description": "eLife Sciences Bus SDK",
-            "time": "2017-11-07T11:05:45+00:00"
+            "time": "2017-11-13T09:52:12+00:00"
         },
         {
             "name": "elife/content-negotiator",
-            "version": "dev-silex",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/content-negotiator-php.git",
-                "reference": "a50c113381dd6e027689b75a08fdaa8fdba15ec5"
+                "reference": "82099671a3b7a716d01e36a0ff05e8317c9a3ced"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/content-negotiator-php/zipball/a50c113381dd6e027689b75a08fdaa8fdba15ec5",
-                "reference": "a50c113381dd6e027689b75a08fdaa8fdba15ec5",
+                "url": "https://api.github.com/repos/elifesciences/content-negotiator-php/zipball/82099671a3b7a716d01e36a0ff05e8317c9a3ced",
+                "reference": "82099671a3b7a716d01e36a0ff05e8317c9a3ced",
                 "shasum": ""
             },
             "require": {
@@ -810,7 +810,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences content negotiator",
-            "time": "2017-11-03T10:28:44+00:00"
+            "time": "2017-11-14T07:45:05+00:00"
         },
         {
             "name": "elife/logging-sdk",
@@ -5182,7 +5182,6 @@
         "elife/api-sdk": 20,
         "elife/api-validator": 20,
         "elife/bus-sdk": 20,
-        "elife/content-negotiator": 20,
         "elife/logging-sdk": 20,
         "jms/serializer": 20,
         "propel/propel": 15,
