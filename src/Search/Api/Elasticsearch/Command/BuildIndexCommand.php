@@ -29,7 +29,7 @@ class BuildIndexCommand extends Command
     {
         $this
             ->setName('search:setup')
-            ->setDescription('Re-index elasticsearch <comment>WARNING: DROPS CONTENT WITH -d</comment>')
+            ->setDescription('Ensure Elasticsearch has been setup <comment>WARNING: DROPS CONTENT WITH -d</comment>')
             ->addOption('delete', 'd', InputOption::VALUE_NONE, 'Drop content')
             ->addOption('index', 'i', InputOption::VALUE_OPTIONAL, 'Index that should be (re)created')
             ->setHelp('Creates new Gearman client and imports entities from API');

@@ -29,7 +29,7 @@ namespace tests\eLife\Search\Gearman {
 
             $this->limitReached = false;
             $this->logger = $this->createMock(LoggerInterface::class);
-            $this->monitoring = $this->createMock(Monitoring::class);
+            $this->monitoring = new Monitoring();
             $this->taskDriver = new GearmanTaskDriver(
                 new AnnotationReader(),
                 new GearmanWorker(),

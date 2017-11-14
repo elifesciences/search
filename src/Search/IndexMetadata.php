@@ -15,14 +15,24 @@ final class IndexMetadata
 
     public static function fromFile(string $filename) : IndexMetadata
     {
-        $contents = json_decode(file_get_contents($filename), true);
-        Assertion::keyExists($contents, self::WRITE);
-        Assertion::keyExists($contents, self::READ);
-        if (!array_key_exists(self::LAST_IMPORT, $contents)) {
-            $contents[self::LAST_IMPORT] = '19700101000000';
+        $document = json_decode(file_get_contents($filename), true);
+
+        return self::fromDocument($document);
+    }
+
+    public static function fromDocument(array $document)
+    {
+        Assertion::keyExists($document, self::WRITE);
+        Assertion::keyExists($document, self::READ);
+        if (!array_key_exists(self::LAST_IMPORT, $document)) {
+            $document[self::LAST_IMPORT] = '19700101000000';
         }
 
-        return new self($contents[self::WRITE], $contents[self::READ], $contents[self::LAST_IMPORT]);
+        return new self(
+            $document[self::WRITE],
+            $document[self::READ],
+            $document[self::LAST_IMPORT]
+        );
     }
 
     public static function fromContents(string $write, string $read, string $lastImport = '19700101000000') : IndexMetadata
@@ -74,13 +84,18 @@ final class IndexMetadata
         return $this->lastImport;
     }
 
-    public function __toString() : string
+    public function toDocument()
     {
-        return json_encode([
+        return [
             self::WRITE => $this->write,
             self::READ => $this->read,
             self::LAST_IMPORT => $this->lastImport,
-        ]);
+        ];
+    }
+
+    public function __toString() : string
+    {
+        return json_encode($this->toDocument());
     }
 
     public function toFile(string $filename) : IndexMetadata
