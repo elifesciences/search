@@ -64,6 +64,7 @@ final class Kernel implements MinimalKernel
 {
     const ROOT = __DIR__.'/../..';
     const CACHE_DIR = __DIR__.'/../../var/cache';
+    const INDEX_METADATA_KEY = 'index-metadata';
 
     public static $routes = [
         '/search' => 'indexAction',
@@ -124,7 +125,7 @@ final class Kernel implements MinimalKernel
     {
         return IndexMetadata::fromDocument(
             $this->app['keyvaluestore']->load(
-                'index-metadata',
+                self::INDEX_METADATA_KEY,
                 IndexMetadata::fromContents('elife_search', 'elife_search')->toDocument()
             )
         );
@@ -132,7 +133,10 @@ final class Kernel implements MinimalKernel
 
     public function updateIndexMetadata(IndexMetadata $updated)
     {
-        $this->app['keyvaluestore']->store('index-metadata', $updated->toDocument());
+        $this->app['keyvaluestore']->store(
+            self::INDEX_METADATA_KEY,
+            $updated->toDocument()
+        );
         // deprecated, remove when not read anymore:
         $updated->toFile('index.json');
     }
