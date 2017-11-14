@@ -179,12 +179,12 @@ final class Console
 
     public function keyvalueSetupCommand(InputInterface $input, OutputInterface $output)
     {
-        $this->app->keyValueStore()->setup();
+        $this->app->get('keyvaluestore')->setup();
     }
 
     public function keyvalueStoreCommand(InputInterface $input, OutputInterface $output)
     {
-        $this->app->keyValueStore()->store(
+        $this->app->get('keyvaluestore')->store(
             $input->getArgument('key'),
             json_decode($input->getArgument('value'), true)
         );
@@ -193,7 +193,7 @@ final class Console
     public function keyvalueLoadCommand(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(var_export(
-            $this->app->keyValueStore()->load(
+            $this->app->get('keyvaluestore')->load(
                 $input->getArgument('key')
             ),
             true

@@ -11,7 +11,7 @@ class ElasticSearchKeyValueStoreTest extends ElasticTestCase
      */
     public function stores_and_load_a_json_document()
     {
-        $store = $this->kernel->keyValueStore('test_key_value_store_index');
+        $store = $this->kernel->getApp()['keyvaluestore'];
         $store->setup();
         $store->store('my-id', $document = ['field' => 'value']);
         $this->assertEquals(

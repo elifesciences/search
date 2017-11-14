@@ -116,38 +116,22 @@ final class Kernel implements MinimalKernel
         }
         // DI.
         $this->dependencies($app);
-        // Add to class once set up.
-        $this->app = $this->applicationFlow($app);
-    }
-
-    public function keyValueStore($indexName = null)
-    {
-        return new ElasticsearchKeyValueStore(
-            new ElasticsearchClient(
-                $this->app['elastic.elasticsearch.plain'],
-                $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
-                true
-            )
-        );
+        $this->app = $app;
+        $this->applicationFlow($app);
     }
 
     public function indexMetadata() : IndexMetadata
     {
-        // FUTURE:
-        // return IndexMetadata::fromDocument($this->keyValueStore()->load('index-metadata'));
-        $filename = realpath(__DIR__.'/../../index.json');
-        if (file_exists($filename)) {
-            $metadata = IndexMetadata::fromFile($filename);
-
-            return $metadata;
-        }
+        return IndexMetadata::fromDocument(
+            $this->app['keyvaluestore']->load('index-metadata')
+        );
 
         return IndexMetadata::fromContents('elife_search', 'elife_search');
     }
 
     public function updateIndexMetadata(IndexMetadata $updated)
     {
-        $this->keyValueStore()->store('index-metadata', $updated->toDocument());
+        $this->app['keyvaluestore']->store('index-metadata', $updated->toDocument());
         // deprecated, remove when not read anymore:
         $updated->toFile('index.json');
     }
@@ -334,6 +318,16 @@ final class Kernel implements MinimalKernel
             }
 
             return $client->build();
+        };
+
+        $app['keyvaluestore'] = function (Application $app) {
+            return new ElasticsearchKeyValueStore(
+                new ElasticsearchClient(
+                    $app['elastic.elasticsearch.plain'],
+                    $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
+                    true
+                )
+            );
         };
 
         $app['elastic.client.write'] = function (Application $app) {
