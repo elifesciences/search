@@ -19,4 +19,18 @@ class ElasticSearchKeyValueStoreTest extends ElasticTestCase
             $store->load('my-id')
         );
     }
+
+    /**
+     * @test
+     */
+    public function allows_defaults_to_be_loaded()
+    {
+        $store = $this->kernel->getApp()['keyvaluestore'];
+        $store->setup();
+        $default = ['field' => 'value'];
+        $this->assertEquals(
+            $default,
+            $store->load('my-id2', $default)
+        );
+    }
 }

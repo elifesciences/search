@@ -2,6 +2,7 @@
 
 namespace eLife\Search\KeyValueStore;
 
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 
 final class ElasticsearchKeyValueStore implements KeyValueStore
@@ -49,11 +50,19 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
         );
     }
 
-    public function load(string $key) : array
+    public function load(string $key, $default = self::NO_DEFAULT) : array
     {
-        return $this->client->getPlainDocumentById(
-            self::DOCUMENT_TYPE,
-            $key
-        )['_source'];
+        try {
+            return $this->client->getPlainDocumentById(
+                self::DOCUMENT_TYPE,
+                $key
+            )['_source'];
+        } catch (Missing404Exception $e) {
+            if ($default !== self::NO_DEFAULT) {
+                return $default;
+            }
+            // TODO: more abstract exception
+            throw $e;
+        }
     }
 }
