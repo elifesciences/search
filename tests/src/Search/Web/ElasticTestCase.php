@@ -324,10 +324,10 @@ abstract class ElasticTestCase extends WebTestCase
 
     public function createConfiguration()
     {
-        if ($environment = getenv('ENVIRONMENT_NAME')) {
+        if (file_exists($configFile = __DIR__.'/../../../../config/config.php')) {
+            $config = include __DIR__.'/../../../../config/config.php';
+        } elseif ($environment = getenv('ENVIRONMENT_NAME')) {
             $config = include __DIR__."/../../../../config/{$environment}.php";
-        } elseif (file_exists(__DIR__.'/../../../../config/local.php')) {
-            $config = include __DIR__.'/../../../../config/local.php';
         } else {
             throw new RuntimeException('No ENVIRONMENT_NAME is specified and no config/local.php has been provided to use a local enviroment');
         }
