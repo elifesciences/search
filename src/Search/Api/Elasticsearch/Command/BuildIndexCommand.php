@@ -60,33 +60,22 @@ class BuildIndexCommand extends Command
         ];
 
         $delete = null;
-        $create = null;
 
-        // Try removing old one.
-        if ($toDelete && $this->client->indexExists()) {
-            try {
+        try {
+            if ($toDelete && $this->client->indexExists()) {
                 $this->client->deleteIndex();
-            } catch (Throwable $e) {
-                $this->logger->error("Cannot delete ElasticSearch index {$this->client->index()}", ['exception' => $e]);
+                $this->logger->info("Removed previous index {$this->client->index()}");
             }
-            $this->logger->info("Removed previous index $this->client->index()}");
-        }
 
-        if (!$this->client->indexExists()) {
-            // Try adding new one!
-            try {
-                $create = $this->client->createIndex($index = null, $config);
-            } catch (Throwable $e) {
-                $this->logger->error(
-                    "Cannot create ElasticSearch index {$this->client->index()}",
-                    ['exception' => $e]
-                );
-                // Re throw.
-                throw $e;
+            if (!$this->client->indexExists()) {
+                $this->client->createIndex($index = null, $config);
+                $this->logger->info("Created new empty index {$this->client->index()}");
+            } else {
+                $this->logger->error("Index {$this->client->index()} already exists, skipping creation.");
             }
-            $this->logger->info("Created new empty index {$this->client->index()}");
-        } else {
-            $this->logger->error("Index {$this->client->index()} already exists, skipping creation.");
+        } catch (Throwable $e) {
+            $this->logger->error("Cannot (re)create ElasticSearch index {$this->client->index()}", ['exception' => $e]);
+            throw $e;
         }
     }
 }
