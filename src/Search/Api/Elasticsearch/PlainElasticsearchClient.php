@@ -4,16 +4,9 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
 use eLife\Search\Api\Query\QueryResponse;
-use eLife\Search\Api\Response\SearchResult;
 use Throwable;
 
-/**
- * TODO: this class is overloaded between the
- * - mapped: converting responses into objects
- * - plain: just return the parsed response body
- * configurations. Split into two.
- */
-class ElasticsearchClient
+class PlainElasticsearchClient
 {
     private $libraryClient;
 

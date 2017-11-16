@@ -3,7 +3,7 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\BlogArticle;
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use Mockery;
 use Mockery\Mock;
@@ -29,7 +29,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->elastic = Mockery::mock(ElasticsearchClient::class);
+        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
 
         $logger = new ExceptionNullLogger();
         $this->validator = $this->getValidator();

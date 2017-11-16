@@ -3,7 +3,7 @@
 namespace eLife\Search\KeyValueStore;
 
 use Elasticsearch\Common\Exceptions\Missing404Exception;
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 
 final class ElasticsearchKeyValueStore implements KeyValueStore
 {
@@ -11,7 +11,7 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
     const INDEX_NAME = 'key_value_store'; // analogue to elife_search
     const DOCUMENT_TYPE = 'json-object'; // analogue to podcast-episode
 
-    public function __construct(ElasticsearchClient $client)
+    public function __construct(PlainElasticsearchClient $client)
     {
         $this->client = $client;
     }

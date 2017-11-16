@@ -3,7 +3,7 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\LabsPost;
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\LabsPostWorkflow;
 use Mockery;
 use PHPUnit_Framework_TestCase;
@@ -28,7 +28,7 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->elastic = Mockery::mock(ElasticsearchClient::class);
+        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
         $logger = new ExceptionNullLogger();
         $this->validator = $this->getValidator();
         $this->workflow = new LabsPostWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);

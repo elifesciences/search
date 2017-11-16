@@ -2,7 +2,7 @@
 
 namespace tests\eLife\Search\Web;
 
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Console;
 use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
@@ -20,7 +20,7 @@ abstract class ElasticTestCase extends WebTestCase
     protected $console;
     /** @var Kernel */
     protected $kernel;
-    /** @var ElasticsearchClient */
+    /** @var MappedElasticsearchClient */
     protected $client;
     /** @var Client */
     protected $api;
@@ -382,7 +382,7 @@ abstract class ElasticTestCase extends WebTestCase
      * This client can actually be used for writes during tests.
      * 'read' means the modifications will be immediately visible to the API during reads, rather than being performed on a separate, offline index.
      */
-    private function getElasticSearchClient(callable $fn = null) : ElasticsearchClient
+    private function getElasticSearchClient(callable $fn = null) : MappedElasticsearchClient
     {
         return $fn ? $fn($this->kernel->get('elastic.client.read')) : $this->kernel->get('elastic.client.read');
     }

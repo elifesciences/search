@@ -11,7 +11,7 @@ class ElasticQueryExecutor implements QueryExecutor
     private $client;
     private $query;
 
-    public function __construct(ElasticsearchClient $client, QueryBuilder $query = null)
+    public function __construct(MappedElasticsearchClient $client, QueryBuilder $query = null)
     {
         $this->client = $client;
         $this->query = $query;

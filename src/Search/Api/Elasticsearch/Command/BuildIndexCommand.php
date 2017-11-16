@@ -2,7 +2,7 @@
 
 namespace eLife\Search\Api\Elasticsearch\Command;
 
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -17,7 +17,7 @@ class BuildIndexCommand extends Command
     private $client;
     private $logger;
 
-    public function __construct(ElasticsearchClient $client, LoggerInterface $logger)
+    public function __construct(PlainElasticsearchClient $client, LoggerInterface $logger)
     {
         $this->client = $client;
         $this->logger = $logger;
