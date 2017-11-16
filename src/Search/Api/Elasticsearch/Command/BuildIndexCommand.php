@@ -68,10 +68,10 @@ class BuildIndexCommand extends Command
             try {
                 $delete = $this->client->deleteIndex();
             } catch (Throwable $e) {
-                $this->logger->error('Cannot delete ElasticSearch index', ['exception' => $e]);
+                $this->logger->error("Cannot delete ElasticSearch index {$this->client->index()}", ['exception' => $e]);
             }
-            if ($delete['payload'] instanceof SuccessResponse) {
-                $this->logger->info('Removed previous index');
+            if ($delete['acknowledged'] instanceof SuccessResponse) {
+                $this->logger->info("Removed previous index $this->client->index()}");
             }
         }
 
@@ -80,18 +80,20 @@ class BuildIndexCommand extends Command
             try {
                 $create = $this->client->customIndex($config);
             } catch (Throwable $e) {
-                $this->logger->error('Cannot create ElasticSearch index', ['exception' => $e->getMessage()]);
+                $this->logger->error(
+                    "Cannot create ElasticSearch index {$this->client->index()}",
+                    ['exception' => $e]
+                );
                 // Re throw.
                 throw $e;
             }
-            if ($create['payload'] instanceof SuccessResponse) {
-                $this->logger->info('Created new index <comment>[Don\'t forget to re-index!]</comment>');
-            }
-            if (isset($create['error'])) {
-                $this->logger->error('Index '.$create['error']['reason'].' skipping creation.');
+            if ($create['acknowledged']) {
+                $this->logger->info("Created new empty index {$this->client->index()}");
+            } else {
+                $this->logger->error('Index {$this->client->index()}:'.$create['error']['reason'].' skipping creation.');
             }
         } else {
-            $this->logger->error('Index already exists, skipping creation.');
+            $this->logger->error("Index {$this->client->index()} already exists, skipping creation.");
         }
     }
 }

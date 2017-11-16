@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "96484fd5a6f20784c3815fec9dfa8e20",
+    "content-hash": "31a13e21f5283cbd814fa29e96004b75",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -721,12 +721,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "b0a13f8eef83fe761771b3ce186bf5a8127a9a66"
+                "reference": "5750a149fabf6487a53f09b1137afa97653edc9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/b0a13f8eef83fe761771b3ce186bf5a8127a9a66",
-                "reference": "b0a13f8eef83fe761771b3ce186bf5a8127a9a66",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/5750a149fabf6487a53f09b1137afa97653edc9e",
+                "reference": "5750a149fabf6487a53f09b1137afa97653edc9e",
                 "shasum": ""
             },
             "require": {
@@ -761,7 +761,56 @@
                 "MIT"
             ],
             "description": "eLife Sciences Bus SDK",
-            "time": "2017-11-07T11:05:45+00:00"
+            "time": "2017-11-13T09:52:12+00:00"
+        },
+        {
+            "name": "elife/content-negotiator",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elifesciences/content-negotiator-php.git",
+                "reference": "82099671a3b7a716d01e36a0ff05e8317c9a3ced"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/elifesciences/content-negotiator-php/zipball/82099671a3b7a716d01e36a0ff05e8317c9a3ced",
+                "reference": "82099671a3b7a716d01e36a0ff05e8317c9a3ced",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0",
+                "symfony/http-foundation": "^2.7 || ^3.0",
+                "symfony/http-kernel": "^2.7 || ^3.0",
+                "willdurand/negotiation": "^2.0.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7.7 || ^6.0",
+                "pimple/pimple": "^3.0",
+                "silex/silex": "^2.0",
+                "symfony/browser-kit": "^2.7 || ^3.0",
+                "symfony/css-selector": "^2.7 || ^3.0",
+                "symfony/debug": "^2.8 || ^3.0"
+            },
+            "suggest": {
+                "silex/silex": "^2.0, to use ContentNegotiationProvider"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "eLife\\ContentNegotiator\\": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "eLife Sciences content negotiator",
+            "time": "2017-11-14T07:45:05+00:00"
         },
         {
             "name": "elife/logging-sdk",
@@ -3104,6 +3153,58 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2017-03-07T16:47:02+00:00"
+        },
+        {
+            "name": "willdurand/negotiation",
+            "version": "v2.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/willdurand/Negotiation.git",
+                "reference": "03436ededa67c6e83b9b12defac15384cb399dc9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/willdurand/Negotiation/zipball/03436ededa67c6e83b9b12defac15384cb399dc9",
+                "reference": "03436ededa67c6e83b9b12defac15384cb399dc9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Negotiation\\": "src/Negotiation"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "William Durand",
+                    "email": "will+git@drnd.me"
+                }
+            ],
+            "description": "Content Negotiation tools for PHP provided as a standalone library.",
+            "homepage": "http://williamdurand.fr/Negotiation/",
+            "keywords": [
+                "accept",
+                "content",
+                "format",
+                "header",
+                "negotiation"
+            ],
+            "time": "2017-05-14T17:21:12+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",
