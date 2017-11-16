@@ -477,7 +477,14 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.build_index'] = function (Application $app) {
-            return new BuildIndexCommand($app['elastic.client.read'], $app['logger']);
+            return new BuildIndexCommand(
+                new ElasticsearchClient(
+                    $app['elastic.elasticsearch.plain'],
+                    $this->indexMetadata()->write(),
+                    true
+                ),
+                $app['logger']
+            );
         };
     }
 
@@ -510,6 +517,7 @@ final class Kernel implements MinimalKernel
     public function handleException(Throwable $e) : Response
     {
         $this->app['logger']->error('Failed to serve response', ['exception' => $e]);
+
         return new JsonResponse([
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString(),

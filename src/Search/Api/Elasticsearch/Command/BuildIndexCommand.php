@@ -70,7 +70,7 @@ class BuildIndexCommand extends Command
             } catch (Throwable $e) {
                 $this->logger->error("Cannot delete ElasticSearch index {$this->client->index()}", ['exception' => $e]);
             }
-            if ($delete['payload'] instanceof SuccessResponse) {
+            if ($delete['acknowledged'] instanceof SuccessResponse) {
                 $this->logger->info("Removed previous index $this->client->index()}");
             }
         }
@@ -87,10 +87,9 @@ class BuildIndexCommand extends Command
                 // Re throw.
                 throw $e;
             }
-            if ($create['payload'] instanceof SuccessResponse) {
+            if ($create['acknowledged']) {
                 $this->logger->info("Created new empty index {$this->client->index()}");
-            }
-            if (isset($create['error'])) {
+            } else {
                 $this->logger->error('Index {$this->client->index()}:'.$create['error']['reason'].' skipping creation.');
             }
         } else {
