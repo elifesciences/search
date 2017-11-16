@@ -493,10 +493,7 @@ final class Kernel implements MinimalKernel
         if ($app['config']['ttl'] > 0) {
             $app->after([$this, 'cache'], 3);
         }
-        // Error handling.
-        if (!$app['config']['debug']) {
-            $app->error([$this, 'handleException']);
-        }
+        $app->error([$this, 'handleException']);
 
         // Return
         return $app;
