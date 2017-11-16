@@ -405,7 +405,7 @@ abstract class ElasticTestCase extends WebTestCase
         if ($lines[0] === 'No alive nodes found in your cluster') {
             $this->fail('Elasticsearch may not be installed, skipping');
         }
-        $this->assertStringStartsWith('Created new index', $lines[0], 'Failed to run test during set up');
+        $this->assertStringStartsWith('Created new empty index', $lines[0], 'Failed to run test during set up');
     }
 
     public function tearDown()

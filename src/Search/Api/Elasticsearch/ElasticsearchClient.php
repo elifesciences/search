@@ -23,6 +23,11 @@ class ElasticsearchClient
         $this->index = $indexName;
     }
 
+    public function index() : string
+    {
+        return $this->index;
+    }
+
     public function deleteIndexByName(string $index)
     {
         $params = [
