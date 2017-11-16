@@ -64,6 +64,7 @@ final class Kernel implements MinimalKernel
 {
     const ROOT = __DIR__.'/../..';
     const CACHE_DIR = __DIR__.'/../../var/cache';
+    const INDEX_METADATA_KEY = 'index-metadata';
 
     public static $routes = [
         '/search' => 'indexAction',
@@ -84,7 +85,6 @@ final class Kernel implements MinimalKernel
             'api_requests_batch' => 10,
             'ttl' => 300,
             'elastic_servers' => ['http://localhost:9200'],
-            'elastic_index' => $this->indexMetadata()->read(),
             'elastic_logging' => false,
             'elastic_force_sync' => false,
             'file_logs_path' => self::ROOT.'/var/logs',
@@ -117,38 +117,26 @@ final class Kernel implements MinimalKernel
         }
         // DI.
         $this->dependencies($app);
-        // Add to class once set up.
-        $this->app = $this->applicationFlow($app);
-    }
-
-    public function keyValueStore($indexName = null)
-    {
-        return new ElasticsearchKeyValueStore(
-            new ElasticsearchClient(
-                $this->app['elastic.elasticsearch.plain'],
-                $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
-                true
-            )
-        );
+        $this->app = $app;
+        $this->applicationFlow($app);
     }
 
     public function indexMetadata() : IndexMetadata
     {
-        // FUTURE:
-        // return IndexMetadata::fromDocument($this->keyValueStore()->load('index-metadata'));
-        $filename = realpath(__DIR__.'/../../index.json');
-        if (file_exists($filename)) {
-            $metadata = IndexMetadata::fromFile($filename);
-
-            return $metadata;
-        }
-
-        return IndexMetadata::fromContents('elife_search', 'elife_search');
+        return IndexMetadata::fromDocument(
+            $this->app['keyvaluestore']->load(
+                self::INDEX_METADATA_KEY,
+                IndexMetadata::fromContents('elife_search', 'elife_search')->toDocument()
+            )
+        );
     }
 
     public function updateIndexMetadata(IndexMetadata $updated)
     {
-        $this->keyValueStore()->store('index-metadata', $updated->toDocument());
+        $this->app['keyvaluestore']->store(
+            self::INDEX_METADATA_KEY,
+            $updated->toDocument()
+        );
         // deprecated, remove when not read anymore:
         $updated->toFile('index.json');
     }
@@ -293,7 +281,15 @@ final class Kernel implements MinimalKernel
         };
 
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['logger'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['config']['elastic_index']);
+            return new SearchController(
+                $app['serializer'],
+                $app['logger'],
+                $app['serializer.context'],
+                $app['elastic.executor'],
+                $app['cache'],
+                $app['config']['api_url'],
+                $this->indexMetadata()->read()
+            );
         };
 
         //#####################################################
@@ -329,12 +325,13 @@ final class Kernel implements MinimalKernel
             return $client->build();
         };
 
-        // TODO: deprecate and remove
-        $app['elastic.client'] = function (Application $app) {
-            return new ElasticsearchClient(
-                $app['elastic.elasticsearch'],
-                $app['config']['elastic_index'],
-                $app['config']['elastic_force_sync']
+        $app['keyvaluestore'] = function (Application $app) {
+            return new ElasticsearchKeyValueStore(
+                new ElasticsearchClient(
+                    $app['elastic.elasticsearch.plain'],
+                    $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
+                    true
+                )
             );
         };
 
@@ -482,7 +479,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.build_index'] = function (Application $app) {
-            return new BuildIndexCommand($app['elastic.client'], $app['logger']);
+            return new BuildIndexCommand($app['elastic.client.read'], $app['logger']);
         };
     }
 

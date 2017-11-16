@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 . bin/ci-process-bootstrap
 
 ./bin/console queue:clean --env="$environment"
@@ -6,9 +7,9 @@
 sleep 5
 
 index_name=elife_search_$(date +%Y%m%d%H%M%S)
-./bin/console search:setup --index="$index_name" --delete
+./bin/console search:setup --index="$index_name" --delete --env="$environment"
 
-./bin/console index:switch:write "$index_name"
+./bin/console index:switch:write "$index_name" --env="$environment"
 . bin/ci-start-processes
 
 echo "Starting reindexing"
@@ -16,5 +17,5 @@ echo "Starting reindexing"
 echo "Finished launching reindexing"
 
 . bin/ci-wait-steady-state
-./bin/console index:switch:read "$index_name"
+./bin/console index:switch:read "$index_name" --env="$environment"
 . bin/ci-expected-results

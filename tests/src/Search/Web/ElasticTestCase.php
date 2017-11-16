@@ -4,6 +4,7 @@ namespace tests\eLife\Search\Web;
 
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Console;
+use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
 use Psr\Log\NullLogger;
 use Silex\WebTestCase;
@@ -331,8 +332,6 @@ abstract class ElasticTestCase extends WebTestCase
             throw new RuntimeException('No ENVIRONMENT_NAME is specified and no config/local.php has been provided to use a local enviroment');
         }
 
-        $config['elastic_index'] = 'elife_test';
-
         return $this->modifyConfiguration($config);
     }
 
@@ -379,14 +378,24 @@ abstract class ElasticTestCase extends WebTestCase
         return $this->kernel->getApp();
     }
 
-    public function getElasticSearchClient(callable $fn = null) : ElasticsearchClient
+    /**
+     * This client can actually be used for writes during tests.
+     * 'read' means the modifications will be immediately visible to the API during reads, rather than being performed on a separate, offline index.
+     */
+    private function getElasticSearchClient(callable $fn = null) : ElasticsearchClient
     {
-        return $fn ? $fn($this->kernel->get('elastic.client')) : $this->kernel->get('elastic.client');
+        return $fn ? $fn($this->kernel->get('elastic.client.read')) : $this->kernel->get('elastic.client.read');
     }
 
     public function setUp()
     {
         parent::setUp();
+        $this->kernel = new Kernel($this->createConfiguration());
+        $this->kernel->updateIndexMetadata(IndexMetadata::fromContents(
+            'elife_test',
+            'elife_test'
+        ));
+
         $this->client = $this->getElasticSearchClient();
         $this->client->deleteIndex();
         $lines = $this->runCommand('search:setup');
