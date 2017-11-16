@@ -3,7 +3,6 @@
 namespace eLife\Search\Api\Elasticsearch\Command;
 
 use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -66,7 +65,7 @@ class BuildIndexCommand extends Command
         // Try removing old one.
         if ($toDelete && $this->client->indexExists()) {
             try {
-                $delete = $this->client->deleteIndex();
+                $this->client->deleteIndex();
             } catch (Throwable $e) {
                 $this->logger->error("Cannot delete ElasticSearch index {$this->client->index()}", ['exception' => $e]);
             }

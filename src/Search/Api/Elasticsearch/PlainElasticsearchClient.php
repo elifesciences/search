@@ -25,17 +25,6 @@ class PlainElasticsearchClient
         return $this->index;
     }
 
-    // plain
-    public function deleteIndexByName(string $index)
-    {
-        $params = [
-            'index' => $index,
-            'client' => ['ignore' => [400, 404]],
-        ];
-
-        return $this->libraryClient->indices()->delete($params);
-    }
-
     // plain, if used
     public function createIndex(string $indexName = null, $additionalParams = [])
     {
@@ -52,12 +41,16 @@ class PlainElasticsearchClient
         ]);
     }
 
-    // plain
     public function deleteIndex(string $indexName = null)
     {
         $indexName = $indexName ?? $this->index;
 
-        return $this->deleteIndexByName($indexName);
+        $params = [
+            'index' => $indexName,
+            'client' => ['ignore' => [400, 404]],
+        ];
+
+        $this->libraryClient->indices()->delete($params);
     }
 
     // plain

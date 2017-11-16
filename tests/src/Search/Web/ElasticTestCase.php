@@ -395,7 +395,7 @@ abstract class ElasticTestCase extends WebTestCase
         );
         $this->mappedClient = $this->kernel->get('elastic.client.read');
 
-        $this->plainClient->deleteIndexByName('elife_test');
+        $this->plainClient->deleteIndex('elife_test');
         $lines = $this->runCommand('search:setup');
         if (!$lines) {
             $this->fail('Could not run search:setup, try running it manually');
@@ -408,7 +408,7 @@ abstract class ElasticTestCase extends WebTestCase
 
     public function tearDown()
     {
-        $this->plainClient->deleteIndexByName('elife_test');
+        $this->plainClient->deleteIndex('elife_test');
         parent::tearDown();
     }
 
