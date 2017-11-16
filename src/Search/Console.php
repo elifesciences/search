@@ -81,7 +81,7 @@ final class Console
             'description' => 'The name of the index we are reading from in the API',
         ],
         'index:delete' => [
-            'description' => 'Delete an index using its name',
+            'description' => 'Delete an index, explicitly using its name',
             'args' => [
                 [
                     'name' => 'index_name',
@@ -118,7 +118,7 @@ final class Console
             throw new LogicException('This method should not be called outside of development');
         }
         /* @var SqsClient $queue */
-        $sqs = $this->app->get('aws.sqs');
+        $sqs = $this->kernel->get('aws.sqs');
 
         $sqs->createQueue([
             'Region' => $this->config['aws']['region'],
@@ -156,13 +156,13 @@ final class Console
 
     public function queueCleanCommand(InputInterface $input, OutputInterface $output)
     {
-        $queue = $this->app->get('aws.queue');
+        $queue = $this->kernel->get('aws.queue');
         $queue->clean();
     }
 
     public function queueCountCommand(InputInterface $input, OutputInterface $output)
     {
-        $queue = $this->app->get('aws.queue');
+        $queue = $this->kernel->get('aws.queue');
         $output->writeln($queue->count());
     }
 
@@ -171,7 +171,7 @@ final class Console
         // Create queue item.
         $item = new InternalSqsMessage($type, $id);
         /** @var $queue WatchableQueue */
-        $queue = $this->app->get('aws.queue');
+        $queue = $this->kernel->get('aws.queue');
         // Queue item.
         $queue->enqueue($item);
         $this->logger->info('Item added successfully.');
@@ -179,12 +179,12 @@ final class Console
 
     public function keyvalueSetupCommand(InputInterface $input, OutputInterface $output)
     {
-        $this->app->keyValueStore()->setup();
+        $this->kernel->get('keyvaluestore')->setup();
     }
 
     public function keyvalueStoreCommand(InputInterface $input, OutputInterface $output)
     {
-        $this->app->keyValueStore()->store(
+        $this->kernel->get('keyvaluestore')->store(
             $input->getArgument('key'),
             json_decode($input->getArgument('value'), true)
         );
@@ -193,7 +193,7 @@ final class Console
     public function keyvalueLoadCommand(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(var_export(
-            $this->app->keyValueStore()->load(
+            $this->kernel->get('keyvaluestore')->load(
                 $input->getArgument('key')
             ),
             true
@@ -203,52 +203,52 @@ final class Console
     public function indexSwitchWriteCommand(InputInterface $input, OutputInterface $output)
     {
         $indexName = $input->getArgument('index_name');
-        $metadata = $this->app->indexMetadata();
+        $metadata = $this->kernel->indexMetadata();
         $this->logger->info("Switching index writes from {$metadata->write()} to $indexName");
-        $this->app->updateIndexMetadata($metadata->switchWrite($indexName));
+        $this->kernel->updateIndexMetadata($metadata->switchWrite($indexName));
     }
 
     public function indexSwitchReadCommand(InputInterface $input, OutputInterface $output)
     {
         $indexName = $input->getArgument('index_name');
-        $metadata = $this->app->indexMetadata();
+        $metadata = $this->kernel->indexMetadata();
         $this->logger->info("Switching index reads from {$metadata->read()} to $indexName");
-        $this->app->updateIndexMetadata($metadata->switchRead($indexName));
+        $this->kernel->updateIndexMetadata($metadata->switchRead($indexName));
     }
 
     public function indexLastImportGetCommand(InputInterface $input, OutputInterface $output)
     {
-        $metadata = $this->app->indexMetadata();
+        $metadata = $this->kernel->indexMetadata();
         $output->writeln($metadata->lastImport());
     }
 
     public function indexLastImportUpdateCommand(InputInterface $input, OutputInterface $output)
     {
         $newLastImport = $input->getArgument('date');
-        $metadata = $this->app->indexMetadata();
-        $this->app->updateIndexMetadata($metadata->updateLastImport($newLastImport));
+        $metadata = $this->kernel->indexMetadata();
+        $this->kernel->updateIndexMetadata($metadata->updateLastImport($newLastImport));
     }
 
     public function indexReadCommand(InputInterface $input, OutputInterface $output)
     {
-        $metadata = $this->app->indexMetadata();
+        $metadata = $this->kernel->indexMetadata();
         $output->writeln($metadata->read());
     }
 
     public function indexDeleteCommand(InputInterface $input, OutputInterface $output)
     {
-        $client = $this->app->get('elastic.client');
+        $client = $this->kernel->get('elastic.client.read');
         $indexName = $input->getArgument('index_name');
         $this->logger->info("Deleting index {$indexName}");
         $client->deleteIndex($indexName);
     }
 
-    public function __construct(Application $console, Kernel $app)
+    public function __construct(Application $console, Kernel $kernel)
     {
         $this->console = $console;
-        $this->config = $app->get('config');
-        $this->logger = $app->get('logger');
-        $this->app = $app;
+        $this->kernel = $kernel;
+        $this->config = $this->kernel->get('config');
+        $this->logger = $this->kernel->get('logger');
         $this->root = __DIR__.'/../..';
 
         if (!defined('GEARMAN_INSTALLED')) {
@@ -258,16 +258,16 @@ final class Console
         // Some annotations
         Register::registerLoader();
 
-        $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'The Environment name.', 'dev'));
+        $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_OPTIONAL, 'The Environment name. Deprecated and not used', 'dev'));
 
         // Add commands from the DI container. (for more complex commands.)
         if (GEARMAN_INSTALLED) {
             try {
                 $this->console->addCommands([
-                    $app->get('console.gearman.worker'),
-                    $app->get('console.gearman.client'),
-                    $app->get('console.gearman.queue'),
-                    $app->get('console.build_index'),
+                    $this->kernel->get('console.gearman.worker'),
+                    $this->kernel->get('console.gearman.client'),
+                    $this->kernel->get('console.gearman.queue'),
+                    $this->kernel->get('console.build_index'),
                 ]);
             } catch (SqsException $e) {
                 $this->logger->debug('Cannot connect to SQS so some commands are not available', ['exception' => $e]);

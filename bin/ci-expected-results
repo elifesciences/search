@@ -1,6 +1,10 @@
 # final verification
 # we start from an empty index
 total=$(curl -v localhost/search | jq ".total")
+if [ ! "$total" ]; then
+    total=-1
+fi
+
 echo "Total results in the index: $total"
 expected_results_api_dummy=32
 if [ ! "$total" -eq "$expected_results_api_dummy" ]; then
