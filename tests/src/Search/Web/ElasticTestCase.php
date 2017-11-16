@@ -3,6 +3,8 @@
 namespace tests\eLife\Search\Web;
 
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
+use eLife\Search\KeyValueStore\ElasticSearchKeyValueStore;
 use eLife\Search\Console;
 use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
@@ -312,7 +314,7 @@ abstract class ElasticTestCase extends WebTestCase
     public function addDocumentToElasticSearch($doc)
     {
         $obj = is_string($doc) ? json_decode($doc, true) : $doc;
-        $this->client->indexJsonDocument($obj['type'], $obj['id'], is_string($doc) ? $doc : json_encode($doc), true);
+        $this->mappedClient->indexJsonDocument($obj['type'], $obj['id'], is_string($doc) ? $doc : json_encode($doc), true);
     }
 
     public function addDocumentsToElasticSearch(array $docs)
@@ -378,15 +380,6 @@ abstract class ElasticTestCase extends WebTestCase
         return $this->kernel->getApp();
     }
 
-    /**
-     * This client can actually be used for writes during tests.
-     * 'read' means the modifications will be immediately visible to the API during reads, rather than being performed on a separate, offline index.
-     */
-    private function getElasticSearchClient(callable $fn = null) : MappedElasticsearchClient
-    {
-        return $fn ? $fn($this->kernel->get('elastic.client.read')) : $this->kernel->get('elastic.client.read');
-    }
-
     public function setUp()
     {
         parent::setUp();
@@ -396,8 +389,14 @@ abstract class ElasticTestCase extends WebTestCase
             'elife_test'
         ));
 
-        $this->client = $this->getElasticSearchClient();
-        $this->client->deleteIndex();
+        $this->plainClient = new PlainElasticsearchClient(
+            $this->kernel->get('elastic.elasticsearch.plain'),
+            $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
+            true
+        );
+        $this->mappedClient = $this->kernel->get('elastic.client.read');
+
+        $this->plainClient->deleteIndexByName('elife_test');
         $lines = $this->runCommand('search:setup');
         if (!$lines) {
             $this->fail('Could not run search:setup, try running it manually');
@@ -410,7 +409,7 @@ abstract class ElasticTestCase extends WebTestCase
 
     public function tearDown()
     {
-        $this->client->deleteIndex();
+        $this->plainClient->deleteIndexByName('elife_test');
         parent::tearDown();
     }
 

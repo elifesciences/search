@@ -4,7 +4,6 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
 use eLife\Search\Api\Query\QueryResponse;
-use Throwable;
 
 class MappedElasticsearchClient
 {
@@ -27,67 +26,6 @@ class MappedElasticsearchClient
         return $this->index;
     }
 
-    // plain
-    public function deleteIndexByName(string $index)
-    {
-        $params = [
-            'index' => $index,
-            'client' => ['ignore' => [400, 404]],
-        ];
-
-        return $this->libraryClient->indices()->delete($params);
-    }
-
-    // plain, if used
-    public function createIndex(string $indexName = null, $additionalParams = [])
-    {
-        $params = array_merge(
-            [
-                'index' => $indexName ?? $this->index,
-            ],
-            $additionalParams
-        );
-
-        return $this->libraryClient->indices()->create($params);
-    }
-
-    // plain
-    public function deleteIndex(string $indexName = null)
-    {
-        $indexName = $indexName ?? $this->index;
-
-        return $this->deleteIndexByName($indexName);
-    }
-
-    // plain
-    public function indexExists(string $indexName = null)
-    {
-        try {
-            // TODO: avoid using exceptions to check
-            $this->libraryClient->indices()->getSettings([
-                'index' => $indexName ?? $this->index,
-            ]);
-
-            return true;
-        } catch (Throwable $e) {
-            return false;
-        }
-    }
-
-    // plain
-    public function customIndex($params)
-    {
-        $params['index'] = $this->index;
-
-        $result = $this->libraryClient->indices()->create($params);
-        $this->libraryClient->cluster()->health([
-            'wait_for_status' => 'yellow', // 'green' would require replication
-        ]);
-
-        return $result;
-    }
-
-    // mapped
     public function indexJsonDocument($type, $id, $body, $flush = false, string $index = null)
     {
         $index = $index ?? $this->index;
@@ -135,18 +73,6 @@ class MappedElasticsearchClient
         ];
 
         return $this->libraryClient->get($params)['payload'] ?? null;
-    }
-
-    // plain
-    public function getPlainDocumentById($type, $id, $index = null)
-    {
-        $params = [
-            'index' => $index ?? $this->index,
-            'type' => $type,
-            'id' => $id,
-        ];
-
-        return $this->libraryClient->get($params);
     }
 
     // all?

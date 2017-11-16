@@ -3,7 +3,6 @@
 namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
-use eLife\Search\Api\Query\QueryResponse;
 use Throwable;
 
 class PlainElasticsearchClient
@@ -87,7 +86,6 @@ class PlainElasticsearchClient
         return $result;
     }
 
-    // mapped
     public function indexJsonDocument($type, $id, $body, $flush = false, string $index = null)
     {
         $index = $index ?? $this->index;
@@ -104,37 +102,6 @@ class PlainElasticsearchClient
         }
 
         return $con;
-    }
-
-    // mapped, if used
-    public function deleteDocument($type, $id)
-    {
-        $params = [
-            'index' => $this->index,
-            'type' => $type,
-            'id' => $id,
-            'client' => ['ignore' => [400, 404]],
-        ];
-
-        return $this->libraryClient->delete($params)['payload'] ?? null;
-    }
-
-    // mapped
-    public function searchDocuments($query) : QueryResponse
-    {
-        return $this->libraryClient->search($query)['payload'] ?? null;
-    }
-
-    // mapped
-    public function getDocumentById($type, $id, $index = null)
-    {
-        $params = [
-            'index' => $index ?? $this->index,
-            'type' => $type,
-            'id' => $id,
-        ];
-
-        return $this->libraryClient->get($params)['payload'] ?? null;
     }
 
     // plain
