@@ -113,12 +113,6 @@ class ElasticsearchClient
         return $con;
     }
 
-    // mapped
-    public function indexDocument($type, $id, SearchResult $body)
-    {
-        return $this->indexJsonDocument($type, $id, $body);
-    }
-
     // mapped, if used
     public function deleteDocument($type, $id)
     {
@@ -170,22 +164,5 @@ class ElasticsearchClient
         ];
 
         return $this->libraryClient->count($params);
-    }
-
-    // what?
-    public function moveIndex(string $source, string $destination)
-    {
-        $params = [
-            'body' => [
-                'source' => [
-                    'index' => $source,
-                ],
-                'dest' => [
-                    'index' => $destination,
-                ],
-            ],
-        ];
-
-        return $this->libraryClient->reindex($params);
     }
 }
