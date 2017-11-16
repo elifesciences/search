@@ -8,15 +8,20 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
+// workaround: due to the lack of env variables in Upstart,
+// long-running processes have to be passed --env for now
+require_once __DIR__.'/../vendor/autoload.php';
+$input = new ArgvInput();
+$env = $input->getParameterOption(['--env', '-e']);
+putenv("ENVIRONMENT_NAME={$env}");
+// end of workaround
+
 require_once __DIR__.'/../src/bootstrap.php';
 set_time_limit(0);
 
-$input = new ArgvInput();
 if (!defined('GEARMAN_INSTALLED')) {
     define('GEARMAN_INSTALLED', class_exists('GearmanClient'));
 }
-$env = $input->getParameterOption(['--env', '-e']);
-putenv("ENVIRONMENT_NAME={$env}");
 $app = new Kernel($config);
 $output = new ConsoleOutput();
 $app->get('logger')->pushHandler(new ConsoleHandler($output));
