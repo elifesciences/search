@@ -25,6 +25,7 @@ use eLife\Bus\Queue\Mock\QueueItemTransformerMock;
 use eLife\Bus\Queue\Mock\WatchableQueueMock;
 use eLife\Bus\Queue\SqsMessageTransformer;
 use eLife\Bus\Queue\SqsWatchableQueue;
+use eLife\ContentNegotiator\Silex\ContentNegotiationProvider;
 use eLife\Logging\LoggingFactory;
 use eLife\Logging\Monitoring;
 use eLife\Ping\Silex\PingControllerProvider;
@@ -40,6 +41,7 @@ use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Gearman\Command\ImportCommand;
 use eLife\Search\Gearman\Command\QueueWatchCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
+use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
 use GearmanClient;
 use GearmanWorker;
 use GuzzleHttp\Client;
@@ -51,7 +53,6 @@ use JMS\Serializer\SerializerBuilder;
 use JsonSchema\Validator;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
-use RuntimeException;
 use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
@@ -65,10 +66,7 @@ final class Kernel implements MinimalKernel
 {
     const ROOT = __DIR__.'/../..';
     const CACHE_DIR = __DIR__.'/../../var/cache';
-
-    public static $routes = [
-        '/search' => 'indexAction',
-    ];
+    const INDEX_METADATA_KEY = 'index-metadata';
 
     private $app;
 
@@ -85,9 +83,6 @@ final class Kernel implements MinimalKernel
             'api_requests_batch' => 10,
             'ttl' => 300,
             'elastic_servers' => ['http://localhost:9200'],
-            // TODO: after backward compatibility with index.txt is not necessary,
-            // transition to indexMetadata()
-            'elastic_index' => $this->indexName(),
             'elastic_logging' => false,
             'elastic_force_sync' => false,
             'file_logs_path' => self::ROOT.'/var/logs',
@@ -104,6 +99,7 @@ final class Kernel implements MinimalKernel
             ], $config['aws'] ?? []),
         ], $config);
         $app->register(new ApiProblemProvider());
+        $app->register(new ContentNegotiationProvider());
         $app->register(new PingControllerProvider());
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
@@ -121,48 +117,28 @@ final class Kernel implements MinimalKernel
         }
         // DI.
         $this->dependencies($app);
-        // Add to class once set up.
-        $this->app = $this->applicationFlow($app);
-    }
-
-    /**
-     * @param string $operation IndexMetadata::READ or IndexMetadata::WRITE
-     *
-     * @return string
-     *                TODO: remove duplication with indexMetadata() once stable
-     */
-    private function indexName($operation = IndexMetadata::READ)
-    {
-        $filename = realpath(__DIR__.'/../../index.json');
-        if (file_exists($filename)) {
-            $indexMetadata = IndexMetadata::fromFile($filename);
-
-            return $indexMetadata->operation($operation);
-        }
-
-        // deprecated
-        $filename = realpath(__DIR__.'/../../index.txt');
-        if (file_exists($filename)) {
-            $lines = file($filename, FILE_IGNORE_NEW_LINES);
-            if (count($lines) > 1) {
-                throw new RuntimeException('Invalid index name: '.var_export($lines, true));
-            }
-
-            return $lines[0];
-        }
-
-        // default
-        return 'elife_search';
+        $this->app = $app;
+        $this->applicationFlow($app);
     }
 
     public function indexMetadata() : IndexMetadata
     {
-        $filename = realpath(__DIR__.'/../../index.json');
-        if (file_exists($filename)) {
-            return IndexMetadata::fromFile($filename);
-        }
+        return IndexMetadata::fromDocument(
+            $this->app['keyvaluestore']->load(
+                self::INDEX_METADATA_KEY,
+                IndexMetadata::fromContents('elife_search', 'elife_search')->toDocument()
+            )
+        );
+    }
 
-        return IndexMetadata::fromContents('elife_search', 'elife_search');
+    public function updateIndexMetadata(IndexMetadata $updated)
+    {
+        $this->app['keyvaluestore']->store(
+            self::INDEX_METADATA_KEY,
+            $updated->toDocument()
+        );
+        // deprecated, remove when not read anymore:
+        $updated->toFile('index.json');
     }
 
     public function dependencies(Application $app)
@@ -305,7 +281,15 @@ final class Kernel implements MinimalKernel
         };
 
         $app['default_controller'] = function (Application $app) {
-            return new SearchController($app['serializer'], $app['logger'], $app['serializer.context'], $app['elastic.executor'], $app['cache'], $app['config']['api_url'], $app['config']['elastic_index']);
+            return new SearchController(
+                $app['serializer'],
+                $app['logger'],
+                $app['serializer.context'],
+                $app['elastic.executor'],
+                $app['cache'],
+                $app['config']['api_url'],
+                $this->indexMetadata()->read()
+            );
         };
 
         //#####################################################
@@ -329,12 +313,25 @@ final class Kernel implements MinimalKernel
             return $client->build();
         };
 
-        // TODO: deprecate and remove
-        $app['elastic.client'] = function (Application $app) {
-            return new ElasticsearchClient(
-                $app['elastic.elasticsearch'],
-                $app['config']['elastic_index'],
-                $app['config']['elastic_force_sync']
+        $app['elastic.elasticsearch.plain'] = function (Application $app) {
+            $client = ClientBuilder::create();
+            // Set hosts.
+            $client->setHosts($app['config']['elastic_servers']);
+            // Logging for ElasticSearch.
+            if ($app['config']['elastic_logging']) {
+                $client->setLogger($app['logger']);
+            }
+
+            return $client->build();
+        };
+
+        $app['keyvaluestore'] = function (Application $app) {
+            return new ElasticsearchKeyValueStore(
+                new ElasticsearchClient(
+                    $app['elastic.elasticsearch.plain'],
+                    $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
+                    true
+                )
             );
         };
 
@@ -482,7 +479,14 @@ final class Kernel implements MinimalKernel
         };
 
         $app['console.build_index'] = function (Application $app) {
-            return new BuildIndexCommand($app['elastic.client'], $app['logger']);
+            return new BuildIndexCommand(
+                new ElasticsearchClient(
+                    $app['elastic.elasticsearch.plain'],
+                    $this->indexMetadata()->write(),
+                    true
+                ),
+                $app['logger']
+            );
         };
     }
 
@@ -505,9 +509,10 @@ final class Kernel implements MinimalKernel
 
     public function routes(Application $app)
     {
-        foreach (self::$routes as $route => $action) {
-            $app->get($route, [$app['default_controller'], $action]);
-        }
+        $app->get('/search', [$app['default_controller'], 'indexAction'])
+            ->before($app['negotiate.accept'](
+                'application/vnd.elife.search+json; version=1'
+            ));
     }
 
     public function withApp(callable $fn, $scope = null) : Kernel

@@ -4,6 +4,7 @@ namespace tests\eLife\Search\Web;
 
 use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Console;
+use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
 use Psr\Log\NullLogger;
 use Silex\WebTestCase;
@@ -323,15 +324,13 @@ abstract class ElasticTestCase extends WebTestCase
 
     public function createConfiguration()
     {
-        if ($environment = getenv('ENVIRONMENT_NAME')) {
+        if (file_exists($configFile = __DIR__.'/../../../../config/config.php')) {
+            $config = include __DIR__.'/../../../../config/config.php';
+        } elseif ($environment = getenv('ENVIRONMENT_NAME')) {
             $config = include __DIR__."/../../../../config/{$environment}.php";
-        } elseif (file_exists(__DIR__.'/../../../../config/local.php')) {
-            $config = include __DIR__.'/../../../../config/local.php';
         } else {
             throw new RuntimeException('No ENVIRONMENT_NAME is specified and no config/local.php has been provided to use a local enviroment');
         }
-
-        $config['elastic_index'] = 'elife_test';
 
         return $this->modifyConfiguration($config);
     }
@@ -354,8 +353,8 @@ abstract class ElasticTestCase extends WebTestCase
     protected function jsonRequest(string $verb, string $endpoint, array $params = [], array $headers = [])
     {
         $server = array_merge([
-            'HTTP_ACCEPT' => 'application/json',
-            'CONTENT_TYPE' => 'application/json',
+            'HTTP_ACCEPT' => 'application/vnd.elife.search+json; version=1',
+            'CONTENT_TYPE' => 'application/vnd.elife.search+json; version=1',
         ], $this->mapHeaders($headers));
 
         return $this->api->request(
@@ -379,14 +378,24 @@ abstract class ElasticTestCase extends WebTestCase
         return $this->kernel->getApp();
     }
 
-    public function getElasticSearchClient(callable $fn = null) : ElasticsearchClient
+    /**
+     * This client can actually be used for writes during tests.
+     * 'read' means the modifications will be immediately visible to the API during reads, rather than being performed on a separate, offline index.
+     */
+    private function getElasticSearchClient(callable $fn = null) : ElasticsearchClient
     {
-        return $fn ? $fn($this->kernel->get('elastic.client')) : $this->kernel->get('elastic.client');
+        return $fn ? $fn($this->kernel->get('elastic.client.read')) : $this->kernel->get('elastic.client.read');
     }
 
     public function setUp()
     {
         parent::setUp();
+        $this->kernel = new Kernel($this->createConfiguration());
+        $this->kernel->updateIndexMetadata(IndexMetadata::fromContents(
+            'elife_test',
+            'elife_test'
+        ));
+
         $this->client = $this->getElasticSearchClient();
         $this->client->deleteIndex();
         $lines = $this->runCommand('search:setup');
@@ -396,7 +405,7 @@ abstract class ElasticTestCase extends WebTestCase
         if ($lines[0] === 'No alive nodes found in your cluster') {
             $this->fail('Elasticsearch may not be installed, skipping');
         }
-        $this->assertStringStartsWith('Created new index', $lines[0], 'Failed to run test during set up');
+        $this->assertStringStartsWith('Created new empty index', $lines[0], 'Failed to run test during set up');
     }
 
     public function tearDown()

@@ -14,6 +14,7 @@ use eLife\Search\Api\Response\SearchResponse;
 use eLife\Search\Api\Response\TypesResponse;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use Negotiation\Accept;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,7 +77,7 @@ final class SearchController
         return $dateTime;
     }
 
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, Accept $type)
     {
         $for = $request->query->get('for', '');
         $order = $request->query->get('order', 'desc');
@@ -151,7 +152,7 @@ final class SearchController
                 TypesResponse::fromArray($data->getTypeTotals())
             );
 
-            return $this->serialize($result);
+            return $this->serialize($result, $type->getParameter('version'));
         }
         if ($data instanceof ErrorResponse) {
             $this->logger->error('Error from elastic search during request', [

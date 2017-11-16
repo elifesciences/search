@@ -7,13 +7,19 @@ use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResult;
 use Throwable;
 
+/**
+ * TODO: this class is overloaded between the
+ * - mapped: converting responses into objects
+ * - plain: just return the parsed response body
+ * configurations. Split into two.
+ */
 class ElasticsearchClient
 {
-    private $connection;
+    private $libraryClient;
 
-    public function __construct(Client $connection, string $index, bool $forceSync = false)
+    public function __construct(Client $libraryClient, string $index, bool $forceSync = false)
     {
-        $this->connection = $connection;
+        $this->libraryClient = $libraryClient;
         $this->index = $index;
         $this->forceSync = $forceSync;
     }
@@ -23,6 +29,12 @@ class ElasticsearchClient
         $this->index = $indexName;
     }
 
+    public function index() : string
+    {
+        return $this->index;
+    }
+
+    // plain
     public function deleteIndexByName(string $index)
     {
         $params = [
@@ -30,19 +42,23 @@ class ElasticsearchClient
             'client' => ['ignore' => [400, 404]],
         ];
 
-        return $this->connection->indices()->delete($params);
+        return $this->libraryClient->indices()->delete($params);
     }
 
-    public function createIndex(string $indexName)
+    // plain, if used
+    public function createIndex(string $indexName = null, $additionalParams = [])
     {
-        $params = [
-            'index' => $indexName,
+        $params = array_merge(
+            [
+                'index' => $indexName ?? $this->index,
+            ],
+            $additionalParams
+        );
 
-        ];
-
-        return $this->connection->indices()->create($params);
+        return $this->libraryClient->indices()->create($params);
     }
 
+    // plain
     public function deleteIndex(string $indexName = null)
     {
         $indexName = $indexName ?? $this->index;
@@ -50,11 +66,13 @@ class ElasticsearchClient
         return $this->deleteIndexByName($indexName);
     }
 
-    public function indexExists()
+    // plain
+    public function indexExists(string $indexName = null)
     {
         try {
-            $this->connection->indices()->getSettings([
-                'index' => $this->index,
+            // TODO: avoid using exceptions to check
+            $this->libraryClient->indices()->getSettings([
+                'index' => $indexName ?? $this->index,
             ]);
 
             return true;
@@ -63,13 +81,20 @@ class ElasticsearchClient
         }
     }
 
+    // plain
     public function customIndex($params)
     {
         $params['index'] = $this->index;
 
-        return $this->connection->indices()->create($params);
+        $result = $this->libraryClient->indices()->create($params);
+        $this->libraryClient->cluster()->health([
+            'wait_for_status' => 'yellow', // 'green' would require replication
+        ]);
+
+        return $result;
     }
 
+    // mapped
     public function indexJsonDocument($type, $id, $body, $flush = false, string $index = null)
     {
         $index = $index ?? $this->index;
@@ -80,19 +105,21 @@ class ElasticsearchClient
             'body' => $body,
         ];
 
-        $con = $this->connection->index($params)['payload'] ?? null;
+        $con = $this->libraryClient->index($params)['payload'] ?? null;
         if ($flush || $this->forceSync) {
-            $this->connection->indices()->refresh(['index' => $this->index]);
+            $this->libraryClient->indices()->refresh(['index' => $this->index]);
         }
 
         return $con;
     }
 
+    // mapped
     public function indexDocument($type, $id, SearchResult $body)
     {
         return $this->indexJsonDocument($type, $id, $body);
     }
 
+    // mapped, if used
     public function deleteDocument($type, $id)
     {
         $params = [
@@ -102,34 +129,50 @@ class ElasticsearchClient
             'client' => ['ignore' => [400, 404]],
         ];
 
-        return $this->connection->delete($params)['payload'] ?? null;
+        return $this->libraryClient->delete($params)['payload'] ?? null;
     }
 
+    // mapped
     public function searchDocuments($query) : QueryResponse
     {
-        return $this->connection->search($query)['payload'] ?? null;
+        return $this->libraryClient->search($query)['payload'] ?? null;
     }
 
-    public function getDocumentById($type, $id)
+    // mapped
+    public function getDocumentById($type, $id, $index = null)
     {
         $params = [
-            'index' => $this->index,
+            'index' => $index ?? $this->index,
             'type' => $type,
             'id' => $id,
         ];
 
-        return $this->connection->get($params)['payload'] ?? null;
+        return $this->libraryClient->get($params)['payload'] ?? null;
     }
 
+    // plain
+    public function getPlainDocumentById($type, $id, $index = null)
+    {
+        $params = [
+            'index' => $index ?? $this->index,
+            'type' => $type,
+            'id' => $id,
+        ];
+
+        return $this->libraryClient->get($params);
+    }
+
+    // all?
     public function count($index)
     {
         $params = [
             'index' => $index,
         ];
 
-        return $this->connection->count($params);
+        return $this->libraryClient->count($params);
     }
 
+    // what?
     public function moveIndex(string $source, string $destination)
     {
         $params = [
@@ -143,6 +186,6 @@ class ElasticsearchClient
             ],
         ];
 
-        return $this->connection->reindex($params);
+        return $this->libraryClient->reindex($params);
     }
 }

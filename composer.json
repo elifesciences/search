@@ -24,6 +24,7 @@
         "elife/api-sdk": "dev-master",
         "elife/api-validator": "dev-master",
         "elife/bus-sdk": "dev-master",
+        "elife/content-negotiator": "^1.0",
         "elife/logging-sdk": "dev-master",
         "elife/ping": "^1.0",
         "guzzlehttp/guzzle": "^6.2",
@@ -36,6 +37,7 @@
         "symfony/event-dispatcher": "dev-master",
         "symfony/monolog-bridge": "^3.2",
         "symfony/psr-http-message-bridge": "^0.2.0",
+        "willdurand/negotiation": "^2.3",
         "zendframework/zend-diactoros": "^1.3"
     },
     "require-dev": {
