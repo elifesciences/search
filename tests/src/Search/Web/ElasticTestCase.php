@@ -4,10 +4,10 @@ namespace tests\eLife\Search\Web;
 
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
-use eLife\Search\KeyValueStore\ElasticSearchKeyValueStore;
 use eLife\Search\Console;
 use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
+use eLife\Search\KeyValueStore\ElasticSearchKeyValueStore;
 use Psr\Log\NullLogger;
 use Silex\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
@@ -403,7 +403,7 @@ abstract class ElasticTestCase extends WebTestCase
         if ($lines[0] === 'No alive nodes found in your cluster') {
             $this->fail('Elasticsearch may not be installed, skipping');
         }
-        $this->assertStringStartsWith('Created new empty index', $lines[0], 'Failed to run test during set up');
+        $this->assertStringStartsWith('Created new empty index', $lines[0], 'Failed to run set up of the test (index creation)');
     }
 
     public function tearDown()

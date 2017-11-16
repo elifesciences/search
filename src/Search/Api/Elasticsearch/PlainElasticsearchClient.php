@@ -46,7 +46,10 @@ class PlainElasticsearchClient
             $additionalParams
         );
 
-        return $this->libraryClient->indices()->create($params);
+        $this->libraryClient->indices()->create($params);
+        $this->libraryClient->cluster()->health([
+            'wait_for_status' => 'yellow', // 'green' would require replication
+        ]);
     }
 
     // plain
@@ -70,19 +73,6 @@ class PlainElasticsearchClient
         } catch (Throwable $e) {
             return false;
         }
-    }
-
-    // plain
-    public function customIndex($params)
-    {
-        $params['index'] = $this->index;
-
-        $result = $this->libraryClient->indices()->create($params);
-        $this->libraryClient->cluster()->health([
-            'wait_for_status' => 'yellow', // 'green' would require replication
-        ]);
-
-        return $result;
     }
 
     public function indexJsonDocument($type, $id, $body)

@@ -70,15 +70,13 @@ class BuildIndexCommand extends Command
             } catch (Throwable $e) {
                 $this->logger->error("Cannot delete ElasticSearch index {$this->client->index()}", ['exception' => $e]);
             }
-            if ($delete['acknowledged'] instanceof SuccessResponse) {
-                $this->logger->info("Removed previous index $this->client->index()}");
-            }
+            $this->logger->info("Removed previous index $this->client->index()}");
         }
 
         if (!$this->client->indexExists()) {
             // Try adding new one!
             try {
-                $create = $this->client->customIndex($config);
+                $create = $this->client->createIndex($index = null, $config);
             } catch (Throwable $e) {
                 $this->logger->error(
                     "Cannot create ElasticSearch index {$this->client->index()}",
@@ -87,11 +85,7 @@ class BuildIndexCommand extends Command
                 // Re throw.
                 throw $e;
             }
-            if ($create['acknowledged']) {
-                $this->logger->info("Created new empty index {$this->client->index()}");
-            } else {
-                $this->logger->error('Index {$this->client->index()}:'.$create['error']['reason'].' skipping creation.');
-            }
+            $this->logger->info("Created new empty index {$this->client->index()}");
         } else {
             $this->logger->error("Index {$this->client->index()} already exists, skipping creation.");
         }
