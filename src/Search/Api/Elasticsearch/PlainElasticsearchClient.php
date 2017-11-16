@@ -115,14 +115,4 @@ class PlainElasticsearchClient
 
         return $this->libraryClient->get($params);
     }
-
-    // all?
-    public function count($index)
-    {
-        $params = [
-            'index' => $index,
-        ];
-
-        return $this->libraryClient->count($params);
-    }
 }

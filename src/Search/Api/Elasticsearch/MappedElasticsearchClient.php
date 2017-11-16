@@ -74,14 +74,4 @@ class MappedElasticsearchClient
 
         return $this->libraryClient->get($params)['payload'] ?? null;
     }
-
-    // all?
-    public function count($index)
-    {
-        $params = [
-            'index' => $index,
-        ];
-
-        return $this->libraryClient->count($params);
-    }
 }
