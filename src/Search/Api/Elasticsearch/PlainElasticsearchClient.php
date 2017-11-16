@@ -3,7 +3,6 @@
 namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
-use Throwable;
 
 class PlainElasticsearchClient
 {
@@ -25,7 +24,6 @@ class PlainElasticsearchClient
         return $this->index;
     }
 
-    // plain, if used
     public function createIndex(string $indexName = null, $additionalParams = [])
     {
         $params = array_merge(
@@ -76,8 +74,7 @@ class PlainElasticsearchClient
         return $con;
     }
 
-    // plain
-    public function getPlainDocumentById($type, $id, $index = null)
+    public function getDocumentById($type, $id, $index = null)
     {
         $params = [
             'index' => $index ?? $this->index,

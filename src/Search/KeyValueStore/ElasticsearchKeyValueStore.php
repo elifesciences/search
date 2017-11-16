@@ -52,7 +52,7 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
     public function load(string $key, $default = self::NO_DEFAULT) : array
     {
         try {
-            return $this->client->getPlainDocumentById(
+            return $this->client->getDocumentById(
                 self::DOCUMENT_TYPE,
                 $key
             )['_source'];
