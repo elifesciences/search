@@ -45,8 +45,7 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
         $this->client->indexJsonDocument(
             self::DOCUMENT_TYPE,
             $key,
-            json_encode($value),
-            $flush = true
+            json_encode($value)
         );
     }
 

@@ -328,8 +328,7 @@ final class Kernel implements MinimalKernel
             return new ElasticsearchKeyValueStore(
                 new PlainElasticsearchClient(
                     $app['elastic.elasticsearch.plain'],
-                    $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
-                    true
+                    $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME
                 )
             );
         };
@@ -481,8 +480,7 @@ final class Kernel implements MinimalKernel
             return new BuildIndexCommand(
                 new PlainElasticsearchClient(
                     $app['elastic.elasticsearch.plain'],
-                    $this->indexMetadata()->write(),
-                    true
+                    $this->indexMetadata()->write()
                 ),
                 $app['logger']
             );

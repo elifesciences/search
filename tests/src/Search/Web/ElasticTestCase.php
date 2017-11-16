@@ -391,8 +391,7 @@ abstract class ElasticTestCase extends WebTestCase
 
         $this->plainClient = new PlainElasticsearchClient(
             $this->kernel->get('elastic.elasticsearch.plain'),
-            $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
-            true
+            $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME
         );
         $this->mappedClient = $this->kernel->get('elastic.client.read');
 

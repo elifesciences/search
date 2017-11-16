@@ -9,11 +9,10 @@ class PlainElasticsearchClient
 {
     private $libraryClient;
 
-    public function __construct(Client $libraryClient, string $index, bool $forceSync = false)
+    public function __construct(Client $libraryClient, string $index)
     {
         $this->libraryClient = $libraryClient;
         $this->index = $index;
-        $this->forceSync = $forceSync;
     }
 
     public function defaultIndex(string $indexName)
@@ -86,9 +85,9 @@ class PlainElasticsearchClient
         return $result;
     }
 
-    public function indexJsonDocument($type, $id, $body, $flush = false, string $index = null)
+    public function indexJsonDocument($type, $id, $body)
     {
-        $index = $index ?? $this->index;
+        $index = $this->index;
         $params = [
             'index' => $index,
             'type' => $type,
@@ -97,9 +96,7 @@ class PlainElasticsearchClient
         ];
 
         $con = $this->libraryClient->index($params)['payload'] ?? null;
-        if ($flush || $this->forceSync) {
-            $this->libraryClient->indices()->refresh(['index' => $this->index]);
-        }
+        $this->libraryClient->indices()->refresh(['index' => $this->index]);
 
         return $con;
     }
