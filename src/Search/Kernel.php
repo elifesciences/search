@@ -509,6 +509,7 @@ final class Kernel implements MinimalKernel
 
     public function handleException(Throwable $e) : Response
     {
+        $this->app['logger']->error('Failed to serve response', ['exception' => $e]);
         return new JsonResponse([
             'error' => $e->getMessage(),
             'trace' => $e->getTraceAsString(),
