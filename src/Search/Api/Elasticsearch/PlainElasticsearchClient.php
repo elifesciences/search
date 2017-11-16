@@ -53,19 +53,11 @@ class PlainElasticsearchClient
         $this->libraryClient->indices()->delete($params);
     }
 
-    // plain
     public function indexExists(string $indexName = null)
     {
-        try {
-            // TODO: avoid using exceptions to check
-            $this->libraryClient->indices()->getSettings([
-                'index' => $indexName ?? $this->index,
-            ]);
-
-            return true;
-        } catch (Throwable $e) {
-            return false;
-        }
+        return $this->libraryClient->indices()->exists([
+            'index' => $indexName ?? $this->index,
+        ]);
     }
 
     public function indexJsonDocument($type, $id, $body)
