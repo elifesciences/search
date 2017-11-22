@@ -22,7 +22,7 @@ elifePipeline {
                     preliminaryStep: {
                         builderDeployRevision 'search--end2end', commit
                         builderSmokeTests 'search--end2end', '/srv/search'
-                        builderCmd 'search--end2end', "cd /srv/search; ./bin/reindex end2end elife_search_${env.BUILD_NUMBER}"
+                        builderCmdNode 'search--end2end', 1, "cd /srv/search; ./bin/reindex end2end elife_search_${env.BUILD_NUMBER}"
                     }
                 ],
                 marker: 'search'
