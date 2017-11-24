@@ -5,8 +5,7 @@ while true;
 do
     nodes=$(curl localhost:9200/_nodes/_local | jq ".nodes | length")
     if [ "$nodes" -eq 1 ]; then
-        echo "ElasticSearch is ready, seeing 1 node through _nodes API"
-        exit 0
+        echo "ElasticSearch is ready, seeing $nodes node through _nodes API"
     else
         echo "ElasticSearch API not responding yet"
         sleep 1
@@ -16,10 +15,11 @@ do
     color=$(curl localhost:9200/_cluster/health | jq -r ".status")
     if [ "$color" == "yellow" ]; then
         echo "ElasticSearch is ready, seeing color $color"
-        exit 0
     else
         echo "ElasticSearch is not ready yet, seeing color $color"
         sleep 1
         continue
     fi
+
+    exit 0
 done
