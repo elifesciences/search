@@ -88,16 +88,16 @@
         },
         {
             "name": "beberlei/assert",
-            "version": "v2.7.8",
+            "version": "v2.7.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/assert.git",
-                "reference": "be6aa40e3f2d2f0766f159409ab9a80c8db6ca23"
+                "reference": "53991547d6f0b8c81354fb2d098dcb71e81678cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/assert/zipball/be6aa40e3f2d2f0766f159409ab9a80c8db6ca23",
-                "reference": "be6aa40e3f2d2f0766f159409ab9a80c8db6ca23",
+                "url": "https://api.github.com/repos/beberlei/assert/zipball/53991547d6f0b8c81354fb2d098dcb71e81678cb",
+                "reference": "53991547d6f0b8c81354fb2d098dcb71e81678cb",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^2.1.1",
-                "phpunit/phpunit": "^4|^5"
+                "phpunit/phpunit": "^4.8.35|^5.7"
             },
             "type": "library",
             "autoload": {
@@ -139,7 +139,7 @@
                 "assertion",
                 "validation"
             ],
-            "time": "2017-10-20T15:59:40+00:00"
+            "time": "2017-11-13T18:35:09+00:00"
         },
         {
             "name": "clue/block-react",
@@ -548,12 +548,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "9eb7202be465f38b315a9c10bbbd622254f0ef57"
+                "reference": "aa436da03486837a743b40fda3f40554b4f50b0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/9eb7202be465f38b315a9c10bbbd622254f0ef57",
-                "reference": "9eb7202be465f38b315a9c10bbbd622254f0ef57",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/aa436da03486837a743b40fda3f40554b4f50b0c",
+                "reference": "aa436da03486837a743b40fda3f40554b4f50b0c",
                 "shasum": ""
             },
             "conflict": {
@@ -565,7 +565,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2017-11-01T15:02:19+00:00"
+            "time": "2017-11-16T14:12:15+00:00"
         },
         {
             "name": "elife/api-client",
@@ -676,12 +676,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "6acc47a8f5ba6ad4ae0d91e839754e087dfd9ad4"
+                "reference": "690fd900374e2e5955216aaf81026c64d9f96032"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/6acc47a8f5ba6ad4ae0d91e839754e087dfd9ad4",
-                "reference": "6acc47a8f5ba6ad4ae0d91e839754e087dfd9ad4",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/690fd900374e2e5955216aaf81026c64d9f96032",
+                "reference": "690fd900374e2e5955216aaf81026c64d9f96032",
                 "shasum": ""
             },
             "require": {
@@ -716,7 +716,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2017-10-23T09:09:19+00:00"
+            "time": "2017-11-27T09:58:57+00:00"
         },
         {
             "name": "elife/api-validator",
@@ -2932,7 +2932,7 @@
         },
         {
             "name": "symfony/serializer",
-            "version": "v3.2.13",
+            "version": "v3.2.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/serializer.git",
