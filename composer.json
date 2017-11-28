@@ -20,6 +20,7 @@
         "elasticsearch/elasticsearch": "~2.0",
         "elife/api": "dev-master",
         "elife/api-client": "dev-master",
+        "elife/api-problem": "^1.0",
         "elife/api-sdk": "dev-master",
         "elife/api-validator": "dev-master",
         "elife/bus-sdk": "dev-master",

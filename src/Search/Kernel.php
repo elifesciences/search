@@ -13,6 +13,7 @@ use Elasticsearch\ClientBuilder;
 use eLife\ApiClient\HttpClient\BatchingHttpClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiClient\HttpClient\NotifyingHttpClient;
+use eLife\ApiProblem\Silex\ApiProblemProvider;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
@@ -98,6 +99,7 @@ final class Kernel implements MinimalKernel
                 'region' => '---------',
             ], $config['aws'] ?? []),
         ], $config);
+        $app->register(new ApiProblemProvider());
         $app->register(new ContentNegotiationProvider());
         $app->register(new PingControllerProvider());
         // Annotations.
@@ -499,7 +501,6 @@ final class Kernel implements MinimalKernel
         if ($app['config']['ttl'] > 0) {
             $app->after([$this, 'cache'], 3);
         }
-        $app->error([$this, 'handleException']);
 
         // Return
         return $app;
@@ -511,16 +512,6 @@ final class Kernel implements MinimalKernel
             ->before($app['negotiate.accept'](
                 'application/vnd.elife.search+json; version=1'
             ));
-    }
-
-    public function handleException(Throwable $e) : Response
-    {
-        $this->app['logger']->error('Failed to serve response', ['exception' => $e]);
-
-        return new JsonResponse([
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-        ]);
     }
 
     public function withApp(callable $fn, $scope = null) : Kernel
