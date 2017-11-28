@@ -6,7 +6,7 @@ use Assert\Assertion;
 use eLife\ApiSdk\Model\Collection;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Api\Response\CollectionResponse;
 use eLife\Search\Gearman\InvalidWorkflow;
@@ -30,7 +30,7 @@ final class CollectionWorkflow implements Workflow
     private $client;
     private $validator;
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger, ElasticsearchClient $client, ApiValidator $validator)
+    public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
     {
         $this->serializer = $serializer;
         $this->logger = $logger;

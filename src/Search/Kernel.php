@@ -32,8 +32,9 @@ use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
 use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
+use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\SearchResponseSerializer;
 use eLife\Search\Api\SearchController;
 use eLife\Search\Api\SearchResultDiscriminator;
@@ -325,16 +326,15 @@ final class Kernel implements MinimalKernel
 
         $app['keyvaluestore'] = function (Application $app) {
             return new ElasticsearchKeyValueStore(
-                new ElasticsearchClient(
+                new PlainElasticsearchClient(
                     $app['elastic.elasticsearch.plain'],
-                    $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME,
-                    true
+                    $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME
                 )
             );
         };
 
         $app['elastic.client.write'] = function (Application $app) {
-            return new ElasticsearchClient(
+            return new MappedElasticsearchClient(
                 $app['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::WRITE),
                 $app['config']['elastic_force_sync']
@@ -342,7 +342,7 @@ final class Kernel implements MinimalKernel
         };
 
         $app['elastic.client.read'] = function (Application $app) {
-            return new ElasticsearchClient(
+            return new MappedElasticsearchClient(
                 $app['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::READ),
                 $app['config']['elastic_force_sync']
@@ -478,10 +478,9 @@ final class Kernel implements MinimalKernel
 
         $app['console.build_index'] = function (Application $app) {
             return new BuildIndexCommand(
-                new ElasticsearchClient(
+                new PlainElasticsearchClient(
                     $app['elastic.elasticsearch.plain'],
-                    $this->indexMetadata()->write(),
-                    true
+                    $this->indexMetadata()->write()
                 ),
                 $app['logger']
             );

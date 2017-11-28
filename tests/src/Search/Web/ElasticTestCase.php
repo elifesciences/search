@@ -2,10 +2,12 @@
 
 namespace tests\eLife\Search\Web;
 
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 use eLife\Search\Console;
 use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
+use eLife\Search\KeyValueStore\ElasticSearchKeyValueStore;
 use Psr\Log\NullLogger;
 use Silex\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
@@ -20,7 +22,7 @@ abstract class ElasticTestCase extends WebTestCase
     protected $console;
     /** @var Kernel */
     protected $kernel;
-    /** @var ElasticsearchClient */
+    /** @var MappedElasticsearchClient */
     protected $client;
     /** @var Client */
     protected $api;
@@ -312,7 +314,7 @@ abstract class ElasticTestCase extends WebTestCase
     public function addDocumentToElasticSearch($doc)
     {
         $obj = is_string($doc) ? json_decode($doc, true) : $doc;
-        $this->client->indexJsonDocument($obj['type'], $obj['id'], is_string($doc) ? $doc : json_encode($doc), true);
+        $this->mappedClient->indexJsonDocument($obj['type'], $obj['id'], is_string($doc) ? $doc : json_encode($doc), true);
     }
 
     public function addDocumentsToElasticSearch(array $docs)
@@ -378,15 +380,6 @@ abstract class ElasticTestCase extends WebTestCase
         return $this->kernel->getApp();
     }
 
-    /**
-     * This client can actually be used for writes during tests.
-     * 'read' means the modifications will be immediately visible to the API during reads, rather than being performed on a separate, offline index.
-     */
-    private function getElasticSearchClient(callable $fn = null) : ElasticsearchClient
-    {
-        return $fn ? $fn($this->kernel->get('elastic.client.read')) : $this->kernel->get('elastic.client.read');
-    }
-
     public function setUp()
     {
         parent::setUp();
@@ -396,8 +389,13 @@ abstract class ElasticTestCase extends WebTestCase
             'elife_test'
         ));
 
-        $this->client = $this->getElasticSearchClient();
-        $this->client->deleteIndex();
+        $this->plainClient = new PlainElasticsearchClient(
+            $this->kernel->get('elastic.elasticsearch.plain'),
+            $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME
+        );
+        $this->mappedClient = $this->kernel->get('elastic.client.read');
+
+        $this->plainClient->deleteIndex('elife_test');
         $lines = $this->runCommand('search:setup');
         if (!$lines) {
             $this->fail('Could not run search:setup, try running it manually');
@@ -405,12 +403,12 @@ abstract class ElasticTestCase extends WebTestCase
         if ($lines[0] === 'No alive nodes found in your cluster') {
             $this->fail('Elasticsearch may not be installed, skipping');
         }
-        $this->assertStringStartsWith('Created new empty index', $lines[0], 'Failed to run test during set up');
+        $this->assertStringStartsWith('Created new empty index', $lines[0], 'Failed to run set up of the test (index creation)');
     }
 
     public function tearDown()
     {
-        $this->client->deleteIndex();
+        $this->plainClient->deleteIndex('elife_test');
         parent::tearDown();
     }
 

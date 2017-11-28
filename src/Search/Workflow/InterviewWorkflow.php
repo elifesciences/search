@@ -6,7 +6,7 @@ use Assert\Assertion;
 use eLife\ApiSdk\Model\Interview;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Api\Response\InterviewResponse;
 use eLife\Search\Gearman\InvalidWorkflow;
@@ -31,7 +31,7 @@ final class InterviewWorkflow implements Workflow
     private $client;
     private $validator;
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger, ElasticsearchClient $client, ApiValidator $validator)
+    public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
     {
         $this->serializer = $serializer;
         $this->logger = $logger;

@@ -5,7 +5,7 @@ namespace eLife\Search\Gearman\Command;
 use eLife\ApiSdk\ApiSdk;
 use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use eLife\Search\Workflow\CollectionWorkflow;
 use eLife\Search\Workflow\InterviewWorkflow;
@@ -32,7 +32,7 @@ final class WorkerCommand extends Command
         ApiSdk $sdk,
         Serializer $serializer,
         GearmanTaskDriver $gearman,
-        ElasticsearchClient $client,
+        MappedElasticsearchClient $client,
         ApiValidator $validator,
         LoggerInterface $logger
     ) {

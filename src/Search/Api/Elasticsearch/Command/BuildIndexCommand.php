@@ -2,8 +2,7 @@
 
 namespace eLife\Search\Api\Elasticsearch\Command;
 
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
+use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +16,7 @@ class BuildIndexCommand extends Command
     private $client;
     private $logger;
 
-    public function __construct(ElasticsearchClient $client, LoggerInterface $logger)
+    public function __construct(PlainElasticsearchClient $client, LoggerInterface $logger)
     {
         $this->client = $client;
         $this->logger = $logger;
@@ -61,39 +60,22 @@ class BuildIndexCommand extends Command
         ];
 
         $delete = null;
-        $create = null;
 
-        // Try removing old one.
-        if ($toDelete && $this->client->indexExists()) {
-            try {
-                $delete = $this->client->deleteIndex();
-            } catch (Throwable $e) {
-                $this->logger->error("Cannot delete ElasticSearch index {$this->client->index()}", ['exception' => $e]);
+        try {
+            if ($toDelete && $this->client->indexExists()) {
+                $this->client->deleteIndex();
+                $this->logger->info("Removed previous index {$this->client->index()}");
             }
-            if ($delete['acknowledged'] instanceof SuccessResponse) {
-                $this->logger->info("Removed previous index $this->client->index()}");
-            }
-        }
 
-        if (!$this->client->indexExists()) {
-            // Try adding new one!
-            try {
-                $create = $this->client->customIndex($config);
-            } catch (Throwable $e) {
-                $this->logger->error(
-                    "Cannot create ElasticSearch index {$this->client->index()}",
-                    ['exception' => $e]
-                );
-                // Re throw.
-                throw $e;
-            }
-            if ($create['acknowledged']) {
+            if (!$this->client->indexExists()) {
+                $this->client->createIndex($index = null, $config);
                 $this->logger->info("Created new empty index {$this->client->index()}");
             } else {
-                $this->logger->error('Index {$this->client->index()}:'.$create['error']['reason'].' skipping creation.');
+                $this->logger->error("Index {$this->client->index()} already exists, skipping creation.");
             }
-        } else {
-            $this->logger->error("Index {$this->client->index()} already exists, skipping creation.");
+        } catch (Throwable $e) {
+            $this->logger->error("Cannot (re)create ElasticSearch index {$this->client->index()}", ['exception' => $e]);
+            throw $e;
         }
     }
 }

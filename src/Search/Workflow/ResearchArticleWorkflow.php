@@ -6,7 +6,7 @@ use Assert\Assertion;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
-use eLife\Search\Api\Elasticsearch\ElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Api\Response\ArticleResponse;
 use eLife\Search\Api\Response\SearchResult;
@@ -35,7 +35,7 @@ final class ResearchArticleWorkflow implements Workflow
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
-        ElasticsearchClient $client,
+        MappedElasticsearchClient $client,
         ApiValidator $validator
     ) {
         $this->serializer = $serializer;
