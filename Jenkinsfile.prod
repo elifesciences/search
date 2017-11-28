@@ -10,6 +10,6 @@ elifePipeline {
         elifeGitMoveToBranch commit, 'master'
         builderDeployRevision 'search--prod', commit
         builderSmokeTests 'search--prod', '/srv/search'
-        builderCmd 'search--prod', "cd /srv/search; ./bin/reindex-on-demand prod elife_search_${env.BUILD_NUMBER}"
+        builderCmdNode 'search--prod', 1, "cd /srv/search; ./bin/reindex-on-demand prod elife_search_${env.BUILD_NUMBER}"
     }
 }
