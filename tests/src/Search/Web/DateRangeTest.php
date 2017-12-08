@@ -23,6 +23,11 @@ class DateRangeTest extends ElasticTestCase
         $this->jsonRequest('GET', '/search', ['start-date' => '2016-11-01']);
         $response = $this->getJsonResponse();
         $this->assertEquals($response->total, 3);
+
+        // boundary is included
+        $this->jsonRequest('GET', '/search', ['start-date' => '2016-12-19']);
+        $response = $this->getJsonResponse();
+        $this->assertEquals($response->total, 2);
     }
 
     public function test_date_range_end_only()
@@ -41,6 +46,11 @@ class DateRangeTest extends ElasticTestCase
         $this->jsonRequest('GET', '/search', ['end-date' => '2016-10-01']);
         $response = $this->getJsonResponse();
         $this->assertEquals($response->total, 0);
+
+        // boundary
+        $this->jsonRequest('GET', '/search', ['end-date' => '2016-12-05']);
+        $response = $this->getJsonResponse();
+        $this->assertEquals($response->total, 1);
     }
 
     public function test_date_range_start_and_end()
