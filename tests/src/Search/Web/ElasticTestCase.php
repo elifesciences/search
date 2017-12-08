@@ -159,7 +159,7 @@ abstract class ElasticTestCase extends WebTestCase
                     ],
                     'version' => 3,
                     'published' => '2016-11-18T00:00:00Z',
-                    'sortDate' => '2016-11-18T00:00:00Z',
+                    'sortDate' => '2016-12-05T16:36:45Z',
                     'statusDate' => '2016-12-05T16:36:45Z',
                     'pdf' => 'https://publishing-cdn.elifesciences.org/19662/elife-19662-v3.pdf',
                     'subjects' => [
