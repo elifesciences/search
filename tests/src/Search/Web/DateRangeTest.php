@@ -27,7 +27,7 @@ class DateRangeTest extends ElasticTestCase
         // boundary is included
         $this->jsonRequest('GET', '/search', ['start-date' => '2016-12-19']);
         $response = $this->getJsonResponse();
-        $this->assertEquals(2, $response->total, "The date lower boundary is being excluded");
+        $this->assertEquals(2, $response->total, 'The date lower boundary is being excluded');
     }
 
     public function test_date_range_end_only()
@@ -50,7 +50,7 @@ class DateRangeTest extends ElasticTestCase
         // boundary
         $this->jsonRequest('GET', '/search', ['end-date' => '2016-12-05']);
         $response = $this->getJsonResponse();
-        $this->assertEquals(1, $response->total, "The date upper boundary is being excluded");
+        $this->assertEquals(1, $response->total, 'The date upper boundary is being excluded');
     }
 
     public function test_date_range_start_and_end()
