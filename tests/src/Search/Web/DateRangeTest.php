@@ -2,6 +2,8 @@
 
 namespace tests\eLife\Search\Web;
 
+use stdClass;
+
 /**
  * @group web
  */
@@ -16,13 +18,18 @@ class DateRangeTest extends ElasticTestCase
         ]);
 
         $this->newClient();
-        $this->jsonRequest('GET', '/search', ['start-date' => '2016-12-01']);
+        $this->jsonRequest('GET', '/search', ['start-date' => '2016-12-13']);
         $response = $this->getJsonResponse();
-        $this->assertEquals($response->total, 2);
+        $this->assertIds(['15275', '15276'], $response);
 
         $this->jsonRequest('GET', '/search', ['start-date' => '2016-11-01']);
         $response = $this->getJsonResponse();
-        $this->assertEquals($response->total, 3);
+        $this->assertIds(['15275', '15276', '19662'], $response);
+
+        // boundary is included
+        $this->jsonRequest('GET', '/search', ['start-date' => '2016-12-19']);
+        $response = $this->getJsonResponse();
+        $this->assertIds(['15275', '15276'], $response, 'The date lower boundary is being excluded');
     }
 
     public function test_date_range_end_only()
@@ -34,13 +41,18 @@ class DateRangeTest extends ElasticTestCase
         ]);
 
         $this->newClient();
-        $this->jsonRequest('GET', '/search', ['end-date' => '2016-12-01']);
+        $this->jsonRequest('GET', '/search', ['end-date' => '2016-12-13']);
         $response = $this->getJsonResponse();
-        $this->assertEquals($response->total, 1);
+        $this->assertIds(['19662'], $response);
 
         $this->jsonRequest('GET', '/search', ['end-date' => '2016-10-01']);
         $response = $this->getJsonResponse();
-        $this->assertEquals($response->total, 0);
+        $this->assertIds([], $response);
+
+        // boundary
+        $this->jsonRequest('GET', '/search', ['end-date' => '2016-12-05']);
+        $response = $this->getJsonResponse();
+        $this->assertIds(['19662'], $response, 'The date upper boundary is being excluded');
     }
 
     public function test_date_range_start_and_end()
@@ -52,8 +64,18 @@ class DateRangeTest extends ElasticTestCase
         ]);
 
         $this->newClient();
-        $this->jsonRequest('GET', '/search', ['start-date' => '2016-11-01', 'end-date' => '2016-12-01']);
+        $this->jsonRequest('GET', '/search', ['start-date' => '2016-11-01', 'end-date' => '2016-12-13']);
         $response = $this->getJsonResponse();
-        $this->assertEquals($response->total, 1);
+        $this->assertIds(['19662'], $response);
+    }
+
+    private function assertIds(array $expected, stdClass $response, $message = null)
+    {
+        $ids = [];
+        foreach ($response->items as $item) {
+            $ids[] = $item->id;
+        }
+        sort($ids);
+        $this->assertEquals($expected, $ids, $message);
     }
 }

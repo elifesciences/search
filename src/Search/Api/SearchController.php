@@ -101,9 +101,9 @@ final class SearchController
         }
 
         if ($endDate || $startDate) {
-            $startDateTime = $endDate ? $this->createValidDateTime('Y-m-d H:i:s', $endDate.' 00:00:00') : null;
-            $endDateTime = $startDate ? $this->createValidDateTime('Y-m-d H:i:s', $startDate.' 23:59:59') : null;
-            $this->validateDateRange($endDateTime, $startDateTime);
+            $startDateTime = $startDate ? $this->createValidDateTime('Y-m-d H:i:s', $startDate.' 00:00:00') : null;
+            $endDateTime = $endDate ? $this->createValidDateTime('Y-m-d H:i:s', $endDate.' 23:59:59') : null;
+            $this->validateDateRange($startDateTime, $endDateTime);
         }
 
         /** @var ElasticQueryBuilder $query */
@@ -121,7 +121,7 @@ final class SearchController
         }
 
         if ($startDateTime || $endDateTime) {
-            $query->betweenDates($endDateTime, $startDateTime);
+            $query->betweenDates($startDateTime, $endDateTime);
         }
 
         $query = $query
