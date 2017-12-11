@@ -191,9 +191,9 @@ abstract class ElasticTestCase extends WebTestCase
                     'researchOrganisms' => [
                         'Rat',
                     ],
-                    'published' => '2016-12-19T00:00:00Z',
-                    'sortDate' => '2016-12-19T00:00:00Z',
-                    'statusDate' => '2016-12-19T00:00:00Z',
+                    'published' => '2016-12-19T12:42:00Z',
+                    'sortDate' => '2016-12-19T12:42:00Z',
+                    'statusDate' => '2016-12-19T12:42:00Z',
                     'pdf' => 'https://publishing-cdn.elifesciences.org/15276/elife-15276-v1.pdf',
                     'subjects' => [
                         [
