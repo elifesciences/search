@@ -2,6 +2,8 @@
 
 namespace tests\eLife\Search\Web;
 
+use stdClass;
+
 /**
  * @group web
  */
@@ -18,16 +20,16 @@ class DateRangeTest extends ElasticTestCase
         $this->newClient();
         $this->jsonRequest('GET', '/search', ['start-date' => '2016-12-13']);
         $response = $this->getJsonResponse();
-        $this->assertEquals(2, $response->total);
+        $this->assertIds(['15275', '15276'], $response);
 
         $this->jsonRequest('GET', '/search', ['start-date' => '2016-11-01']);
         $response = $this->getJsonResponse();
-        $this->assertEquals(3, $response->total);
+        $this->assertIds(['15275', '15276', '19662'], $response);
 
         // boundary is included
         $this->jsonRequest('GET', '/search', ['start-date' => '2016-12-19']);
         $response = $this->getJsonResponse();
-        $this->assertEquals(2, $response->total, 'The date lower boundary is being excluded');
+        $this->assertIds(['15275', '15276'], $response, 'The date lower boundary is being excluded');
     }
 
     public function test_date_range_end_only()
@@ -41,16 +43,16 @@ class DateRangeTest extends ElasticTestCase
         $this->newClient();
         $this->jsonRequest('GET', '/search', ['end-date' => '2016-12-13']);
         $response = $this->getJsonResponse();
-        $this->assertEquals(1, $response->total);
+        $this->assertIds(['19662'], $response);
 
         $this->jsonRequest('GET', '/search', ['end-date' => '2016-10-01']);
         $response = $this->getJsonResponse();
-        $this->assertEquals(0, $response->total);
+        $this->assertIds([], $response);
 
         // boundary
         $this->jsonRequest('GET', '/search', ['end-date' => '2016-12-05']);
         $response = $this->getJsonResponse();
-        $this->assertEquals(1, $response->total, 'The date upper boundary is being excluded');
+        $this->assertIds(['19662'], $response, 'The date upper boundary is being excluded');
     }
 
     public function test_date_range_start_and_end()
@@ -64,6 +66,16 @@ class DateRangeTest extends ElasticTestCase
         $this->newClient();
         $this->jsonRequest('GET', '/search', ['start-date' => '2016-11-01', 'end-date' => '2016-12-13']);
         $response = $this->getJsonResponse();
-        $this->assertEquals(1, $response->total);
+        $this->assertIds(['19662'], $response);
+    }
+
+    private function assertIds(array $expected, stdClass $response, $message = null)
+    {
+        $ids = [];
+        foreach ($response->items as $item) {
+            $ids[] = $item->id;
+        }
+        sort($ids);
+        $this->assertEquals($expected, $ids, $message);
     }
 }
