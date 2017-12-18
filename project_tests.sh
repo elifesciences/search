@@ -7,6 +7,9 @@ rm -f build/*.xml
 proofreader src/ tests/ web/
 vendor/bin/phpunit --log-junit build/phpunit.xml
 
+echo "Creating, deleting an index"
+bin/ci-lifecycle "$env"
+
 echo "Importing api-dummy"
 bin/ci-import "$env"
 
