@@ -237,7 +237,7 @@ final class Console
 
     public function indexDeleteCommand(InputInterface $input, OutputInterface $output)
     {
-        $client = $this->kernel->get('elastic.client.read');
+        $client = $this->kernel->get('elastic.client.plain');
         $indexName = $input->getArgument('index_name');
         $this->logger->info("Deleting index {$indexName}");
         $client->deleteIndex($indexName);
