@@ -4,7 +4,6 @@ namespace eLife\Search\Api;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use Doctrine\Common\Cache\Cache;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
 use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
@@ -28,7 +27,6 @@ final class SearchController
     private $apiUrl;
     private $elastic;
     private $context;
-    private $cache;
     private $elasticIndex;
     private $logger;
 
@@ -37,7 +35,6 @@ final class SearchController
         LoggerInterface $logger,
         SerializationContext $context,
         ElasticQueryExecutor $elastic,
-        Cache $cache,
         string $apiUrl,
         string $elasticIndex
     ) {
@@ -45,7 +42,6 @@ final class SearchController
         $this->logger = $logger;
         $this->context = $context;
         $this->elastic = $elastic;
-        $this->cache = $cache;
         $this->apiUrl = $apiUrl;
         $this->elasticIndex = $elasticIndex;
     }
