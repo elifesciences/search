@@ -3,14 +3,13 @@
 namespace tests\eLife\Search;
 
 use ComposerLocator;
-use Csa\Bundle\GuzzleBundle\GuzzleHttp\Middleware\MockMiddleware;
+use Csa\GuzzleHttp\Middleware\Cache\MockMiddleware;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use JsonSchema\Validator;
-use test\eLife\ApiSdk\ValidatingStorageAdapter;
 
 trait HttpClient
 {

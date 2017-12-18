@@ -2,7 +2,8 @@
 
 namespace tests\eLife\Search;
 
-use Csa\Bundle\GuzzleBundle\Cache\StorageAdapterInterface;
+use Csa\GuzzleHttp\Middleware\Cache\Adapter\StorageAdapterInterface;
+use Csa\GuzzleHttp\Middleware\Cache\CacheMiddleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -12,10 +13,10 @@ final class InMemoryStorageAdapter implements StorageAdapterInterface
     private $requestHeadersBlacklist = [
         'User-Agent',
         'Host',
-        'X-Guzzle-Cache',
+        CacheMiddleware::DEBUG_HEADER,
     ];
     private $responseHeadersBlacklist = [
-        'X-Guzzle-Cache',
+        CacheMiddleware::DEBUG_HEADER,
     ];
 
     public function __construct(array $requestHeadersBlacklist = [], array $responseHeadersBlacklist = [])
