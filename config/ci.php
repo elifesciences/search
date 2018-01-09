@@ -3,7 +3,6 @@
 require_once __DIR__.'/extra/gearman_shim.php';
 
 return [
-    'debug' => false,
     'validate' => true,
     'api_url' => 'http://localhost:8080',
     'ttl' => 0,
