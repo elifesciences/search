@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'debug' => true,
     'gearman_servers' => ['end2end--search--1.elife.internal'],
     'elastic_servers' => ['http://end2end--search--1.elife.internal:9200'],
     'api_url' => 'http://end2end--gateway.elife.internal/',
