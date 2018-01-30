@@ -74,7 +74,11 @@ final class Kernel implements MinimalKernel
 
     public function __construct($config = [])
     {
-        $app = new Application();
+        $app = new Application([
+            'logger.channel' => 'search',
+            'logger.path' => self::ROOT.'/var/logs',
+            'logger.level' => LogLevel::INFO,
+        ]);
         // Load config
         $app['config'] = array_merge([
             'cli' => false,
@@ -87,9 +91,6 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_logging' => false,
             'elastic_force_sync' => false,
-            'logger.channel' => 'search',
-            'logger.path' => self::ROOT.'/var/logs',
-            'logger.level' => LogLevel::INFO,
             'gearman_worker_timeout' => 20000,
             'process_memory_limit' => 256,
             'aws' => array_merge([
