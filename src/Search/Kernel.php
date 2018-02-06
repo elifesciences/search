@@ -86,6 +86,10 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_logging' => false,
             'elastic_force_sync' => false,
+            'elastic_search_client_options' => [
+                'timeout' => 0.9,
+                'connect_timeout' => 0.5,
+            ],
             'file_logs_path' => self::ROOT.'/var/logs',
             'logging_level' => LogLevel::INFO,
             'gearman_worker_timeout' => 20000,
@@ -288,7 +292,8 @@ final class Kernel implements MinimalKernel
                 $app['serializer.context'],
                 $app['elastic.executor'],
                 $app['config']['api_url'],
-                $this->indexMetadata()->read()
+                $this->indexMetadata()->read(),
+                $app['config']['elastic_search_client_options']
             );
         };
 
