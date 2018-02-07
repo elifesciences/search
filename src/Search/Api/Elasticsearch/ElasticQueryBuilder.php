@@ -4,7 +4,6 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use DateTimeImmutable;
 use eLife\Search\Api\Query\QueryBuilder;
-use eLife\Search\Api\Query\QueryExecutor;
 
 final class ElasticQueryBuilder implements QueryBuilder
 {
