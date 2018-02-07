@@ -22,11 +22,6 @@ class ElasticQueryExecutor implements QueryExecutor
         $this->query = $query;
     }
 
-    public function getHash() : string
-    {
-        return sha1(json_encode($this->query->getQuery()));
-    }
-
     public function execute() : QueryResponse
     {
         return $this->client->searchDocuments($this->query->getRawQuery());
