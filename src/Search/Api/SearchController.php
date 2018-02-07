@@ -6,7 +6,6 @@ use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
-use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
 use eLife\Search\Api\Query\QueryResponse;
@@ -35,7 +34,6 @@ final class SearchController
         Serializer $serializer,
         LoggerInterface $logger,
         SerializationContext $context,
-        ElasticQueryExecutor $elastic,
         MappedElasticsearchClient $client,
         string $apiUrl,
         string $elasticIndex,
@@ -44,7 +42,6 @@ final class SearchController
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->context = $context;
-        $this->elastic = $elastic;
         $this->client = $client;
         $this->apiUrl = $apiUrl;
         $this->elasticIndex = $elasticIndex;
