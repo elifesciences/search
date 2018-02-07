@@ -10,14 +10,14 @@ class MappedElasticsearchClient
     private $libraryClient;
     private $index;
     private $forceSync;
-    private $clientOptions;
+    private $readClientOptions;
 
-    public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $clientOptions = [])
+    public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $readClientOptions = [])
     {
         $this->libraryClient = $libraryClient;
         $this->index = $index;
         $this->forceSync = $forceSync;
-        $this->clientOptions = $clientOptions;
+        $this->readClientOptions = $readClientOptions;
     }
 
     public function defaultIndex(string $indexName)
@@ -62,7 +62,8 @@ class MappedElasticsearchClient
 
     public function searchDocuments(array $query) : QueryResponse
     {
-        $query['client'] = $this->clientOptions;
+        $query['client'] = $this->readClientOptions;
+
         return $this->libraryClient->search($query)['payload'] ?? null;
     }
 
@@ -73,6 +74,7 @@ class MappedElasticsearchClient
             'type' => $type,
             'id' => $id,
         ];
+        $params['client'] = $this->readClientOptions;
 
         return $this->libraryClient->get($params)['payload'] ?? null;
     }

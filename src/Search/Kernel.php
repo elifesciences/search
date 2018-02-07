@@ -85,7 +85,7 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_logging' => false,
             'elastic_force_sync' => false,
-            'elastic_search_client_options' => [
+            'elastic_read_client_options' => [
                 'timeout' => 0.9,
                 'connect_timeout' => 0.5,
             ],
@@ -342,7 +342,7 @@ final class Kernel implements MinimalKernel
                 $app['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::WRITE),
                 $app['config']['elastic_force_sync'],
-                $app['config']['elastic_search_client_options']
+                $app['config']['elastic_read_client_options']
             );
         };
 
@@ -351,7 +351,7 @@ final class Kernel implements MinimalKernel
                 $app['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::READ),
                 $app['config']['elastic_force_sync'],
-                $app['config']['elastic_search_client_options']
+                $app['config']['elastic_read_client_options']
             );
         };
 
