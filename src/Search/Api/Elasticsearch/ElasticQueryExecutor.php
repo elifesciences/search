@@ -21,9 +21,4 @@ class ElasticQueryExecutor implements QueryExecutor
     {
         $this->query = $query;
     }
-
-    public function execute() : QueryResponse
-    {
-        return $this->client->searchDocuments($this->query->getRawQuery());
-    }
 }
