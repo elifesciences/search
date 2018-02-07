@@ -9,7 +9,7 @@ class MappedElasticsearchClient
 {
     private $libraryClient;
 
-    public function __construct(Client $libraryClient, string $index, bool $forceSync = false)
+    public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $clientOptions = [])
     {
         $this->libraryClient = $libraryClient;
         $this->index = $index;
@@ -44,7 +44,6 @@ class MappedElasticsearchClient
         return $con;
     }
 
-    // mapped, if used
     public function deleteDocument($type, $id)
     {
         $params = [
@@ -57,13 +56,11 @@ class MappedElasticsearchClient
         return $this->libraryClient->delete($params)['payload'] ?? null;
     }
 
-    // mapped
-    public function searchDocuments($query) : QueryResponse
+    public function searchDocuments(array $query) : QueryResponse
     {
         return $this->libraryClient->search($query)['payload'] ?? null;
     }
 
-    // mapped
     public function getDocumentById($type, $id, $index = null)
     {
         $params = [
