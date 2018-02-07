@@ -4,7 +4,6 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use DateTimeImmutable;
 use eLife\Search\Api\Query\QueryBuilder;
-use eLife\Search\Api\Query\QueryExecutor;
 
 final class ElasticQueryBuilder implements QueryBuilder
 {
@@ -19,7 +18,7 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     private $dateType;
 
-    public function __construct(string $index, ElasticQueryExecutor $exec)
+    public function __construct(string $index)
     {
         $this->query['index'] = $index;
         $this->query['body']['aggregations']['type_agg']['terms'] = [
@@ -47,8 +46,6 @@ final class ElasticQueryBuilder implements QueryBuilder
                 ],
             ],
         ];
-
-        $this->exec = $exec;
     }
 
     private $query = [];
@@ -230,14 +227,6 @@ final class ElasticQueryBuilder implements QueryBuilder
     public function getRawQuery() : array
     {
         return $this->query;
-    }
-
-    public function getQuery() : QueryExecutor
-    {
-        $exec = clone $this->exec;
-        $exec->setQuery($this);
-
-        return $exec;
     }
 
     private function dateQuery($query)

@@ -8,12 +8,16 @@ use eLife\Search\Api\Query\QueryResponse;
 class MappedElasticsearchClient
 {
     private $libraryClient;
+    private $index;
+    private $forceSync;
+    private $readClientOptions;
 
-    public function __construct(Client $libraryClient, string $index, bool $forceSync = false)
+    public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $readClientOptions = [])
     {
         $this->libraryClient = $libraryClient;
         $this->index = $index;
         $this->forceSync = $forceSync;
+        $this->readClientOptions = $readClientOptions;
     }
 
     public function defaultIndex(string $indexName)
@@ -44,7 +48,6 @@ class MappedElasticsearchClient
         return $con;
     }
 
-    // mapped, if used
     public function deleteDocument($type, $id)
     {
         $params = [
@@ -57,13 +60,13 @@ class MappedElasticsearchClient
         return $this->libraryClient->delete($params)['payload'] ?? null;
     }
 
-    // mapped
-    public function searchDocuments($query) : QueryResponse
+    public function searchDocuments(array $query) : QueryResponse
     {
+        $query['client'] = $this->readClientOptions;
+
         return $this->libraryClient->search($query)['payload'] ?? null;
     }
 
-    // mapped
     public function getDocumentById($type, $id, $index = null)
     {
         $params = [
@@ -71,6 +74,7 @@ class MappedElasticsearchClient
             'type' => $type,
             'id' => $id,
         ];
+        $params['client'] = $this->readClientOptions;
 
         return $this->libraryClient->get($params)['payload'] ?? null;
     }
