@@ -19,7 +19,7 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     private $dateType;
 
-    public function __construct(string $index, ElasticQueryExecutor $exec)
+    public function __construct(string $index)
     {
         $this->query['index'] = $index;
         $this->query['body']['aggregations']['type_agg']['terms'] = [
@@ -47,8 +47,6 @@ final class ElasticQueryBuilder implements QueryBuilder
                 ],
             ],
         ];
-
-        $this->exec = $exec;
     }
 
     private $query = [];

@@ -108,7 +108,7 @@ final class SearchController
         }
 
         /** @var ElasticQueryBuilder $query */
-        $query = new ElasticQueryBuilder($this->elasticIndex, $this->elastic);
+        $query = new ElasticQueryBuilder($this->elasticIndex);
 
         $query = $query->searchFor($for);
 
