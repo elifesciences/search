@@ -232,14 +232,6 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this->query;
     }
 
-    public function getQuery() : QueryExecutor
-    {
-        $exec = clone $this->exec;
-        $exec->setQuery($this);
-
-        return $exec;
-    }
-
     private function dateQuery($query)
     {
         $arr = [];
