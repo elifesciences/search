@@ -291,6 +291,7 @@ final class Kernel implements MinimalKernel
                 $app['logger'],
                 $app['serializer.context'],
                 $app['elastic.executor'],
+                $app['elastic.client.read'],
                 $app['config']['api_url'],
                 $this->indexMetadata()->read(),
                 $app['config']['elastic_search_client_options']
