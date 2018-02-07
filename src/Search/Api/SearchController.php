@@ -36,8 +36,7 @@ final class SearchController
         SerializationContext $context,
         MappedElasticsearchClient $client,
         string $apiUrl,
-        string $elasticIndex,
-        array $clientOptions = []
+        string $elasticIndex
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
@@ -45,7 +44,6 @@ final class SearchController
         $this->client = $client;
         $this->apiUrl = $apiUrl;
         $this->elasticIndex = $elasticIndex;
-        $this->clientOptions = $clientOptions;
     }
 
     private function validateDateRange(DateTimeImmutable $startDateTime = null, DateTimeImmutable $endDateTime = null)
@@ -135,8 +133,6 @@ final class SearchController
                 $query = $query->sortByRelevance();
                 break;
         }
-
-        $query = $query->setClientOptions($this->clientOptions);
 
         $data = $this->client->searchDocuments($query->getRawQuery());
 

@@ -8,12 +8,16 @@ use eLife\Search\Api\Query\QueryResponse;
 class MappedElasticsearchClient
 {
     private $libraryClient;
+    private $index;
+    private $forceSync;
+    private $clientOptions;
 
     public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $clientOptions = [])
     {
         $this->libraryClient = $libraryClient;
         $this->index = $index;
         $this->forceSync = $forceSync;
+        $this->clientOptions = $clientOptions;
     }
 
     public function defaultIndex(string $indexName)
@@ -58,6 +62,7 @@ class MappedElasticsearchClient
 
     public function searchDocuments(array $query) : QueryResponse
     {
+        $query['client'] = $this->clientOptions;
         return $this->libraryClient->search($query)['payload'] ?? null;
     }
 

@@ -291,8 +291,7 @@ final class Kernel implements MinimalKernel
                 $app['serializer.context'],
                 $app['elastic.client.read'],
                 $app['config']['api_url'],
-                $this->indexMetadata()->read(),
-                $app['config']['elastic_search_client_options']
+                $this->indexMetadata()->read()
             );
         };
 
@@ -342,7 +341,8 @@ final class Kernel implements MinimalKernel
             return new MappedElasticsearchClient(
                 $app['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::WRITE),
-                $app['config']['elastic_force_sync']
+                $app['config']['elastic_force_sync'],
+                $app['config']['elastic_search_client_options']
             );
         };
 
@@ -350,7 +350,8 @@ final class Kernel implements MinimalKernel
             return new MappedElasticsearchClient(
                 $app['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::READ),
-                $app['config']['elastic_force_sync']
+                $app['config']['elastic_force_sync'],
+                $app['config']['elastic_search_client_options']
             );
         };
 

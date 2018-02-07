@@ -251,11 +251,4 @@ final class ElasticQueryBuilder implements QueryBuilder
 
         return $this;
     }
-
-    public function setClientOptions(array $options)
-    {
-        $this->query['client'] = $options;
-
-        return $this;
-    }
 }
