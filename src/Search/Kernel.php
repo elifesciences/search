@@ -32,7 +32,6 @@ use eLife\Ping\Silex\PingControllerProvider;
 use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
-use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
@@ -91,6 +90,10 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_logging' => false,
             'elastic_force_sync' => false,
+            'elastic_read_client_options' => [
+                'timeout' => 0.9,
+                'connect_timeout' => 0.5,
+            ],
             'gearman_worker_timeout' => 20000,
             'process_memory_limit' => 256,
             'aws' => array_merge([
@@ -280,7 +283,7 @@ final class Kernel implements MinimalKernel
                 $app['serializer'],
                 $app['logger'],
                 $app['serializer.context'],
-                $app['elastic.executor'],
+                $app['elastic.client.read'],
                 $app['config']['api_url'],
                 $this->indexMetadata()->read()
             );
@@ -332,7 +335,8 @@ final class Kernel implements MinimalKernel
             return new MappedElasticsearchClient(
                 $app['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::WRITE),
-                $app['config']['elastic_force_sync']
+                $app['config']['elastic_force_sync'],
+                $app['config']['elastic_read_client_options']
             );
         };
 
@@ -340,7 +344,8 @@ final class Kernel implements MinimalKernel
             return new MappedElasticsearchClient(
                 $app['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::READ),
-                $app['config']['elastic_force_sync']
+                $app['config']['elastic_force_sync'],
+                $app['config']['elastic_read_client_options']
             );
         };
 
@@ -349,10 +354,6 @@ final class Kernel implements MinimalKernel
                 $app['elastic.elasticsearch.plain'],
                 $this->indexMetadata()->write()
             );
-        };
-
-        $app['elastic.executor'] = function (Application $app) {
-            return new ElasticQueryExecutor($app['elastic.client.read']);
         };
 
         //#####################################################

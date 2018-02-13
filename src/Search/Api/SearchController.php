@@ -6,7 +6,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
-use eLife\Search\Api\Elasticsearch\ElasticQueryExecutor;
+use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
 use eLife\Search\Api\Query\QueryResponse;
 use eLife\Search\Api\Response\SearchResponse;
@@ -34,14 +34,14 @@ final class SearchController
         Serializer $serializer,
         LoggerInterface $logger,
         SerializationContext $context,
-        ElasticQueryExecutor $elastic,
+        MappedElasticsearchClient $client,
         string $apiUrl,
         string $elasticIndex
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->context = $context;
-        $this->elastic = $elastic;
+        $this->client = $client;
         $this->apiUrl = $apiUrl;
         $this->elasticIndex = $elasticIndex;
     }
@@ -103,7 +103,7 @@ final class SearchController
         }
 
         /** @var ElasticQueryBuilder $query */
-        $query = new ElasticQueryBuilder($this->elasticIndex, $this->elastic);
+        $query = new ElasticQueryBuilder($this->elasticIndex);
 
         $query = $query->searchFor($for);
 
@@ -134,7 +134,7 @@ final class SearchController
                 break;
         }
 
-        $data = $query->getQuery()->execute();
+        $data = $this->client->searchDocuments($query->getRawQuery());
 
         if ($data instanceof QueryResponse) {
             if ($page > 1 && 0 === count($data->toArray())) {
