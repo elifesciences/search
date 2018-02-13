@@ -26,8 +26,8 @@ use eLife\Bus\Queue\Mock\WatchableQueueMock;
 use eLife\Bus\Queue\SqsMessageTransformer;
 use eLife\Bus\Queue\SqsWatchableQueue;
 use eLife\ContentNegotiator\Silex\ContentNegotiationProvider;
-use eLife\Logging\LoggingFactory;
 use eLife\Logging\Monitoring;
+use eLife\Logging\Silex\LoggerProvider;
 use eLife\Ping\Silex\PingControllerProvider;
 use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
@@ -51,6 +51,7 @@ use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JsonSchema\Validator;
+use LogicException;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Silex\Application;
@@ -72,9 +73,8 @@ final class Kernel implements MinimalKernel
 
     public function __construct($config = [])
     {
-        $app = new Application();
         // Load config
-        $app['config'] = array_merge([
+        $config = array_merge([
             'cli' => false,
             'debug' => false,
             'validate' => false,
@@ -89,8 +89,8 @@ final class Kernel implements MinimalKernel
                 'timeout' => 0.9,
                 'connect_timeout' => 0.5,
             ],
-            'file_logs_path' => self::ROOT.'/var/logs',
-            'logging_level' => LogLevel::INFO,
+            'logger.path' => self::ROOT.'/var/logs',
+            'logger.level' => LogLevel::INFO,
             'gearman_worker_timeout' => 20000,
             'process_memory_limit' => 256,
             'aws' => array_merge([
@@ -102,8 +102,15 @@ final class Kernel implements MinimalKernel
                 'region' => '---------',
             ], $config['aws'] ?? []),
         ], $config);
+        $app = new Application([
+            'logger.channel' => 'search',
+            'logger.path' => $config['logger.path'],
+            'logger.level' => $config['logger.level'],
+        ]);
+        $app['config'] = $config;
         $app->register(new ApiProblemProvider());
         $app->register(new ContentNegotiationProvider());
+        $app->register(new LoggerProvider());
         $app->register(new PingControllerProvider());
         // Annotations.
         AnnotationRegistry::registerAutoloadNamespace(
@@ -195,16 +202,6 @@ final class Kernel implements MinimalKernel
 
         $app['validator'] = function (Application $app) {
             return new ApiValidator($app['serializer'], $app['serializer.context'], $app['message-validator'], $app['psr7.bridge']);
-        };
-
-        $app['logger'] = function (Application $app) {
-            $factory = new LoggingFactory(
-                $app['config']['file_logs_path'],
-                'search',
-                $app['config']['logging_level']
-            );
-
-            return $factory->logger();
         };
 
         $app['monitoring'] = function (Application $app) {
@@ -516,6 +513,13 @@ final class Kernel implements MinimalKernel
             ->before($app['negotiate.accept'](
                 'application/vnd.elife.search+json; version=1'
             ));
+
+        if ($app['debug']) {
+            $app->get('/error', function () use ($app) {
+                $app['logger']->debug('Simulating error');
+                throw new LogicException('Simulated error');
+            });
+        }
     }
 
     public function withApp(callable $fn, $scope = null) : Kernel
