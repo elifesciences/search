@@ -4,6 +4,7 @@ namespace eLife\Search\Api;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
 use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
@@ -18,6 +19,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
@@ -134,7 +136,11 @@ final class SearchController
                 break;
         }
 
-        $data = $this->client->searchDocuments($query->getRawQuery());
+        try {
+            $data = $this->client->searchDocuments($query->getRawQuery());
+        } catch (NoNodesAvailableException $e) {
+            throw new HttpException(504, 'Timeout from ElasticSearch', $e);
+        }
 
         if ($data instanceof QueryResponse) {
             if ($page > 1 && 0 === count($data->toArray())) {
