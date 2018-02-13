@@ -73,13 +73,8 @@ final class Kernel implements MinimalKernel
 
     public function __construct($config = [])
     {
-        $app = new Application([
-            'logger.channel' => 'search',
-            'logger.path' => self::ROOT.'/var/logs',
-            'logger.level' => LogLevel::INFO,
-        ]);
         // Load config
-        $app['config'] = array_merge([
+        $config = array_merge([
             'cli' => false,
             'debug' => false,
             'validate' => false,
@@ -94,6 +89,8 @@ final class Kernel implements MinimalKernel
                 'timeout' => 0.9,
                 'connect_timeout' => 0.5,
             ],
+            'logger.path' => self::ROOT.'/var/logs',
+            'logger.level' => LogLevel::INFO,
             'gearman_worker_timeout' => 20000,
             'process_memory_limit' => 256,
             'aws' => array_merge([
@@ -105,6 +102,12 @@ final class Kernel implements MinimalKernel
                 'region' => '---------',
             ], $config['aws'] ?? []),
         ], $config);
+        $app = new Application([
+            'logger.channel' => 'search',
+            'logger.path' => $config['logger.path'],
+            'logger.level' => $config['logger.level'],
+        ]);
+        $app['config'] = $config;
         $app->register(new ApiProblemProvider());
         $app->register(new ContentNegotiationProvider());
         $app->register(new LoggerProvider());

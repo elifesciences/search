@@ -11,8 +11,6 @@ return [
     'annotation_cache' => false,
     'elastic_logging' => true,
     'ttl' => 0,
-    'file_log_path' => __DIR__.'../var/logs/all.log',
-    'file_error_log_path' => __DIR__.'../var/logs/error.log',
     'gearman_servers' => ['elife_gearman_1'],
     'gearman_auto_restart' => true,
     'aws' => [
