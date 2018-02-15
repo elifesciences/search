@@ -33,6 +33,7 @@ elifePipeline {
             lock('search--continuumtest') {
                 builderDeployRevision 'search--continuumtest', commit
                 builderSmokeTests 'search--continuumtest', '/srv/search'
+                builderCmdNode 'search--continuumtest', 1, "cd /srv/search; ./bin/reindex-on-demand continuumtest elife_search_${env.BUILD_NUMBER}"
             }
         }
 
