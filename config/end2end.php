@@ -6,6 +6,7 @@ return [
     'api_url' => 'http://end2end--gateway.elife.internal/',
     'api_requests_batch' => 20,
     'elastic_logging' => true,
+    'rate_limit_minimum_page' => 21,
     'aws' => [
         'queue_name' => 'search--end2end',
         'credential_file' => true,
