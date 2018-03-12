@@ -16,6 +16,9 @@ final class ElasticQueryBuilder implements QueryBuilder
     const DATE_DEFAULT = 'sortDate';
     const DATE_PUBLISHED = 'published';
 
+    const MAXIMUM_SUBJECTS = 100;
+    const MAXIMUM_TYPES = 18;
+
     private $dateType;
 
     public function __construct(string $index)
@@ -23,7 +26,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         $this->query['index'] = $index;
         $this->query['body']['aggregations']['type_agg']['terms'] = [
             'field' => '_type',
-            'size' => 18,
+            'size' => self::MAXIMUM_TYPES,
         ];
         $this->query['body']['aggregations']['subject_agg'] = [
             'nested' => [
@@ -33,7 +36,7 @@ final class ElasticQueryBuilder implements QueryBuilder
                 'name' => [
                     'terms' => [
                         'field' => 'subjects.id',
-                        'size' => 15,
+                        'size' => self::MAXIMUM_SUBJECTS,
                         'min_doc_count' => 0,
                     ],
                     'aggs' => [
