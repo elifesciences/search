@@ -57,4 +57,26 @@ final class PageTest extends ElasticTestCase
             yield 'page '.$page => [$page];
         }
     }
+
+    /**
+     * @test
+     */
+    public function it_tags_high_numbered_pages_with_rate_limiting_headers()
+    {
+        $this->addDocumentsToElasticSearch([
+            $this->getArticleFixture(0),
+            $this->getArticleFixture(1),
+            $this->getArticleFixture(2),
+        ]);
+
+        $this->newClient();
+
+        $this->api->request('GET', '/search?page=1');
+        $response = $this->getResponse();
+        $this->assertNull($response->headers->get('X-Kong-Limit'));
+
+        $this->api->request('GET', '/search?page=2');
+        $response = $this->getResponse();
+        $this->assertEquals('highpages=1', $response->headers->get('X-Kong-Limit'));
+    }
 }

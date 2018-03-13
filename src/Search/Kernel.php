@@ -82,6 +82,7 @@ final class Kernel implements MinimalKernel
             'api_url' => '',
             'api_requests_batch' => 10,
             'ttl' => 300,
+            'rate_limit_minimum_page' => 2,
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_logging' => false,
             'elastic_force_sync' => false,
@@ -503,6 +504,10 @@ final class Kernel implements MinimalKernel
             $app->after([$this, 'cache'], 3);
         }
 
+        if ($app['config']['rate_limit_minimum_page']) {
+            $app->after([$this, 'rateLimit'], 4);
+        }
+
         // Return
         return $app;
     }
@@ -572,6 +577,15 @@ final class Kernel implements MinimalKernel
         $response->setEtag(md5($response->getContent()));
         $response->setPublic();
         $response->isNotModified($request);
+
+        return $response;
+    }
+
+    public function rateLimit(Request $request, Response $response) : Response
+    {
+        if ($request->query->get('page', null) >= $this->app['config']['rate_limit_minimum_page']) {
+            $response->headers->set('X-Kong-Limit', 'highpages=1');
+        }
 
         return $response;
     }
