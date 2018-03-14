@@ -68,9 +68,9 @@ final class ImportCommand extends Command
         try {
             $this->monitoring->nameTransaction('queue:import');
             $this->monitoring->startTransaction();
-            if ($entity === 'all') {
+            if ('all' === $entity) {
                 foreach (self::$supports as $e) {
-                    if ($e !== 'all') {
+                    if ('all' !== $e) {
                         // Run the item.
 
                         $this->{'import'.$e}();
@@ -146,7 +146,7 @@ final class ImportCommand extends Command
             $progress->advance();
             try {
                 $item = $items->current();
-                if ($item === null) {
+                if (null === $item) {
                     $items->next();
                     continue;
                 }

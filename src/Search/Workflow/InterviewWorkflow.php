@@ -53,7 +53,7 @@ final class InterviewWorkflow implements Workflow
         $searchInterview = $this->validator->deserialize($this->serialize($interview), InterviewResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchInterview);
-        if ($isValid === false) {
+        if (false === $isValid) {
             $this->logger->error(
                 'Interview<'.$interview->getId().'> cannot be transformed into a valid search result',
                 [

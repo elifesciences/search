@@ -52,7 +52,7 @@ final class PodcastEpisodeWorkflow implements Workflow
         $searchPodcastEpisode = $this->validator->deserialize($this->serialize($podcastEpisode), PodcastEpisodeResponse::class);
         // Validate response.
         $isValid = $this->validator->validateSearchResult($searchPodcastEpisode);
-        if ($isValid === false) {
+        if (false === $isValid) {
             $this->logger->error(
                 'PodcastEpisode<'.$podcastEpisode->getNumber().'> cannot be transformed into a valid search result',
                 [

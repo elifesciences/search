@@ -53,7 +53,7 @@ final class CollectionWorkflow implements Workflow
         $searchCollection = $this->validator->deserialize($this->serialize($collection), CollectionResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchCollection);
-        if ($isValid === false) {
+        if (false === $isValid) {
             $this->logger->error(
                 'Collection<'.$collection->getId().'> cannot be transformed into a valid search result',
                 [

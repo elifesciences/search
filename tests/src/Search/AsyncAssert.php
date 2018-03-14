@@ -107,7 +107,7 @@ trait AsyncAssert
 
     public function __call($name, $arguments)
     {
-        if (strpos($name, 'async') === 0) {
+        if (0 === strpos($name, 'async')) {
             // Trim off the async.
             $fn = lcfirst(substr($name, 5));
             if (method_exists($this, $fn)) {

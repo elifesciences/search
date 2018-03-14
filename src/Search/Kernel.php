@@ -155,7 +155,6 @@ final class Kernel implements MinimalKernel
 
     public function dependencies(Application $app)
     {
-
         //#####################################################
         // -------------------- Basics -----------------------
         //#####################################################

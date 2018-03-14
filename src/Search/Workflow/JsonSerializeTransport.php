@@ -15,7 +15,7 @@ trait JsonSerializeTransport
     {
         if (
             !isset($this->serializer) ||
-            $this->serializer === null ||
+            null === $this->serializer ||
             !$this->serializer instanceof Serializer
         ) {
             throw new LogicException('You must inject API SDK serializer for this to work (property: $serializer missing.)');
@@ -32,7 +32,7 @@ trait JsonSerializeTransport
     {
         if (
             !isset($this->serializer) ||
-            $this->serializer === null ||
+            null === $this->serializer ||
             !$this->serializer instanceof Serializer
         ) {
             throw new LogicException('You must inject API SDK serializer for this to work (property: $serializer missing.)');

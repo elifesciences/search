@@ -281,7 +281,6 @@ abstract class ElasticTestCase extends WebTestCase
                     'stage' => 'published',
                 ];
                 break;
-
         }
     }
 
@@ -400,7 +399,7 @@ abstract class ElasticTestCase extends WebTestCase
         if (!$lines) {
             $this->fail('Could not run search:setup, try running it manually');
         }
-        if ($lines[0] === 'No alive nodes found in your cluster') {
+        if ('No alive nodes found in your cluster' === $lines[0]) {
             $this->fail('Elasticsearch may not be installed, skipping');
         }
         $this->assertStringStartsWith('Created new empty index', $lines[0], 'Failed to run set up of the test (index creation)');

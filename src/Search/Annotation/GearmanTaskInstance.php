@@ -38,7 +38,7 @@ final class GearmanTaskInstance
     public function serialize($data)
     {
         $serialize = $this->serialize;
-        if ($serialize === null) {
+        if (null === $serialize) {
             $serialize = function ($data) {
                 return serialize($data);
             };
@@ -50,7 +50,7 @@ final class GearmanTaskInstance
     public function deserialize($data)
     {
         $deserialize = $this->deserialize;
-        if ($deserialize === null) {
+        if (null === $deserialize) {
             $deserialize = function ($data) {
                 return unserialize($data);
             };

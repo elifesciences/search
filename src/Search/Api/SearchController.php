@@ -50,12 +50,12 @@ final class SearchController
 
     private function validateDateRange(DateTimeImmutable $startDateTime = null, DateTimeImmutable $endDateTime = null)
     {
-        if ($endDateTime === false || $startDateTime === false) {
+        if (false === $endDateTime || false === $startDateTime) {
             throw new BadRequestHttpException('Invalid date provided');
         }
         if (
             ($endDateTime && $startDateTime) &&
-            ($startDateTime->diff($endDateTime)->invert === 1)
+            (1 === $startDateTime->diff($endDateTime)->invert)
         ) {
             throw new BadRequestHttpException('start-date must be the same or before end-date');
         }
@@ -66,8 +66,8 @@ final class SearchController
         $dateTime = DateTimeImmutable::createFromFormat($format, $time, new DateTimeZone('UTC'));
         $errors = DateTimeImmutable::getLastErrors();
         if (
-            ($strict && $errors['warning_count'] !== 0) ||
-            $errors['error_count'] !== 0
+            ($strict && 0 !== $errors['warning_count']) ||
+            0 !== $errors['error_count']
         ) {
             throw new BadRequestHttpException("Invalid date format provided ($format)");
         }
@@ -179,7 +179,7 @@ final class SearchController
         $words = explode('-', $id);
         $words[0] = ucfirst($words[0]);
         $words = array_map(function ($word) {
-            if (in_array($word, ['the', 'a', 'of', 'in']) === false) {
+            if (false === in_array($word, ['the', 'a', 'of', 'in'])) {
                 return ucfirst($word);
             }
 
@@ -192,7 +192,7 @@ final class SearchController
     public function hydrateSubjects(array $subjects)
     {
         return array_map(function ($subject) {
-            if ($subject['name'] === null) {
+            if (null === $subject['name']) {
                 $subject['name'] = $this->getSubjectName($subject['id']);
             }
 

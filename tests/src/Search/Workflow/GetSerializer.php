@@ -14,7 +14,7 @@ trait GetSerializer
 
     public function getSerializer() : Serializer
     {
-        if ($this->serializer === null) {
+        if (null === $this->serializer) {
             $sdk = new ApiSdk($this->getHttpClient());
             $this->serializer = $sdk->getSerializer();
         }

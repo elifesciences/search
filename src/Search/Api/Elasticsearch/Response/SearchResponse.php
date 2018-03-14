@@ -15,7 +15,7 @@ final class SearchResponse implements ElasticResponse, QueryResponse
 
     public function getResults() : array
     {
-        if ($this->_results !== null) {
+        if (null !== $this->_results) {
             return $this->_results;
         }
 
