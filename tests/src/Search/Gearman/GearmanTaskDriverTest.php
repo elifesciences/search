@@ -22,9 +22,6 @@ namespace tests\eLife\Search\Gearman {
         public function setUp()
         {
             Register::registerLoader();
-            if (!class_exists('GearmanWorker')) {
-                $this->markTestSkipped('Gearman must be installed to run these tests');
-            }
 
             $this->limitReached = false;
             $this->logger = $this->createMock(LoggerInterface::class);
