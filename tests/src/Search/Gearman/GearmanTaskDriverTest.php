@@ -3,6 +3,7 @@
 namespace tests\eLife\Search\Gearman {
     use Closure;
     use Doctrine\Common\Annotations\AnnotationReader;
+    use eLife\Bus\Limit\CallbackLimit;
     use eLife\Logging\Monitoring;
     use eLife\Search\Annotation\GearmanTaskDriver;
     use eLife\Search\Annotation\GearmanTaskInstance;
@@ -32,9 +33,9 @@ namespace tests\eLife\Search\Gearman {
                 new GearmanClientMock(),
                 $this->logger,
                 $this->monitoring,
-                function () {
+                new CallbackLimit(function () {
                     return $this->limitReached;
-                }
+                })
             );
         }
 
