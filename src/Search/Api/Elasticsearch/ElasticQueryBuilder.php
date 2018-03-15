@@ -62,7 +62,7 @@ final class ElasticQueryBuilder implements QueryBuilder
     private function getSort($reverse = false)
     {
         if ($reverse) {
-            return $this->order === 'desc' ? 'asc' : 'desc';
+            return 'desc' === $this->order ? 'asc' : 'desc';
         }
 
         return $this->order;
@@ -71,7 +71,7 @@ final class ElasticQueryBuilder implements QueryBuilder
     public function setDateType(string $field) : QueryBuilder
     {
         // No need to do any fancy enum checks.
-        if ($field === self::DATE_PUBLISHED) {
+        if (self::DATE_PUBLISHED === $field) {
             $this->dateType = $field;
 
             return $this;
@@ -111,7 +111,6 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     private function setBoostings(array $query = [])
     {
-
         /* Boost results based on 'type' */
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'collection']]]];
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['type' => 'podcast-episode']]]];
@@ -161,7 +160,7 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function searchFor(string $string) : QueryBuilder
     {
-        if ($string !== '') {
+        if ('' !== $string) {
             /* Query all fields for the actual query term*/
             $query = [
                 'query' => $string,
@@ -179,7 +178,7 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function order(string $direction = 'desc') : QueryBuilder
     {
-        $this->order = $direction === 'desc' ? 'desc' : 'asc';
+        $this->order = 'desc' === $direction ? 'desc' : 'asc';
 
         return $this;
     }

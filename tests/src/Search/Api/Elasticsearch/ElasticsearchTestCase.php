@@ -61,7 +61,7 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
             ++$i;
             $this->assertInstanceOf(SearchResult::class, $item);
         }
-        $this->assertFalse($i === 0, 'Result set must be iterable.');
+        $this->assertFalse(0 === $i, 'Result set must be iterable.');
         // Make sure we didn't just iterate
         $this->assertNotEmpty($model->getResults());
     }

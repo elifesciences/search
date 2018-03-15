@@ -44,7 +44,6 @@ trait HttpMocks
                     ],
                 ],
             ],
-
         ];
     }
 

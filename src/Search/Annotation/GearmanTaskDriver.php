@@ -149,7 +149,7 @@ final class GearmanTaskDriver
             try {
                 $this->logger->debug('gearman:worker: Loop start, listening for jobs');
                 $result = $this->worker->work();
-                if ($this->worker->returnCode() == GEARMAN_TIMEOUT) {
+                if (GEARMAN_TIMEOUT == $this->worker->returnCode()) {
                     $this->logger->debug('gearman:worker: No job after timeout, looping');
                     continue;
                 }

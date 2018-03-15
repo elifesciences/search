@@ -11,7 +11,7 @@ class GearmanTransformer implements QueueItemTransformer
     public function transform(QueueItem $item, bool $serialized = true)
     {
         $type = self::$typeMap[$item->getType()] ?? null;
-        if ($type === null) {
+        if (null === $type) {
             throw new LogicException('Workflow does not exist for that type.');
         }
 

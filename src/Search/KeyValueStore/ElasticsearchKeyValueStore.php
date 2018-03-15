@@ -57,7 +57,7 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
                 $key
             )['_source'];
         } catch (Missing404Exception $e) {
-            if ($default !== self::NO_DEFAULT) {
+            if (self::NO_DEFAULT !== $default) {
                 return $default;
             }
             // TODO: more abstract exception

@@ -114,7 +114,7 @@ final class Console
 
     public function queueCreateCommand()
     {
-        if ($this->config['debug'] !== true) {
+        if (true !== $this->config['debug']) {
             throw new LogicException('This method should not be called outside of development');
         }
         /* @var SqsClient $queue */

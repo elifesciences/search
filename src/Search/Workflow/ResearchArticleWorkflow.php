@@ -63,7 +63,7 @@ final class ResearchArticleWorkflow implements Workflow
         }
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($articleSearchResponse);
-        if ($isValid === false) {
+        if (false === $isValid) {
             $this->logger->error(
                 'ResearchArticle<'.$article->getId().'> cannot be transformed into a valid search result',
                 [

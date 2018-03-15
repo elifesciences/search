@@ -53,7 +53,7 @@ final class LabsPostWorkflow implements Workflow
         $searchLabsPost = $this->validator->deserialize($this->serialize($labsPost), LabsPostResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchLabsPost);
-        if ($isValid === false) {
+        if (false === $isValid) {
             $this->logger->error(
                 'LabsPost<'.$labsPost->getId().'> cannot be transformed into a valid search result',
                 [

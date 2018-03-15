@@ -1,7 +1,6 @@
 <?php
 
 namespace tests\eLife\Search\Gearman {
-
     use Closure;
     use Doctrine\Common\Annotations\AnnotationReader;
     use eLife\Logging\Monitoring;
@@ -115,11 +114,9 @@ namespace tests\eLife\Search\Gearman {
             );
         }
     }
-
 }
 
 namespace MockAnnotations {
-
     use eLife\Search\Annotation\GearmanTask;
     use eLife\Search\Workflow\Workflow;
 
@@ -167,5 +164,4 @@ namespace MockAnnotations {
             return 'stdClass';
         }
     }
-
 }

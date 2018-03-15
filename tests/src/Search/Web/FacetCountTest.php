@@ -22,7 +22,7 @@ class FacetCountTest extends ElasticTestCase
         $this->jsonRequest('GET', '/search', ['order' => 'asc', 'sort' => 'date', 'subject' => ['cell-biology']]);
         $response = $this->getJsonResponse();
         $subjects = array_filter($response->subjects, function ($subject) {
-            return $subject->id === 'cell-biology';
+            return 'cell-biology' === $subject->id;
         });
         // The amount of research articles are still accurate.
         $this->assertEquals($response->types->{'research-article'}, 3, 'The amount of research article are still accurate');

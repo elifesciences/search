@@ -54,7 +54,7 @@ final class BlogArticleWorkflow implements Workflow
         $searchBlogArticle = $this->validator->deserialize($this->serialize($blogArticle), BlogArticleResponse::class);
         // Validate that response.
         $isValid = $this->validator->validateSearchResult($searchBlogArticle);
-        if ($isValid === false) {
+        if (false === $isValid) {
             $this->logger->error(
                 'BlogArticle<'.$blogArticle->getId().'> cannot be transformed into a valid search result',
                 [

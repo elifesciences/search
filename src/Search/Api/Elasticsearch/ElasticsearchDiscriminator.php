@@ -37,7 +37,7 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
         if (
             isset($data['_type']) &&
             isset($data['_source']) &&
-            isset($data['_source']['type']) === false
+            false === isset($data['_source']['type'])
         ) {
             $data['_source']['type'] = $data['_type'];
         }
@@ -47,17 +47,17 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
         // Discriminator.
         switch (true) {
             // First check settings call and turn into into a success. (current avoids knowing the index name)
-            case isset($root['settings']) === true:
+            case true === isset($root['settings']):
                 $data['internal_search_type'] = 'success';
                 break;
 
             // Nope out early to avoid errors.
             case
-                isset($data['_index']) === false &&
-                isset($data['_shards']) === false &&
-                isset($data['acknowledged']) === false &&
-                isset($data['created']) === false &&
-                isset($data['error']) === false:
+                false === isset($data['_index']) &&
+                false === isset($data['_shards']) &&
+                false === isset($data['acknowledged']) &&
+                false === isset($data['created']) &&
+                false === isset($data['error']):
             case is_string($data):
                 return;
 
@@ -77,9 +77,9 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
                 break;
 
             // We have an acknowledged message (success)
-            case isset($data['acknowledged']) && $data['acknowledged'] === true:
-            case isset($data['created']) && $data['created'] === true:
-            case isset($data['found']) && $data['found'] === true:
+            case isset($data['acknowledged']) && true === $data['acknowledged']:
+            case isset($data['created']) && true === $data['created']:
+            case isset($data['found']) && true === $data['found']:
                 $data['internal_search_type'] = 'success';
                 break;
 
