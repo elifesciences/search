@@ -145,7 +145,7 @@ final class GearmanTaskDriver
         $this->logger->info('gearman:worker: Started listening.');
         $this->addTasksToWorker($this->worker);
         $limit = $this->limit;
-        while (!$limit()) {
+        while (!$limit->hasBeenReached()) {
             try {
                 $this->logger->debug('gearman:worker: Loop start, listening for jobs');
                 $result = $this->worker->work();
