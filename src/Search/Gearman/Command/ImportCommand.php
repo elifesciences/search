@@ -140,7 +140,7 @@ final class ImportCommand extends Command
 
         $items->rewind();
         while ($items->valid()) {
-            if ($limit()) {
+            if ($limit->hasBeenReached()) {
                 throw new RuntimeException('Command cannot complete because: '.implode(', ', $limit->getReasons()));
             }
             $progress->advance();
