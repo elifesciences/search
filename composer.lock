@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "97394fa34d3d5cfd95463bfa06d27ccd",
@@ -88,16 +88,16 @@
         },
         {
             "name": "beberlei/assert",
-            "version": "v2.9.3",
+            "version": "v2.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/assert.git",
-                "reference": "7d8108458bbe3d063dc3315278b2001a7156fade"
+                "reference": "c07fe163d6a3b3e4b1275981ec004397954afa89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/assert/zipball/7d8108458bbe3d063dc3315278b2001a7156fade",
-                "reference": "7d8108458bbe3d063dc3315278b2001a7156fade",
+                "url": "https://api.github.com/repos/beberlei/assert/zipball/c07fe163d6a3b3e4b1275981ec004397954afa89",
+                "reference": "c07fe163d6a3b3e4b1275981ec004397954afa89",
                 "shasum": ""
             },
             "require": {
@@ -139,7 +139,7 @@
                 "assertion",
                 "validation"
             ],
-            "time": "2018-03-16T17:46:00+00:00"
+            "time": "2018-04-16T11:18:27+00:00"
         },
         {
             "name": "clue/block-react",
@@ -548,12 +548,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "2ceb798da35b1bd7f26d81aaa6ae535bd958dd41"
+                "reference": "a9f528e8bf0c826870bcb6f4e3d26f4217d58e0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/2ceb798da35b1bd7f26d81aaa6ae535bd958dd41",
-                "reference": "2ceb798da35b1bd7f26d81aaa6ae535bd958dd41",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/a9f528e8bf0c826870bcb6f4e3d26f4217d58e0a",
+                "reference": "a9f528e8bf0c826870bcb6f4e3d26f4217d58e0a",
                 "shasum": ""
             },
             "conflict": {
@@ -565,7 +565,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2018-03-26T12:08:31+00:00"
+            "time": "2018-05-23T09:01:40+00:00"
         },
         {
             "name": "elife/api-client",
@@ -677,12 +677,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "df953302a4931eed85166a55649c0ad9f436d526"
+                "reference": "b426511849bf57af910858baed737065fdf266ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/df953302a4931eed85166a55649c0ad9f436d526",
-                "reference": "df953302a4931eed85166a55649c0ad9f436d526",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/b426511849bf57af910858baed737065fdf266ea",
+                "reference": "b426511849bf57af910858baed737065fdf266ea",
                 "shasum": ""
             },
             "require": {
@@ -718,7 +718,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2018-03-26T13:10:06+00:00"
+            "time": "2018-05-24T09:07:43+00:00"
         },
         {
             "name": "elife/api-validator",
