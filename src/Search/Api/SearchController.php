@@ -5,7 +5,6 @@ namespace eLife\Search\Api;
 use DateTimeImmutable;
 use DateTimeZone;
 use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
-use eLife\ApiSdk\Model\Subject;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;

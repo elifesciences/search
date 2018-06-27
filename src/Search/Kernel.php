@@ -52,7 +52,6 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JsonSchema\Validator;
 use LogicException;
-use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Silex\Application;
 use Silex\Provider;
@@ -178,7 +177,7 @@ final class Kernel implements MinimalKernel
         };
         // Annotation reader.
         $app['annotations.reader'] = function (Application $app) {
-            if ($app['config']['annotation_cache'] === false) {
+            if (false === $app['config']['annotation_cache']) {
                 return new AnnotationReader();
             }
 
@@ -407,7 +406,7 @@ final class Kernel implements MinimalKernel
             if (isset($app['config']['aws']['endpoint'])) {
                 $config['endpoint'] = $app['config']['aws']['endpoint'];
             }
-            if (!isset($app['config']['aws']['credential_file']) || $app['config']['aws']['credential_file'] === false) {
+            if (!isset($app['config']['aws']['credential_file']) || false === $app['config']['aws']['credential_file']) {
                 $config['credentials'] = [
                     'key' => $app['config']['aws']['key'],
                     'secret' => $app['config']['aws']['secret'],
