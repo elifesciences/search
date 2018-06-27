@@ -124,6 +124,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'blog-article']]]];
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'research-advance']]]];
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'research-article']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'research-communication']]]];
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'registered-report']]]];
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'replication-study']]]];
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'scientific-correspondence']]]];
