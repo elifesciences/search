@@ -196,6 +196,7 @@ class SearchResponseTest extends SerializerTest
                         "insight": 0,
                         "research-advance": 1,
                         "research-article": 2,
+                        "research-communication": 0,
                         "retraction": 0,
                         "registered-report": 0,
                         "replication-study": 0,
