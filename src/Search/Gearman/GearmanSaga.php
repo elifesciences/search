@@ -7,9 +7,9 @@ use GearmanClient;
 use GearmanTask;
 use Generator;
 use React\EventLoop\Factory;
+use function React\Promise\all;
 use React\Promise\Deferred;
 use React\Promise\Promise;
-use function React\Promise\all;
 
 final class GearmanSaga
 {

@@ -5,12 +5,12 @@ namespace tests\eLife\Search;
 use Csa\GuzzleHttp\Middleware\Cache\Adapter\StorageAdapterInterface;
 use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\ApiValidator\MessageValidator;
+use function GuzzleHttp\json_decode;
+use function GuzzleHttp\json_encode;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
-use function GuzzleHttp\json_decode;
-use function GuzzleHttp\json_encode;
 
 final class ValidatingStorageAdapter implements StorageAdapterInterface
 {
