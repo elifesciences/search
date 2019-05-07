@@ -7,6 +7,7 @@ return [
     'api_requests_batch' => 20,
     'elastic_logging' => true,
     'rate_limit_minimum_page' => 21,
+    'rate_limit_for' => false,
     'aws' => [
         'queue_name' => 'search--end2end',
         'credential_file' => true,
