@@ -82,7 +82,6 @@ final class Kernel implements MinimalKernel
             'api_requests_batch' => 10,
             'ttl' => 300,
             'rate_limit_minimum_page' => 2,
-            'rate_limit_for' => false,
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_logging' => false,
             'elastic_force_sync' => false,
@@ -583,10 +582,6 @@ final class Kernel implements MinimalKernel
     public function rateLimit(Request $request, Response $response) : Response
     {
         if ($request->query->get('page', null) >= $this->app['config']['rate_limit_minimum_page']) {
-            $response->headers->set('X-Kong-Limit', 'highpages=1');
-        }
-
-        if ($request->query->get('for', null) && $this->app['config']['rate_limit_for']) {
             $response->headers->set('X-Kong-Limit', 'highpages=1');
         }
 
