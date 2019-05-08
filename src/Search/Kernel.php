@@ -585,10 +585,6 @@ final class Kernel implements MinimalKernel
             $response->headers->set('X-Kong-Limit', 'highpages=1');
         }
 
-        if ($request->query->get('for', null)) {
-            $response->headers->set('X-Kong-Limit', 'highpages=1');
-        }
-
         return $response;
     }
 }
