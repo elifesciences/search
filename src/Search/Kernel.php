@@ -365,10 +365,7 @@ final class Kernel implements MinimalKernel
         $app['gearman.client'] = function (Application $app) {
             $worker = new GearmanClient();
             foreach ($app['config']['gearman_servers'] as $server) {
-                try {
-                    $worker->addServer($server);
-                } catch (Throwable $e) {
-                }
+                $worker->addServer($server);
             }
 
             return $worker;
