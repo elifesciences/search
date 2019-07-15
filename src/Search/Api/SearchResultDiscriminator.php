@@ -22,6 +22,7 @@ final class SearchResultDiscriminator implements EventSubscriberInterface
         'retraction',
         'registered-report',
         'replication-study',
+        'review-article',
         'scientific-correspondence',
         'short-report',
         'tools-resources',
