@@ -7,7 +7,7 @@ return [
     'validate' => true,
     'api_url' => 'http://localhost:8080',
     'ttl' => 0,
-    'gearman_servers' => ['localhost'],
+    'gearman_servers' => ['127.0.0.1'],
     'gearman_auto_restart' => false,
     'elastic_force_sync' => true,
     'elastic_logging' => true,
