@@ -146,6 +146,7 @@ final class TypesResponse
         $retraction = 0,
         $registeredReport = 0,
         $replicationStudy = 0,
+        $reviewArticle = 0,
         $scientificCorrespondence = 0,
         $shortReport = 0,
         $toolsResources = 0,
@@ -165,6 +166,7 @@ final class TypesResponse
         $this->retraction = $retraction;
         $this->registeredReport = $registeredReport;
         $this->replicationStudy = $replicationStudy;
+        $this->reviewArticle = $reviewArticle;
         $this->scientificCorrespondence = $scientificCorrespondence;
         $this->shortReport = $shortReport;
         $this->toolsResources = $toolsResources;
