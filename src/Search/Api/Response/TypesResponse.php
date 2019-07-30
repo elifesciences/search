@@ -75,6 +75,13 @@ final class TypesResponse
     public $replicationStudy;
 
     /**
+     * @SerializedName("review-article")
+     * @Type("integer")
+     * @Since(version="1")
+     */
+    public $reviewArticle;
+
+    /**
      * @SerializedName("scientific-correspondence")
      * @Type("integer")
      * @Since(version="1")
@@ -139,6 +146,7 @@ final class TypesResponse
         $retraction = 0,
         $registeredReport = 0,
         $replicationStudy = 0,
+        $reviewArticle = 0,
         $scientificCorrespondence = 0,
         $shortReport = 0,
         $toolsResources = 0,
@@ -158,6 +166,7 @@ final class TypesResponse
         $this->retraction = $retraction;
         $this->registeredReport = $registeredReport;
         $this->replicationStudy = $replicationStudy;
+        $this->reviewArticle = $reviewArticle;
         $this->scientificCorrespondence = $scientificCorrespondence;
         $this->shortReport = $shortReport;
         $this->toolsResources = $toolsResources;
@@ -181,6 +190,7 @@ final class TypesResponse
             $type_totals['retraction'] ?? 0,
             $type_totals['registered-report'] ?? 0,
             $type_totals['replication-study'] ?? 0,
+            $type_totals['review-article'] ?? 0,
             $type_totals['scientific-correspondence'] ?? 0,
             $type_totals['short-report'] ?? 0,
             $type_totals['tools-resources'] ?? 0,
