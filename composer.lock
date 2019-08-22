@@ -573,12 +573,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "1230ee8529eac59e51ee95d9a2e9add486d1580e"
+                "reference": "abc08e2b8ae22864d7dbc30a1e96912fbd81cb42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/1230ee8529eac59e51ee95d9a2e9add486d1580e",
-                "reference": "1230ee8529eac59e51ee95d9a2e9add486d1580e",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/abc08e2b8ae22864d7dbc30a1e96912fbd81cb42",
+                "reference": "abc08e2b8ae22864d7dbc30a1e96912fbd81cb42",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API client",
-            "time": "2018-09-19T16:14:15+00:00"
+            "time": "2019-08-06T08:48:30+00:00"
         },
         {
             "name": "elife/api-problem",
