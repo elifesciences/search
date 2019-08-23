@@ -12,6 +12,7 @@ namespace {
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/ApiTestCase.php';
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/ApiSdkTest.php';
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/Builder.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/NormalizerSamplesTestCase.php';
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/BlogArticleNormalizerTest.php';
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/CollectionNormalizerTest.php';
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/ArticlePoANormalizerTest.php';
