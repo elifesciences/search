@@ -56,11 +56,11 @@ trait HttpMocks
             new Request(
                 'GET',
                 'http://api.elifesciences.org/subjects/subject1',
-                ['Accept' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)]
+                ['Accept' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT, 1)]
             ),
             new Response(
                 200,
-                ['Content-Type' => new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
+                ['Content-Type' => (string) new MediaType(SubjectsClient::TYPE_SUBJECT, 1)],
                 json_encode($this->createSubjectJson())
             )
         );
