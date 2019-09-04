@@ -27,7 +27,7 @@
         "elife/content-negotiator": "^1.0",
         "elife/logging-sdk": "^1.0@dev",
         "elife/ping": "^1.0",
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": "^6.3",
         "jms/serializer": "^1.5@dev",
         "justinrainbow/json-schema": "^5.1",
         "mindplay/composer-locator": "^2.1",
