@@ -13,7 +13,7 @@ index_name="$2"
 echo "Stopping gearman:worker instances"
 sudo start search-gearman-worker-stop-all || {
     sudo systemctl stop search-gearman-worker-controller.target
-    sudo systemctl stop search-queue-watch.target
+    sudo systemctl stop search-queue-watch-controller.target
 }
 
 echo "Creating new index $index_name"
@@ -25,7 +25,7 @@ echo "Switching writes to new index $index_name"
 echo "Restarting processes"
 sudo start search-processes || {
     sudo systemctl start search-gearman-worker-controller.target
-    sudo systemctl start search-queue-watch.target
+    sudo systemctl start search-queue-watch-controller.target
 }
 
 echo "Importing all API content"
