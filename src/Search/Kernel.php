@@ -121,10 +121,6 @@ final class Kernel implements MinimalKernel
             $app->register(new Provider\HttpFragmentServiceProvider());
             $app->register(new Provider\ServiceControllerServiceProvider());
             $app->register(new Provider\TwigServiceProvider());
-            $app->register(new Provider\WebProfilerServiceProvider(), [
-                'profiler.cache_dir' => self::CACHE_DIR.'/profiler',
-                'profiler.mount_prefix' => '/_profiler', // this is the default
-            ]);
         }
         // DI.
         $this->dependencies($app);
