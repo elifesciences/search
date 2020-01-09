@@ -90,11 +90,7 @@ final class GearmanTaskDriver
                     ]
                 );
                 $this->monitoring->recordException($e, "Deserialization problem in $task->name");
-                throw new InvalidWorkflow(
-                    "Cannot deserialize a {$task->getSdkClass()}",
-                    0,
-                    $e
-                );
+                throw new InvalidWorkflow("Cannot deserialize a {$task->getSdkClass()}", 0, $e);
             }
             try {
                 $object = $task->instance;
