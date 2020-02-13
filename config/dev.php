@@ -17,4 +17,12 @@ return [
         'region' => 'us-east-1',
         'endpoint' => 'http://localhost:4100',
     ],
+    'feature_rds' => false,
+    'rds_articles' => [
+        '30274' => [
+            'date' => '2020-01-29T19:18:00Z',
+            'display' => 'https://hub.stenci.la/elife/30274/main/?elife',
+            'download' => 'https://hub.stenci.la/elife/30274/files/download/article-30274.md',
+        ],
+    ],
 ];
