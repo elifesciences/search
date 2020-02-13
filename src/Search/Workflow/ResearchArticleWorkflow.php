@@ -31,17 +31,20 @@ final class ResearchArticleWorkflow implements Workflow
     private $logger;
     private $client;
     private $validator;
+    private $rdsArticles;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
+        ApiValidator $validator,
+        array $rdsArticles
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
+        $this->rdsArticles = $rdsArticles;
     }
 
     /**
@@ -132,7 +135,11 @@ final class ResearchArticleWorkflow implements Workflow
             'value' => json_encode($articleObject->dataSets ?? '[]'),
         ];
 
-        $sortDate = $article->getStatusDate();
+        if (isset($this->rdsArticles[$article->getId()]['date'])) {
+            $sortDate = new DateTimeImmutable($this->rdsArticles[$article->getId()]['date']);
+        } else {
+            $sortDate = $article->getStatusDate();
+        }
         $this->addSortDate($articleObject, $sortDate);
 
         $this->logger->debug('Article<'.$article->getId().'> Detected type '.($article->getType() ?? 'research-article'));

@@ -27,6 +27,7 @@ final class WorkerCommand extends Command
     private $client;
     private $validator;
     private $logger;
+    private $rdsArticles;
 
     public function __construct(
         ApiSdk $sdk,
@@ -34,7 +35,8 @@ final class WorkerCommand extends Command
         GearmanTaskDriver $gearman,
         MappedElasticsearchClient $client,
         ApiValidator $validator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        array $rdsArticles
     ) {
         $this->sdk = $sdk;
         $this->serializer = $serializer;
@@ -42,6 +44,7 @@ final class WorkerCommand extends Command
         $this->client = $client;
         $this->validator = $validator;
         $this->logger = $logger;
+        $this->rdsArticles = $rdsArticles;
 
         parent::__construct(null);
     }
@@ -59,7 +62,7 @@ final class WorkerCommand extends Command
     {
         $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
+        $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator, $this->rdsArticles));
         $this->gearman->registerWorkflow(new LabsPostWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new PodcastEpisodeWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new CollectionWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
