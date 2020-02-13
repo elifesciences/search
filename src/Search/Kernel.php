@@ -435,7 +435,7 @@ final class Kernel implements MinimalKernel
                 $app['elastic.client.write'],
                 $app['validator'],
                 $app['logger'],
-                $app['feature_rds'] ? $app['rds_articles'] : []
+                $app['config']['feature_rds'] ? $app['config']['rds_articles'] : []
             );
         };
 
