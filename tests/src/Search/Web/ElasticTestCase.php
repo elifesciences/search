@@ -326,7 +326,7 @@ abstract class ElasticTestCase extends WebTestCase
     public function createConfiguration()
     {
         if (file_exists($configFile = __DIR__.'/../../../../config/config.php')) {
-            $config = include __DIR__.'/../../../../config/config.php';
+            $config = include __DIR__.'/../../../../config.php';
         } elseif ($environment = getenv('ENVIRONMENT_NAME')) {
             $config = include __DIR__."/../../../../config/{$environment}.php";
         } else {
