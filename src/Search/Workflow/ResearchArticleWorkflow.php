@@ -16,7 +16,6 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
-use const DATE_ISO8601;
 
 final class ResearchArticleWorkflow implements Workflow
 {
@@ -139,7 +138,7 @@ final class ResearchArticleWorkflow implements Workflow
         ];
 
         if (isset($this->rdsArticles[$article->getId()]['date'])) {
-            $sortDate = DateTimeImmutable::createFromFormat(DATE_RFC3339, $this->rdsArticles[$article->getId()]['date']);
+            $sortDate = DateTimeImmutable::createFromFormat(DATE_ATOM, $this->rdsArticles[$article->getId()]['date']);
             if (false === $sortDate) {
                 throw new RuntimeException($this->rdsArticles[$article->getId()]['date'].' is not a valid date');
             }
