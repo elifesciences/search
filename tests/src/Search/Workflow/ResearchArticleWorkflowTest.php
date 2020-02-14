@@ -14,7 +14,6 @@ use test\eLife\ApiSdk\Serializer\ArticlePoANormalizerTest;
 use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\ExceptionNullLogger;
 use tests\eLife\Search\HttpMocks;
-use function json_decode;
 
 class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
 {
