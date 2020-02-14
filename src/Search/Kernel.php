@@ -101,6 +101,8 @@ final class Kernel implements MinimalKernel
                 'secret' => '-------------------------------',
                 'region' => '---------',
             ], $config['aws'] ?? []),
+            'feature_rds' => false,
+            'rds_articles' => [],
         ], $config);
         $app = new Application([
             'logger.channel' => 'search',
@@ -432,7 +434,8 @@ final class Kernel implements MinimalKernel
                 $app['console.gearman.task_driver'],
                 $app['elastic.client.write'],
                 $app['validator'],
-                $app['logger']
+                $app['logger'],
+                $app['config']['feature_rds'] ? $app['config']['rds_articles'] : []
             );
         };
 

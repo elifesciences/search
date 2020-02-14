@@ -2,12 +2,14 @@
 
 namespace tests\eLife\Search\Workflow;
 
+use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
 use Mockery;
 use Mockery\Mock;
 use PHPUnit_Framework_TestCase;
+use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\Serializer\ArticlePoANormalizerTest;
 use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\ExceptionNullLogger;
@@ -83,6 +85,36 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertJson($article, 'Article is not valid JSON');
         $this->assertEquals('research-article', $type, 'A type is required.');
         $this->assertNotNull($id, 'An ID is required.');
+    }
+
+    public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
+    {
+        $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
+            $this->elastic, $this->validator, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
+
+        $article = Builder::for(ArticlePoA::class)
+            ->withId('article-1')
+            ->withStatusDate(new DateTimeImmutable('2010-02-03T04:05:06Z'))
+            ->__invoke();
+
+        $return = json_decode($this->workflow->index($article)['json'], true);
+
+        $this->assertSame('2010-02-03T04:05:06Z', $return['sortDate']);
+    }
+
+    public function testRdsDateIsUsedAsTheSortDateWhenThereIsAnRdsArticle()
+    {
+        $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
+            $this->elastic, $this->validator, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
+
+        $article = Builder::for(ArticlePoA::class)
+            ->withId('article-2')
+            ->withStatusDate(new DateTimeImmutable('2010-02-03T04:05:06Z'))
+            ->__invoke();
+
+        $return = json_decode($this->workflow->index($article)['json'], true);
+
+        $this->assertSame('2020-09-08T07:06:05Z', $return['sortDate']);
     }
 
     /**

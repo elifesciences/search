@@ -3,6 +3,7 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
+use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
@@ -12,6 +13,7 @@ use eLife\Search\Api\Response\ArticleResponse;
 use eLife\Search\Api\Response\SearchResult;
 use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
@@ -31,17 +33,20 @@ final class ResearchArticleWorkflow implements Workflow
     private $logger;
     private $client;
     private $validator;
+    private $rdsArticles;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
+        ApiValidator $validator,
+        array $rdsArticles = []
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
+        $this->rdsArticles = $rdsArticles;
     }
 
     /**
@@ -132,7 +137,14 @@ final class ResearchArticleWorkflow implements Workflow
             'value' => json_encode($articleObject->dataSets ?? '[]'),
         ];
 
-        $sortDate = $article->getStatusDate();
+        if (isset($this->rdsArticles[$article->getId()]['date'])) {
+            $sortDate = DateTimeImmutable::createFromFormat(DATE_ATOM, $this->rdsArticles[$article->getId()]['date']);
+            if (false === $sortDate) {
+                throw new RuntimeException($this->rdsArticles[$article->getId()]['date'].' is not a valid date');
+            }
+        } else {
+            $sortDate = $article->getStatusDate();
+        }
         $this->addSortDate($articleObject, $sortDate);
 
         $this->logger->debug('Article<'.$article->getId().'> Detected type '.($article->getType() ?? 'research-article'));
