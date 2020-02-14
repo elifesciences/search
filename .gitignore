@@ -1,6 +1,5 @@
 /build/
-/config/config.php
-/config/local.php
+/config.php
 /index.json
 /.php_cs.cache
 /var/
