@@ -9,6 +9,7 @@ use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
 use eLife\Search\KeyValueStore\ElasticSearchKeyValueStore;
 use Psr\Log\NullLogger;
+use RuntimeException;
 use Silex\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\Console\Application;
