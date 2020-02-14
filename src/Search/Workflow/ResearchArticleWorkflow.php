@@ -3,6 +3,7 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
+use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
@@ -12,8 +13,10 @@ use eLife\Search\Api\Response\ArticleResponse;
 use eLife\Search\Api\Response\SearchResult;
 use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
+use const DATE_ISO8601;
 
 final class ResearchArticleWorkflow implements Workflow
 {
@@ -136,7 +139,10 @@ final class ResearchArticleWorkflow implements Workflow
         ];
 
         if (isset($this->rdsArticles[$article->getId()]['date'])) {
-            $sortDate = new DateTimeImmutable($this->rdsArticles[$article->getId()]['date']);
+            $sortDate = DateTimeImmutable::createFromFormat(DATE_RFC3339, $this->rdsArticles[$article->getId()]['date']);
+            if (false === $sortDate) {
+                throw new RuntimeException($this->rdsArticles[$article->getId()]['date'].' is not a valid date');
+            }
         } else {
             $sortDate = $article->getStatusDate();
         }
