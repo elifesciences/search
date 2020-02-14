@@ -38,7 +38,7 @@ final class ResearchArticleWorkflow implements Workflow
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator,
-        array $rdsArticles
+        array $rdsArticles = []
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
@@ -104,7 +104,7 @@ final class ResearchArticleWorkflow implements Workflow
             }
 
             return $author;
-        }, $articleObject->authors);
+        }, $articleObject->authors ?? []);
         // Fix author name in references.
         $articleObject->references = array_map(function ($reference) {
             $reference->authors = array_map(function ($author) {
