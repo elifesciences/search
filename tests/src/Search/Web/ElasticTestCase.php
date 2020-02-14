@@ -9,6 +9,7 @@ use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
 use eLife\Search\KeyValueStore\ElasticSearchKeyValueStore;
 use Psr\Log\NullLogger;
+use RuntimeException;
 use Silex\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\Console\Application;
@@ -325,12 +326,12 @@ abstract class ElasticTestCase extends WebTestCase
 
     public function createConfiguration()
     {
-        if (file_exists($configFile = __DIR__.'/../../../../config/config.php')) {
-            $config = include __DIR__.'/../../../../config/config.php';
+        if (file_exists($configFile = __DIR__.'/../../../../config.php')) {
+            $config = include __DIR__.'/../../../../config.php';
         } elseif ($environment = getenv('ENVIRONMENT_NAME')) {
             $config = include __DIR__."/../../../../config/{$environment}.php";
         } else {
-            throw new RuntimeException('No ENVIRONMENT_NAME is specified and no config/local.php has been provided to use a local enviroment');
+            throw new RuntimeException('No config.php has been found and no ENVIRONMENT_NAME is specified.');
         }
 
         return $this->modifyConfiguration($config);
