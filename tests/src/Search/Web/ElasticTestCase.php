@@ -328,10 +328,8 @@ abstract class ElasticTestCase extends WebTestCase
     {
         if (file_exists($configFile = __DIR__.'/../../../../config.php')) {
             $config = include __DIR__.'/../../../../config.php';
-        } elseif ($environment = getenv('ENVIRONMENT_NAME')) {
-            $config = include __DIR__."/../../../../config/{$environment}.php";
         } else {
-            throw new RuntimeException('No config.php has been found and no ENVIRONMENT_NAME is specified.');
+            throw new RuntimeException('No config.php has been found.');
         }
 
         return $this->modifyConfiguration($config);
