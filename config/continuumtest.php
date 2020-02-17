@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'gearman_servers' => ['localhost'],
+    'gearman_servers' => ['127.0.0.1'],
     'api_url' => 'http://continuumtest--gateway.elife.internal/',
     'api_requests_batch' => 20,
     'rate_limit_minimum_page' => 21,
