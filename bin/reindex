@@ -2,13 +2,12 @@
 set -e
 
 if [ "$#" -lt 2 ]; then
-    echo "Usage: bin/reindex ENVIRONMENT INDEX_NAME"
-    echo "Example: bin/reindex end2end elife_search_67"
+    echo "Usage: bin/reindex INDEX_NAME"
+    echo "Example: bin/reindex elife_search_67"
     exit 1
 fi
 
-environment="$1"
-index_name="$2"
+index_name="$1"
 
 echo "Stopping gearman:worker instances"
 sudo systemctl stop search-gearman-worker-controller.target
@@ -28,7 +27,7 @@ echo "Importing all API content"
 ./bin/console queue:import all
 
 echo "Waiting for empty queues"
-./bin/wait-for-empty-queues "$environment"
+./bin/wait-for-empty-queues
 
 echo "Switching reads to new index $index_name"
 ./bin/console index:switch:read "$index_name"

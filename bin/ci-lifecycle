@@ -2,7 +2,6 @@
 set -e
 . bin/ci-process-bootstrap
 
-echo $environment
 temporary_index_name=elife_search_temporary_lifecycle_test
 ./bin/console search:setup --index="$temporary_index_name" --delete
 ./bin/console index:delete "$temporary_index_name"
