@@ -1,5 +1,5 @@
 # will return also on failing conditions such as dead processes
-timeout 60 ./bin/wait-for-empty-queues "$environment" &
+timeout 60 ./bin/wait-for-empty-queues &
 waitingPid=$!
 wait "$waitingPid"
 waitingReturnCode=$?

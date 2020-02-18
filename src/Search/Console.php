@@ -258,6 +258,7 @@ final class Console
         // Some annotations
         Register::registerLoader();
 
+        // TODO: remove when it is *never* passed in by the formula or anything else
         $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_OPTIONAL, 'The Environment name. Deprecated and not used', 'dev'));
 
         // Add commands from the DI container. (for more complex commands.)
