@@ -2,20 +2,20 @@
 set -e
 . bin/ci-process-bootstrap
 
-./bin/console queue:clean --env="$environment"
+./bin/console queue:clean
 # TODO: poll for queue:count == 0, with timeout
 sleep 5
 
 index_name=elife_search_$(date +%Y%m%d%H%M%S)
-./bin/console search:setup --index="$index_name" --delete --env="$environment"
+./bin/console search:setup --index="$index_name" --delete
 
-./bin/console index:switch:write "$index_name" --env="$environment"
+./bin/console index:switch:write "$index_name"
 . bin/ci-start-processes
 
 echo "Starting reindexing"
-./bin/console queue:import all --env="$environment"
+./bin/console queue:import all
 echo "Finished launching reindexing"
 
 . bin/ci-wait-steady-state
-./bin/console index:switch:read "$index_name" --env="$environment"
+./bin/console index:switch:read "$index_name"
 . bin/ci-expected-results
