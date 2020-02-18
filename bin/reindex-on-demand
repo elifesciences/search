@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-if [ "$#" -lt 2 ]; then
+if [ "$#" -lt 1 ]; then
     echo "Usage: bin/reindex-on-demand POSSIBLE_INDEX_NAME"
     echo "Example: bin/reindex-on-demand elife_search_90"
     exit 1
