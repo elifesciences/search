@@ -771,12 +771,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "5750a149fabf6487a53f09b1137afa97653edc9e"
+                "reference": "3af0739fac110e79ea7f21aadf8d17b891f3b918"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/5750a149fabf6487a53f09b1137afa97653edc9e",
-                "reference": "5750a149fabf6487a53f09b1137afa97653edc9e",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/3af0739fac110e79ea7f21aadf8d17b891f3b918",
+                "reference": "3af0739fac110e79ea7f21aadf8d17b891f3b918",
                 "shasum": ""
             },
             "require": {
@@ -789,7 +789,7 @@
                 "psr/log": "^1.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.7 || ^6.0",
+                "phpunit/phpunit": "^5.7.1 || ^6.0",
                 "symfony/console": "^2.7 || ^3.2"
             },
             "suggest": {
@@ -811,7 +811,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences Bus SDK",
-            "time": "2017-11-13T09:52:12+00:00"
+            "time": "2018-03-15T10:08:05+00:00"
         },
         {
             "name": "elife/content-negotiator",
@@ -1200,6 +1200,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "abandoned": true,
             "time": "2015-05-20T03:37:09+00:00"
         },
         {
@@ -1250,6 +1251,7 @@
                 "Guzzle",
                 "stream"
             ],
+            "abandoned": true,
             "time": "2014-10-12T19:18:40+00:00"
         },
         {
@@ -4277,7 +4279,6 @@
                 "mock",
                 "xunit"
             ],
-            "abandoned": true,
             "time": "2016-12-08T20:27:08+00:00"
         },
         {
