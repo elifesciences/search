@@ -303,10 +303,13 @@ final class Console
             $this->logger->warning('RDS feature is not enabled.');
             return;
         }
+        $ids = [];
         foreach ($this->config['rds_articles'] as $id => $_) {
             $this->logger->info("Queuing RDS article $id");
             $this->enqueue('article', $id);
+            $ids[] = $id;
         }
+        $output->writeln("Queued: " . implode(', ', $ids));
         $this->logger->info('RDS articles added to indexing queue.');
     }
 
