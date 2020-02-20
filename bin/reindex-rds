@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -e
+
+./bin/console rds:reindex
+
+echo "Waiting for empty queues"
+./bin/wait-for-empty-queues
