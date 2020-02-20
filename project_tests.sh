@@ -13,3 +13,6 @@ bin/ci-import
 
 echo "Reindexing api-dummy"
 bin/ci-reindex
+
+echo "Reindexing RDS articles"
+bin/reindex-rds
