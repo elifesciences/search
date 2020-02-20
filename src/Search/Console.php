@@ -113,7 +113,6 @@ final class Console
         'rds:reindex' => [
             'description' => 'Reindex RDS articles to correctly place them in listings',
         ],
-
     ];
 
     public function queueCreateCommand()
@@ -301,6 +300,7 @@ final class Console
         $this->logger->info('Reindex RDS articles...');
         if (!$this->config['feature_rds']) {
             $this->logger->warning('RDS feature is not enabled.');
+
             return;
         }
         $ids = [];
@@ -309,7 +309,7 @@ final class Console
             $this->enqueue('article', $id);
             $ids[] = $id;
         }
-        $output->writeln("Queued: " . implode(', ', $ids));
+        $output->writeln('Queued: '.implode(', ', $ids));
         $this->logger->info('RDS articles added to indexing queue.');
     }
 
