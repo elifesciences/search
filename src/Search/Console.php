@@ -302,7 +302,7 @@ final class Console
             $this->logger->warning('RDS feature is not enabled. Reindexing will have no effect.');
         }
         $ids = [];
-        foreach ($this->config['rds_articles'] as $id => $_) {
+        foreach (array_keys($this->config['rds_articles']) as $id) {
             $this->logger->info("Queuing RDS article $id");
             $this->enqueue('article', $id);
             $ids[] = $id;
