@@ -299,9 +299,7 @@ final class Console
     {
         $this->logger->info('Reindex RDS articles...');
         if (!$this->config['feature_rds']) {
-            $this->logger->warning('RDS feature is not enabled.');
-
-            return;
+            $this->logger->warning('RDS feature is not enabled. Reindexing will have no effect.');
         }
         $ids = [];
         foreach ($this->config['rds_articles'] as $id => $_) {
