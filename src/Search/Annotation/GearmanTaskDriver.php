@@ -74,8 +74,8 @@ final class GearmanTaskDriver
     {
         $worker->addFunction($task->name, Closure::bind(function (GearmanJob $job) use ($task) {
             $this->logger->debug('GearmanTaskDriver task started', ['task' => $task->name]);
-            $this->monitoring->nameTransaction('gearman:worker '.$task->name);
             $this->monitoring->startTransaction();
+            $this->monitoring->nameTransaction('gearman:worker '.$task->name);
 
             try {
                 $data = $task->deserialize($job->workload());

@@ -66,8 +66,8 @@ final class ImportCommand extends Command
         }
 
         try {
-            $this->monitoring->nameTransaction('queue:import');
             $this->monitoring->startTransaction();
+            $this->monitoring->nameTransaction('queue:import');
             if ('all' === $entity) {
                 foreach (self::$supports as $e) {
                     if ('all' !== $e) {
