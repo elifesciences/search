@@ -110,6 +110,9 @@ final class Console
                 ['name' => 'date'],
             ],
         ],
+        'rds:reindex' => [
+            'description' => 'Reindex RDS articles to correctly place them in listings',
+        ],
     ];
 
     public function queueCreateCommand()
@@ -290,6 +293,22 @@ final class Console
             $this->logger->error('Cannot clean var/cache/', ['exception' => $e]);
         }
         $this->logger->info('Cache cleared successfully.');
+    }
+
+    public function rdsReindexCommand(InputInterface $input, OutputInterface $output)
+    {
+        $this->logger->info('Reindex RDS articles...');
+        if (!$this->config['feature_rds']) {
+            $this->logger->warning('RDS feature is not enabled. Reindexing will have no effect.');
+        }
+        $ids = [];
+        foreach (array_keys($this->config['rds_articles']) as $id) {
+            $this->logger->info("Queuing RDS article $id");
+            $this->enqueue('article', $id);
+            $ids[] = $id;
+        }
+        $output->writeln('Queued: '.implode(', ', $ids));
+        $this->logger->info('RDS articles added to indexing queue.');
     }
 
     public function run($input = null, $output = null)
