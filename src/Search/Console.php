@@ -8,6 +8,7 @@ use Closure;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
+use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
 use Exception;
 use LogicException;
 use Psr\Log\LoggerInterface;
@@ -88,6 +89,9 @@ final class Console
                     'mode' => InputArgument::REQUIRED,
                 ],
             ],
+        ],
+        'index:delete:unused' => [
+            'description' => 'Delete all unused indexes',
         ],
         'index:switch:read' => [
             'description' => 'Switches the index we are reading from in the API',
@@ -244,6 +248,26 @@ final class Console
         $indexName = $input->getArgument('index_name');
         $this->logger->info("Deleting index {$indexName}");
         $client->deleteIndex($indexName);
+    }
+
+    public function indexDeleteUnusedCommand(InputInterface $input, OutputInterface $output)
+    {
+        $client = $this->kernel->get('elastic.client.plain');
+        foreach ($client->allIndexes() as $indexName) {
+            if (in_array(
+                $indexName,
+                [
+                    ElasticsearchKeyValueStore::INDEX_NAME,
+                    $this->kernel->indexMetadata()->write(),
+                    $this->kernel->indexMetadata()->read(),
+                ]
+            )) {
+                $this->logger->info("Preserving index {$indexName}");
+                continue;
+            }
+            $this->logger->info("Deleting index {$indexName}");
+            $client->deleteIndex($indexName);
+        }
     }
 
     public function __construct(Application $console, Kernel $kernel)
