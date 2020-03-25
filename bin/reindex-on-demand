@@ -19,7 +19,6 @@ if [ "$existing_last_import" != "$desired_last_import" ]; then
     echo "Reindexing"
     bin/reindex "$possible_index_name"
     bin/console index:lastimport:update "$desired_last_import"
-    bin/console index:delete "$existing_index_name"
 else
     echo "Not reindexing"
 fi
