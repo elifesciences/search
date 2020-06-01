@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-# with just a single worker the polling may fail often as there is a gap between 
-# with two or more workers this becomes quite unlikely
+# with just a single worker the polling may fail often as there is a gap between accepting and completing a job.
+# with more workers this becomes less unlikely.
 no_workers_threshold=15 # how many attempts per-loop should be made to detect workers? 10 is safe, 15 is safer.
 no_workers_attempt=0 # which attempt are we on now?
 
