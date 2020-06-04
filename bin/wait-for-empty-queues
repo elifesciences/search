@@ -5,8 +5,8 @@ set -e
 # with more workers this becomes less unlikely.
 
 # how many attempts per-loop should be made to detect workers? 10 is safe for continuumtest, 15 is safer.
-# neither are safe for `prod` so a ridiculous 50 checks over a five second period is being added.
-no_workers_threshold=50 
+# neither are safe for `prod` so a ridiculous 300 checks over a thirty second period is being added.
+no_workers_threshold=300
 no_workers_attempt=0 # which attempt are we on now?
 
 while true; do
