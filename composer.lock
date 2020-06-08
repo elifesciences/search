@@ -548,12 +548,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "349c6280f44c95acf7eea49ad68901b3cf528db5"
+                "reference": "02af549cf4ab00807ee122169a726e5fd34ca3b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/349c6280f44c95acf7eea49ad68901b3cf528db5",
-                "reference": "349c6280f44c95acf7eea49ad68901b3cf528db5",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/02af549cf4ab00807ee122169a726e5fd34ca3b1",
+                "reference": "02af549cf4ab00807ee122169a726e5fd34ca3b1",
                 "shasum": ""
             },
             "conflict": {
@@ -565,7 +565,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2020-02-18T11:53:51+00:00"
+            "time": "2020-06-08T01:15:34+00:00"
         },
         {
             "name": "elife/api-client",
@@ -573,12 +573,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "879961b8c6b59d70a0ade10b10e3f6d32635e37e"
+                "reference": "f89bb6bfc3ca3dfb8265d1bba34fc541395e8669"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/879961b8c6b59d70a0ade10b10e3f6d32635e37e",
-                "reference": "879961b8c6b59d70a0ade10b10e3f6d32635e37e",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/f89bb6bfc3ca3dfb8265d1bba34fc541395e8669",
+                "reference": "f89bb6bfc3ca3dfb8265d1bba34fc541395e8669",
                 "shasum": ""
             },
             "require": {
@@ -621,7 +621,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API client",
-            "time": "2020-02-10T14:10:10+00:00"
+            "time": "2020-06-08T01:08:39+00:00"
         },
         {
             "name": "elife/api-problem",
@@ -677,12 +677,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "dff23fde2429b40a08ca548d801c39f7ae0ad2c9"
+                "reference": "55e41135e5bde24848a0162937934026f4d7b42b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/dff23fde2429b40a08ca548d801c39f7ae0ad2c9",
-                "reference": "dff23fde2429b40a08ca548d801c39f7ae0ad2c9",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/55e41135e5bde24848a0162937934026f4d7b42b",
+                "reference": "55e41135e5bde24848a0162937934026f4d7b42b",
                 "shasum": ""
             },
             "require": {
@@ -722,7 +722,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2020-02-28T13:33:16+00:00"
+            "time": "2020-06-08T01:08:16+00:00"
         },
         {
             "name": "elife/api-validator",
@@ -4283,6 +4283,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2016-12-08T20:27:08+00:00"
         },
         {
@@ -5047,5 +5048,6 @@
     "platform": {
         "php": "^7.0"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
