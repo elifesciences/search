@@ -548,12 +548,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "02af549cf4ab00807ee122169a726e5fd34ca3b1"
+                "reference": "40309efa97bf0ba3049da54037ebf52af059eabc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/02af549cf4ab00807ee122169a726e5fd34ca3b1",
-                "reference": "02af549cf4ab00807ee122169a726e5fd34ca3b1",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/40309efa97bf0ba3049da54037ebf52af059eabc",
+                "reference": "40309efa97bf0ba3049da54037ebf52af059eabc",
                 "shasum": ""
             },
             "conflict": {
@@ -565,7 +565,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2020-06-08T01:15:34+00:00"
+            "time": "2020-06-08T13:46:14+00:00"
         },
         {
             "name": "elife/api-client",
@@ -677,12 +677,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "55e41135e5bde24848a0162937934026f4d7b42b"
+                "reference": "81fae305fe3bb7fea86a3e52d6a2a4e7f5ecf169"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/55e41135e5bde24848a0162937934026f4d7b42b",
-                "reference": "55e41135e5bde24848a0162937934026f4d7b42b",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/81fae305fe3bb7fea86a3e52d6a2a4e7f5ecf169",
+                "reference": "81fae305fe3bb7fea86a3e52d6a2a4e7f5ecf169",
                 "shasum": ""
             },
             "require": {
@@ -722,7 +722,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2020-06-08T01:08:16+00:00"
+            "time": "2020-06-08T18:04:49+00:00"
         },
         {
             "name": "elife/api-validator",
@@ -730,12 +730,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-validator-php.git",
-                "reference": "4307a752a29e8e98a305358d991d755c26f07063"
+                "reference": "b87e36a48be01b1c466c506d7024f5558974245a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/4307a752a29e8e98a305358d991d755c26f07063",
-                "reference": "4307a752a29e8e98a305358d991d755c26f07063",
+                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/b87e36a48be01b1c466c506d7024f5558974245a",
+                "reference": "b87e36a48be01b1c466c506d7024f5558974245a",
                 "shasum": ""
             },
             "require": {
@@ -766,7 +766,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API validator",
-            "time": "2017-03-15T12:52:36+00:00"
+            "time": "2020-03-05T04:54:17+00:00"
         },
         {
             "name": "elife/bus-sdk",
@@ -774,12 +774,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "3af0739fac110e79ea7f21aadf8d17b891f3b918"
+                "reference": "4db90f7b9819956a76c71e37f2d50f96e9bc39d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/3af0739fac110e79ea7f21aadf8d17b891f3b918",
-                "reference": "3af0739fac110e79ea7f21aadf8d17b891f3b918",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/4db90f7b9819956a76c71e37f2d50f96e9bc39d0",
+                "reference": "4db90f7b9819956a76c71e37f2d50f96e9bc39d0",
                 "shasum": ""
             },
             "require": {
@@ -790,6 +790,9 @@
                 "jms/serializer": "^1.4",
                 "php": "^7.0",
                 "psr/log": "^1.0"
+            },
+            "conflict": {
+                "sebastian/comparator": "<1.2.3"
             },
             "require-dev": {
                 "phpunit/phpunit": "^5.7.1 || ^6.0",
@@ -814,7 +817,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences Bus SDK",
-            "time": "2018-03-15T10:08:05+00:00"
+            "time": "2020-03-30T15:50:06+00:00"
         },
         {
             "name": "elife/content-negotiator",
@@ -871,12 +874,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/logging-sdk-php.git",
-                "reference": "81a10f8a88f528ff516b1a83e957a91a1d391c75"
+                "reference": "dfdd87eb422d36f9e82c3066ad05abb2d199a68b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/logging-sdk-php/zipball/81a10f8a88f528ff516b1a83e957a91a1d391c75",
-                "reference": "81a10f8a88f528ff516b1a83e957a91a1d391c75",
+                "url": "https://api.github.com/repos/elifesciences/logging-sdk-php/zipball/dfdd87eb422d36f9e82c3066ad05abb2d199a68b",
+                "reference": "dfdd87eb422d36f9e82c3066ad05abb2d199a68b",
                 "shasum": ""
             },
             "require": {
@@ -915,7 +918,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences logging SDK",
-            "time": "2018-01-30T11:28:03+00:00"
+            "time": "2018-03-15T10:08:12+00:00"
         },
         {
             "name": "elife/ping",
@@ -1950,7 +1953,7 @@
             ],
             "authors": [
                 {
-                    "name": "William Durand",
+                    "name": "William DURAND",
                     "email": "william.durand1@gmail.com"
                 }
             ],
