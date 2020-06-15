@@ -6,8 +6,12 @@ set -e
 # more workers also means more CPU usage which means less CPU available for serving traffic.
 
 # how many attempts per-loop should be made to detect workers?
-no_workers_threshold=3000 # 3000 attempts with a .10s interval is five minutes.
-no_workers_attempt=0 # which attempt are we on now?
+num_workers_threshold=3000 # 3000 attempts with a .10s interval is five minutes.
+num_workers_attempt=0 # which attempt are we on now?
+
+# same again, but for the sqs watcher
+num_watches_threshold=50 # 50 attempts with a .10s interval is five seconds
+num_watches_attempt=0
 
 while true; do
     # `|| true` avoid failing the script when there are no results
@@ -15,20 +19,27 @@ while true; do
     watches=$(pgrep -cf queue:watch || true)
 
     if [ "$workers" -eq "0" ]; then
-        if [ "$no_workers_attempt" = "$no_workers_threshold" ]; then
+        if [ "$num_workers_attempt" = "$num_workers_threshold" ]; then
             echo "No alive gearman:worker processes"
             break
         fi
-        no_workers_attempt=$((no_workers_attempt+1))
+        num_workers_attempt=$((num_workers_attempt+1))
         sleep .10 # ten checks in a second
         continue
     fi
-    no_workers_attempt=0 # we've found a worker, reset the counter
+    num_workers_attempt=0 # we've found a worker, reset the counter
 
     if [ "$watches" -eq "0" ]; then
-        echo "No alive queue:watch processes"
-        break
+        if [ "$num_watches_attempt" = "$num_watches_threshold" ]; then
+            echo "No alive queue:watch processes"
+            break
+        fi
+        num_watches_attempt=$((num_watches_attempt+1))
+        sleep .10
+        continue
     fi
+    num_watches_attempt=0
+
     sqs_queue=$(bin/console queue:count)
     echo "Job in SQS queue (approximate): $sqs_queue"
     gearman_queue=$(gearadmin --status | cut -f 2 | paste -sd+ | bc)
