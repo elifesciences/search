@@ -6,11 +6,11 @@ set -e
 # more workers also means more CPU usage which means less CPU available for serving traffic.
 
 # how many attempts per-loop should be made to detect workers?
-num_workers_threshold=3000 # 3000 attempts with a .10s interval is five minutes.
+num_workers_threshold=100 # 100 attempts with a .10s interval is 10 seconds
 num_workers_attempt=0 # which attempt are we on now?
 
 # same again, but for the sqs watcher
-num_watches_threshold=50 # 50 attempts with a .10s interval is five seconds
+num_watches_threshold=100 # 100 attempts with a .10s interval is 10 seconds
 num_watches_attempt=0
 
 while true; do
