@@ -322,9 +322,6 @@ final class Console
     public function rdsReindexCommand(InputInterface $input, OutputInterface $output)
     {
         $this->logger->info('Reindex RDS articles...');
-        if (!$this->config['feature_rds']) {
-            $this->logger->warning('RDS feature is not enabled. Reindexing will have no effect.');
-        }
         $ids = [];
         foreach (array_keys($this->config['rds_articles']) as $id) {
             $this->logger->info("Queuing RDS article $id");
