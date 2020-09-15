@@ -433,7 +433,8 @@ final class Kernel implements MinimalKernel
                 $app['console.gearman.task_driver'],
                 $app['elastic.client.write'],
                 $app['validator'],
-                $app['logger']
+                $app['logger'],
+                $app['config']['rds_articles']
             );
         };
 
