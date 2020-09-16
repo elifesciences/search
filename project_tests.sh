@@ -14,5 +14,6 @@ bin/ci-import
 echo "Reindexing api-dummy"
 bin/ci-reindex
 
-echo "Reindexing RDS articles"
+echo "Reindexing ERA articles"
+bin/reindex-era
 bin/reindex-rds

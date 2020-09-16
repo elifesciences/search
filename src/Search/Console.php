@@ -114,8 +114,11 @@ final class Console
                 ['name' => 'date'],
             ],
         ],
+        'era:reindex' => [
+            'description' => 'Reindex ERA articles to correctly place them in listings',
+        ],
         'rds:reindex' => [
-            'description' => 'Reindex RDS articles to correctly place them in listings',
+            'description' => 'Reindex ERA articles to correctly place them in listings',
         ],
     ];
 
@@ -319,20 +322,25 @@ final class Console
         $this->logger->info('Cache cleared successfully.');
     }
 
-    public function rdsReindexCommand(InputInterface $input, OutputInterface $output)
+    public function eraReindexCommand(InputInterface $input, OutputInterface $output)
     {
-        $this->logger->info('Reindex RDS articles...');
+        $this->logger->info('Reindex ERA articles...');
         if (!$this->config['feature_rds']) {
             $this->logger->warning('RDS feature is not enabled. Reindexing will have no effect.');
         }
         $ids = [];
         foreach (array_keys($this->config['rds_articles']) as $id) {
-            $this->logger->info("Queuing RDS article $id");
+            $this->logger->info("Queuing ERA article $id");
             $this->enqueue('article', $id);
             $ids[] = $id;
         }
         $output->writeln('Queued: '.implode(', ', $ids));
-        $this->logger->info('RDS articles added to indexing queue.');
+        $this->logger->info('ERA articles added to indexing queue.');
+    }
+
+    public function rdsReindexCommand(InputInterface $input, OutputInterface $output)
+    {
+        $this->eraReindexCommand($input, $output);
     }
 
     public function run($input = null, $output = null)
