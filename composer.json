@@ -34,7 +34,7 @@
         "monolog/monolog": "^1.22",
         "propel/propel": "^2.0@alpha",
         "silex/silex": "^2.0",
-        "symfony/event-dispatcher": "dev-master",
+        "symfony/event-dispatcher": "^3.2",
         "symfony/monolog-bridge": "^3.2",
         "symfony/psr-http-message-bridge": "^0.2.0",
         "willdurand/negotiation": "^2.3",
