@@ -87,7 +87,7 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($id, 'An ID is required.');
     }
 
-    public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
+    public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoEraArticle()
     {
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
             $this->elastic, $this->validator, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
@@ -102,7 +102,7 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertSame('2010-02-03T04:05:06Z', $return['sortDate']);
     }
 
-    public function testRdsDateIsUsedAsTheSortDateWhenThereIsAnRdsArticle()
+    public function testEraDateIsUsedAsTheSortDateWhenThereIsAnEraArticle()
     {
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
             $this->elastic, $this->validator, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);

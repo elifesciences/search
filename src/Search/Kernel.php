@@ -102,7 +102,7 @@ final class Kernel implements MinimalKernel
                 'region' => '---------',
             ], $config['aws'] ?? []),
             'feature_rds' => false,
-            'rds_articles' => [],
+            'era_articles' => [],
         ], $config);
         $app = new Application([
             'logger.channel' => 'search',
@@ -435,7 +435,7 @@ final class Kernel implements MinimalKernel
                 $app['elastic.client.write'],
                 $app['validator'],
                 $app['logger'],
-                $app['config']['feature_rds'] ? $app['config']['rds_articles'] : []
+                $app['config']['feature_rds'] ? $app['config']['era_articles'] : []
             );
         };
 

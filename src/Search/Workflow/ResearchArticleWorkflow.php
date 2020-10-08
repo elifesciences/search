@@ -33,20 +33,20 @@ final class ResearchArticleWorkflow implements Workflow
     private $logger;
     private $client;
     private $validator;
-    private $rdsArticles;
+    private $eraArticles;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator,
-        array $rdsArticles = []
+        array $eraArticles = []
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
-        $this->rdsArticles = $rdsArticles;
+        $this->eraArticles = $eraArticles;
     }
 
     /**
@@ -80,7 +80,7 @@ final class ResearchArticleWorkflow implements Workflow
                     'validation_error' => $this->validator->getLastError()->getMessage(),
                 ]
             );
-            throw new InvalidWorkflow('ResearchArticle<'.$article->getId().'> cannot be trasformed into a valid search result.');
+            throw new InvalidWorkflow('ResearchArticle<'.$article->getId().'> cannot be transformed into a valid search result.');
         }
         $this->logger->info('ResearchArticle<'.$article->getId().'> validated against current schema.');
 
@@ -137,10 +137,10 @@ final class ResearchArticleWorkflow implements Workflow
             'value' => json_encode($articleObject->dataSets ?? '[]'),
         ];
 
-        if (isset($this->rdsArticles[$article->getId()]['date'])) {
-            $sortDate = DateTimeImmutable::createFromFormat(DATE_ATOM, $this->rdsArticles[$article->getId()]['date']);
+        if (isset($this->eraArticles[$article->getId()]['date'])) {
+            $sortDate = DateTimeImmutable::createFromFormat(DATE_ATOM, $this->eraArticles[$article->getId()]['date']);
             if (false === $sortDate) {
-                throw new RuntimeException($this->rdsArticles[$article->getId()]['date'].' is not a valid date');
+                throw new RuntimeException($this->eraArticles[$article->getId()]['date'].' is not a valid date');
             }
         } else {
             $sortDate = $article->getStatusDate();
