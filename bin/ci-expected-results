@@ -6,9 +6,12 @@ if [ ! "$total" ]; then
 fi
 
 echo "Total results in the index: $total"
-expected_results_api_dummy=32
+expected_results_api_dummy=41
 if [ ! "$total" -eq "$expected_results_api_dummy" ]; then
     echo "There should be exactly $expected_results_api_dummy results in the index"
+    if [ "$total" -gt "$expected_results_api_dummy" ]; then
+        echo "(have more test fixtures been added to api-dummy?)"
+    fi
     exit 2
 fi
 echo "Success!"
