@@ -13,7 +13,7 @@
         }
     },
     "require": {
-        "php": "^7.0",
+        "php": "~7.2.0",
         "aws/aws-sdk-php": "^3.19",
         "clue/block-react": "^1.1",
         "doctrine/cache": "dev-master",
@@ -34,7 +34,7 @@
         "monolog/monolog": "^1.22",
         "propel/propel": "^2.0@alpha",
         "silex/silex": "^2.0",
-        "symfony/event-dispatcher": "dev-master",
+        "symfony/event-dispatcher": "^3.2",
         "symfony/monolog-bridge": "^3.2",
         "symfony/psr-http-message-bridge": "^0.2.0",
         "willdurand/negotiation": "^2.3",
