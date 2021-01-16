@@ -255,4 +255,16 @@ final class ElasticQueryBuilder implements QueryBuilder
 
         return $this;
     }
+
+    public function setSourceFields() : QueryBuilder
+    {
+        $this->query['body']['_source'] = [
+            'includes' => [
+                '*',
+            ],
+            'excludes' => [],
+        ];
+
+        return $this;
+    }
 }

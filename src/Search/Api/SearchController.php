@@ -108,6 +108,8 @@ final class SearchController
 
         $query = $query->searchFor($for);
 
+        $query->setSourceFields();
+
         $query->setDateType($useDate);
 
         if ($subjects) {
