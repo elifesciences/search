@@ -19,6 +19,7 @@ final class BlogArticleWorkflow implements Workflow
     use Blocks;
     use JsonSerializeTransport;
     use SortDate;
+
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
 
