@@ -351,7 +351,7 @@ final class Console
             $command = $this->console
                 ->register($name)
                 ->setDescription($cmd['description'] ?? $name.' command')
-                ->setCode(Closure::bind(function (InputInterface $input, OutputInterface $output) use ($fn, $name) {
+                ->setCode(Closure::bind(function (InputInterface $input, OutputInterface $output) use ($fn) {
                     $this->{$fn.'Command'}($input, $output);
                 }, $this));
 
