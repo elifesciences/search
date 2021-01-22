@@ -42,7 +42,7 @@ namespace tests\eLife\Search\Gearman {
         /**
          * @test
          */
-        public function test_can_instantiate()
+        public function testCanInstantiate()
         {
             $this->assertInstanceOf(GearmanTaskDriver::class, $this->taskDriver);
         }
@@ -50,7 +50,7 @@ namespace tests\eLife\Search\Gearman {
         /**
          * @test
          */
-        public function test_can_read_annotations()
+        public function testCanReadAnnotations()
         {
             $this->taskDriver->registerWorkflow(new MockAnnotations\MockClassWithNamedAnnotations());
             $this->assertContainsOnlyInstancesOf(GearmanTaskInstance::class, $this->taskDriver->tasks);
@@ -63,7 +63,7 @@ namespace tests\eLife\Search\Gearman {
         /**
          * @test
          */
-        public function test_can_read_annotations_with_flow()
+        public function testCanReadAnnotationsWithFlow()
         {
             $this->taskDriver->registerWorkflow(new MockAnnotations\MockClassWithNamedAndFlowAnnotations());
             $this->assertContainsOnlyInstancesOf(GearmanTaskInstance::class, $this->taskDriver->tasks);
@@ -77,7 +77,7 @@ namespace tests\eLife\Search\Gearman {
         /**
          * @test
          */
-        public function test_can_read_annotations_with_params()
+        public function testCanReadAnnotationsWithParams()
         {
             $this->taskDriver->registerWorkflow(new MockAnnotations\MockClassWithNamedAndParametersAnnotations());
             $this->assertContainsOnlyInstancesOf(GearmanTaskInstance::class, $this->taskDriver->tasks);
@@ -91,7 +91,7 @@ namespace tests\eLife\Search\Gearman {
         /**
          * @test
          */
-        public function exits_on_limit_being_reached()
+        public function exitsOnLimitBeingReached()
         {
             $this->logLines = [];
             $this->logger->expects($this->any())

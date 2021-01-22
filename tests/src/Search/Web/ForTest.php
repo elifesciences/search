@@ -7,7 +7,7 @@ namespace tests\eLife\Search\Web;
  */
 final class ForTest extends ElasticTestCase
 {
-    public function test_all_for_words_match()
+    public function testAllForWordsMatch()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -24,7 +24,7 @@ final class ForTest extends ElasticTestCase
         $this->assertEquals($response->items[1]->id, '15276');
     }
 
-    public function test_all_for_words_have_to_match()
+    public function testAllForWordsHaveToMatch()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -39,7 +39,7 @@ final class ForTest extends ElasticTestCase
         $this->assertEquals($response->total, 0);
     }
 
-    public function test_all_for_words_fuzzy_match()
+    public function testAllForWordsFuzzyMatch()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),

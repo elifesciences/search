@@ -9,7 +9,7 @@ class ElasticSearchKeyValueStoreTest extends ElasticTestCase
     /**
      * @test
      */
-    public function stores_and_load_a_json_document()
+    public function storesAndLoadAJsonDocument()
     {
         $store = $this->kernel->getApp()['keyvaluestore'];
         $store->setup();
@@ -23,7 +23,7 @@ class ElasticSearchKeyValueStoreTest extends ElasticTestCase
     /**
      * @test
      */
-    public function allows_defaults_to_be_loaded()
+    public function allowsDefaultsToBeLoaded()
     {
         $store = $this->kernel->getApp()['keyvaluestore'];
         $store->setup();
