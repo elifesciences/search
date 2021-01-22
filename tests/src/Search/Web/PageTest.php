@@ -10,7 +10,7 @@ final class PageTest extends ElasticTestCase
      * @test
      * @dataProvider invalidPageProvider
      */
-    public function it_returns_a_400_for_an_invalid_page(string $page)
+    public function itReturnsA400ForAnInvalidPage(string $page)
     {
         $this->newClient();
         $this->api->request('GET', "/search?page={$page}");
@@ -29,7 +29,7 @@ final class PageTest extends ElasticTestCase
     /**
      * @test
      */
-    public function it_returns_a_404_for_a_page_that_is_not_there()
+    public function itReturnsA404ForAPageThatIsNotThere()
     {
         $this->newClient();
         $this->api->request('GET', '/search?page=2');
@@ -42,7 +42,7 @@ final class PageTest extends ElasticTestCase
      * @test
      * @dataProvider invalidPerPageProvider
      */
-    public function it_returns_a_400_for_an_invalid_per_page(string $perPage)
+    public function itReturnsA400ForAnInvalidPerPage(string $perPage)
     {
         $this->newClient();
         $this->api->request('GET', "/search?per-page={$perPage}");
@@ -61,7 +61,7 @@ final class PageTest extends ElasticTestCase
     /**
      * @test
      */
-    public function it_tags_high_numbered_pages_with_rate_limiting_headers()
+    public function itTagsHighNumberedPagesWithRateLimitingHeaders()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),

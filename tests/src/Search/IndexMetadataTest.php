@@ -14,7 +14,7 @@ class IndexMetadataTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function dumps_to_a_document_and_back()
+    public function dumpsToADocumentAndBack()
     {
         $this->assertEquals(
             $this->sample,
@@ -25,7 +25,7 @@ class IndexMetadataTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function dumps_to_a_file_and_back()
+    public function dumpsToAFileAndBack()
     {
         $file = sys_get_temp_dir().'/'.uniqid().'.json';
         $this->sample->toFile($file);

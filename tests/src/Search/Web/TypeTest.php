@@ -10,7 +10,7 @@ final class TypeTest extends ElasticTestCase
      * @test
      * @dataProvider typeProvider
      */
-    public function it_negotiates_type(string $type, int $statusCode)
+    public function itNegotiatesType(string $type, int $statusCode)
     {
         $this->newClient();
 

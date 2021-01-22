@@ -10,7 +10,7 @@ class FacetCountTest extends ElasticTestCase
     /**
      * @test
      */
-    public function test_facet_count_is_accurate_after_filtering_subject()
+    public function testFacetCountIsAccurateAfterFilteringSubject()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),

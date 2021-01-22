@@ -10,7 +10,7 @@ class BoostTest extends ElasticTestCase
     /**
      * @test
      */
-    public function test_boost_by_type()
+    public function testBoostByType()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(2),
@@ -24,7 +24,7 @@ class BoostTest extends ElasticTestCase
         $this->assertEquals($response->items[1]->id, '15276');
     }
 
-    public function test_boost_by_field()
+    public function testBoostByField()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(4),
@@ -38,7 +38,7 @@ class BoostTest extends ElasticTestCase
         $this->assertEquals($response->items[1]->id, '15275');
     }
 
-    public function test_boost_applies_when_all_words_match()
+    public function testBoostAppliesWhenAllWordsMatch()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -54,7 +54,7 @@ class BoostTest extends ElasticTestCase
         $this->assertEquals($response->items[1]->id, '15279');
     }
 
-    public function test_boost_applies_when_all_words_fuzzy_match()
+    public function testBoostAppliesWhenAllWordsFuzzyMatch()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
