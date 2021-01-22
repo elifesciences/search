@@ -7,7 +7,7 @@ namespace tests\eLife\Search\Web;
  */
 class TypeSubjectFilterTest extends ElasticTestCase
 {
-    public function test_subject_filtering_works()
+    public function testSubjectFilteringWorks()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -30,7 +30,7 @@ class TypeSubjectFilterTest extends ElasticTestCase
         $this->assertEquals($response->total, 4);
     }
 
-    public function test_type_filtering_works()
+    public function testTypeFilteringWorks()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -53,7 +53,7 @@ class TypeSubjectFilterTest extends ElasticTestCase
         $this->assertEquals($response->total, 4);
     }
 
-    public function test_subject_and_type_filtering_works()
+    public function testSubjectAndTypeFilteringWorks()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -95,7 +95,7 @@ class TypeSubjectFilterTest extends ElasticTestCase
         $this->assertEquals($response->total, 4);
     }
 
-    public function test_for_subject_and_type_filtering_works()
+    public function testForSubjectAndTypeFilteringWorks()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),

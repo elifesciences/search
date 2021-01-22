@@ -7,7 +7,7 @@ namespace tests\eLife\Search\Web;
  */
 class UseDateTest extends ElasticTestCase
 {
-    public function test_use_date()
+    public function testUseDate()
     {
         $this->addDocumentsToElasticSearch([
             $this->getCollectionFixture(0),
@@ -27,7 +27,7 @@ class UseDateTest extends ElasticTestCase
         $this->assertEquals($response->items[1]->id, '15275');
     }
 
-    public function test_use_date_range()
+    public function testUseDateRange()
     {
         $this->addDocumentsToElasticSearch([
             $this->getCollectionFixture(0),

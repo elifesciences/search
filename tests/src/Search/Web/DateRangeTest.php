@@ -9,7 +9,7 @@ use stdClass;
  */
 class DateRangeTest extends ElasticTestCase
 {
-    public function test_date_range_start_only()
+    public function testDateRangeStartOnly()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -32,7 +32,7 @@ class DateRangeTest extends ElasticTestCase
         $this->assertIds(['15275', '15276'], $response, 'The date lower boundary is being excluded');
     }
 
-    public function test_date_range_end_only()
+    public function testDateRangeEndOnly()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
@@ -55,7 +55,7 @@ class DateRangeTest extends ElasticTestCase
         $this->assertIds(['19662'], $response, 'The date upper boundary is being excluded');
     }
 
-    public function test_date_range_start_and_end()
+    public function testDateRangeStartAndEnd()
     {
         $this->addDocumentsToElasticSearch([
             $this->getArticleFixture(0),
