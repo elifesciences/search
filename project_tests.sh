@@ -2,8 +2,7 @@
 set -e
 
 rm -f build/*.xml
-# Temporarily disable proofreader
-#proofreader src/ tests/ web/
+proofreader src/ tests/ web/
 vendor/bin/phpunit --log-junit build/phpunit.xml
 
 echo "Creating, deleting an index"
