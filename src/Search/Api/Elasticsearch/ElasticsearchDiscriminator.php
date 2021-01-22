@@ -52,8 +52,7 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
                 break;
 
             // Nope out early to avoid errors.
-            case
-                false === isset($data['_index']) &&
+            case false === isset($data['_index']) &&
                 false === isset($data['_shards']) &&
                 false === isset($data['acknowledged']) &&
                 false === isset($data['created']) &&

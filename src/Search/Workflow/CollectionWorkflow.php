@@ -16,11 +16,11 @@ use Throwable;
 
 final class CollectionWorkflow implements Workflow
 {
-    const WORKFLOW_SUCCESS = 1;
-    const WORKFLOW_FAILURE = -1;
-
     use JsonSerializeTransport;
     use SortDate;
+
+    const WORKFLOW_SUCCESS = 1;
+    const WORKFLOW_FAILURE = -1;
 
     /**
      * @var Serializer

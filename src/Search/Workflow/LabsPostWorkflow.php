@@ -16,12 +16,12 @@ use Throwable;
 
 final class LabsPostWorkflow implements Workflow
 {
-    const WORKFLOW_SUCCESS = 1;
-    const WORKFLOW_FAILURE = -1;
-
     use Blocks;
     use JsonSerializeTransport;
     use SortDate;
+
+    const WORKFLOW_SUCCESS = 1;
+    const WORKFLOW_FAILURE = -1;
 
     /**
      * @var Serializer
