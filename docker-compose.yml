@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+    es7:
+        build:
+            context: .
+            dockerfile: ./.docker/Dockerfile.es7
+        environment:
+            - discovery.type=single-node
+        ports:
+            - 9201:9200
+            - 9301:9300
+    es2:
+        build:
+            context: .
+            dockerfile: ./.docker/Dockerfile.es2
+        ports:
+            - 9202:9200
+    api_dummy:
+        image: elifesciences/api-dummy
+        ports:
+            - 8081:8080
