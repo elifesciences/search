@@ -1,4 +1,3 @@
 FROM elasticsearch:2.4.6
 
-COPY .docker/snapshots/ /snapshots/
-COPY --chown=elasticsearch:elasticsearch .docker/elasticsearch.es2.yml /etc/elasticsearch/elasticsearch.yml
+COPY --chown=elasticsearch:elasticsearch .docker/elasticsearch.es2.yml /usr/share/elasticsearch/config/elasticsearch.yml
