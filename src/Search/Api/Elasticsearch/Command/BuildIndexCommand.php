@@ -71,7 +71,7 @@ class BuildIndexCommand extends Command
                 $this->client->createIndex($index = null, $config);
                 $this->logger->info("Created new empty index {$this->client->index()}");
             } else {
-                $this->logger->error("Index {$this->client->index()} already exists, skipping creation.");
+                $this->logger->warning("Index {$this->client->index()} already exists, skipping creation.");
             }
         } catch (Throwable $e) {
             $this->logger->error("Cannot (re)create ElasticSearch index {$this->client->index()}", ['exception' => $e]);
