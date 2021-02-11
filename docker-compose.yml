@@ -9,8 +9,8 @@ services:
             - http.cors.allow-origin=*
             - http.cors.enabled=true
             - cluster.name=es-docker-cluster
-            - discovery.seed_hosts=es02
-            - cluster.initial_master_nodes=es01,es02
+            - discovery.seed_hosts=es02,es03
+            - cluster.initial_master_nodes=es01,es02,es03
             - bootstrap.memory_lock=true
             - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
             - network.host=0.0.0.0
@@ -30,8 +30,8 @@ services:
             - http.cors.allow-origin=*
             - http.cors.enabled=true
             - cluster.name=es-docker-cluster
-            - discovery.seed_hosts=es01
-            - cluster.initial_master_nodes=es01,es02
+            - discovery.seed_hosts=es01,es03
+            - cluster.initial_master_nodes=es01,es02,es03
             - bootstrap.memory_lock=true
             - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
             - network.host=0.0.0.0
@@ -41,6 +41,25 @@ services:
                 hard: -1
         volumes:
             - ./.docker/data/es02:/usr/share/elasticsearch/data
+    es03:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+        container_name: es03
+        environment:
+            - node.name=es03
+            - http.cors.allow-origin=*
+            - http.cors.enabled=true
+            - cluster.name=es-docker-cluster
+            - discovery.seed_hosts=es01,es02
+            - cluster.initial_master_nodes=es01,es02,es03
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - network.host=0.0.0.0
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - ./.docker/data/es03:/usr/share/elasticsearch/data
     kib7:
         build:
             context: .
