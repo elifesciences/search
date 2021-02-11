@@ -1,22 +1,51 @@
 version: '3'
 
 services:
-    es7:
-        build:
-            context: .
-            dockerfile: ./.docker/Dockerfile.es7
+    es01:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+        container_name: es01
         environment:
-            - discovery.type=single-node
+            - node.name=es01
+            - http.cors.allow-origin=*
+            - http.cors.enabled=true
+            - cluster.name=es-docker-cluster
+            - discovery.seed_hosts=es02
+            - cluster.initial_master_nodes=es01,es02
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - network.host=0.0.0.0
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
         ports:
             - 9201:9200
-            - 9301:9300
-    es2:
+        volumes:
+            - ./.docker/data/es01:/usr/share/elasticsearch/data
+    es02:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
+        container_name: es02
+        environment:
+            - node.name=es02
+            - http.cors.allow-origin=*
+            - http.cors.enabled=true
+            - cluster.name=es-docker-cluster
+            - discovery.seed_hosts=es01
+            - cluster.initial_master_nodes=es01,es02
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - network.host=0.0.0.0
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        volumes:
+            - ./.docker/data/es02:/usr/share/elasticsearch/data
+    kib7:
         build:
             context: .
-            dockerfile: ./.docker/Dockerfile.es2
+            dockerfile: ./.docker/Dockerfile.kib7
+        env_file:
+            - ./.docker/kib7.env
         ports:
-            - 9202:9200
-    api_dummy:
-        image: elifesciences/api-dummy
-        ports:
-            - 8081:8080
+            - 5602:5601
