@@ -1,7 +1,0 @@
-node.name: "None"
-http.cors.allow-origin: "/.*/"
-http.cors.enabled: true
-
-network.host: 0.0.0.0
-
-path.repo: ["/var/lib/elasticsearch/repo"]
