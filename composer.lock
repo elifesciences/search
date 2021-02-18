@@ -636,12 +636,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "99dd9b00404b94838d2e860d310abba968e06ce2"
+                "reference": "d26e72d58d59e43623cfe2119384105f9d9bd8dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/99dd9b00404b94838d2e860d310abba968e06ce2",
-                "reference": "99dd9b00404b94838d2e860d310abba968e06ce2",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/d26e72d58d59e43623cfe2119384105f9d9bd8dd",
+                "reference": "d26e72d58d59e43623cfe2119384105f9d9bd8dd",
                 "shasum": ""
             },
             "conflict": {
@@ -653,7 +653,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2021-02-05T05:50:27+00:00"
+            "time": "2021-02-16T10:44:18+00:00"
         },
         {
             "name": "elife/api-client",
@@ -661,12 +661,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "f89bb6bfc3ca3dfb8265d1bba34fc541395e8669"
+                "reference": "f0e4e97912fa800c0baa2ed00933255803cdb315"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/f89bb6bfc3ca3dfb8265d1bba34fc541395e8669",
-                "reference": "f89bb6bfc3ca3dfb8265d1bba34fc541395e8669",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/f0e4e97912fa800c0baa2ed00933255803cdb315",
+                "reference": "f0e4e97912fa800c0baa2ed00933255803cdb315",
                 "shasum": ""
             },
             "require": {
@@ -685,7 +685,8 @@
                 "phpspec/phpspec": "^2.4",
                 "phpspec/prophecy": "^1.10",
                 "phpunit/phpunit": "^5.2",
-                "psr/log": "^1.0"
+                "psr/log": "^1.0",
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "suggest": {
                 "guzzlehttp/guzzle": "^6.0, to use the Guzzle6HttpClient adapter",
@@ -709,7 +710,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API client",
-            "time": "2020-06-08T01:08:39+00:00"
+            "time": "2021-02-16T11:09:40+00:00"
         },
         {
             "name": "elife/api-problem",
@@ -765,12 +766,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "8c7543d46cbaeaa7026994a61f765a6c66d88143"
+                "reference": "908b0e213cb5224b0327954f9db80fa42d45fff8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/8c7543d46cbaeaa7026994a61f765a6c66d88143",
-                "reference": "8c7543d46cbaeaa7026994a61f765a6c66d88143",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/908b0e213cb5224b0327954f9db80fa42d45fff8",
+                "reference": "908b0e213cb5224b0327954f9db80fa42d45fff8",
                 "shasum": ""
             },
             "require": {
@@ -792,7 +793,8 @@
                 "mindplay/composer-locator": "^2.1.1",
                 "mtdowling/jmespath.php": "^2.0",
                 "phpunit/phpunit": "^5.2",
-                "psr/http-message": "^1.0"
+                "psr/http-message": "^1.0",
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
             "extra": {
@@ -810,7 +812,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2021-02-05T06:20:24+00:00"
+            "time": "2021-02-16T12:42:46+00:00"
         },
         {
             "name": "elife/api-validator",
@@ -818,12 +820,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-validator-php.git",
-                "reference": "b87e36a48be01b1c466c506d7024f5558974245a"
+                "reference": "0864db339c40bb77da11bb84b1e6394a2cd5e31b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/b87e36a48be01b1c466c506d7024f5558974245a",
-                "reference": "b87e36a48be01b1c466c506d7024f5558974245a",
+                "url": "https://api.github.com/repos/elifesciences/api-validator-php/zipball/0864db339c40bb77da11bb84b1e6394a2cd5e31b",
+                "reference": "0864db339c40bb77da11bb84b1e6394a2cd5e31b",
                 "shasum": ""
             },
             "require": {
@@ -836,7 +838,8 @@
             "require-dev": {
                 "phpspec/phpspec": "^2.4",
                 "phpspec/prophecy": "^1.5",
-                "phpunit/phpunit": "^5.2"
+                "phpunit/phpunit": "^5.2",
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
             "extra": {
@@ -854,7 +857,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API validator",
-            "time": "2020-03-05T04:54:17+00:00"
+            "time": "2021-02-16T11:06:30+00:00"
         },
         {
             "name": "elife/bus-sdk",
@@ -862,12 +865,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "4db90f7b9819956a76c71e37f2d50f96e9bc39d0"
+                "reference": "7be1eac38aa3a39f5773b44db442de4be1206dce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/4db90f7b9819956a76c71e37f2d50f96e9bc39d0",
-                "reference": "4db90f7b9819956a76c71e37f2d50f96e9bc39d0",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/7be1eac38aa3a39f5773b44db442de4be1206dce",
+                "reference": "7be1eac38aa3a39f5773b44db442de4be1206dce",
                 "shasum": ""
             },
             "require": {
@@ -884,6 +887,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^5.7.1 || ^6.0",
+                "squizlabs/php_codesniffer": "^3.5",
                 "symfony/console": "^2.7 || ^3.2"
             },
             "suggest": {
@@ -905,7 +909,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences Bus SDK",
-            "time": "2020-03-30T15:50:06+00:00"
+            "time": "2021-02-16T14:20:23+00:00"
         },
         {
             "name": "elife/content-negotiator",
@@ -1826,51 +1830,6 @@
             "time": "2019-11-15T16:17:10+00:00"
         },
         {
-            "name": "paragonie/random_compat",
-            "version": "v9.99.99",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
-                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.*|5.*",
-                "vimeo/psalm": "^1"
-            },
-            "suggest": {
-                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Paragon Initiative Enterprises",
-                    "email": "security@paragonie.com",
-                    "homepage": "https://paragonie.com"
-                }
-            ],
-            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
-            "keywords": [
-                "csprng",
-                "polyfill",
-                "pseudorandom",
-                "random"
-            ],
-            "time": "2018-07-02T15:55:56+00:00"
-        },
-        {
             "name": "phpcollection/phpcollection",
             "version": "0.5.0",
             "source": {
@@ -2687,16 +2646,16 @@
         },
         {
             "name": "symfony/debug",
-            "version": "v4.4.13",
+            "version": "v4.4.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
-                "reference": "aeb73aca16a8f1fe958230fe44e6cf4c84cbb85e"
+                "reference": "af4987aa4a5630e9615be9d9c3ed1b0f24ca449c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/debug/zipball/aeb73aca16a8f1fe958230fe44e6cf4c84cbb85e",
-                "reference": "aeb73aca16a8f1fe958230fe44e6cf4c84cbb85e",
+                "url": "https://api.github.com/repos/symfony/debug/zipball/af4987aa4a5630e9615be9d9c3ed1b0f24ca449c",
+                "reference": "af4987aa4a5630e9615be9d9c3ed1b0f24ca449c",
                 "shasum": ""
             },
             "require": {
@@ -2711,11 +2670,6 @@
                 "symfony/http-kernel": "^3.4|^4.0|^5.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.4-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\Debug\\": ""
@@ -2738,7 +2692,7 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Symfony Debug Component",
+            "description": "Provides tools to ease debugging PHP code",
             "homepage": "https://symfony.com",
             "funding": [
                 {
@@ -2754,7 +2708,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-10T07:47:39+00:00"
+            "time": "2021-01-27T09:09:26+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -3026,16 +2980,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v3.4.44",
+            "version": "v3.4.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "e5a42880895b43cd53d1a7b92bdcfb7d80c0af1c"
+                "reference": "b9885fcce6fe494201da4f70a9309770e9d13dc8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/e5a42880895b43cd53d1a7b92bdcfb7d80c0af1c",
-                "reference": "e5a42880895b43cd53d1a7b92bdcfb7d80c0af1c",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/b9885fcce6fe494201da4f70a9309770e9d13dc8",
+                "reference": "b9885fcce6fe494201da4f70a9309770e9d13dc8",
                 "shasum": ""
             },
             "require": {
@@ -3047,11 +3001,6 @@
                 "symfony/expression-language": "~2.8|~3.0|~4.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.4-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\HttpFoundation\\": ""
@@ -3090,20 +3039,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-12T14:55:37+00:00"
+            "time": "2020-10-24T10:57:07+00:00"
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v3.4.44",
+            "version": "v3.4.47",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "27dcaa8c6b18c75df9f37badeb4d3564ffaa1326"
+                "reference": "a98a4c30089e6a2d52a9fa236f718159b539f6f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/27dcaa8c6b18c75df9f37badeb4d3564ffaa1326",
-                "reference": "27dcaa8c6b18c75df9f37badeb4d3564ffaa1326",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/a98a4c30089e6a2d52a9fa236f718159b539f6f5",
+                "reference": "a98a4c30089e6a2d52a9fa236f718159b539f6f5",
                 "shasum": ""
             },
             "require": {
@@ -3151,11 +3100,6 @@
                 "symfony/var-dumper": ""
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.4-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Symfony\\Component\\HttpKernel\\": ""
@@ -3194,7 +3138,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-31T05:53:42+00:00"
+            "time": "2020-11-27T08:42:42+00:00"
         },
         {
             "name": "symfony/monolog-bridge",
@@ -3279,7 +3223,7 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.22.0",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
@@ -3521,20 +3465,20 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.18.1",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "a6977d63bf9a0ad4c65cd352709e230876f9904a"
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/a6977d63bf9a0ad4c65cd352709e230876f9904a",
-                "reference": "a6977d63bf9a0ad4c65cd352709e230876f9904a",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/5232de97ee3b75b0360528dae24e73db49566ab1",
+                "reference": "5232de97ee3b75b0360528dae24e73db49566ab1",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=7.1"
             },
             "suggest": {
                 "ext-mbstring": "For best performance"
@@ -3542,7 +3486,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-main": "1.22-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -3594,43 +3538,34 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-14T12:35:20+00:00"
+            "time": "2021-01-22T09:19:47+00:00"
         },
         {
             "name": "symfony/polyfill-php56",
-            "version": "v1.18.1",
+            "version": "v1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php56.git",
-                "reference": "13df84e91cd168f247c2f2ec82cc0fa24901c011"
+                "reference": "54b8cd7e6c1643d78d011f3be89f3ef1f9f4c675"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/13df84e91cd168f247c2f2ec82cc0fa24901c011",
-                "reference": "13df84e91cd168f247c2f2ec82cc0fa24901c011",
+                "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/54b8cd7e6c1643d78d011f3be89f3ef1f9f4c675",
+                "reference": "54b8cd7e6c1643d78d011f3be89f3ef1f9f4c675",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3",
-                "symfony/polyfill-util": "~1.0"
+                "php": ">=7.1"
             },
-            "type": "library",
+            "type": "metapackage",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-main": "1.20-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
                     "url": "https://github.com/symfony/polyfill"
                 }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php56\\": ""
-                },
-                "files": [
-                    "bootstrap.php"
-                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3668,46 +3603,34 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-14T12:35:20+00:00"
+            "time": "2020-10-23T14:02:19+00:00"
         },
         {
             "name": "symfony/polyfill-php70",
-            "version": "v1.18.1",
+            "version": "v1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php70.git",
-                "reference": "0dd93f2c578bdc9c72697eaa5f1dd25644e618d3"
+                "reference": "5f03a781d984aae42cebd18e7912fa80f02ee644"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/0dd93f2c578bdc9c72697eaa5f1dd25644e618d3",
-                "reference": "0dd93f2c578bdc9c72697eaa5f1dd25644e618d3",
+                "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/5f03a781d984aae42cebd18e7912fa80f02ee644",
+                "reference": "5f03a781d984aae42cebd18e7912fa80f02ee644",
                 "shasum": ""
             },
             "require": {
-                "paragonie/random_compat": "~1.0|~2.0|~9.99",
-                "php": ">=5.3.3"
+                "php": ">=7.1"
             },
-            "type": "library",
+            "type": "metapackage",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-main": "1.20-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
                     "url": "https://github.com/symfony/polyfill"
                 }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php70\\": ""
-                },
-                "files": [
-                    "bootstrap.php"
-                ],
-                "classmap": [
-                    "Resources/stubs"
-                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3745,7 +3668,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-14T12:35:20+00:00"
+            "time": "2020-10-23T14:02:19+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
@@ -3822,25 +3745,25 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.18.1",
+            "version": "v1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "d87d5766cbf48d72388a9f6b85f280c8ad51f981"
+                "reference": "dc3063ba22c2a1fd2f45ed856374d79114998f91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/d87d5766cbf48d72388a9f6b85f280c8ad51f981",
-                "reference": "d87d5766cbf48d72388a9f6b85f280c8ad51f981",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/dc3063ba22c2a1fd2f45ed856374d79114998f91",
+                "reference": "dc3063ba22c2a1fd2f45ed856374d79114998f91",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0.8"
+                "php": ">=7.1"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-main": "1.22-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -3898,77 +3821,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-07-14T12:35:20+00:00"
-        },
-        {
-            "name": "symfony/polyfill-util",
-            "version": "v1.18.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/polyfill-util.git",
-                "reference": "46b910c71e9828f8ec2aa7a0314de1130d9b295a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-util/zipball/46b910c71e9828f8ec2aa7a0314de1130d9b295a",
-                "reference": "46b910c71e9828f8ec2aa7a0314de1130d9b295a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.18-dev"
-                },
-                "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Util\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony utilities for portability of PHP codes",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "compat",
-                "compatibility",
-                "polyfill",
-                "shim"
-            ],
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2020-07-14T12:35:20+00:00"
+            "time": "2021-01-07T16:49:33+00:00"
         },
         {
             "name": "symfony/psr-http-message-bridge",
