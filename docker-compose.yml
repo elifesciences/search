@@ -1,70 +1,83 @@
 version: '3'
-
 services:
-    es01:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
-        container_name: es01
+    odfe-node1:
+        image: amazon/opendistro-for-elasticsearch:1.11.0
+        container_name: odfe-node1
         environment:
-            - node.name=es01
-            - http.cors.allow-origin=*
-            - http.cors.enabled=true
-            - cluster.name=es-docker-cluster
-            - discovery.seed_hosts=es02,es03
-            - cluster.initial_master_nodes=es01,es02,es03
-            - bootstrap.memory_lock=true
-            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-            - network.host=0.0.0.0
+            - cluster.name=odfe-cluster
+            - node.name=odfe-node1
+            - discovery.seed_hosts=odfe-node1,odfe-node2,odfe-node3
+            - cluster.initial_master_nodes=odfe-node1,odfe-node2,odfe-node3
+            - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
         ulimits:
             memlock:
                 soft: -1
                 hard: -1
+            nofile:
+                soft: 65536 # maximum number of open files for the Elasticsearch user, set to at least 65536 on modern systems
+                hard: 65536
+        volumes:
+            - ./.docker/data/odfe-data1:/usr/share/elasticsearch/data
         ports:
             - 9201:9200
-        volumes:
-            - ./.docker/data/es01:/usr/share/elasticsearch/data
-    es02:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
-        container_name: es02
+            - 9601:9600 # required for Performance Analyzer
+        networks:
+            - odfe-net
+    odfe-node2:
+        image: amazon/opendistro-for-elasticsearch:1.11.0
+        container_name: odfe-node2
         environment:
-            - node.name=es02
-            - http.cors.allow-origin=*
-            - http.cors.enabled=true
-            - cluster.name=es-docker-cluster
-            - discovery.seed_hosts=es01,es03
-            - cluster.initial_master_nodes=es01,es02,es03
+            - cluster.name=odfe-cluster
+            - node.name=odfe-node2
+            - discovery.seed_hosts=odfe-node1,odfe-node2,odfe-node3
+            - cluster.initial_master_nodes=odfe-node1,odfe-node2,odfe-node3
             - bootstrap.memory_lock=true
             - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-            - network.host=0.0.0.0
         ulimits:
             memlock:
                 soft: -1
                 hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
         volumes:
-            - ./.docker/data/es02:/usr/share/elasticsearch/data
-    es03:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
-        container_name: es03
+            - ./.docker/data/odfe-data2:/usr/share/elasticsearch/data
+        networks:
+            - odfe-net
+    odfe-node3:
+        image: amazon/opendistro-for-elasticsearch:1.11.0
+        container_name: odfe-node3
         environment:
-            - node.name=es03
-            - http.cors.allow-origin=*
-            - http.cors.enabled=true
-            - cluster.name=es-docker-cluster
-            - discovery.seed_hosts=es01,es02
-            - cluster.initial_master_nodes=es01,es02,es03
+            - cluster.name=odfe-cluster
+            - node.name=odfe-node3
+            - discovery.seed_hosts=odfe-node1,odfe-node2,odfe-node3
+            - cluster.initial_master_nodes=odfe-node1,odfe-node2,odfe-node3
             - bootstrap.memory_lock=true
             - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-            - network.host=0.0.0.0
         ulimits:
             memlock:
                 soft: -1
                 hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
         volumes:
-            - ./.docker/data/es03:/usr/share/elasticsearch/data
-    kib7:
-        build:
-            context: .
-            dockerfile: ./.docker/Dockerfile.kib7
-        env_file:
-            - ./.docker/kib7.env
+            - ./.docker/data/odfe-data3:/usr/share/elasticsearch/data
+        networks:
+            - odfe-net
+    kibana:
+        image: amazon/opendistro-for-elasticsearch-kibana:1.11.0
+        container_name: odfe-kibana
         ports:
             - 5602:5601
+        expose:
+            - "5601"
+        environment:
+            ELASTICSEARCH_URL: https://odfe-node1:9200
+            ELASTICSEARCH_HOSTS: https://odfe-node1:9200
+        networks:
+            - odfe-net
+
+networks:
+    odfe-net:
