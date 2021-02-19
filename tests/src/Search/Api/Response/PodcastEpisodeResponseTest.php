@@ -111,6 +111,23 @@ class PodcastEpisodeResponseTest extends SerializerTest
                                 "x": 25,
                                 "y": 75
                             }
+                        },
+                        "social": {
+                            "alt": "",
+                            "uri": "https://iiif.elifesciences.org/lax/09560%2Felife-09560-fig1-v1.tif",
+                            "source": {
+                                "mediaType": "image/jpeg",
+                                "uri": "https://iiif.elifesciences.org/lax/09560%2Felife-09560-fig1-v1.tif/full/full/0/default.jpg",
+                                "filename": "an-image.jpg"
+                            },
+                            "size": {
+                                "width": 4194,
+                                "height": 4714
+                            },
+                            "focalPoint": {
+                                "x": 25,
+                                "y": 75
+                            }
                         }
                     }
                 }',
