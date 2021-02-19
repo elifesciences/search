@@ -162,11 +162,12 @@ final class ElasticQueryBuilder implements QueryBuilder
 
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['appendices.content' => $query]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['authorResponse' => $query]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['authors.orcid' => $query]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['body' => $query]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['decisionLetter' => $query]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['doi' => $query]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['elocationId' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['authors.orcid' => $query]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['id' => $query]]]];
         }
     }
 
