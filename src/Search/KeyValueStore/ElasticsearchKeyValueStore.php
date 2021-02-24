@@ -26,11 +26,6 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
                         'settings' => [
                             'number_of_shards' => 1,
                         ],
-                        'mappings' => [
-                            self::DOCUMENT_TYPE => [
-                                'enabled' => false,
-                            ],
-                        ],
                     ],
                 ]
             );
