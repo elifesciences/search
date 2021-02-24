@@ -300,6 +300,7 @@ final class Kernel implements MinimalKernel
             $client = ClientBuilder::create();
             // Set hosts.
             $client->setHosts($app['config']['elastic_servers']);
+            $client->setSSLVerification($app['config']['elastic_ssl_verification'] ?? true);
             // Logging for ElasticSearch.
             if ($app['config']['elastic_logging']) {
                 $client->setLogger($app['logger']);
@@ -313,6 +314,7 @@ final class Kernel implements MinimalKernel
             $client = ClientBuilder::create();
             // Set hosts.
             $client->setHosts($app['config']['elastic_servers']);
+            $client->setSSLVerification($app['config']['elastic_ssl_verification'] ?? true);
             // Logging for ElasticSearch.
             if ($app['config']['elastic_logging']) {
                 $client->setLogger($app['logger']);
