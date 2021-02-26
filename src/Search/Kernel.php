@@ -451,15 +451,15 @@ final class Kernel implements MinimalKernel
             );
         };
 
-        $app['console.gearman.queue'] = function (Application $app) {
+        $app['console.aws.queue'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
                 return new QueueWatchCommand(
                     $app['mocks.queue'],
                     $app['mocks.queue_transformer'],
-                    $app['gearman.client'],
+                    $app['api.sdk'],
+                    $app['elastic.client.write'],
                     true,
-                    $app['config']['aws']['queue_name'],
                     $app['logger'],
                     $app['monitoring'],
                     $app['limit.long_running']
@@ -469,9 +469,9 @@ final class Kernel implements MinimalKernel
             return new QueueWatchCommand(
                 $app['aws.queue'],
                 $app['aws.queue_transformer'],
-                $app['gearman.client'],
+                $app['api.sdk'],
+                $app['elastic.client.write'],
                 false,
-                $app['config']['aws']['queue_name'],
                 $app['logger'],
                 $app['monitoring'],
                 $app['limit.long_running']

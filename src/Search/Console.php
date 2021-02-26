@@ -288,14 +288,17 @@ final class Console
         // TODO: remove when it is *never* passed in by the formula or anything else
         $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_OPTIONAL, 'The Environment name. Deprecated and not used', 'dev'));
 
+        $this->console->addCommands([
+            $this->kernel->get('console.gearman.client'),
+            $this->kernel->get('console.build_index'),
+            $this->kernel->get('console.aws.queue'),
+        ]);
+
         // Add commands from the DI container. (for more complex commands.)
         if (GEARMAN_INSTALLED) {
             try {
                 $this->console->addCommands([
                     $this->kernel->get('console.gearman.worker'),
-                    $this->kernel->get('console.gearman.client'),
-                    $this->kernel->get('console.gearman.queue'),
-                    $this->kernel->get('console.build_index'),
                 ]);
             } catch (SqsException $e) {
                 $this->logger->debug('Cannot connect to SQS so some commands are not available', ['exception' => $e]);

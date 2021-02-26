@@ -31,7 +31,7 @@ class BuildIndexCommand extends Command
             ->setDescription('Ensure Elasticsearch has been setup <comment>WARNING: DROPS CONTENT WITH -d</comment>')
             ->addOption('delete', 'd', InputOption::VALUE_NONE, 'Drop content')
             ->addOption('index', 'i', InputOption::VALUE_OPTIONAL, 'Index that should be (re)created')
-            ->setHelp('Creates new Gearman client and imports entities from API');
+            ->setHelp('Prepares index with initial mappings');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -42,20 +42,19 @@ class BuildIndexCommand extends Command
 
         $toDelete = $input->getOption('delete');
 
-        $mapping = array_filter(
+        $mappings = array_filter(
             array_merge(
                 [],
-                Yaml::parse(file_get_contents(__DIR__.'/resources/_default_.yaml')),
-                Yaml::parse(file_get_contents(__DIR__.'/resources/article.yaml')),
-                Yaml::parse(file_get_contents(__DIR__.'/resources/blog-article.yaml')),
-                Yaml::parse(file_get_contents(__DIR__.'/resources/interview.yaml')),
-                Yaml::parse(file_get_contents(__DIR__.'/resources/labs-post.yaml'))
+                Yaml::parse(file_get_contents(__DIR__.'/resources-7.9/mappings.yaml'))
             ), 'json_encode');
 
         $config = [
             'client' => ['ignore' => [400, 404]],
             'body' => [
-                'mappings' => $mapping,
+                'settings' => [
+                    'index.mapping.total_fields.limit' => 2000,
+                ],
+                'mappings' => $mappings,
             ],
         ];
 

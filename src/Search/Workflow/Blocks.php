@@ -13,6 +13,9 @@ trait Blocks
 
     final private function flattenBlock(stdClass $block) : string
     {
+        if (!is_string($block->text ?? ' ')) {
+            $block->text = $this->flattenBlocks($block->text);
+        }
         return implode(' ', array_filter([
             $block->id ?? null,
             $block->label ?? null,

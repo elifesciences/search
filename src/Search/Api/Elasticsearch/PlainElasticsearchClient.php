@@ -78,8 +78,7 @@ class PlainElasticsearchClient
         $index = $this->index;
         $params = [
             'index' => $index,
-            'type' => $type,
-            'id' => $id,
+            'id' => "$type-$id",
             'body' => $body,
         ];
 
@@ -93,8 +92,7 @@ class PlainElasticsearchClient
     {
         $params = [
             'index' => $index ?? $this->index,
-            'type' => $type,
-            'id' => $id,
+            'id' => "$type-$id",
         ];
 
         return $this->libraryClient->get($params);
