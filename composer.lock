@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "afb4b8ca9df368827320c9e501c2af98",
+    "content-hash": "8352ad0f984c706a45a652f7a5d0d1fe",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -632,7 +632,7 @@
         },
         {
             "name": "elife/api",
-            "version": "dev-master",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
@@ -762,16 +762,16 @@
         },
         {
             "name": "elife/api-sdk",
-            "version": "dev-master",
+            "version": "dev-reference-journal-without-pages",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "908b0e213cb5224b0327954f9db80fa42d45fff8"
+                "reference": "71a12df4f0a09891030da1b417e3f568050f79dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/908b0e213cb5224b0327954f9db80fa42d45fff8",
-                "reference": "908b0e213cb5224b0327954f9db80fa42d45fff8",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/71a12df4f0a09891030da1b417e3f568050f79dc",
+                "reference": "71a12df4f0a09891030da1b417e3f568050f79dc",
                 "shasum": ""
             },
             "require": {
@@ -786,7 +786,7 @@
             },
             "require-dev": {
                 "csa/guzzle-cache-middleware": "^1.0",
-                "elife/api": "dev-master",
+                "elife/api": "~1.1.0",
                 "elife/api-validator": "^1.0@dev",
                 "guzzlehttp/guzzle": "^6.0",
                 "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
@@ -812,7 +812,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2021-02-16T12:42:46+00:00"
+            "time": "2021-03-01T13:52:55+00:00"
         },
         {
             "name": "elife/api-validator",
@@ -861,22 +861,22 @@
         },
         {
             "name": "elife/bus-sdk",
-            "version": "dev-master",
+            "version": "dev-reference-journal-without-pages",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "7be1eac38aa3a39f5773b44db442de4be1206dce"
+                "reference": "cfddd594453fb37db9d02d784a63b2cf634136e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/7be1eac38aa3a39f5773b44db442de4be1206dce",
-                "reference": "7be1eac38aa3a39f5773b44db442de4be1206dce",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/cfddd594453fb37db9d02d784a63b2cf634136e2",
+                "reference": "cfddd594453fb37db9d02d784a63b2cf634136e2",
                 "shasum": ""
             },
             "require": {
                 "aws/aws-sdk-php": "^3.19",
                 "doctrine/cache": "^1.6",
-                "elife/api-sdk": "^1.0",
+                "elife/api-sdk": "dev-reference-journal-without-pages",
                 "elife/logging-sdk": "^1.0",
                 "jms/serializer": "^1.4",
                 "php": "^7.0",
@@ -909,7 +909,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences Bus SDK",
-            "time": "2021-02-16T14:20:23+00:00"
+            "time": "2021-03-01T17:24:01+00:00"
         },
         {
             "name": "elife/content-negotiator",
@@ -6156,7 +6156,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "doctrine/cache": 20,
-        "elife/api": 20,
         "elife/api-client": 20,
         "elife/api-sdk": 20,
         "elife/api-validator": 20,
