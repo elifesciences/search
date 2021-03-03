@@ -70,7 +70,7 @@ class PlainElasticsearchClient
     {
         return $this->libraryClient->count([
             'index' => $indexName ?? $this->index,
-        ]);
+        ])['count'];
     }
 
     public function indexExists(string $indexName = null)
