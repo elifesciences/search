@@ -6,7 +6,7 @@ if [ ! "$total" ]; then
 fi
 
 echo "Total results in the index: $total"
-expected_results_api_dummy=41
+expected_results_api_dummy=$(bin/console gateway:total)
 if [ ! "$total" -eq "$expected_results_api_dummy" ]; then
     echo "There should be exactly $expected_results_api_dummy results in the index"
     if [ "$total" -gt "$expected_results_api_dummy" ]; then
