@@ -1,7 +1,7 @@
 # final verification
 # we start from an empty index
 
-actual_total=$(curl -v localhost:5001/search | jq ".total")
+actual_total=$(curl -v localhost/search | jq ".total")
 if [ ! "$actual_total" ]; then
     actual_total=-1
 fi
@@ -15,6 +15,7 @@ if [ ! "$actual_total" -eq "$expected_total" ]; then
     exit 2
 fi
 
+echo "CHECK: Search for article id"
 actual_first_id=$(curl -v "localhost/search?for=04395&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].id")
 expected_first_id='"04395"'
 if [[ $actual_first_id != $expected_first_id ]]; then
@@ -23,6 +24,7 @@ if [[ $actual_first_id != $expected_first_id ]]; then
     exit 2
 fi
 
+echo "CHECK: Search for article title"
 actual_first_title=$(curl -v "localhost/search?for=Updates%20to%20the%20zoonotic%20niche%20map%20of%20Ebola%20virus%20disease%20in%20Africa&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].title")
 expected_first_title='"Updates to the zoonotic niche map of Ebola virus disease in Africa"'
 if [[ $actual_first_title != $expected_first_title ]]; then
@@ -31,6 +33,7 @@ if [[ $actual_first_title != $expected_first_title ]]; then
     exit 2
 fi
 
+echo "CHECK: Search for lead author"
 actual_author_line=$(curl -v "localhost/search?for=David%20Rasmussen&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].authorLine")
 expected_author_line='"David A Rasmussen, Tanja Stadler"'
 if [[ $actual_author_line != $expected_author_line ]]; then
