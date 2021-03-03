@@ -66,6 +66,13 @@ class PlainElasticsearchClient
         $this->libraryClient->indices()->delete($params);
     }
 
+    public function indexCount(string $indexName = null)
+    {
+        return $this->libraryClient->count([
+            'index' => $indexName ?? $this->index,
+        ]);
+    }
+
     public function indexExists(string $indexName = null)
     {
         return $this->libraryClient->indices()->exists([

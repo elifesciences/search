@@ -81,6 +81,12 @@ final class Console
         'index:read' => [
             'description' => 'The name of the index we are reading from in the API',
         ],
+        'index:total:read' => [
+            'description' => 'The total number of items on the read index',
+        ],
+        'index:total:write' => [
+            'description' => 'The total number of items on the read index',
+        ],
         'index:delete' => [
             'description' => 'Delete an index, explicitly using its name',
             'args' => [
@@ -243,6 +249,20 @@ final class Console
     {
         $metadata = $this->kernel->indexMetadata();
         $output->writeln($metadata->read());
+    }
+
+    public function indexTotalReadCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->kernel->indexMetadata();
+        $client = $this->kernel->get('elastic.client.plain');
+        $output->writeln($client->indexCount($metadata->read()));
+    }
+
+    public function indexTotalWriteCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->kernel->indexMetadata();
+        $client = $this->kernel->get('elastic.client.plain');
+        $output->writeln($client->indexCount($metadata->write()));
     }
 
     public function indexDeleteCommand(InputInterface $input, OutputInterface $output)
