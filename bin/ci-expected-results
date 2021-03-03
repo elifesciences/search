@@ -6,7 +6,7 @@ if [ ! "$actual_total" ]; then
     actual_total=-1
 fi
 echo "Total results in the index: $actual_total"
-expected_total=44
+expected_total=41
 if [ ! "$actual_total" -eq "$expected_total" ]; then
     echo "There should be exactly $expected_total results in the index"
     if [ "$actual_total" -gt "$expected_total" ]; then
