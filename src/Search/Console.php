@@ -117,6 +117,9 @@ final class Console
         'rds:reindex' => [
             'description' => 'Reindex RDS articles to correctly place them in listings',
         ],
+        'gateway:total' => [
+            'description' => 'Get the total number of items that could potentially be indexed from the API gateway',
+        ],
     ];
 
     public function queueCreateCommand()
@@ -330,6 +333,18 @@ final class Console
         }
         $output->writeln('Queued: '.implode(', ', $ids));
         $this->logger->info('RDS articles added to indexing queue.');
+    }
+
+    public function gatewayTotalCommand(InputInterface $input, OutputInterface $output)
+    {
+        $sdk = $this->kernel->get('api.sdk');
+        $total = $sdk->articles()->count();
+        $total += $sdk->blogArticles()->count();
+        $total += $sdk->collections()->count();
+        $total += $sdk->interviews()->count();
+        $total += $sdk->labsPosts()->count();
+        $total += $sdk->podcastEpisodes()->count();
+        $output->writeln($total);
     }
 
     public function run($input = null, $output = null)
