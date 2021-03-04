@@ -766,12 +766,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "908b0e213cb5224b0327954f9db80fa42d45fff8"
+                "reference": "8c582e68c383c64e505fdbfaf282f4e0d1e8f036"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/908b0e213cb5224b0327954f9db80fa42d45fff8",
-                "reference": "908b0e213cb5224b0327954f9db80fa42d45fff8",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/8c582e68c383c64e505fdbfaf282f4e0d1e8f036",
+                "reference": "8c582e68c383c64e505fdbfaf282f4e0d1e8f036",
                 "shasum": ""
             },
             "require": {
@@ -786,7 +786,7 @@
             },
             "require-dev": {
                 "csa/guzzle-cache-middleware": "^1.0",
-                "elife/api": "dev-master",
+                "elife/api": "~1.1.0",
                 "elife/api-validator": "^1.0@dev",
                 "guzzlehttp/guzzle": "^6.0",
                 "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
@@ -812,7 +812,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2021-02-16T12:42:46+00:00"
+            "time": "2021-03-02T18:09:19+00:00"
         },
         {
             "name": "elife/api-validator",

@@ -1,17 +1,56 @@
+#!/bin/bash
 # final verification
 # we start from an empty index
-total=$(curl -v localhost/search | jq ".total")
-if [ ! "$total" ]; then
-    total=-1
-fi
+set -e
 
-echo "Total results in the index: $total"
-expected_results_api_dummy=41
-if [ ! "$total" -eq "$expected_results_api_dummy" ]; then
-    echo "There should be exactly $expected_results_api_dummy results in the index"
-    if [ "$total" -gt "$expected_results_api_dummy" ]; then
+actual_total=$(curl -v localhost/search | jq ".total")
+if [ ! "$actual_total" ]; then
+    actual_total=-1
+fi
+echo "Total results in the index: $actual_total"
+expected_total=44
+if [ ! "$actual_total" -eq "$expected_total" ]; then
+    echo "There should be exactly $expected_total results in the index"
+    if [ "$actual_total" -gt "$expected_total" ]; then
         echo "(have more test fixtures been added to api-dummy?)"
     fi
     exit 2
 fi
+
+echo "CHECK: Search for article id"
+actual_first_id=$(curl -v "localhost/search?for=04395&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].id")
+expected_first_id='"04395"'
+if [ "$actual_first_id" != "$expected_first_id" ]; then
+    echo "When searching for an article id, it should appear as the first result"
+    echo "Expected first id $expected_first_id, actual id $actual_first_id"
+    exit 2
+fi
+
+echo "CHECK: Search for article title"
+actual_first_title=$(curl -v "localhost/search?for=Updates%20to%20the%20zoonotic%20niche%20map%20of%20Ebola%20virus%20disease%20in%20Africa&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].title")
+expected_first_title='"Updates to the zoonotic niche map of Ebola virus disease in Africa"'
+if [ "$actual_first_title" != "$expected_first_title" ]; then
+    echo "When searching for an article title, it should appear as the first result"
+    echo "Expected first title $expected_first_title, actual title $actual_first_title"
+    exit 2
+fi
+
+echo "CHECK: Search for lead author"
+actual_author_line=$(curl -v "localhost/search?for=David%20Rasmussen&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].authorLine")
+expected_author_line='"David A Rasmussen, Tanja Stadler"'
+if [ "$actual_author_line" != "$expected_author_line" ]; then
+    echo "When searching for a lead author, their paper should appear as the first result"
+    echo "Expected authorLine $expected_author_line, actual authorLine $actual_author_line"
+    exit 2
+fi
+
+echo "CHECK: Search for author not in authorLine"
+actual_author_non_authorline_title=$(curl -v "localhost/search?for=Passarelli&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].title")
+expected_author_non_authorline_title='"The genome sequence of the colonial chordate, <i>Botryllus schlosseri</i>"'
+if [ "$actual_author_non_authorline_title" != "$expected_author_non_authorline_title" ]; then
+    echo "When searching for an author that doesn't appear in the authorLine, their paper should appear as the first result"
+    echo "Expected title $expected_author_non_authorline_title, actual title $actual_author_non_authorline_title"
+    exit 2
+fi
+
 echo "Success!"
