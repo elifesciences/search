@@ -85,7 +85,7 @@ final class Console
             'description' => 'The total number of items on the read index',
         ],
         'index:total:write' => [
-            'description' => 'The total number of items on the read index',
+            'description' => 'The total number of items on the write index',
         ],
         'index:delete' => [
             'description' => 'Delete an index, explicitly using its name',
