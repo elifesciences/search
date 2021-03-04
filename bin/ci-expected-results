@@ -12,7 +12,7 @@ expected_total=$(bin/console gateway:total)
 if [ ! "$actual_total" -eq "$expected_total" ]; then
     echo "There should be exactly $expected_total results in the index"
     if [ "$actual_total" -gt "$expected_total" ]; then
-        echo "(have more test fixtures been added to api-dummy?)"
+        echo "(have more test fixtures been added to api-dummy and/or api-sdk updated?)"
     fi
     exit 2
 fi
