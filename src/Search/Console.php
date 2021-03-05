@@ -22,6 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @property LoggerInterface temp_logger
@@ -377,9 +378,13 @@ final class Console
         $total = $this->searchTotal();
         $perPage = 100;
         $json = null;
-        for ($page = 1; $page < $total / $perPage; $page++) {
+        $responseHeaders = null;
+        $statusCode = null;
+        for ($page = 1; $page < ceil($total / $perPage); $page++) {
             $request = Request::create('/search?per-page='.$perPage.'&page='.$page);
             $response = $this->kernel->getApp()->handle($request);
+            $responseHeaders = $response->headers->all();
+            $statusCode = $response->getStatusCode();
             $responseJson = json_decode($response->getContent());
             if ($json) {
                 $json->items = array_merge($json->items, $responseJson->items);
@@ -388,7 +393,9 @@ final class Console
             }
         }
 
-        dump($json->items);
+        if ($json) {
+            $this->kernel->validate(new Response($json, $statusCode, $responseHeaders));
+        }
     }
 
     private function searchTotal() {

@@ -543,7 +543,7 @@ final class Kernel implements MinimalKernel
         return $this->app;
     }
 
-    public function validate(Request $request, Response $response)
+    public function validate(Response $response)
     {
         try {
             if (
