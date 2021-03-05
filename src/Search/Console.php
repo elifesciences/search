@@ -380,7 +380,7 @@ final class Console
         $json = null;
         $responseHeaders = null;
         $statusCode = null;
-        for ($page = 1; $page < ceil($total / $perPage); $page++) {
+        for ($page = 1; $page <= ceil($total / $perPage); $page++) {
             $request = Request::create('/search?per-page='.$perPage.'&page='.$page);
             $response = $this->kernel->getApp()->handle($request);
             $responseHeaders = $response->headers->all();
@@ -394,7 +394,7 @@ final class Console
         }
 
         if ($json) {
-            $this->kernel->validate(new Response($json, $statusCode, $responseHeaders));
+            $this->kernel->validate(new Response(json_encode($json), $statusCode, $responseHeaders));
         }
     }
 
