@@ -370,11 +370,13 @@ final class Console
         $output->writeln($total);
     }
 
-    public function searchTotalCommand(InputInterface $input, OutputInterface $output) {
+    public function searchTotalCommand(InputInterface $input, OutputInterface $output)
+    {
         $output->writeln($this->searchTotal());
     }
 
-    public function searchValidateCommand(InputInterface $input, OutputInterface $output) {
+    public function searchValidateCommand(InputInterface $input, OutputInterface $output)
+    {
         $total = $this->searchTotal();
         $perPage = 100;
         $json = null;
@@ -406,10 +408,24 @@ final class Console
     }
 
     private function searchTotal() {
-        $request = Request::create('/search?per-page=1');
-        $response = $this->kernel->getApp()->handle($request);
+        $response = $this->searchRequest(1);
         $json = json_decode($response->getContent());
         return $json->total;
+    }
+
+    private function searchRequest(int $perPage = null, int $page = null) : Response
+    {
+        $query = [];
+        if ($perPage) {
+            $query = ['per-page' => $perPage];
+        }
+        if ($page) {
+            $query = ['page' => $page];
+        }
+
+        return $this->kernel->getApp()->handle(Request::create('/search', 'GET', [
+            'query' => $query,
+        ]));
     }
 
     public function run($input = null, $output = null)
