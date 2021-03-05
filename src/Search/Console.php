@@ -394,8 +394,8 @@ final class Console
         }
 
         if ($json) {
-            $validate = $this->kernel->validate(new Response(json_encode($json), $statusCode, $responseHeaders));
-            if (is_null($validate)) {
+            if ($this->kernel->get('validator')
+                ->validate(new Response(json_encode($json), $statusCode, $responseHeaders))) {
                 $output->write('Valid results!');
             } else {
                 $output->write('Invalid!');
