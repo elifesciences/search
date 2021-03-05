@@ -21,6 +21,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @property LoggerInterface temp_logger
@@ -130,10 +131,6 @@ final class Console
             'description' => 'Get the search results total',
         ],
     ];
-
-    public function searchTotalCommand(InputInterface $input, OutputInterface $output) {
-        dump($this->kernel->getApp()->get('/search'));
-    }
 
     public function queueCreateCommand()
     {
@@ -367,6 +364,17 @@ final class Console
         $total += $sdk->labsPosts()->count();
         $total += $sdk->podcastEpisodes()->count();
         $output->writeln($total);
+    }
+
+    public function searchTotalCommand(InputInterface $input, OutputInterface $output) {
+        $output->writeln($this->searchTotal());
+    }
+
+    private function searchTotal() {
+        $request = Request::create('/search?per-page=1');
+        $response = $this->kernel->getApp()->handle($request);
+        $json = json_decode($response->getContent());
+        return $json->total;
     }
 
     public function run($input = null, $output = null)
