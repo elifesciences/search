@@ -5,6 +5,7 @@ namespace eLife\Search;
 use Aws\Sqs\Exception\SqsException;
 use Aws\Sqs\SqsClient;
 use Closure;
+use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
@@ -387,13 +388,12 @@ final class Console
             $response = $this->searchRequest($perPage, ++$page);
             $json->items = array_merge($json->items, json_decode($response->getContent())->items);
         }
-        try {
-            $this->kernel->get('validator')
-                ->validate(new Response(json_encode($json), $statusCode, $responseHeaders));
-            $output->writeln('valid');
-        } catch (Exception $e) {
-            $this->logger->error('invalid search response', ['exception' => $e]);
+        $valid = $this->kernel->get('validator')
+            ->validate(new Response(json_encode($json), $statusCode, $responseHeaders));
+        if (!$valid) {
+            throw new InvalidMessage('invalid search response');
         }
+        $output->writeln('valid');
     }
 
     private function searchTotal() {
