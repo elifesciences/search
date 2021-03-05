@@ -126,7 +126,14 @@ final class Console
         'gateway:total' => [
             'description' => 'Get the total number of items that could potentially be indexed from the API gateway',
         ],
+        'search:total' => [
+            'description' => 'Get the search results total',
+        ],
     ];
+
+    public function searchTotal(InputInterface $input, OutputInterface $output) {
+        dump($this->kernel->get('/search'));
+    }
 
     public function queueCreateCommand()
     {
@@ -324,11 +331,6 @@ final class Console
                 $this->logger->debug('Cannot connect to SQS so some commands are not available', ['exception' => $e]);
             }
         }
-    }
-
-    private function path($path = '')
-    {
-        return $this->root.$path;
     }
 
     public function cacheClearCommand(InputInterface $input, OutputInterface $output)
