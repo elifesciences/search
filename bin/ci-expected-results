@@ -53,4 +53,7 @@ if [ "$actual_author_non_authorline_title" != "$expected_author_non_authorline_t
     exit 2
 fi
 
+echo "CHECK: Search results validate against schema"
+bin/console search:valid
+
 echo "Success!"
