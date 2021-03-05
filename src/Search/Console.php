@@ -385,7 +385,7 @@ final class Console
         $statusCode = $response->getStatusCode();
         while (count($json->items) < $json->total) {
             $response = $this->searchRequest($perPage, ++$page);
-            $json->items = array_merge($json->items, json_decode($response->getContent()));
+            $json->items = array_merge($json->items, json_decode($response->getContent())->items);
         }
         if ($this->kernel->get('validator')
             ->validate(new Response(json_encode($json), $statusCode, $responseHeaders))) {
@@ -403,13 +403,11 @@ final class Console
 
     private function searchRequest(int $perPage = null, int $page = null) : Response
     {
-        $query = array_filter([
-            'per-page' => $perPage,
-            'page' => $page,
-        ]);
-
         return $this->kernel->getApp()->handle(
-            Request::create('/search'.(!empty($query) ? '?'.http_build_query($query) : ''))
+            Request::create('/search', 'GET', [
+                'per-page' => $perPage,
+                'page' => $page,
+            ])
         );
     }
 
