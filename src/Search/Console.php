@@ -130,6 +130,9 @@ final class Console
         'search:total' => [
             'description' => 'Get the search results total',
         ],
+        'search:validate' => [
+            'description' => 'Validate all of the search results',
+        ],
     ];
 
     public function queueCreateCommand()
@@ -368,6 +371,24 @@ final class Console
 
     public function searchTotalCommand(InputInterface $input, OutputInterface $output) {
         $output->writeln($this->searchTotal());
+    }
+
+    public function searchValidateCommand(InputInterface $input, OutputInterface $output) {
+        $total = $this->searchTotal();
+        $perPage = 100;
+        $json = null;
+        for ($page = 1; $page < $total / $perPage; $page++) {
+            $request = Request::create('/search?per-page='.$perPage.'&page='.$page);
+            $response = $this->kernel->getApp()->handle($request);
+            $responseJson = json_decode($response->getContent());
+            if ($json) {
+                $json->items = array_merge($json->items, $responseJson->items);
+            } else {
+                $json = $responseJson;
+            }
+        }
+
+        dump($json->items);
     }
 
     private function searchTotal() {
