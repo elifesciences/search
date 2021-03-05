@@ -377,33 +377,21 @@ final class Console
 
     public function searchValidateCommand(InputInterface $input, OutputInterface $output)
     {
-        $total = $this->searchTotal();
         $perPage = 100;
-        $json = null;
-        $responseHeaders = null;
-        $statusCode = null;
-        for ($page = 1; $page <= ceil($total / $perPage); $page++) {
-            $request = Request::create('/search?per-page='.$perPage.'&page='.$page);
-            $response = $this->kernel->getApp()->handle($request);
-            $responseHeaders = $response->headers->all();
-            $statusCode = $response->getStatusCode();
-            $responseJson = json_decode($response->getContent());
-            if ($json) {
-                $json->items = array_merge($json->items, $responseJson->items);
-            } else {
-                $json = $responseJson;
-            }
+        $page = 1;
+        $response = $this->searchRequest($perPage, $page);
+        $json = json_decode($response->getContent());
+        $responseHeaders = $response->headers->all();
+        $statusCode = $response->getStatusCode();
+        while (count($json->items) < $json->total) {
+            $response = $this->searchRequest($perPage, ++$page);
+            $json->items = array_merge($json->items, json_decode($response->getContent()));
         }
-
-        if ($json) {
-            if ($this->kernel->get('validator')
-                ->validate(new Response(json_encode($json), $statusCode, $responseHeaders))) {
-                $output->write('Valid results!');
-            } else {
-                $output->write('Invalid!');
-            }
+        if ($this->kernel->get('validator')
+            ->validate(new Response(json_encode($json), $statusCode, $responseHeaders))) {
+            $output->write('Valid results!');
         } else {
-            $output->write('Nothing to validate!');
+            $output->write('Invalid!');
         }
     }
 
@@ -423,9 +411,7 @@ final class Console
             $query = ['page' => $page];
         }
 
-        return $this->kernel->getApp()->handle(Request::create('/search', 'GET', [
-            'query' => $query,
-        ]));
+        return $this->kernel->getApp()->handle(Request::create('/search', 'GET', $query));
     }
 
     public function run($input = null, $output = null)
