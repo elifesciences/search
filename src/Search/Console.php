@@ -387,11 +387,12 @@ final class Console
             $response = $this->searchRequest($perPage, ++$page);
             $json->items = array_merge($json->items, json_decode($response->getContent())->items);
         }
-        if ($this->kernel->get('validator')
-            ->validate(new Response(json_encode($json), $statusCode, $responseHeaders))) {
-            $output->write('Valid results!');
-        } else {
-            $output->write('Invalid!');
+        try {
+            $this->kernel->get('validator')
+                ->validate(new Response(json_encode($json), $statusCode, $responseHeaders));
+            $output->writeln('valid');
+        } catch (Exception $e) {
+            $this->logger->error('invalid search response', ['exception' => $e]);
         }
     }
 
