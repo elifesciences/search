@@ -131,7 +131,7 @@ final class Console
         ],
     ];
 
-    public function searchTotal(InputInterface $input, OutputInterface $output) {
+    public function searchTotalCommand(InputInterface $input, OutputInterface $output) {
         dump($this->kernel->get('/search'));
     }
 
