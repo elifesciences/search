@@ -81,6 +81,12 @@ final class Console
         'index:read' => [
             'description' => 'The name of the index we are reading from in the API',
         ],
+        'index:total:read' => [
+            'description' => 'The total number of items on the read index',
+        ],
+        'index:total:write' => [
+            'description' => 'The total number of items on the write index',
+        ],
         'index:delete' => [
             'description' => 'Delete an index, explicitly using its name',
             'args' => [
@@ -116,6 +122,9 @@ final class Console
         ],
         'rds:reindex' => [
             'description' => 'Reindex RDS articles to correctly place them in listings',
+        ],
+        'gateway:total' => [
+            'description' => 'Get the total number of items that could potentially be indexed from the API gateway',
         ],
     ];
 
@@ -242,6 +251,20 @@ final class Console
         $output->writeln($metadata->read());
     }
 
+    public function indexTotalReadCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->kernel->indexMetadata();
+        $client = $this->kernel->get('elastic.client.plain');
+        $output->writeln($client->indexCount($metadata->read()));
+    }
+
+    public function indexTotalWriteCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->kernel->indexMetadata();
+        $client = $this->kernel->get('elastic.client.plain');
+        $output->writeln($client->indexCount($metadata->write()));
+    }
+
     public function indexDeleteCommand(InputInterface $input, OutputInterface $output)
     {
         $client = $this->kernel->get('elastic.client.plain');
@@ -330,6 +353,18 @@ final class Console
         }
         $output->writeln('Queued: '.implode(', ', $ids));
         $this->logger->info('RDS articles added to indexing queue.');
+    }
+
+    public function gatewayTotalCommand(InputInterface $input, OutputInterface $output)
+    {
+        $sdk = $this->kernel->get('api.sdk');
+        $total = $sdk->articles()->count();
+        $total += $sdk->blogArticles()->count();
+        $total += $sdk->collections()->count();
+        $total += $sdk->interviews()->count();
+        $total += $sdk->labsPosts()->count();
+        $total += $sdk->podcastEpisodes()->count();
+        $output->writeln($total);
     }
 
     public function run($input = null, $output = null)
