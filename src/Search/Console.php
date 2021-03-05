@@ -394,7 +394,14 @@ final class Console
         }
 
         if ($json) {
-            $this->kernel->validate(new Response(json_encode($json), $statusCode, $responseHeaders));
+            $validate = $this->kernel->validate(new Response(json_encode($json), $statusCode, $responseHeaders));
+            if (is_null($validate)) {
+                $output->write('Valid results!');
+            } else {
+                $output->write('Invalid!');
+            }
+        } else {
+            $output->write('Nothing to validate!');
         }
     }
 
