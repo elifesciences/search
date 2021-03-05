@@ -403,13 +403,10 @@ final class Console
 
     private function searchRequest(int $perPage = null, int $page = null) : Response
     {
-        $query = [];
-        if ($perPage) {
-            $query = ['per-page' => $perPage];
-        }
-        if ($page) {
-            $query = ['page' => $page];
-        }
+        $query = array_filter([
+            'per-page' => $perPage,
+            'page' => $page,
+        ]);
 
         return $this->kernel->getApp()->handle(Request::create('/search', 'GET', $query));
     }
