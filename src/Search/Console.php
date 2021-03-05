@@ -132,7 +132,7 @@ final class Console
     ];
 
     public function searchTotalCommand(InputInterface $input, OutputInterface $output) {
-        dump($this->kernel->get('/search'));
+        dump($this->kernel->getApp()->get('/search'));
     }
 
     public function queueCreateCommand()
