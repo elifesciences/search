@@ -408,7 +408,9 @@ final class Console
             'page' => $page,
         ]);
 
-        return $this->kernel->getApp()->handle(Request::create('/search', 'GET', $query));
+        return $this->kernel->getApp()->handle(
+            Request::create('/search'.(!empty($query) ? '?'.http_build_query($query) : ''))
+        );
     }
 
     public function run($input = null, $output = null)
