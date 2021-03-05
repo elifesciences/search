@@ -404,10 +404,10 @@ final class Console
     private function searchRequest(int $perPage = null, int $page = null) : Response
     {
         return $this->kernel->getApp()->handle(
-            Request::create('/search', 'GET', [
+            Request::create('/search', 'GET', array_filter([
                 'per-page' => $perPage,
                 'page' => $page,
-            ])
+            ]))
         );
     }
 
