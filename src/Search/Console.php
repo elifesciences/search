@@ -389,7 +389,7 @@ final class Console
             $json->items = array_merge($json->items, json_decode($response->getContent())->items);
         }
         $valid = $this->kernel->get('validator')
-            ->validate(new Response(json_encode($json), $statusCode, $responseHeaders));
+            ->validate(new Request(), new Response(json_encode($json), $statusCode, $responseHeaders));
         if (!$valid) {
             throw new InvalidMessage('invalid search response');
         }
