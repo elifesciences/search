@@ -390,7 +390,7 @@ final class Console
                 $e = new InvalidMessage('Invalid search response for: '.$request->getRequestUri());
                 $this->logger->error(
                     'Invalid search response',
-                    ['exception' => $e, 'response' => $response->getContent()]
+                    ['exception' => $e, 'responseBody' => $response->getContent()]
                 );
                 throw $e;
             }
