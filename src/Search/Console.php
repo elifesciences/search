@@ -388,7 +388,10 @@ final class Console
 
             if (!$this->kernel->get('validator')->validate($response)) {
                 $e = new InvalidMessage('Invalid search response for: '.$request->getRequestUri());
-                $this->logger->error('Invalid search response', ['exception' => $e, 'response' => $response]);
+                $this->logger->error(
+                    'Invalid search response',
+                    ['exception' => $e, 'response' => $response->getContent()]
+                );
                 throw $e;
             }
         }
