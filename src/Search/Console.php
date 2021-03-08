@@ -5,6 +5,7 @@ namespace eLife\Search;
 use Aws\Sqs\Exception\SqsException;
 use Aws\Sqs\SqsClient;
 use Closure;
+use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
@@ -21,6 +22,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @property LoggerInterface temp_logger
@@ -125,6 +128,12 @@ final class Console
         ],
         'gateway:total' => [
             'description' => 'Get the total number of items that could potentially be indexed from the API gateway',
+        ],
+        'search:total' => [
+            'description' => 'Get the search results total',
+        ],
+        'search:validate' => [
+            'description' => 'Validate all of the search results',
         ],
     ];
 
@@ -326,11 +335,6 @@ final class Console
         }
     }
 
-    private function path($path = '')
-    {
-        return $this->root.$path;
-    }
-
     public function cacheClearCommand(InputInterface $input, OutputInterface $output)
     {
         $this->logger->info('Clearing cache...');
@@ -365,6 +369,48 @@ final class Console
         $total += $sdk->labsPosts()->count();
         $total += $sdk->podcastEpisodes()->count();
         $output->writeln($total);
+    }
+
+    public function searchTotalCommand(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln($this->searchTotal());
+    }
+
+    public function searchValidateCommand(InputInterface $input, OutputInterface $output)
+    {
+        $perPage = 100;
+        $total = $this->searchTotal();
+
+        for ($page = 1; $page <= ceil($total / $perPage); $page++) {
+            $request = $this->searchRequest($perPage, $page);
+            $output->writeln('Validating: '.$request->getRequestUri());
+            $response = $this->kernel->getApp()->handle($request);
+
+            if (!$this->kernel->get('validator')->validate($response)) {
+                $e = new InvalidMessage('Invalid search response for: '.$request->getRequestUri());
+                $this->logger->error(
+                    'Invalid search response',
+                    ['exception' => $e, 'responseBody' => $response->getContent()]
+                );
+                throw $e;
+            }
+        }
+
+        $output->writeln('Valid!');
+    }
+
+    private function searchTotal() {
+        $response = $this->kernel->getApp()->handle($this->searchRequest(1));
+        $json = json_decode($response->getContent());
+        return $json->total;
+    }
+
+    private function searchRequest(int $perPage = null, int $page = null) : Request
+    {
+        return Request::create('/search', 'GET', array_filter([
+            'per-page' => $perPage,
+            'page' => $page,
+        ]));
     }
 
     public function run($input = null, $output = null)
