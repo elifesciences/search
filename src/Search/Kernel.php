@@ -86,8 +86,8 @@ final class Kernel implements MinimalKernel
             'elastic_logging' => false,
             'elastic_force_sync' => false,
             'elastic_read_client_options' => [
-                'timeout' => 1.2,
-                'connect_timeout' => 0.5,
+                'timeout' => 1.8,
+                'connect_timeout' => 0.7,
             ],
             'logger.path' => self::ROOT.'/var/logs',
             'logger.level' => LogLevel::INFO,
