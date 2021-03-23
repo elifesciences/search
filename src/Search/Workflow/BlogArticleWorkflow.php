@@ -88,6 +88,11 @@ final class BlogArticleWorkflow implements Workflow
         // Normalized fields.
         $blogArticleObject = json_decode($this->serialize($blogArticle));
         $blogArticleObject->body = $this->flattenBlocks($blogArticleObject->content ?? []);
+        $blogArticleObject->snippet = $this->serializer->normalize(
+            $blogArticle,
+            null,
+            ['snippet' => true, 'type' => true]
+        );
         unset($blogArticleObject->content);
         $this->addSortDate($blogArticleObject, $blogArticle->getPublishedDate());
 
