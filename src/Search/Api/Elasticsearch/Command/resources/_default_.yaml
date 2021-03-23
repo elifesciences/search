@@ -44,3 +44,7 @@ _default_:
       type: date
       format: strict_date_optional_time
       index: not_analyzed
+
+    snippet:
+      type: string
+      index: not_analyzed
