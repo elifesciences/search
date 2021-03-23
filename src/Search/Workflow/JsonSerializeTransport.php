@@ -44,4 +44,25 @@ trait JsonSerializeTransport
 
         return self::$cache[$key];
     }
+
+    public function snippet($article) : array
+    {
+        if (
+            !isset($this->serializer) ||
+            null === $this->serializer ||
+            !$this->serializer instanceof Serializer
+        ) {
+            throw new LogicException('You must inject API SDK serializer for this to work (property: $serializer missing.)');
+        }
+        $key = 'snippet--'.spl_object_hash($article);
+        if (!isset(self::$cache[$key])) {
+            self::$cache[$key] = $this->serializer->normalize(
+                $article,
+                null,
+                ['snippet' => true, 'type' => true]
+            );
+        }
+
+        return self::$cache[$key];
+    }
 }

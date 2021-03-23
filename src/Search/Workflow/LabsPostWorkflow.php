@@ -88,11 +88,7 @@ final class LabsPostWorkflow implements Workflow
         // Normalized fields.
         $labsPostObject = json_decode($this->serialize($labsPost));
         $labsPostObject->body = $this->flattenBlocks($labsPostObject->content ?? []);
-        $labsPostObject->snippet = $this->serializer->normalize(
-            $labsPost,
-            null,
-            ['snippet' => true, 'type' => true]
-        );
+        $labsPostObject->snippet = $this->snippet($labsPost);
         unset($labsPostObject->content);
         $this->addSortDate($labsPostObject, $labsPost->getPublishedDate());
 
