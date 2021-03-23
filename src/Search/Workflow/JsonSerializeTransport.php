@@ -45,7 +45,7 @@ trait JsonSerializeTransport
         return self::$cache[$key];
     }
 
-    public function snippet($article) : array
+    public function snippet($article) : string
     {
         if (
             !isset($this->serializer) ||
@@ -56,11 +56,11 @@ trait JsonSerializeTransport
         }
         $key = 'snippet--'.spl_object_hash($article);
         if (!isset(self::$cache[$key])) {
-            self::$cache[$key] = $this->serializer->normalize(
+            self::$cache[$key] = json_encode($this->serializer->normalize(
                 $article,
                 null,
                 ['snippet' => true, 'type' => true]
-            );
+            ));
         }
 
         return self::$cache[$key];
