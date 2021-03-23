@@ -88,6 +88,11 @@ final class InterviewWorkflow implements Workflow
         // Normalized fields.
         $interviewObject = json_decode($this->serialize($interview));
         $interviewObject->body = $this->flattenBlocks($interviewObject->content ?? []);
+        $interviewObject->snippet = $this->serializer->normalize(
+            $interview,
+            null,
+            ['snippet' => true, 'type' => true]
+        );
         unset($interviewObject->content);
         // Add publish date to sort on.
         $this->addSortDate($interviewObject, $interview->getPublishedDate());
