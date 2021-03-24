@@ -86,7 +86,7 @@ final class CollectionWorkflow implements Workflow
         $this->logger->debug('Collection<'.$collection->getId().'> Indexing '.$collection->getTitle());
         // Normalized fields.
         $collectionObject = json_decode($this->serialize($collection));
-        $collectionObject->snippet = $this->snippet($collection);
+        $collectionObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($collection))];
         $this->addSortDate($collectionObject, $collection->getPublishedDate());
 
         // Return.
