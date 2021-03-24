@@ -45,7 +45,7 @@ trait JsonSerializeTransport
         return self::$cache[$key];
     }
 
-    public function snippet($article) : string
+    public function snippet($article) : array
     {
         if (
             !isset($this->serializer) ||
