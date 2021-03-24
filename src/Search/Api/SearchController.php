@@ -214,7 +214,6 @@ final class SearchController
             $headers = $data->getHeaders();
         }
 
-        $json = json_encode(['items' => $data->items] + json_decode($json, true));
         return new Response($json, 200, $headers);
     }
 }

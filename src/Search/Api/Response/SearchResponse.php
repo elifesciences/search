@@ -16,7 +16,7 @@ final class SearchResponse implements HasHeaders
     public $total;
 
     /**
-     * @Type("array<eLife\Search\Api\Response\SearchResult>")
+     * @Type("array")
      * @Since(version="1")
      * @Accessor(setter="setItems")
      */
