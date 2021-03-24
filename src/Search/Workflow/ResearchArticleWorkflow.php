@@ -136,7 +136,7 @@ final class ResearchArticleWorkflow implements Workflow
             'format' => 'json',
             'value' => json_encode($articleObject->dataSets ?? '[]'),
         ];
-        $articleObject->snippet = $this->snippet($article);
+        $articleObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($article))];
 
         if (isset($this->rdsArticles[$article->getId()]['date'])) {
             $sortDate = DateTimeImmutable::createFromFormat(DATE_ATOM, $this->rdsArticles[$article->getId()]['date']);
