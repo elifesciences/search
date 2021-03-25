@@ -9,9 +9,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Api\Response\ArticleResponse;
-use eLife\Search\Api\Response\SearchResult;
-use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
@@ -47,44 +44,6 @@ final class ResearchArticleWorkflow implements Workflow
         $this->client = $client;
         $this->validator = $validator;
         $this->rdsArticles = $rdsArticles;
-    }
-
-    /**
-     * @GearmanTask(
-     *     name="research_article_validate",
-     *     next="research_article_index",
-     *     deserialize="deserialize",
-     *     serialize="serialize",
-     *     priority="medium"
-     * )
-     */
-    public function validate(ArticleVersion $article) : ArticleVersion
-    {
-        $this->logger->debug('ResearchArticle<'.$article->getId().'> Validating '.$article->getTitle());
-        $articleSearchResponse = $this->validator->deserialize($this->serialize($article), SearchResult::class);
-        // @todo remove hack at some point.
-        if ($articleSearchResponse->image) {
-            $articleSearchResponse->image = $articleSearchResponse->image->https();
-        }
-        // Validate that response.
-        $isValid = $this->validator->validateSearchResult($articleSearchResponse);
-        if (false === $isValid) {
-            $this->logger->error(
-                'ResearchArticle<'.$article->getId().'> cannot be transformed into a valid search result',
-                [
-                    'input' => [
-                        'type' => 'article',
-                        'id' => $article->getId(),
-                    ],
-                    'search_result' => $this->validator->serialize($articleSearchResponse),
-                    'validation_error' => $this->validator->getLastError()->getMessage(),
-                ]
-            );
-            throw new InvalidWorkflow('ResearchArticle<'.$article->getId().'> cannot be trasformed into a valid search result.');
-        }
-        $this->logger->info('ResearchArticle<'.$article->getId().'> validated against current schema.');
-
-        return $article;
     }
 
     /**
@@ -183,9 +142,7 @@ final class ResearchArticleWorkflow implements Workflow
             $document = $this->client->getDocumentById($type, $id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
-            // That document contains a blog article.
-            Assertion::isInstanceOf($result, ArticleResponse::class);
-            // That blog article is valid JSON.
+            // That research article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
             $this->logger->error('ResearchArticle<'.$id.'> rolling back', [

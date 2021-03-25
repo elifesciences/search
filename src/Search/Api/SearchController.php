@@ -26,7 +26,7 @@ final class SearchController
 {
     private $serializer;
     private $apiUrl;
-    private $elastic;
+    private $client;
     private $context;
     private $elasticIndex;
     private $logger;
