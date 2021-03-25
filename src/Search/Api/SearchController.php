@@ -4,7 +4,9 @@ namespace eLife\Search\Api;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Elasticsearch\Common\Exceptions\ElasticsearchException;
 use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
+use Elasticsearch\Common\Exceptions\ServerErrorResponseException;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
@@ -137,8 +139,16 @@ final class SearchController
 
         try {
             $data = $this->client->searchDocuments($query->getRawQuery());
-        } catch (NoNodesAvailableException $e) {
-            throw new HttpException(504, 'Timeout from ElasticSearch', $e);
+        } catch (ElasticsearchException $e) {
+            $message = ($e instanceof NoNodesAvailableException)
+                ? 'Timeout from ElasticSearch' : 'Error from ElasticSearch';
+
+            $this->logger->error('Elasticsearch exception during search', [
+                'request' => $request,
+                'error' => $e,
+            ]);
+
+            throw new HttpException(504, $message, $e);
         }
 
         if ($data instanceof QueryResponse) {
