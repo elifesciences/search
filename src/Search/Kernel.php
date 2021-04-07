@@ -37,7 +37,6 @@ use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\SearchResponseSerializer;
 use eLife\Search\Api\SearchController;
-use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Gearman\Command\ImportCommand;
 use eLife\Search\Gearman\Command\QueueWatchCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;

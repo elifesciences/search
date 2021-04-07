@@ -7,8 +7,6 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
 use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
 use eLife\Search\Api\Elasticsearch\Response\SearchResponse;
-use eLife\Search\Api\Response\SearchResult;
-use eLife\Search\Api\SearchResultDiscriminator;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
