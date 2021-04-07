@@ -59,7 +59,7 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
         // Make sure we can iterate through.
         foreach ($model as $item) {
             ++$i;
-            $this->assertInstanceOf(SearchResult::class, $item);
+            $this->assertTrue(is_array($item));
         }
         $this->assertFalse(0 === $i, 'Result set must be iterable.');
         // Make sure we didn't just iterate
@@ -81,7 +81,15 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
 
     protected function wrapEsJson($json) : string
     {
-        return '{"_source":'.$json.'}';
+        return json_encode([
+            '_source' => [
+                'snippet' => [
+                    'format' => 'json',
+                    'value' => json_encode(json_decode($json)),
+                ],
+            ],
+        ]);
+//        return '{"_source":{"snippet":{"format":"json","value":"'.json_encode(json_decode($json), JSON_HEX_QUOT | JSON_HEX_APOS).'"}}}';
     }
 
     protected function makeJsonQuery(string $hit, $count = 1) : string
