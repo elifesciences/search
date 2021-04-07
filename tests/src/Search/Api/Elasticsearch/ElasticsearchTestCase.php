@@ -86,7 +86,6 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
                 ],
             ],
         ]);
-//        return '{"_source":{"snippet":{"format":"json","value":"'.json_encode(json_decode($json), JSON_HEX_QUOT | JSON_HEX_APOS).'"}}}';
     }
 
     protected function makeJsonQuery(string $hit, $count = 1) : string
