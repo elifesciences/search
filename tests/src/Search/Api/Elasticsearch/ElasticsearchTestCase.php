@@ -46,7 +46,6 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
         $this->serializer = SerializerBuilder::create()
             ->configureListeners(function (EventDispatcher $dispatcher) {
                 $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
-                $dispatcher->addSubscriber(new SearchResultDiscriminator());
             })
             ->build();
     }
