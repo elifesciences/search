@@ -2,6 +2,8 @@
 
 namespace eLife\Search\Api\Elasticsearch\Response;
 
+use JMS\Serializer\Annotation\Accessor;
+use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
 final class DocumentResponse implements ElasticResponse
