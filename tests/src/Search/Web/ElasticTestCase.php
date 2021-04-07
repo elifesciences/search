@@ -314,6 +314,10 @@ abstract class ElasticTestCase extends WebTestCase
     public function addDocumentToElasticSearch($doc)
     {
         $obj = is_string($doc) ? json_decode($doc, true) : $doc;
+        $doc['snippet'] = [
+            'format' => 'json',
+            'value' => json_encode($doc),
+        ];
         $this->mappedClient->indexJsonDocument($obj['type'], $obj['id'], is_string($doc) ? $doc : json_encode($doc), true);
     }
 
