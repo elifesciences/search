@@ -41,24 +41,24 @@ trait JsonSerializeTransport
         return self::$cache[$key];
     }
 
-    public function serialize($article) : string
+    public function serialize($item) : string
     {
         $this->checkSerializer();
 
-        $key = spl_object_hash($article);
+        $key = spl_object_hash($item);
         if (!isset(self::$cache[$key])) {
-            self::$cache[$key] = $this->serializer->serialize($article, 'json');
+            self::$cache[$key] = $this->serializer->serialize($item, 'json');
         }
 
         return self::$cache[$key];
     }
 
-    public function snippet($article) : array
+    public function snippet($item) : array
     {
         $this->checkSerializer();
 
         return $this->serializer->normalize(
-            $article,
+            $item,
             null,
             ['snippet' => true, 'type' => true]
         );
