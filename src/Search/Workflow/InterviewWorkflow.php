@@ -89,6 +89,7 @@ final class InterviewWorkflow implements Workflow
         $interviewObject = json_decode($this->serialize($interview));
         $interviewObject->body = $this->flattenBlocks($interviewObject->content ?? []);
         unset($interviewObject->content);
+        $interviewObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($interview))];
         // Add publish date to sort on.
         $this->addSortDate($interviewObject, $interview->getPublishedDate());
 

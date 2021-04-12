@@ -89,6 +89,7 @@ final class BlogArticleWorkflow implements Workflow
         $blogArticleObject = json_decode($this->serialize($blogArticle));
         $blogArticleObject->body = $this->flattenBlocks($blogArticleObject->content ?? []);
         unset($blogArticleObject->content);
+        $blogArticleObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($blogArticle))];
         $this->addSortDate($blogArticleObject, $blogArticle->getPublishedDate());
 
         // Return.

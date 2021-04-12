@@ -86,6 +86,7 @@ final class PodcastEpisodeWorkflow implements Workflow
 
         // Normalized fields.
         $podcastEpisodeObject = json_decode($this->serialize($podcastEpisode));
+        $podcastEpisodeObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($podcastEpisode))];
         // Add sort date.
         $this->addSortDate($podcastEpisodeObject, $podcastEpisode->getPublishedDate());
 
