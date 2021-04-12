@@ -13,20 +13,13 @@ trait JsonSerializeTransport
 
     private function checkSerializer()
     {
-        static $checked = false;
-
-        if (!$checked) {
-            if (
-                !isset($this->serializer) ||
-                null === $this->serializer ||
-                !$this->serializer instanceof Serializer
-            ) {
-                throw new LogicException('You must inject API SDK serializer for this to work (property: $serializer missing.)');
-            }
-            $checked = true;
+        if (
+            !isset($this->serializer) ||
+            null === $this->serializer ||
+            !$this->serializer instanceof Serializer
+        ) {
+            throw new LogicException('You must inject API SDK serializer for this to work (property: $serializer missing.)');
         }
-
-        return $checked;
     }
 
     public function deserialize(string $json)
