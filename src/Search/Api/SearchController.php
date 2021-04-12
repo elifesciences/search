@@ -145,6 +145,7 @@ final class SearchController
 
             $this->logger->error('Elasticsearch exception during search', [
                 'request' => $request,
+                'requestUri' => $request->getRequestUri(),
                 'error' => $e,
             ]);
 
@@ -168,11 +169,13 @@ final class SearchController
         if ($data instanceof ErrorResponse) {
             $this->logger->error('Error from elastic search during request', [
                 'request' => $request,
+                'requestUri' => $request->getRequestUri(),
                 'error' => $data->error,
             ]);
         } else {
             $this->logger->error('Unknown error from elastic search during request', [
                 'request' => $request,
+                'requestUri' => $request->getRequestUri(),
                 'error' => $data,
             ]);
         }
