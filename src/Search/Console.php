@@ -90,6 +90,12 @@ final class Console
         'index:total:write' => [
             'description' => 'The total number of items on the write index',
         ],
+        'index:snippet:total:read' => [
+            'description' => 'The total number of items with a snippet on the read index',
+        ],
+        'index:snippet:total:write' => [
+            'description' => 'The total number of items with a snippet on the write index',
+        ],
         'index:delete' => [
             'description' => 'Delete an index, explicitly using its name',
             'args' => [
@@ -272,6 +278,20 @@ final class Console
         $metadata = $this->kernel->indexMetadata();
         $client = $this->kernel->get('elastic.client.plain');
         $output->writeln($client->indexCount($metadata->write()));
+    }
+
+    public function indexSnippetTotalReadCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->kernel->indexMetadata();
+        $client = $this->kernel->get('elastic.client.plain');
+        $output->writeln($client->indexSnippetCount($metadata->read()));
+    }
+
+    public function indexSnippetTotalWriteCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->kernel->indexMetadata();
+        $client = $this->kernel->get('elastic.client.plain');
+        $output->writeln($client->indexSnippetCount($metadata->write()));
     }
 
     public function indexDeleteCommand(InputInterface $input, OutputInterface $output)
