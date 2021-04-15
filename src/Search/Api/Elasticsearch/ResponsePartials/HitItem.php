@@ -2,20 +2,26 @@
 
 namespace eLife\Search\Api\Elasticsearch\ResponsePartials;
 
-use eLife\Search\Api\Response\SearchResult;
+use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
 final class HitItem
 {
     /**
-     * @Type(SearchResult::class)
+     * @Type("array")
      * @SerializedName("_source")
+     * @Accessor(setter="setSource")
      */
     public $_source;
 
-    public function unwrap() : SearchResult
+    public function setSource(array $_source)
     {
-        return $this->_source;
+        $this->_source = $_source['snippet']['value'];
+    }
+
+    public function unwrap() : array
+    {
+        return json_decode($this->_source, true);
     }
 }

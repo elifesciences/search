@@ -8,8 +8,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Api\Response\CollectionResponse;
-use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -36,42 +34,6 @@ final class CollectionWorkflow implements Workflow
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
-    }
-
-    /**
-     * @GearmanTask(
-     *     name="collection_validate",
-     *     next="collection_index",
-     *     deserialize="deserialize",
-     *     serialize="serialize"
-     * )
-     * @SuppressWarnings(ForbiddenDateTime)
-     */
-    public function validate(Collection $collection) : Collection
-    {
-        // Create response to validate.
-        $searchCollection = $this->validator->deserialize($this->serialize($collection), CollectionResponse::class);
-        // Validate that response.
-        $isValid = $this->validator->validateSearchResult($searchCollection);
-        if (false === $isValid) {
-            $this->logger->error(
-                'Collection<'.$collection->getId().'> cannot be transformed into a valid search result',
-                [
-                    'input' => [
-                        'type' => 'collection',
-                        'id' => $collection->getId(),
-                    ],
-                    'search_result' => $this->validator->serialize($searchCollection),
-                    'validation_error' => $this->validator->getLastError()->getMessage(),
-                ]
-            );
-            throw new InvalidWorkflow('Collection<'.$collection->getId().'> cannot be trasformed into a valid search result. See error log for details.');
-        }
-        // Log results.
-        $this->logger->info('Collection<'.$collection->getId().'> validated against current schema.');
-
-        // Pass it on.
-        return $collection;
     }
 
     /**
@@ -122,8 +84,6 @@ final class CollectionWorkflow implements Workflow
             $document = $this->client->getDocumentById($type, $id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
-            // That document contains a collection.
-            Assertion::isInstanceOf($result, CollectionResponse::class);
             // That collection is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {

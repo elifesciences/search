@@ -62,16 +62,6 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
      * @dataProvider labsPostProvider
      * @test
      */
-    public function testValidationOfLabsPost(LabsPost $labsPost)
-    {
-        $return = $this->workflow->validate($labsPost);
-        $this->assertInstanceOf(LabsPost::class, $return);
-    }
-
-    /**
-     * @dataProvider labsPostProvider
-     * @test
-     */
     public function testIndexOfLabsPost(LabsPost $labsPost)
     {
         $return = $this->workflow->index($labsPost);

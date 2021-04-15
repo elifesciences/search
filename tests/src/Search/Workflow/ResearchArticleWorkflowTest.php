@@ -66,16 +66,6 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
      * @dataProvider researchArticleProvider
      * @test
      */
-    public function testValidationOfResearchArticle(ArticlePoA $researchArticle)
-    {
-        $return = $this->workflow->validate($researchArticle);
-        $this->assertInstanceOf(ArticlePoA::class, $return);
-    }
-
-    /**
-     * @dataProvider researchArticleProvider
-     * @test
-     */
     public function testIndexOfResearchArticle(ArticlePoA $researchArticle)
     {
         $return = $this->workflow->index($researchArticle);

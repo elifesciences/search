@@ -19,11 +19,11 @@ class GearmanTransformer implements QueueItemTransformer
     }
 
     private static $typeMap = [
-        'blog-article' => 'blog_article_validate',
-        'interview' => 'interview_validate',
-        'labs-post' => 'labs_post_validate',
-        'podcast-episode' => 'podcast_episode_validate',
-        'collection' => 'collection_validate',
-        'article' => 'research_article_validate',
+        'blog-article' => 'blog_article_index',
+        'interview' => 'interview_index',
+        'labs-post' => 'labs_post_index',
+        'podcast-episode' => 'podcast_episode_index',
+        'collection' => 'collection_index',
+        'article' => 'research_article_index',
     ];
 }

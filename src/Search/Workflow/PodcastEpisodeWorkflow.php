@@ -8,8 +8,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Api\Response\PodcastEpisodeResponse;
-use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -36,41 +34,6 @@ final class PodcastEpisodeWorkflow implements Workflow
         $this->client = $client;
         $this->logger = $logger;
         $this->validator = $validator;
-    }
-
-    /**
-     * @GearmanTask(
-     *     name="podcast_episode_validate",
-     *     next="podcast_episode_index",
-     *     deserialize="deserialize",
-     *     serialize="serialize"
-     * )
-     */
-    public function validate(PodcastEpisode $podcastEpisode) : PodcastEpisode
-    {
-        // Create response to validate.
-        $searchPodcastEpisode = $this->validator->deserialize($this->serialize($podcastEpisode), PodcastEpisodeResponse::class);
-        // Validate response.
-        $isValid = $this->validator->validateSearchResult($searchPodcastEpisode);
-        if (false === $isValid) {
-            $this->logger->error(
-                'PodcastEpisode<'.$podcastEpisode->getNumber().'> cannot be transformed into a valid search result',
-                [
-                    'input' => [
-                        'type' => 'podcast-episode',
-                        'number' => $podcastEpisode->getNumber(),
-                    ],
-                    'search_result' => $this->validator->serialize($searchPodcastEpisode),
-                    'validation_error' => $this->validator->getLastError()->getMessage(),
-                ]
-            );
-            throw new InvalidWorkflow('PodcastEpisode<'.$podcastEpisode->getNumber().'> cannot be trasformed into a valid search result.');
-        }
-        // Log results.
-        $this->logger->info('PodcastEpisode<'.$podcastEpisode->getNumber().'> validated against current schema.');
-
-        // Pass it on.
-        return $podcastEpisode;
     }
 
     /**
@@ -129,9 +92,7 @@ final class PodcastEpisodeWorkflow implements Workflow
             $document = $this->client->getDocumentById($type, $id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
-            // That document contains a blog article.
-            Assertion::isInstanceOf($result, PodcastEpisodeResponse::class);
-            // That blog article is valid JSON.
+            // That podcast episode is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
             $this->logger->error('PodcastEpisode<'.$id.'> rolling back', [

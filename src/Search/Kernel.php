@@ -37,7 +37,6 @@ use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\SearchResponseSerializer;
 use eLife\Search\Api\SearchController;
-use eLife\Search\Api\SearchResultDiscriminator;
 use eLife\Search\Gearman\Command\ImportCommand;
 use eLife\Search\Gearman\Command\QueueWatchCommand;
 use eLife\Search\Gearman\Command\WorkerCommand;
@@ -160,7 +159,6 @@ final class Kernel implements MinimalKernel
             return SerializerBuilder::create()
                 ->configureListeners(function (EventDispatcher $dispatcher) {
                     $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
-                    $dispatcher->addSubscriber(new SearchResultDiscriminator());
                 })
                 ->setCacheDir(self::CACHE_DIR)
                 ->build();
