@@ -62,16 +62,6 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
      * @dataProvider interviewProvider
      * @test
      */
-    public function testValidationOfInterview(Interview $interview)
-    {
-        $return = $this->workflow->validate($interview);
-        $this->assertInstanceOf(Interview::class, $return);
-    }
-
-    /**
-     * @dataProvider interviewProvider
-     * @test
-     */
     public function testIndexOfInterview(Interview $interview)
     {
         $return = $this->workflow->index($interview);

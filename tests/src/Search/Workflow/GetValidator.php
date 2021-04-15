@@ -7,7 +7,6 @@ use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
-use eLife\Search\Api\SearchResultDiscriminator;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
@@ -21,7 +20,6 @@ trait GetValidator
         $serializer = SerializerBuilder::create()
             ->configureListeners(function (EventDispatcher $dispatcher) {
                 $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
-                $dispatcher->addSubscriber(new SearchResultDiscriminator());
             })
             ->build();
 

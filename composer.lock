@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5f30aacba1f633dd7aa4444a6ed34c4f",
+    "content-hash": "edb29527fc614e405b4fae52792347a0",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -643,16 +643,16 @@
         },
         {
             "name": "elife/api",
-            "version": "dev-master",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "c0454e4f28df49bff3327c096795f5d56db5e54e"
+                "reference": "79e0f72e8200414e2638aeb6a4b8a0b6439a89c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/c0454e4f28df49bff3327c096795f5d56db5e54e",
-                "reference": "c0454e4f28df49bff3327c096795f5d56db5e54e",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/79e0f72e8200414e2638aeb6a4b8a0b6439a89c6",
+                "reference": "79e0f72e8200414e2638aeb6a4b8a0b6439a89c6",
                 "shasum": ""
             },
             "conflict": {
@@ -664,7 +664,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API specification",
-            "time": "2020-10-22T15:51:49+00:00"
+            "time": "2021-03-16T13:34:26+00:00"
         },
         {
             "name": "elife/api-client",
@@ -6415,7 +6415,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "doctrine/cache": 20,
-        "elife/api": 20,
         "elife/api-client": 20,
         "elife/api-sdk": 20,
         "elife/api-validator": 20,

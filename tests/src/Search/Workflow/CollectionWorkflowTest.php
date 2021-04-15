@@ -62,16 +62,6 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
      * @dataProvider collectionProvider
      * @test
      */
-    public function testValidationOfCollection(Collection $collection)
-    {
-        $return = $this->workflow->validate($collection);
-        $this->assertInstanceOf(Collection::class, $return);
-    }
-
-    /**
-     * @dataProvider collectionProvider
-     * @test
-     */
     public function testIndexOfCollection(Collection $collection)
     {
         $return = $this->workflow->index($collection);

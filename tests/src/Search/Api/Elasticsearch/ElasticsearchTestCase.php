@@ -7,8 +7,6 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
 use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
 use eLife\Search\Api\Elasticsearch\Response\SearchResponse;
-use eLife\Search\Api\Response\SearchResult;
-use eLife\Search\Api\SearchResultDiscriminator;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
@@ -46,7 +44,6 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
         $this->serializer = SerializerBuilder::create()
             ->configureListeners(function (EventDispatcher $dispatcher) {
                 $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
-                $dispatcher->addSubscriber(new SearchResultDiscriminator());
             })
             ->build();
     }
@@ -59,7 +56,7 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
         // Make sure we can iterate through.
         foreach ($model as $item) {
             ++$i;
-            $this->assertInstanceOf(SearchResult::class, $item);
+            $this->assertTrue(is_array($item));
         }
         $this->assertFalse(0 === $i, 'Result set must be iterable.');
         // Make sure we didn't just iterate
@@ -81,7 +78,14 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
 
     protected function wrapEsJson($json) : string
     {
-        return '{"_source":'.$json.'}';
+        return json_encode([
+            '_source' => [
+                'snippet' => [
+                    'format' => 'json',
+                    'value' => json_encode(json_decode($json)),
+                ],
+            ],
+        ]);
     }
 
     protected function makeJsonQuery(string $hit, $count = 1) : string

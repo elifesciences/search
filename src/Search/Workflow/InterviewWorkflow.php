@@ -8,8 +8,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Api\Response\InterviewResponse;
-use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -41,41 +39,6 @@ final class InterviewWorkflow implements Workflow
 
     /**
      * @GearmanTask(
-     *     name="interview_validate",
-     *     next="interview_index",
-     *     deserialize="deserialize",
-     *     serialize="serialize"
-     * )
-     */
-    public function validate(Interview $interview) : Interview
-    {
-        // Create response to validate
-        $searchInterview = $this->validator->deserialize($this->serialize($interview), InterviewResponse::class);
-        // Validate that response.
-        $isValid = $this->validator->validateSearchResult($searchInterview);
-        if (false === $isValid) {
-            $this->logger->error(
-                'Interview<'.$interview->getId().'> cannot be transformed into a valid search result',
-                [
-                    'input' => [
-                        'type' => 'interview',
-                        'id' => $interview->getId(),
-                    ],
-                    'search_result' => $this->validator->serialize($searchInterview),
-                    'validation_error' => $this->validator->getLastError()->getMessage(),
-                ]
-            );
-            throw new InvalidWorkflow('Interview<'.$interview->getId().'> cannot be trasformed into a valid search result.');
-        }
-        // Log results.
-        $this->logger->info('Interview<'.$interview->getId().'> validated against current schema.');
-
-        // Pass it on.
-        return $interview;
-    }
-
-    /**
-     * @GearmanTask(
      *     name="interview_index",
      *     next="interview_insert",
      *     deserialize="deserialize"
@@ -89,6 +52,7 @@ final class InterviewWorkflow implements Workflow
         $interviewObject = json_decode($this->serialize($interview));
         $interviewObject->body = $this->flattenBlocks($interviewObject->content ?? []);
         unset($interviewObject->content);
+        $interviewObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($interview))];
         // Add publish date to sort on.
         $this->addSortDate($interviewObject, $interview->getPublishedDate());
 
@@ -124,9 +88,7 @@ final class InterviewWorkflow implements Workflow
             $document = $this->client->getDocumentById($type, $id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
-            // That document contains a blog article.
-            Assertion::isInstanceOf($result, InterviewResponse::class);
-            // That blog article is valid JSON.
+            // That interview is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
             $this->logger->error('Interview<'.$id.'> rolling back', [

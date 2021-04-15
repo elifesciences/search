@@ -8,8 +8,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Api\Response\LabsPostResponse;
-use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -41,41 +39,6 @@ final class LabsPostWorkflow implements Workflow
 
     /**
      * @GearmanTask(
-     *     name="labs_post_validate",
-     *     next="labs_post_index",
-     *     deserialize="deserialize",
-     *     serialize="serialize"
-     * )
-     */
-    public function validate(LabsPost $labsPost) : LabsPost
-    {
-        // Create response to validate.
-        $searchLabsPost = $this->validator->deserialize($this->serialize($labsPost), LabsPostResponse::class);
-        // Validate that response.
-        $isValid = $this->validator->validateSearchResult($searchLabsPost);
-        if (false === $isValid) {
-            $this->logger->error(
-                'LabsPost<'.$labsPost->getId().'> cannot be transformed into a valid search result',
-                [
-                    'input' => [
-                        'type' => 'labs-post',
-                        'id' => $labsPost->getId(),
-                    ],
-                    'search_result' => $this->validator->serialize($searchLabsPost),
-                    'validation_error' => $this->validator->getLastError()->getMessage(),
-                ]
-            );
-            throw new InvalidWorkflow('LabsPost<'.$labsPost->getId().'> cannot be trasformed into a valid search result.');
-        }
-        // Log results.
-        $this->logger->info('LabsPost<'.$labsPost->getId().'> validated against current schema.');
-
-        // Pass it on.
-        return $labsPost;
-    }
-
-    /**
-     * @GearmanTask(
      *     name="labs_post_index",
      *     next="labs_post_insert",
      *     deserialize="deserialize"
@@ -89,6 +52,7 @@ final class LabsPostWorkflow implements Workflow
         $labsPostObject = json_decode($this->serialize($labsPost));
         $labsPostObject->body = $this->flattenBlocks($labsPostObject->content ?? []);
         unset($labsPostObject->content);
+        $labsPostObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($labsPost))];
         $this->addSortDate($labsPostObject, $labsPost->getPublishedDate());
 
         return [
@@ -123,9 +87,7 @@ final class LabsPostWorkflow implements Workflow
             $document = $this->client->getDocumentById($type, $id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
-            // That document contains a blog article.
-            Assertion::isInstanceOf($result, LabsPostResponse::class);
-            // That blog article is valid JSON.
+            // That labs post is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {
             $this->logger->error('LabsPost<'.$id.'> rolling back', [

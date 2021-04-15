@@ -5,6 +5,7 @@ namespace eLife\Search;
 use Aws\Sqs\Exception\SqsException;
 use Aws\Sqs\SqsClient;
 use Closure;
+use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
@@ -21,6 +22,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @property LoggerInterface temp_logger
@@ -81,6 +84,18 @@ final class Console
         'index:read' => [
             'description' => 'The name of the index we are reading from in the API',
         ],
+        'index:total:read' => [
+            'description' => 'The total number of items on the read index',
+        ],
+        'index:total:write' => [
+            'description' => 'The total number of items on the write index',
+        ],
+        'index:snippet:total:read' => [
+            'description' => 'The total number of items with a snippet on the read index',
+        ],
+        'index:snippet:total:write' => [
+            'description' => 'The total number of items with a snippet on the write index',
+        ],
         'index:delete' => [
             'description' => 'Delete an index, explicitly using its name',
             'args' => [
@@ -116,6 +131,15 @@ final class Console
         ],
         'rds:reindex' => [
             'description' => 'Reindex RDS articles to correctly place them in listings',
+        ],
+        'gateway:total' => [
+            'description' => 'Get the total number of items that could potentially be indexed from the API gateway',
+        ],
+        'search:total' => [
+            'description' => 'Get the search results total',
+        ],
+        'search:validate' => [
+            'description' => 'Validate all of the search results',
         ],
     ];
 
@@ -242,6 +266,34 @@ final class Console
         $output->writeln($metadata->read());
     }
 
+    public function indexTotalReadCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->kernel->indexMetadata();
+        $client = $this->kernel->get('elastic.client.plain');
+        $output->writeln($client->indexCount($metadata->read()));
+    }
+
+    public function indexTotalWriteCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->kernel->indexMetadata();
+        $client = $this->kernel->get('elastic.client.plain');
+        $output->writeln($client->indexCount($metadata->write()));
+    }
+
+    public function indexSnippetTotalReadCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->kernel->indexMetadata();
+        $client = $this->kernel->get('elastic.client.plain');
+        $output->writeln($client->indexSnippetCount($metadata->read()));
+    }
+
+    public function indexSnippetTotalWriteCommand(InputInterface $input, OutputInterface $output)
+    {
+        $metadata = $this->kernel->indexMetadata();
+        $client = $this->kernel->get('elastic.client.plain');
+        $output->writeln($client->indexSnippetCount($metadata->write()));
+    }
+
     public function indexDeleteCommand(InputInterface $input, OutputInterface $output)
     {
         $client = $this->kernel->get('elastic.client.plain');
@@ -306,11 +358,6 @@ final class Console
         }
     }
 
-    private function path($path = '')
-    {
-        return $this->root.$path;
-    }
-
     public function cacheClearCommand(InputInterface $input, OutputInterface $output)
     {
         $this->logger->info('Clearing cache...');
@@ -333,6 +380,60 @@ final class Console
         }
         $output->writeln('Queued: '.implode(', ', $ids));
         $this->logger->info('RDS articles added to indexing queue.');
+    }
+
+    public function gatewayTotalCommand(InputInterface $input, OutputInterface $output)
+    {
+        $sdk = $this->kernel->get('api.sdk');
+        $total = $sdk->articles()->count();
+        $total += $sdk->blogArticles()->count();
+        $total += $sdk->collections()->count();
+        $total += $sdk->interviews()->count();
+        $total += $sdk->labsPosts()->count();
+        $total += $sdk->podcastEpisodes()->count();
+        $output->writeln($total);
+    }
+
+    public function searchTotalCommand(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln($this->searchTotal());
+    }
+
+    public function searchValidateCommand(InputInterface $input, OutputInterface $output)
+    {
+        $perPage = 100;
+        $total = $this->searchTotal();
+
+        for ($page = 1; $page <= ceil($total / $perPage); $page++) {
+            $request = $this->searchRequest($perPage, $page);
+            $output->writeln('Validating: '.$request->getRequestUri());
+            $response = $this->kernel->getApp()->handle($request);
+
+            if (!$this->kernel->get('validator')->validate($response)) {
+                $e = new InvalidMessage('Invalid search response for: '.$request->getRequestUri());
+                $this->logger->error(
+                    'Invalid search response',
+                    ['exception' => $e, 'responseBody' => $response->getContent()]
+                );
+                throw $e;
+            }
+        }
+
+        $output->writeln('Valid!');
+    }
+
+    private function searchTotal() {
+        $response = $this->kernel->getApp()->handle($this->searchRequest(1));
+        $json = json_decode($response->getContent());
+        return $json->total;
+    }
+
+    private function searchRequest(int $perPage = null, int $page = null) : Request
+    {
+        return Request::create('/search', 'GET', array_filter([
+            'per-page' => $perPage,
+            'page' => $page,
+        ]));
     }
 
     public function run($input = null, $output = null)

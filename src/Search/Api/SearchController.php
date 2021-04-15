@@ -4,7 +4,9 @@ namespace eLife\Search\Api;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Elasticsearch\Common\Exceptions\ElasticsearchException;
 use Elasticsearch\Common\Exceptions\NoNodesAvailableException;
+use Elasticsearch\Common\Exceptions\ServerErrorResponseException;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
@@ -26,7 +28,7 @@ final class SearchController
 {
     private $serializer;
     private $apiUrl;
-    private $elastic;
+    private $client;
     private $context;
     private $elasticIndex;
     private $logger;
@@ -137,8 +139,17 @@ final class SearchController
 
         try {
             $data = $this->client->searchDocuments($query->getRawQuery());
-        } catch (NoNodesAvailableException $e) {
-            throw new HttpException(504, 'Timeout from ElasticSearch', $e);
+        } catch (ElasticsearchException $e) {
+            $message = ($e instanceof NoNodesAvailableException)
+                ? 'Timeout from ElasticSearch' : 'Error from ElasticSearch';
+
+            $this->logger->error('Elasticsearch exception during search', [
+                'request' => $request,
+                'requestUri' => $request->getRequestUri(),
+                'error' => $e,
+            ]);
+
+            throw new HttpException(504, $message, $e);
         }
 
         if ($data instanceof QueryResponse) {
@@ -158,11 +169,13 @@ final class SearchController
         if ($data instanceof ErrorResponse) {
             $this->logger->error('Error from elastic search during request', [
                 'request' => $request,
+                'requestUri' => $request->getRequestUri(),
                 'error' => $data->error,
             ]);
         } else {
             $this->logger->error('Unknown error from elastic search during request', [
                 'request' => $request,
+                'requestUri' => $request->getRequestUri(),
                 'error' => $data,
             ]);
         }

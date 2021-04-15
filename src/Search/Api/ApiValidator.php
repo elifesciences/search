@@ -42,7 +42,7 @@ final class ApiValidator
         return $this->serializer->serialize($data, 'json', $context);
     }
 
-    public function validateSearchResult(SearchResult $result, $strict = false) : bool
+    public function validateSearchResult($result, $strict = false) : bool
     {
         $searchResponse = new SearchResponse([$result], 1, [
             [

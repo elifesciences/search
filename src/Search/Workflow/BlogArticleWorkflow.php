@@ -8,8 +8,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Api\Response\BlogArticleResponse;
-use eLife\Search\Gearman\InvalidWorkflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -41,42 +39,6 @@ final class BlogArticleWorkflow implements Workflow
 
     /**
      * @GearmanTask(
-     *     name="blog_article_validate",
-     *     next="blog_article_index",
-     *     deserialize="deserialize",
-     *     serialize="serialize"
-     * )
-     * @SuppressWarnings(ForbiddenDateTime)
-     */
-    public function validate(BlogArticle $blogArticle) : BlogArticle
-    {
-        // Create response to validate.
-        $searchBlogArticle = $this->validator->deserialize($this->serialize($blogArticle), BlogArticleResponse::class);
-        // Validate that response.
-        $isValid = $this->validator->validateSearchResult($searchBlogArticle);
-        if (false === $isValid) {
-            $this->logger->error(
-                'BlogArticle<'.$blogArticle->getId().'> cannot be transformed into a valid search result',
-                [
-                    'input' => [
-                        'type' => 'blog-article',
-                        'id' => $blogArticle->getId(),
-                    ],
-                    'search_result' => $this->validator->serialize($searchBlogArticle),
-                    'validation_error' => $this->validator->getLastError()->getMessage(),
-                ]
-            );
-            throw new InvalidWorkflow('BlogArticle<'.$blogArticle->getId().'> cannot be transformed into a valid search result.');
-        }
-        // Log results.
-        $this->logger->info('BlogArticle<'.$blogArticle->getId().'> validated against current schema.');
-
-        // Pass it on.
-        return $blogArticle;
-    }
-
-    /**
-     * @GearmanTask(
      *     name="blog_article_index",
      *     next="blog_article_insert",
      *     deserialize="deserialize"
@@ -89,6 +51,7 @@ final class BlogArticleWorkflow implements Workflow
         $blogArticleObject = json_decode($this->serialize($blogArticle));
         $blogArticleObject->body = $this->flattenBlocks($blogArticleObject->content ?? []);
         unset($blogArticleObject->content);
+        $blogArticleObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($blogArticle))];
         $this->addSortDate($blogArticleObject, $blogArticle->getPublishedDate());
 
         // Return.
@@ -124,8 +87,6 @@ final class BlogArticleWorkflow implements Workflow
             $document = $this->client->getDocumentById($type, $id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
-            // That document contains a blog article.
-            Assertion::isInstanceOf($result, BlogArticleResponse::class);
             // That blog article is valid JSON.
             $this->validator->validateSearchResult($result, true);
         } catch (Throwable $e) {

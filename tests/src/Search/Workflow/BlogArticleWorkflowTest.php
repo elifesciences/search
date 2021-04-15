@@ -64,16 +64,6 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
      * @dataProvider blogArticleProvider
      * @test
      */
-    public function testValidationOfBlogArticle(BlogArticle $blogArticle)
-    {
-        $return = $this->workflow->validate($blogArticle);
-        $this->assertInstanceOf(BlogArticle::class, $return);
-    }
-
-    /**
-     * @dataProvider blogArticleProvider
-     * @test
-     */
     public function testIndexOfBlogArticle(BlogArticle $blogArticle)
     {
         $return = $this->workflow->index($blogArticle);

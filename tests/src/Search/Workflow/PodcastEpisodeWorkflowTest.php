@@ -62,16 +62,6 @@ class PodcastEpisodeWorkflowTest extends PHPUnit_Framework_TestCase
      * @dataProvider podcastEpisodeProvider
      * @test
      */
-    public function testValidationOfPodcastEpisode(PodcastEpisode $podcastEpisode)
-    {
-        $return = $this->workflow->validate($podcastEpisode);
-        $this->assertInstanceOf(PodcastEpisode::class, $return);
-    }
-
-    /**
-     * @dataProvider podcastEpisodeProvider
-     * @test
-     */
     public function testIndexOfPodcastEpisode(PodcastEpisode $podcastEpisode)
     {
         $return = $this->workflow->index($podcastEpisode);

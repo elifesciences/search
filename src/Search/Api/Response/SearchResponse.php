@@ -16,7 +16,7 @@ final class SearchResponse implements HasHeaders
     public $total;
 
     /**
-     * @Type("array<eLife\Search\Api\Response\SearchResult>")
+     * @Type("array")
      * @Since(version="1")
      * @Accessor(setter="setItems")
      */
@@ -43,16 +43,6 @@ final class SearchResponse implements HasHeaders
     public function __construct(array $items, $total, $subjects, TypesResponse $types)
     {
         $this->items = $items;
-        // @todo remove this hack!
-        $this->items = array_map(function ($item) {
-            if (property_exists($item, 'image')) {
-                if ($item->image) {
-                    $item->image = $item->image->https();
-                }
-            }
-
-            return $item;
-        }, $items);
         $this->total = $total;
         $this->types = $types;
         $this->subjects = $subjects;
