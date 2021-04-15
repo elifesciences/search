@@ -90,7 +90,7 @@ class PlainElasticsearchClient
                     ],
                 ],
             ],
-        ])['count'];
+        ])['hits']['total'];
     }
 
     public function indexExists(string $indexName = null)
