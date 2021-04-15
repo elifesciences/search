@@ -73,6 +73,26 @@ class PlainElasticsearchClient
         ])['count'];
     }
 
+    public function indexSnippetCount(string $indexName = null)
+    {
+        return $this->libraryClient->search([
+            'index' => $indexName ?? $this->index,
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            [
+                                'match' => [
+                                    'snippet.format' => 'json',
+                                ],
+                            ]
+                        ],
+                    ],
+                ],
+            ],
+        ])['hits']['total'];
+    }
+
     public function indexExists(string $indexName = null)
     {
         return $this->libraryClient->indices()->exists([
