@@ -152,10 +152,6 @@ final class SearchController
             throw new HttpException(504, $message, $e);
         }
 
-        $this->logger->error('DEBUG', [
-            'requestUri' => $this->prepareUriForLogging($request->getRequestUri()),
-        ]);
-
         if ($data instanceof QueryResponse) {
             if ($page > 1 && 0 === count($data->toArray())) {
                 throw new NotFoundHttpException("No page {$page}");
