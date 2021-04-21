@@ -145,7 +145,8 @@ final class SearchController
 
             $this->logger->error('Elasticsearch exception during search', [
                 'request' => $request,
-                'requestUri' => $this->prepareUriForLogging($request->getRequestUri()),
+                'requestUri' => $request->getRequestUri(),
+                'requestUriParsed' => $this->prepareUriForLogging($request->getRequestUri()),
                 'error' => $e,
             ]);
 
@@ -169,13 +170,15 @@ final class SearchController
         if ($data instanceof ErrorResponse) {
             $this->logger->error('Error from elastic search during request', [
                 'request' => $request,
-                'requestUri' => $this->prepareUriForLogging($request->getRequestUri()),
+                'requestUri' => $request->getRequestUri(),
+                'requestUriParsed' => $this->prepareUriForLogging($request->getRequestUri()),
                 'error' => $data->error,
             ]);
         } else {
             $this->logger->error('Unknown error from elastic search during request', [
                 'request' => $request,
-                'requestUri' => $this->prepareUriForLogging($request->getRequestUri()),
+                'requestUri' => $request->getRequestUri(),
+                'requestUriParsed' => $this->prepareUriForLogging($request->getRequestUri()),
                 'error' => $data,
             ]);
         }
@@ -236,9 +239,6 @@ final class SearchController
         parse_str($values['query'] ?? '', $query);
         $query = array_filter($query) + ['for' => '[EMPTY]'];
         $values['query'] = $query;
-        return [
-            'raw' => $uri,
-            'parsed' => $values,
-        ];
+        return $values;
     }
 }
