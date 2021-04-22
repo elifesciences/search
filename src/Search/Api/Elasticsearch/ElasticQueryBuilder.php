@@ -25,30 +25,30 @@ final class ElasticQueryBuilder implements QueryBuilder
     {
         $this->query['index'] = $index;
         $this->query['body']['aggregations']['type_agg']['terms'] = [
-            'field' => '_type',
+            'field' => 'type.keyword',
             'size' => self::MAXIMUM_TYPES,
         ];
-        $this->query['body']['aggregations']['subject_agg'] = [
-            'nested' => [
-                'path' => 'subjects',
-            ],
-            'aggs' => [
-                'name' => [
-                    'terms' => [
-                        'field' => 'subjects.id',
-                        'size' => self::MAXIMUM_SUBJECTS,
-                        'min_doc_count' => 0,
-                    ],
-                    'aggs' => [
-                        'name' => [
-                            'terms' => [
-                                'field' => 'subjects.name',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
+//        $this->query['body']['aggregations']['subject_agg'] = [
+//            'nested' => [
+//                'path' => 'subjects',
+//            ],
+//            'aggs' => [
+//                'name' => [
+//                    'terms' => [
+//                        'field' => 'subjects.id',
+//                        'size' => self::MAXIMUM_SUBJECTS,
+//                        'min_doc_count' => 0,
+//                    ],
+//                    'aggs' => [
+//                        'name' => [
+//                            'terms' => [
+//                                'field' => 'subjects.name',
+//                            ],
+//                        ],
+//                    ],
+//                ],
+//            ],
+//        ];
     }
 
     private $query = [];
