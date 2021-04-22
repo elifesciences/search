@@ -100,12 +100,11 @@ class PlainElasticsearchClient
         ]);
     }
 
-    public function indexJsonDocument($type, $id, $body)
+    public function indexJsonDocument($id, $body)
     {
         $index = $this->index;
         $params = [
             'index' => $index,
-            'type' => $type,
             'id' => $id,
             'body' => $body,
         ];
@@ -116,11 +115,10 @@ class PlainElasticsearchClient
         return $con;
     }
 
-    public function getDocumentById($type, $id, $index = null)
+    public function getDocumentById($id, $index = null)
     {
         $params = [
             'index' => $index ?? $this->index,
-            'type' => $type,
             'id' => $id,
         ];
 

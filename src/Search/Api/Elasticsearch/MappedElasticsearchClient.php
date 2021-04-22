@@ -30,12 +30,11 @@ class MappedElasticsearchClient
         return $this->index;
     }
 
-    public function indexJsonDocument($type, $id, $body, $flush = false, string $index = null)
+    public function indexJsonDocument($id, $body, $flush = false, string $index = null)
     {
         $index = $index ?? $this->index;
         $params = [
             'index' => $index,
-            'type' => $type,
             'id' => $id,
             'body' => $body,
         ];
@@ -48,11 +47,10 @@ class MappedElasticsearchClient
         return $con;
     }
 
-    public function deleteDocument($type, $id)
+    public function deleteDocument($id)
     {
         $params = [
             'index' => $this->index,
-            'type' => $type,
             'id' => $id,
             'client' => ['ignore' => [400, 404]],
         ];
@@ -67,11 +65,10 @@ class MappedElasticsearchClient
         return $this->libraryClient->search($query)['payload'] ?? null;
     }
 
-    public function getDocumentById($type, $id, $index = null)
+    public function getDocumentById($id, $index = null)
     {
         $params = [
             'index' => $index ?? $this->index,
-            'type' => $type,
             'id' => $id,
         ];
         $params['client'] = $this->readClientOptions;

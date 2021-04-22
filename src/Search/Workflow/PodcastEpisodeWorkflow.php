@@ -55,26 +55,24 @@ final class PodcastEpisodeWorkflow implements Workflow
 
         return [
             'json' => json_encode($podcastEpisodeObject),
-            'type' => 'podcast-episode',
-            'id' => $podcastEpisode->getNumber(),
+            'id' => 'podcast-episode-'.$podcastEpisode->getNumber(),
         ];
     }
 
     /**
      * @GearmanTask(
      *     name="podcast_episode_insert",
-     *     parameters={"json", "type", "id"},
+     *     parameters={"json", "id"},
      *     next="podcast_episode_post_validate"
      * )
      */
-    public function insert(string $json, string $type, string $id)
+    public function insert(string $json, string $id)
     {
         // Insert the document.
         $this->logger->debug('PodcastEpisode<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($type, $id, $json);
+        $this->client->indexJsonDocument($id, $json);
 
         return [
-            'type' => $type,
             'id' => $id,
         ];
     }
@@ -82,14 +80,14 @@ final class PodcastEpisodeWorkflow implements Workflow
     /**
      * @GearmanTask(
      *     name="podcast_episode_post_validate",
-     *     parameters={"type", "id"}
+     *     parameters={"id"}
      * )
      */
-    public function postValidate($type, $id)
+    public function postValidate($id)
     {
         try {
             // Post-validation, we got a document.
-            $document = $this->client->getDocumentById($type, $id);
+            $document = $this->client->getDocumentById($id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
             // That podcast episode is valid JSON.
@@ -99,7 +97,7 @@ final class PodcastEpisodeWorkflow implements Workflow
                 'exception' => $e,
                 'document' => $result ?? null,
             ]);
-            $this->client->deleteDocument($type, $id);
+            $this->client->deleteDocument($id);
 
             // We failed.
             return self::WORKFLOW_FAILURE;

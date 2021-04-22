@@ -58,34 +58,32 @@ final class InterviewWorkflow implements Workflow
 
         return [
             'json' => json_encode($interviewObject),
-            'type' => 'interview',
-            'id' => $interview->getId(),
+            'id' => 'interview-'.$interview->getId(),
         ];
     }
 
     /**
-     * @GearmanTask(name="interview_insert", next="interview_post_validate", parameters={"json", "type", "id"})
+     * @GearmanTask(name="interview_insert", next="interview_post_validate", parameters={"json", "id"})
      */
-    public function insert(string $json, string $type, string $id)
+    public function insert(string $json, string $id)
     {
         // Insert the document.
         $this->logger->debug('Interview<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($type, $id, $json);
+        $this->client->indexJsonDocument($id, $json);
 
         return [
-            'type' => $type,
             'id' => $id,
         ];
     }
 
     /**
-     * @GearmanTask(name="interview_post_validate", parameters={"type", "id"})
+     * @GearmanTask(name="interview_post_validate", parameters={"id"})
      */
-    public function postValidate(string $type, string $id)
+    public function postValidate(string $id)
     {
         try {
             // Post-validation, we got a document.
-            $document = $this->client->getDocumentById($type, $id);
+            $document = $this->client->getDocumentById($id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
             // That interview is valid JSON.
@@ -94,7 +92,7 @@ final class InterviewWorkflow implements Workflow
             $this->logger->error('Interview<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
-            $this->client->deleteDocument($type, $id);
+            $this->client->deleteDocument($id);
 
             // We failed.
             return self::WORKFLOW_FAILURE;
