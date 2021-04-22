@@ -12,13 +12,16 @@ properties:
     type: text
   abstract:
     type: text
-  subjects.id:
-    type: keyword
-  subjects.name:
-    type: text
-    fields:
-      keyword:
+  subjects:
+    type: nested
+    properties:
+      id:
         type: keyword
+      name:
+        type: text
+        fields:
+          keyword:
+            type: keyword
   keywords:
     type: text
     fields:
