@@ -1,0 +1,59 @@
+properties:
+  id:
+    type: keyword
+  title:
+    type: text
+  snippet:
+    type: object
+    enabled: false
+  impactStatement:
+    type: text
+  summary:
+    type: text
+  abstract:
+    type: text
+  subjects.id:
+    type: keyword
+  subjects.name:
+    type: text
+    fields:
+      keyword:
+        type: keyword
+  keywords:
+    type: text
+    fields:
+      keyword:
+        type: keyword
+  researchOrganisms:
+    type: text
+    fields:
+      keyword:
+        type: keyword
+  type:
+    type: keyword
+  body:
+    type: text
+  appendices:
+    type: text
+  acknowledgements:
+    type: text
+  decisionLetter:
+    type: text
+  authorResponse:
+    type: text
+  funding.format:
+    type.keyword
+  funding.value:
+    type: text
+  dataSets.format:
+    type.keyword
+  dataSets.value:
+    type: text
+  sortDate:
+    type: date
+  published:
+    type: date
+  updated:
+    type: date
+  statusDate:
+    type: date

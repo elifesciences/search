@@ -45,11 +45,7 @@ class BuildIndexCommand extends Command
         $mapping = array_filter(
             array_merge(
                 [],
-                Yaml::parse(file_get_contents(__DIR__.'/resources/_default_.yaml')),
-                Yaml::parse(file_get_contents(__DIR__.'/resources/article.yaml')),
-                Yaml::parse(file_get_contents(__DIR__.'/resources/blog-article.yaml')),
-                Yaml::parse(file_get_contents(__DIR__.'/resources/interview.yaml')),
-                Yaml::parse(file_get_contents(__DIR__.'/resources/labs-post.yaml'))
+                Yaml::parse(file_get_contents(__DIR__.'/resources/mappings.yaml'))
             ), 'json_encode');
 
         $config = [
