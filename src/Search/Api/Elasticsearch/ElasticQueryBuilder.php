@@ -8,7 +8,6 @@ use eLife\Search\Api\Query\QueryBuilder;
 final class ElasticQueryBuilder implements QueryBuilder
 {
     private $order;
-    private $exec;
 
     const PHP_DATETIME_FORMAT = 'yyyy/MM/dd HH:mm:ss';
     const ELASTIC_DATETIME_FORMAT = 'Y/m/d H:i:s';
@@ -16,39 +15,33 @@ final class ElasticQueryBuilder implements QueryBuilder
     const DATE_DEFAULT = 'sortDate';
     const DATE_PUBLISHED = 'published';
 
-    const MAXIMUM_SUBJECTS = 100;
-    const MAXIMUM_TYPES = 18;
-
     private $dateType;
 
     public function __construct(string $index)
     {
         $this->query['index'] = $index;
-        $this->query['body']['aggregations']['type_agg']['terms'] = [
-            'field' => 'type.keyword',
-            'size' => self::MAXIMUM_TYPES,
+        $this->query['body']['aggs']['type_agg']['terms'] = [
+            'field' => 'type',
         ];
-//        $this->query['body']['aggregations']['subject_agg'] = [
-//            'nested' => [
-//                'path' => 'subjects',
-//            ],
-//            'aggs' => [
-//                'name' => [
-//                    'terms' => [
-//                        'field' => 'subjects.id',
-//                        'size' => self::MAXIMUM_SUBJECTS,
-//                        'min_doc_count' => 0,
-//                    ],
-//                    'aggs' => [
-//                        'name' => [
-//                            'terms' => [
-//                                'field' => 'subjects.name',
-//                            ],
-//                        ],
-//                    ],
-//                ],
-//            ],
-//        ];
+        $this->query['body']['aggs']['subject_agg'] = [
+            'nested' => [
+                'path' => 'subjects',
+            ],
+            'aggs' => [
+                'name' => [
+                    'terms' => [
+                        'field' => 'subjects.id',
+                    ],
+                    'aggs' => [
+                        'name' => [
+                            'terms' => [
+                                'field' => 'subjects.name.keyword',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
     private $query = [];
