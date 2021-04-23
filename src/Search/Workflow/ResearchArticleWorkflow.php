@@ -78,7 +78,9 @@ final class ResearchArticleWorkflow implements Workflow
 
             return $reference;
         }, $articleObject->authors);
-        $articleObject->abstract = $this->flattenBlocks($articleObject->abstract ?? []);
+        if ($articleObject->abstract) {
+            $articleObject->abstract = $this->flattenBlock($articleObject->abstract);
+        }
         $articleObject->body = $this->flattenBlocks($articleObject->body ?? []);
         foreach ($articleObject->appendices ?? [] as $appendix) {
             $appendix->content = $this->flattenBlocks($appendix->content ?? []);

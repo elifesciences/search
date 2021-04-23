@@ -14,6 +14,7 @@ use Throwable;
 
 final class CollectionWorkflow implements Workflow
 {
+    use Blocks;
     use JsonSerializeTransport;
     use SortDate;
 
@@ -48,6 +49,7 @@ final class CollectionWorkflow implements Workflow
         $this->logger->debug('Collection<'.$collection->getId().'> Indexing '.$collection->getTitle());
         // Normalized fields.
         $collectionObject = json_decode($this->serialize($collection));
+        $collectionObject->summary = $this->flattenBlocks($collectionObject->summary ?? []);
         $collectionObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($collection))];
         $this->addSortDate($collectionObject, $collection->getPublishedDate());
 
