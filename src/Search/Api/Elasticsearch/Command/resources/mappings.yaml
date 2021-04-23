@@ -45,11 +45,11 @@ properties:
   authorResponse:
     type: text
   funding.format:
-    type.keyword
+    type: keyword
   funding.value:
     type: text
   dataSets.format:
-    type.keyword
+    type: keyword
   dataSets.value:
     type: text
   sortDate:
