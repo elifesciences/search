@@ -49,7 +49,7 @@ class BuildIndexCommand extends Command
             ), 'json_encode');
 
         $config = [
-            'client' => ['ignore' => [400, 404]],
+            'client' => ['ignore' => [404]],
             'body' => [
                 'mappings' => $mapping,
             ],
