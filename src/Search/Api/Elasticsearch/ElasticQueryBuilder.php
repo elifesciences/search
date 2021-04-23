@@ -105,27 +105,27 @@ final class ElasticQueryBuilder implements QueryBuilder
     private function setBoostings(array $query = [])
     {
         /* Boost results based on 'type' */
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['type' => 'correction']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['type' => 'podcast-episode']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['type' => 'retraction']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => ['query' => 'correction', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => ['query' => 'podcast-episode', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => ['query' => 'retraction', 'fields' => ['type']]]]];
 
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'collection']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'editorial']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'insight']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'interview']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'feature']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'query' => ['match' => ['type' => 'labs-post']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'filter' => ['query_string' => ['query' => 'collection', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'filter' => ['query_string' => ['query' => 'editorial', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'filter' => ['query_string' => ['query' => 'insight', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'filter' => ['query_string' => ['query' => 'interview', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'filter' => ['query_string' => ['query' => 'feature', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 1, 'filter' => ['query_string' => ['query' => 'labs-post', 'fields' => ['type']]]]];
 
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'blog-article']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'registered-report']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'replication-study']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'research-advance']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'research-article']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'research-communication']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'review-article']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'scientific-correspondence']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'short-report']]]];
-        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'query' => ['match' => ['type' => 'tools-resources']]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'filter' => ['query_string' => ['query' => 'blog-article', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'filter' => ['query_string' => ['query' => 'registered-report', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'filter' => ['query_string' => ['query' => 'replication-study', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'filter' => ['query_string' => ['query' => 'research-advance', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'filter' => ['query_string' => ['query' => 'research-article', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'filter' => ['query_string' => ['query' => 'research-communication', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'filter' => ['query_string' => ['query' => 'review-article', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'filter' => ['query_string' => ['query' => 'scientific-correspondence', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'filter' => ['query_string' => ['query' => 'short-report', 'fields' => ['type']]]]];
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 0, 'filter' => ['query_string' => ['query' => 'tools-resources', 'fields' => ['type']]]]];
 
         if (!(empty($query))) {
             /* Boost results based on which field(s) match the query term */
