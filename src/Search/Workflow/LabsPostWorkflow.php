@@ -50,6 +50,7 @@ final class LabsPostWorkflow implements Workflow
 
         // Normalized fields.
         $labsPostObject = json_decode($this->serialize($labsPost));
+        $labsPostObject->type = 'labs-post';
         $labsPostObject->body = $this->flattenBlocks($labsPostObject->content ?? []);
         unset($labsPostObject->content);
         $labsPostObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($labsPost))];
@@ -57,7 +58,7 @@ final class LabsPostWorkflow implements Workflow
 
         return [
             'json' => json_encode($labsPostObject),
-            'id' => 'labs-post-'.$labsPost->getId(),
+            'id' => $labsPostObject->type.'-'.$labsPost->getId(),
         ];
     }
 

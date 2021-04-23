@@ -49,6 +49,7 @@ final class BlogArticleWorkflow implements Workflow
         $this->logger->debug('BlogArticle<'.$blogArticle->getId().'> Indexing '.$blogArticle->getTitle());
         // Normalized fields.
         $blogArticleObject = json_decode($this->serialize($blogArticle));
+        $blogArticleObject->type = 'blog-article';
         $blogArticleObject->body = $this->flattenBlocks($blogArticleObject->content ?? []);
         unset($blogArticleObject->content);
         $blogArticleObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($blogArticle))];
@@ -57,7 +58,7 @@ final class BlogArticleWorkflow implements Workflow
         // Return.
         return [
             'json' => json_encode($blogArticleObject),
-            'id' => 'blog-article-'.$blogArticle->getId(),
+            'id' => $blogArticleObject->type.'-'.$blogArticle->getId(),
         ];
     }
 

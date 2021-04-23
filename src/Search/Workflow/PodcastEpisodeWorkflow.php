@@ -49,13 +49,14 @@ final class PodcastEpisodeWorkflow implements Workflow
 
         // Normalized fields.
         $podcastEpisodeObject = json_decode($this->serialize($podcastEpisode));
+        $podcastEpisodeObject->type = 'podcast-episode';
         $podcastEpisodeObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($podcastEpisode))];
         // Add sort date.
         $this->addSortDate($podcastEpisodeObject, $podcastEpisode->getPublishedDate());
 
         return [
             'json' => json_encode($podcastEpisodeObject),
-            'id' => 'podcast-episode-'.$podcastEpisode->getNumber(),
+            'id' => $podcastEpisodeObject->type.'-'.$podcastEpisode->getNumber(),
         ];
     }
 

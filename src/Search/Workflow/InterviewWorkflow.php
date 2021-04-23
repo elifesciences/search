@@ -50,6 +50,7 @@ final class InterviewWorkflow implements Workflow
 
         // Normalized fields.
         $interviewObject = json_decode($this->serialize($interview));
+        $interviewObject->type = 'interview';
         $interviewObject->body = $this->flattenBlocks($interviewObject->content ?? []);
         unset($interviewObject->content);
         $interviewObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($interview))];
@@ -58,7 +59,7 @@ final class InterviewWorkflow implements Workflow
 
         return [
             'json' => json_encode($interviewObject),
-            'id' => 'interview-'.$interview->getId(),
+            'id' => $interviewObject->type.'-'.$interview->getId(),
         ];
     }
 

@@ -49,6 +49,7 @@ final class CollectionWorkflow implements Workflow
         $this->logger->debug('Collection<'.$collection->getId().'> Indexing '.$collection->getTitle());
         // Normalized fields.
         $collectionObject = json_decode($this->serialize($collection));
+        $collectionObject->type = 'collection';
         $collectionObject->summary = $this->flattenBlocks($collectionObject->summary ?? []);
         $collectionObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($collection))];
         $this->addSortDate($collectionObject, $collection->getPublishedDate());
@@ -56,7 +57,7 @@ final class CollectionWorkflow implements Workflow
         // Return.
         return [
             'json' => json_encode($collectionObject),
-            'id' => 'collection-'.$collection->getId(),
+            'id' => $collectionObject->type.'-'.$collection->getId(),
         ];
     }
 
