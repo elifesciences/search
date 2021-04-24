@@ -129,6 +129,11 @@ final class ElasticQueryBuilder implements QueryBuilder
 
         if (!(empty($query))) {
             /* Boost results based on which field(s) match the query term */
+            // Add to mappings: authorLine, authors, curators, reviewers, digest, doi & elocationId
+
+            // Consider removing from mappings: additionalFiles, chapters, content, ethics, figuresPdf, image,
+            // interviewee, issue, number, pdf, podcastEpisodes, references, relatedContent.sources, stage, status,
+            // titlePrefix, version, versionsDate, volume & xml
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'filter' => ['query_string' => $query + ['fields' => ['authorLine']]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'filter' => ['query_string' => $query + ['fields' => ['authors.affiliations.name']]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'filter' => ['query_string' => $query + ['fields' => ['authors.name.preferred']]]]];
@@ -153,7 +158,7 @@ final class ElasticQueryBuilder implements QueryBuilder
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['digest.content.text']]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['impactStatement']]]]];
 
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['appendices.content']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['appendices']]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['authorResponse']]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['authors.orcid']]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['body']]]]];
