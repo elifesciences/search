@@ -129,38 +129,38 @@ final class ElasticQueryBuilder implements QueryBuilder
 
         if (!(empty($query))) {
             /* Boost results based on which field(s) match the query term */
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['authorLine' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['authors.affiliations.name' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['authors.name.preferred' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['authors.name.value' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['authors.onBehalfOf' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'query' => ['match' => ['authors.people.name.preferred' => $query]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'filter' => ['query_string' => $query + ['fields' => ['authorLine']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'filter' => ['query_string' => $query + ['fields' => ['authors.affiliations.name']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'filter' => ['query_string' => $query + ['fields' => ['authors.name.preferred']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'filter' => ['query_string' => $query + ['fields' => ['authors.name.value']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'filter' => ['query_string' => $query + ['fields' => ['authors.onBehalfOf']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 10, 'filter' => ['query_string' => $query + ['fields' => ['authors.people.name.preferred']]]]];
 
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 9, 'query' => ['match' => ['title' => $query]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 9, 'filter' => ['query_string' => $query + ['fields' => ['title']]]]];
 
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'query' => ['match' => ['curators.name.preferred' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'query' => ['match' => ['curators.orcid' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'query' => ['match' => ['dataSets.value' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'query' => ['match' => ['reviewers.name.preferred' => $query]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'filter' => ['query_string' => $query + ['fields' => ['curators.name.preferred']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'filter' => ['query_string' => $query + ['fields' => ['curators.orcid']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'filter' => ['query_string' => $query + ['fields' => ['dataSets.value']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 8, 'filter' => ['query_string' => $query + ['fields' => ['reviewers.name.preferred']]]]];
 
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 6, 'query' => ['match' => ['funding.value' => $query]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 6, 'filter' => ['query_string' => $query + ['fields' => ['funding.value']]]]];
 
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 4, 'query' => ['match' => ['keywords' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 4, 'query' => ['match' => ['researchOrganisms' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 4, 'query' => ['match' => ['subjects.name' => $query]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 4, 'filter' => ['query_string' => $query + ['fields' => ['keywords']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 4, 'filter' => ['query_string' => $query + ['fields' => ['researchOrganisms']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 4, 'filter' => ['query_string' => $query + ['fields' => ['subjects.name']]]]];
 
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'query' => ['match' => ['abstract.content.text' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'query' => ['match' => ['digest.content.text' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'query' => ['match' => ['impactStatement' => $query]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['abstract']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['digest.content.text']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['impactStatement']]]]];
 
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['appendices.content' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['authorResponse' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['authors.orcid' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['body' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['decisionLetter' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['doi' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['elocationId' => $query]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'query' => ['match' => ['id' => $query]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['appendices.content']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['authorResponse']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['authors.orcid']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['body']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['decisionLetter']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['doi']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['elocationId']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['id']]]]];
         }
     }
 
@@ -170,11 +170,11 @@ final class ElasticQueryBuilder implements QueryBuilder
             /* Query all fields for the actual query term*/
             $query = [
                 'query' => $string,
-                'operator' => 'and',
+                'default_operator' => 'and',
                 'fuzziness' => 'auto',
             ];
 
-            $this->query['body']['query']['bool']['must'][] = ['query' => ['match' => ['_all' => $query]]];
+            $this->query['body']['query']['bool']['must'][] = ['query_string' => $query];
 
             $this->setBoostings($query);
         }
