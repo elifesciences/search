@@ -42,10 +42,18 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
         );
     }
 
-    public function load(string $key) : array
+    public function load(string $key, $default = self::NO_DEFAULT) : array
     {
-        return $this->client->getDocumentById(
-            $key
-        )['_source'];
+        try {
+            return $this->client->getDocumentById(
+                $key
+            )['_source'];
+        } catch (Missing404Exception $e) {
+            if (self::NO_DEFAULT !== $default) {
+                return $default;
+            }
+            // TODO: more abstract exception
+            throw $e;
+        }
     }
 }
