@@ -114,7 +114,7 @@ final class ImportCommand extends Command
     public function importResearchArticles()
     {
         $this->logger->info('Importing Research Articles');
-        $events = $this->sdk->articles()->slice(0, 50);
+        $events = $this->sdk->articles();
         $this->iterateSerializeTask($events, 'article', 'getId', $events->count(), $skipInvalid = true);
     }
 

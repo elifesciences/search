@@ -13,7 +13,7 @@ sleep 5
 . bin/ci-start-processes
 
 echo "Starting import"
-./bin/console queue:import ResearchArticles
+./bin/console queue:import all
 echo "Finished launching import"
 
 . bin/ci-wait-steady-state
