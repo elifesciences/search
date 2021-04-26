@@ -12,12 +12,10 @@ properties:
           preferred:
             type: text
       orcid:
-        properties:
-          preferred:
-            type: text
-            fields:
-              keyword:
-                type: keyword
+        type: text
+        fields:
+          keyword:
+            type: keyword
   curators:
     properties:
       name:
@@ -25,12 +23,10 @@ properties:
           preferred:
             type: text
       orcid:
-        properties:
-          preferred:
-            type: text
-            fields:
-              keyword:
-                type: keyword
+        type: text
+        fields:
+          keyword:
+            type: keyword
   reviewers:
     properties:
       name:
@@ -38,12 +34,10 @@ properties:
           preferred:
             type: text
       orcid:
-        properties:
-          preferred:
-            type: text
-            fields:
-              keyword:
-                type: keyword
+        type: text
+        fields:
+          keyword:
+            type: keyword
   snippet:
     type: object
     enabled: false
