@@ -3,11 +3,64 @@ properties:
     type: keyword
   title:
     type: text
+  authorLine:
+    type: text
+  authors:
+    properties:
+      name:
+        properties:
+          preferred:
+            type: text
+      orcid:
+        properties:
+          preferred:
+            type: text
+            fields:
+              keyword:
+                type: keyword
+  curators:
+    properties:
+      name:
+        properties:
+          preferred:
+            type: text
+      orcid:
+        properties:
+          preferred:
+            type: text
+            fields:
+              keyword:
+                type: keyword
+  reviewers:
+    properties:
+      name:
+        properties:
+          preferred:
+            type: text
+      orcid:
+        properties:
+          preferred:
+            type: text
+            fields:
+              keyword:
+                type: keyword
   snippet:
     type: object
     enabled: false
   impactStatement:
     type: text
+  digest:
+    type: text
+  doi:
+    type: text
+    fields:
+      keyword:
+        type: keyword
+  elocationId:
+    type: text
+    fields:
+      keyword:
+        type: keyword
   summary:
     type: text
   abstract:
