@@ -155,7 +155,7 @@ final class ElasticQueryBuilder implements QueryBuilder
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 4, 'filter' => ['query_string' => $query + ['fields' => ['subjects.name']]]]];
 
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['abstract']]]]];
-            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['digest.content.text']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['digest']]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['impactStatement']]]]];
 
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['appendices']]]]];
