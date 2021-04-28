@@ -66,10 +66,8 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $return = $this->workflow->index($collection);
         $article = $return['json'];
-        $type = $return['type'];
         $id = $return['id'];
         $this->assertJson($article, 'Collection is not valid JSON');
-        $this->assertEquals('collection', $type, 'A type is required.');
         $this->assertNotNull($id, 'An ID is required.');
     }
 
@@ -81,12 +79,9 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $this->elastic->shouldReceive('indexJsonDocument');
         $ret = $this->workflow->insert($this->workflow->serialize($collection), 'collection', $collection->getId());
-        $this->assertArrayHasKey('type', $ret);
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $type = $ret['type'];
-        $this->assertEquals('collection', $type);
-        $this->assertEquals($collection->getId(), $id);
+        $this->assertEquals('collection-'.$collection->getId(), $id);
     }
 
     public function collectionProvider() : array

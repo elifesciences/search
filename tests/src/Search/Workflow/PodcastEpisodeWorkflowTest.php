@@ -66,10 +66,8 @@ class PodcastEpisodeWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $return = $this->workflow->index($podcastEpisode);
         $article = $return['json'];
-        $type = $return['type'];
         $id = $return['id'];
         $this->assertJson($article, 'PodcastEpisode is not valid JSON');
-        $this->assertEquals('podcast-episode', $type, 'A type is required.');
         $this->assertNotNull($id, 'An ID is required.');
     }
 
@@ -81,12 +79,9 @@ class PodcastEpisodeWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $this->elastic->shouldReceive('indexJsonDocument');
         $ret = $this->workflow->insert($this->workflow->serialize($podcastEpisode), 'podcast-episode', $podcastEpisode->getNumber());
-        $this->assertArrayHasKey('type', $ret);
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $type = $ret['type'];
-        $this->assertEquals('podcast-episode', $type);
-        $this->assertEquals($podcastEpisode->getNumber(), $id);
+        $this->assertEquals('podcast-episode-'.$podcastEpisode->getNumber(), $id);
     }
 
     public function podcastEpisodeProvider() : array

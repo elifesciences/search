@@ -68,10 +68,8 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $return = $this->workflow->index($blogArticle);
         $article = $return['json'];
-        $type = $return['type'];
         $id = $return['id'];
         $this->assertJson($article, 'Article is not valid JSON');
-        $this->assertEquals('blog-article', $type, 'A type is required.');
         $this->assertNotNull($id, 'An ID is required.');
     }
 
@@ -83,12 +81,9 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $this->elastic->shouldReceive('indexJsonDocument');
         $ret = $this->workflow->insert($this->workflow->serialize($blogArticle), 'blog-article', $blogArticle->getId());
-        $this->assertArrayHasKey('type', $ret);
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $type = $ret['type'];
-        $this->assertEquals('blog-article', $type);
-        $this->assertEquals($blogArticle->getId(), $id);
+        $this->assertEquals('blog-article-'.$blogArticle->getId(), $id);
     }
 
     public function blogArticleProvider() : array
