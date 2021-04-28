@@ -79,7 +79,7 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfInterview(Interview $interview)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($interview), 'interview', $interview->getId());
+        $ret = $this->workflow->insert($this->workflow->serialize($interview), $interview->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($interview->getId(), $id);

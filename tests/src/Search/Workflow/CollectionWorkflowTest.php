@@ -79,7 +79,7 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfCollection(Collection $collection)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($collection), 'collection', $collection->getId());
+        $ret = $this->workflow->insert($this->workflow->serialize($collection), $collection->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($collection->getId(), $id);

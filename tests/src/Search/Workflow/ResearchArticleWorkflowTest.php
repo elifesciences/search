@@ -114,7 +114,7 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
     {
         // TODO: this should set up an expectation about actual ArticlePoA data being received, as passing in a BlogArticle doesn't break the test
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($researchArticle), 'research-article', $researchArticle->getId());
+        $ret = $this->workflow->insert($this->workflow->serialize($researchArticle), $researchArticle->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($researchArticle->getId(), $id);

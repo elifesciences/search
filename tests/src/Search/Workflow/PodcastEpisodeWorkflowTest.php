@@ -79,7 +79,7 @@ class PodcastEpisodeWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfPodcastEpisode(PodcastEpisode $podcastEpisode)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($podcastEpisode), 'podcast-episode', $podcastEpisode->getNumber());
+        $ret = $this->workflow->insert($this->workflow->serialize($podcastEpisode), $podcastEpisode->getNumber());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($podcastEpisode->getNumber(), $id);

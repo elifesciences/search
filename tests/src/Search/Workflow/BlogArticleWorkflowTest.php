@@ -81,7 +81,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfBlogArticle(BlogArticle $blogArticle)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($blogArticle), 'blog-article', $blogArticle->getId());
+        $ret = $this->workflow->insert($this->workflow->serialize($blogArticle), $blogArticle->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($blogArticle->getId(), $id);

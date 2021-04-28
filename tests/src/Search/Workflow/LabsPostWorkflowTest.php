@@ -79,7 +79,7 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfLabsPost(LabsPost $labsPost)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($labsPost), 'labs-post', $labsPost->getId());
+        $ret = $this->workflow->insert($this->workflow->serialize($labsPost), $labsPost->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($labsPost->getId(), $id);
