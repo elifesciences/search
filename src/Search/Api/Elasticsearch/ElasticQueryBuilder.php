@@ -75,25 +75,9 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
-    private function postQuery(string $key, $value)
+    private function postFilter($filter)
     {
-        if (isset($this->query['body']['post_filter']['terms'])) {
-            $firstFilter = $this->query['body']['post_filter']['terms'];
-            $secondFilter = [];
-            $secondFilter[$key] = $value;
-            unset($this->query['body']['post_filter']['terms']);
-            $this->query['body']['post_filter']['query']['bool']['must'] = [
-                ['terms' => $firstFilter],
-                ['terms' => $secondFilter],
-            ];
-        } elseif (isset($this->query['body']['post_filter']['query']['bool']['must'])) {
-            $nthFilter = [];
-            $nthFilter[$key] = $value;
-            $this->query['body']['post_filter']['query']['bool']['must'][] = ['terms' => $nthFilter];
-        } else {
-            $this->query['body']['post_filter'] = $this->query['body']['post_filter'] ?? [];
-            $this->query['body']['post_filter']['terms'][$key] = $value;
-        }
+        $this->query['body']['post_filter']['bool']['filter'][] = $filter;
     }
 
     private function query($key, array $body)
@@ -225,14 +209,31 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function whereSubjects(array $subjects = []) : QueryBuilder
     {
-        $this->postQuery('subjects.id', $subjects);
+        $this->postFilter([
+            'nested' => [
+                'path' => 'subjects',
+                'query' => [
+                    'bool' => [
+                        'filter' => [
+                            'terms' => [
+                                'subjects.id' => $subjects,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
 
         return $this;
     }
 
     public function whereType(array $types = []) : QueryBuilder
     {
-        $this->postQuery('_type', $types);
+        $this->postFilter([
+            'terms' => [
+                'type' => $types,
+            ],
+        ]);
 
         return $this;
     }
