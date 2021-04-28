@@ -69,6 +69,7 @@ class PodcastEpisodeWorkflowTest extends PHPUnit_Framework_TestCase
         $id = $return['id'];
         $this->assertJson($article, 'PodcastEpisode is not valid JSON');
         $this->assertNotNull($id, 'An ID is required.');
+        $this->assertStringStartsWith('podcast-episode-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
     /**
@@ -81,7 +82,7 @@ class PodcastEpisodeWorkflowTest extends PHPUnit_Framework_TestCase
         $ret = $this->workflow->insert($this->workflow->serialize($podcastEpisode), 'podcast-episode', $podcastEpisode->getNumber());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $this->assertEquals('podcast-episode-'.$podcastEpisode->getNumber(), $id);
+        $this->assertEquals($podcastEpisode->getNumber(), $id);
     }
 
     public function podcastEpisodeProvider() : array

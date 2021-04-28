@@ -73,6 +73,7 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $id = $return['id'];
         $this->assertJson($article, 'Article is not valid JSON');
         $this->assertNotNull($id, 'An ID is required.');
+        $this->assertStringStartsWith('research-article-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
     public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
@@ -116,7 +117,7 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $ret = $this->workflow->insert($this->workflow->serialize($researchArticle), 'research-article', $researchArticle->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $this->assertEquals('research-article-'.$researchArticle->getId(), $id);
+        $this->assertEquals($researchArticle->getId(), $id);
     }
 
     public function researchArticleProvider() : array

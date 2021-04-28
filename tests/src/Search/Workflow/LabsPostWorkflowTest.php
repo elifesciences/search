@@ -69,6 +69,7 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
         $id = $return['id'];
         $this->assertJson($article, 'LabsPost is not valid JSON');
         $this->assertNotNull($id, 'An ID is required.');
+        $this->assertStringStartsWith('labs-post-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
     /**
@@ -81,7 +82,7 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
         $ret = $this->workflow->insert($this->workflow->serialize($labsPost), 'labs-post', $labsPost->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $this->assertEquals('labs-post-'.$labsPost->getId(), $id);
+        $this->assertEquals($labsPost->getId(), $id);
     }
 
     public function labsPostProvider() : array

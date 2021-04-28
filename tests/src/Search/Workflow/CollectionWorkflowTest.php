@@ -69,6 +69,7 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
         $id = $return['id'];
         $this->assertJson($article, 'Collection is not valid JSON');
         $this->assertNotNull($id, 'An ID is required.');
+        $this->assertStringStartsWith('collection-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
     /**
@@ -81,7 +82,7 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
         $ret = $this->workflow->insert($this->workflow->serialize($collection), 'collection', $collection->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $this->assertEquals('collection-'.$collection->getId(), $id);
+        $this->assertEquals($collection->getId(), $id);
     }
 
     public function collectionProvider() : array

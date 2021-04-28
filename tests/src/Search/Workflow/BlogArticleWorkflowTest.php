@@ -71,6 +71,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $id = $return['id'];
         $this->assertJson($article, 'Article is not valid JSON');
         $this->assertNotNull($id, 'An ID is required.');
+        $this->assertStringStartsWith('blog-article-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
     /**
@@ -83,7 +84,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $ret = $this->workflow->insert($this->workflow->serialize($blogArticle), 'blog-article', $blogArticle->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $this->assertEquals('blog-article-'.$blogArticle->getId(), $id);
+        $this->assertEquals($blogArticle->getId(), $id);
     }
 
     public function blogArticleProvider() : array
