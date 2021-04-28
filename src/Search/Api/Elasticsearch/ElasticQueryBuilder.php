@@ -260,7 +260,7 @@ final class ElasticQueryBuilder implements QueryBuilder
             $query['lte'] = $endDate->format(self::ELASTIC_DATETIME_FORMAT);
         }
 
-        $this->query['body']['query']['bool']['must'][] = ['query' => ['range' => $this->dateQuery($query)]];
+        $this->query['body']['query']['bool']['filter'][] = ['range' => $this->dateQuery($query)];
 
         return $this;
     }
