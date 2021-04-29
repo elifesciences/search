@@ -22,6 +22,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         $this->query['index'] = $index;
         $this->query['body']['aggs']['type_agg']['terms'] = [
             'field' => 'type',
+            'min_doc_count' => 0,
         ];
         $this->query['body']['aggs']['subject_agg'] = [
             'nested' => [
@@ -31,6 +32,7 @@ final class ElasticQueryBuilder implements QueryBuilder
                 'name' => [
                     'terms' => [
                         'field' => 'subjects.id',
+                        'min_doc_count' => 0,
                     ],
                     'aggs' => [
                         'name' => [
