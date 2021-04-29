@@ -9,7 +9,6 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
 {
     private $client;
     const INDEX_NAME = 'key_value_store'; // analogue to elife_search
-    const DOCUMENT_TYPE = 'json-object'; // analogue to podcast-episode
 
     public function __construct(PlainElasticsearchClient $client)
     {
@@ -26,11 +25,6 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
                         'settings' => [
                             'number_of_shards' => 1,
                         ],
-                        'mappings' => [
-                            self::DOCUMENT_TYPE => [
-                                'enabled' => false,
-                            ],
-                        ],
                     ],
                 ]
             );
@@ -43,7 +37,6 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
     public function store(string $key, array $value)
     {
         $this->client->indexJsonDocument(
-            self::DOCUMENT_TYPE,
             $key,
             json_encode($value)
         );
@@ -53,7 +46,6 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
     {
         try {
             return $this->client->getDocumentById(
-                self::DOCUMENT_TYPE,
                 $key
             )['_source'];
         } catch (Missing404Exception $e) {

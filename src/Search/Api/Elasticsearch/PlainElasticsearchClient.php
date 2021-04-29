@@ -73,26 +73,6 @@ class PlainElasticsearchClient
         ])['count'];
     }
 
-    public function indexSnippetCount(string $indexName = null)
-    {
-        return $this->libraryClient->search([
-            'index' => $indexName ?? $this->index,
-            'body' => [
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            [
-                                'match' => [
-                                    'snippet.format' => 'json',
-                                ],
-                            ]
-                        ],
-                    ],
-                ],
-            ],
-        ])['hits']['total'];
-    }
-
     public function indexExists(string $indexName = null)
     {
         return $this->libraryClient->indices()->exists([
@@ -100,12 +80,11 @@ class PlainElasticsearchClient
         ]);
     }
 
-    public function indexJsonDocument($type, $id, $body)
+    public function indexJsonDocument($id, $body)
     {
         $index = $this->index;
         $params = [
             'index' => $index,
-            'type' => $type,
             'id' => $id,
             'body' => $body,
         ];
@@ -116,11 +95,10 @@ class PlainElasticsearchClient
         return $con;
     }
 
-    public function getDocumentById($type, $id, $index = null)
+    public function getDocumentById($id, $index = null)
     {
         $params = [
             'index' => $index ?? $this->index,
-            'type' => $type,
             'id' => $id,
         ];
 

@@ -33,15 +33,6 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
     {
         $data = $event->getData();
 
-        // Elasticsearch type setting.
-        if (
-            isset($data['_type']) &&
-            isset($data['_source']) &&
-            false === isset($data['_source']['type'])
-        ) {
-            $data['_source']['type'] = $data['_type'];
-        }
-
         $root = is_array($data) ? current($data) : [];
 
         // Discriminator.
@@ -62,6 +53,7 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
 
             // We have an elastic search response (with search results).
             case isset($data['hits']):
+                $data['hits']['total'] = $data['hits']['total']['value'] ?? 0;
                 $data['internal_search_type'] = 'search';
                 break;
 

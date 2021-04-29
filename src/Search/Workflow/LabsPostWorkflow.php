@@ -50,6 +50,7 @@ final class LabsPostWorkflow implements Workflow
 
         // Normalized fields.
         $labsPostObject = json_decode($this->serialize($labsPost));
+        $labsPostObject->type = 'labs-post';
         $labsPostObject->body = $this->flattenBlocks($labsPostObject->content ?? []);
         unset($labsPostObject->content);
         $labsPostObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($labsPost))];
@@ -57,34 +58,32 @@ final class LabsPostWorkflow implements Workflow
 
         return [
             'json' => json_encode($labsPostObject),
-            'type' => 'labs-post',
-            'id' => $labsPost->getId(),
+            'id' => $labsPostObject->type.'-'.$labsPost->getId(),
         ];
     }
 
     /**
-     * @GearmanTask(name="labs_post_insert", next="labs_post_post_validate", parameters={"json", "type", "id"})
+     * @GearmanTask(name="labs_post_insert", next="labs_post_post_validate", parameters={"json", "id"})
      */
-    public function insert(string $json, string $type, string $id)
+    public function insert(string $json, string $id)
     {
         // Insert the document.
         $this->logger->debug('LabsPost<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($type, $id, $json);
+        $this->client->indexJsonDocument($id, $json);
 
         return [
-            'type' => $type,
             'id' => $id,
         ];
     }
 
     /**
-     * @GearmanTask(name="labs_post_post_validate", parameters={"type", "id"})
+     * @GearmanTask(name="labs_post_post_validate", parameters={"id"})
      */
-    public function postValidate(string $type, string $id)
+    public function postValidate(string $id)
     {
         try {
             // Post-validation, we got a document.
-            $document = $this->client->getDocumentById($type, $id);
+            $document = $this->client->getDocumentById($id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
             // That labs post is valid JSON.
@@ -93,7 +92,7 @@ final class LabsPostWorkflow implements Workflow
             $this->logger->error('LabsPost<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
-            $this->client->deleteDocument($type, $id);
+            $this->client->deleteDocument($id);
 
             // We failed.
             return self::WORKFLOW_FAILURE;
