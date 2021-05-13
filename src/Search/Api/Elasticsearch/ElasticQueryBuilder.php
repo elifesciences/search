@@ -191,7 +191,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
-    public function applyWordLimit(string $string, int &$overLimit = 0) : string
+    public function applyWordLimit(string $string, &$overLimit = 0) : string
     {
         $words = preg_split('/\s+/', $string);
         $limitWords = array_slice($words, 0, self::WORD_LIMIT);
