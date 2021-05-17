@@ -108,6 +108,15 @@ final class SearchController
         /** @var ElasticQueryBuilder $query */
         $query = new ElasticQueryBuilder($this->elasticIndex);
 
+        $for = $query->applyWordLimit($for, $wordsOverLimit);
+
+        if ($wordsOverLimit > 0) {
+            $this->logger->warning('Search word limit reached', [
+                'limit' => ElasticQueryBuilder::WORD_LIMIT,
+                'exceededBy' => $wordsOverLimit,
+            ]);
+        }
+
         $query = $query->searchFor($for);
 
         $query->setDateType($useDate);
