@@ -1,4 +1,12 @@
 #!/bin/bash
 set -e
 
-ab -n 100 -c 5 "http://search--vagrant/search?for=Updates%20to%20the%20zoonotic%20niche%20map%20of%20Ebola%20virus%20disease%20in%20Africa&page=1&per-page=10&sort=relevance&order=desc&use-date=default"
+bench=$(ab -n 100 -c 5 "http://search--vagrant/search?for=Updates%20to%20the%20zoonotic%20niche%20map%20of%20Ebola%20virus%20disease%20in%20Africa&page=1&per-page=10&sort=relevance&order=desc&use-date=default")
+
+echo "$bench\n"
+
+failed=$(echo "$bench" | grep "Failed requests" | grep -Eo "[0-9]+$")
+time_taken=$(echo "$bench" | grep "Time taken for tests" | grep -Eo "[0-9\.]+")
+
+echo "There were $failed failed requests"
+echo "Time taken was $time_taken seconds"
