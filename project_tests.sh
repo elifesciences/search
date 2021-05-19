@@ -16,3 +16,6 @@ bin/ci-reindex
 
 echo "Reindexing RDS articles"
 bin/reindex-rds
+
+echo "Monitor performance"
+bin/ci-performance
