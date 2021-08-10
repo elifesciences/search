@@ -20,6 +20,7 @@ final class ElasticQueryBuilder implements QueryBuilder
     public function __construct(string $index)
     {
         $this->query['index'] = $index;
+        $this->query['body']['track_total_hits'] = true;
         $this->query['body']['aggs']['type_agg']['terms'] = [
             'field' => 'type',
             'min_doc_count' => 0,
