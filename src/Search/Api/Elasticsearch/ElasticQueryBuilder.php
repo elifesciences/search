@@ -15,6 +15,11 @@ final class ElasticQueryBuilder implements QueryBuilder
     const DATE_DEFAULT = 'sortDate';
     const DATE_PUBLISHED = 'published';
 
+    const MAXIMUM_SUBJECTS = 100;
+    const MAXIMUM_TYPES = 18;
+
+    const WORD_LIMIT = 32;
+
     private $dateType;
 
     public function __construct(string $index)
@@ -24,6 +29,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         $this->query['body']['aggs']['type_agg']['terms'] = [
             'field' => 'type',
             'min_doc_count' => 0,
+            'size' => self::MAXIMUM_TYPES,
         ];
         $this->query['body']['aggs']['subject_agg'] = [
             'nested' => [
@@ -33,6 +39,7 @@ final class ElasticQueryBuilder implements QueryBuilder
                 'name' => [
                     'terms' => [
                         'field' => 'subjects.id',
+                        'size' => self::MAXIMUM_SUBJECTS,
                         'min_doc_count' => 0,
                     ],
                     'aggs' => [
@@ -172,6 +179,16 @@ final class ElasticQueryBuilder implements QueryBuilder
         }
 
         return $this;
+    }
+
+    public function applyWordLimit(string $string, &$overLimit = 0) : string
+    {
+        $words = preg_split('/\s+/', $string);
+        $limitWords = array_slice($words, 0, self::WORD_LIMIT);
+
+        $overLimit = count($words) - count($limitWords);
+
+        return implode(' ', $limitWords);
     }
 
     public function order(string $direction = 'desc') : QueryBuilder
