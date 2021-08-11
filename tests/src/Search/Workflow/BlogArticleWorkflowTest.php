@@ -68,11 +68,10 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $return = $this->workflow->index($blogArticle);
         $article = $return['json'];
-        $type = $return['type'];
         $id = $return['id'];
         $this->assertJson($article, 'Article is not valid JSON');
-        $this->assertEquals('blog-article', $type, 'A type is required.');
         $this->assertNotNull($id, 'An ID is required.');
+        $this->assertStringStartsWith('blog-article-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
     /**
@@ -82,12 +81,9 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfBlogArticle(BlogArticle $blogArticle)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($blogArticle), 'blog-article', $blogArticle->getId());
-        $this->assertArrayHasKey('type', $ret);
+        $ret = $this->workflow->insert($this->workflow->serialize($blogArticle), $blogArticle->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $type = $ret['type'];
-        $this->assertEquals('blog-article', $type);
         $this->assertEquals($blogArticle->getId(), $id);
     }
 

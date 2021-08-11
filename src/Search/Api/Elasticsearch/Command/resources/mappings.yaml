@@ -1,0 +1,110 @@
+dynamic: false
+properties:
+  id:
+    type: keyword
+  title:
+    type: text
+  authorLine:
+    type: text
+  authors:
+    properties:
+      name:
+        properties:
+          preferred:
+            type: text
+      orcid:
+        type: text
+        fields:
+          keyword:
+            type: keyword
+  curators:
+    properties:
+      name:
+        properties:
+          preferred:
+            type: text
+      orcid:
+        type: text
+        fields:
+          keyword:
+            type: keyword
+  reviewers:
+    properties:
+      name:
+        properties:
+          preferred:
+            type: text
+      orcid:
+        type: text
+        fields:
+          keyword:
+            type: keyword
+  snippet:
+    type: object
+    enabled: false
+  impactStatement:
+    type: text
+  digest:
+    type: text
+  doi:
+    type: text
+    fields:
+      keyword:
+        type: keyword
+  elocationId:
+    type: text
+    fields:
+      keyword:
+        type: keyword
+  summary:
+    type: text
+  abstract:
+    type: text
+  subjects:
+    type: nested
+    properties:
+      id:
+        type: keyword
+      name:
+        type: text
+        fields:
+          keyword:
+            type: keyword
+  keywords:
+    type: text
+    fields:
+      keyword:
+        type: keyword
+  researchOrganisms:
+    type: text
+    fields:
+      keyword:
+        type: keyword
+  type:
+    type: keyword
+  body:
+    type: text
+  appendices:
+    type: text
+  acknowledgements:
+    type: text
+  decisionLetter:
+    type: text
+  authorResponse:
+    type: text
+  funding.format:
+    type: keyword
+  funding.value:
+    type: text
+  dataSets.format:
+    type: keyword
+  dataSets.value:
+    type: text
+  sortDate:
+    type: date
+  published:
+    type: date
+  updated:
+    type: date
+  statusDate:
+    type: date

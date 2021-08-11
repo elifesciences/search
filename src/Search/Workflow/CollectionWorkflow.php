@@ -14,6 +14,7 @@ use Throwable;
 
 final class CollectionWorkflow implements Workflow
 {
+    use Blocks;
     use JsonSerializeTransport;
     use SortDate;
 
@@ -48,40 +49,40 @@ final class CollectionWorkflow implements Workflow
         $this->logger->debug('Collection<'.$collection->getId().'> Indexing '.$collection->getTitle());
         // Normalized fields.
         $collectionObject = json_decode($this->serialize($collection));
+        $collectionObject->type = 'collection';
+        $collectionObject->summary = $this->flattenBlocks($collectionObject->summary ?? []);
         $collectionObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($collection))];
         $this->addSortDate($collectionObject, $collection->getPublishedDate());
 
         // Return.
         return [
             'json' => json_encode($collectionObject),
-            'type' => 'collection',
-            'id' => $collection->getId(),
+            'id' => $collectionObject->type.'-'.$collection->getId(),
         ];
     }
 
     /**
-     * @GearmanTask(name="collection_insert", next="collection_post_validate", parameters={"json", "type", "id"})
+     * @GearmanTask(name="collection_insert", next="collection_post_validate", parameters={"json", "id"})
      */
-    public function insert(string $json, string $type, string $id) : array
+    public function insert(string $json, string $id) : array
     {
         // Insert the document.
         $this->logger->debug('Collection<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($type, $id, $json);
+        $this->client->indexJsonDocument($id, $json);
 
         return [
-            'type' => $type,
             'id' => $id,
         ];
     }
 
     /**
-     * @GearmanTask(name="collection_post_validate", parameters={"type", "id"})
+     * @GearmanTask(name="collection_post_validate", parameters={"id"})
      */
-    public function postValidate(string $type, string $id) : int
+    public function postValidate(string $id) : int
     {
         try {
             // Post-validation, we got a document.
-            $document = $this->client->getDocumentById($type, $id);
+            $document = $this->client->getDocumentById($id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
             // That collection is valid JSON.
@@ -90,7 +91,7 @@ final class CollectionWorkflow implements Workflow
             $this->logger->error('Collection<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
-            $this->client->deleteDocument($type, $id);
+            $this->client->deleteDocument($id);
 
             // We failed.
             return self::WORKFLOW_FAILURE;

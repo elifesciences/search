@@ -78,9 +78,15 @@ final class ResearchArticleWorkflow implements Workflow
 
             return $reference;
         }, $articleObject->authors);
+        $articleObject->abstract = $this->flattenBlocks($articleObject->abstract->content ?? []);
+        $articleObject->digest = $this->flattenBlocks($articleObject->digest->content ?? []);
         $articleObject->body = $this->flattenBlocks($articleObject->body ?? []);
-        foreach ($articleObject->appendices ?? [] as $appendix) {
-            $appendix->content = $this->flattenBlocks($appendix->content ?? []);
+        if (!empty($articleObject->appendices)) {
+            $appendices = '';
+            foreach ($articleObject->appendices ?? [] as $appendix) {
+                $appendices .= $this->flattenBlocks($appendix->content ?? []);
+            }
+            $articleObject->appendices = $appendices;
         }
         $articleObject->acknowledgements = $this->flattenBlocks($articleObject->acknowledgements ?? []);
         $articleObject->decisionLetter = $this->flattenBlocks($articleObject->decisionLetter->content ?? []);
@@ -111,35 +117,33 @@ final class ResearchArticleWorkflow implements Workflow
 
         return [
             'json' => json_encode($articleObject),
-            'type' => $article->getType() ?? 'research-article',
-            'id' => $article->getId(),
+            'id' => ($article->getType() ?? 'research-article').'-'.$article->getId(),
         ];
     }
 
     /**
-     * @GearmanTask(name="research_article_insert", next="research_article_post_validate", parameters={"json", "type", "id"})
+     * @GearmanTask(name="research_article_insert", next="research_article_post_validate", parameters={"json", "id"})
      */
-    public function insert(string $json, string $type, string $id)
+    public function insert(string $json, string $id)
     {
         // Insert the document.
         $this->logger->debug('ResearchArticle<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($type, $id, $json);
+        $this->client->indexJsonDocument($id, $json);
 
         return [
-            'type' => $type,
             'id' => $id,
         ];
     }
 
     /**
-     * @GearmanTask(name="research_article_post_validate", parameters={"type", "id"})
+     * @GearmanTask(name="research_article_post_validate", parameters={"id"})
      */
-    public function postValidate(string $type, string $id)
+    public function postValidate(string $id)
     {
         $this->logger->debug('ResearchArticle<'.$id.'> post validation.');
         try {
             // Post-validation, we got a document.
-            $document = $this->client->getDocumentById($type, $id);
+            $document = $this->client->getDocumentById($id);
             Assertion::isInstanceOf($document, DocumentResponse::class);
             $result = $document->unwrap();
             // That research article is valid JSON.
@@ -148,7 +152,7 @@ final class ResearchArticleWorkflow implements Workflow
             $this->logger->error('ResearchArticle<'.$id.'> rolling back', [
                 'exception' => $e,
             ]);
-            $this->client->deleteDocument($type, $id);
+            $this->client->deleteDocument($id);
 
             // We failed.
             return self::WORKFLOW_FAILURE;
