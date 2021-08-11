@@ -18,3 +18,4 @@ echo "Finished launching import"
 
 . bin/ci-wait-steady-state
 . bin/ci-expected-results
+. bin/ci-performance
