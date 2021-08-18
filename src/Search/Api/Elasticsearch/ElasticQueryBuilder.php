@@ -168,9 +168,8 @@ final class ElasticQueryBuilder implements QueryBuilder
         if ('' !== $string) {
             /* Query all fields for the actual query term*/
             $query = [
-                'query' => $string,
-                'operator' => 'and',
-                'fuzziness' => 'auto',
+                'query' => $string.'~',
+                'default_operator' => 'AND',
             ];
 
             $this->query['body']['query']['bool']['must'][] = ['query_string' => $query];
