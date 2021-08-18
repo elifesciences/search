@@ -169,7 +169,7 @@ final class ElasticQueryBuilder implements QueryBuilder
             /* Query all fields for the actual query term*/
             $query = [
                 'query' => $string,
-                'default_operator' => 'and',
+                'operator' => 'and',
                 'fuzziness' => 'auto',
             ];
 
