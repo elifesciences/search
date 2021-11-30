@@ -3,7 +3,7 @@
 # we start from an empty index
 set -e
 
-actual_total=$(curl -v localhost/search | jq ".total")
+actual_total=$(curl localhost/search | jq ".total")
 if [ ! "$actual_total" ]; then
     actual_total=-1
 fi
@@ -11,6 +11,23 @@ echo "Total results in the index: $actual_total"
 expected_total=$(bin/console gateway:total)
 if [ ! "$actual_total" -eq "$expected_total" ]; then
     echo "There should be exactly $expected_total results in the index"
+    for t in article blog-article collection interview labs-post podcast-episode
+    do
+        if [ "$t" = "article" ]; then
+            t="research-article&type[]=correction&type[]=insight&type[]=tools-resources"
+        fi
+
+        if [ "$t" = "podcast-episode" ]; then
+            id_field=".number"
+        else
+            id_field=".id"
+        fi
+        expected_t=$(curl "localhost:8080/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
+        actual_t=$(curl "localhost/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
+        if [ "$actual_t" != "$expected_t" ]; then
+            echo "${t} expected: \"${expected_t}\", actual: \"${actual_t}\""
+        fi
+    done
     if [ "$actual_total" -gt "$expected_total" ]; then
         echo "(have more test fixtures been added to api-dummy and/or api-sdk updated?)"
     fi
