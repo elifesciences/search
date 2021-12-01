@@ -67,8 +67,10 @@ final class CollectionWorkflow implements Workflow
     public function insert(string $json, string $id) : array
     {
         // Insert the document.
-        $this->logger->debug('Collection<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($id, $json);
+        $insert = $this->client->indexJsonDocument($id, $json);
+        $this->logger->debug('Collection<'.$id.'> importing into Elasticsearch.', [
+            'insert' => $insert,
+        ]);
 
         return [
             'id' => $id,

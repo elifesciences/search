@@ -39,12 +39,12 @@ class MappedElasticsearchClient
             'body' => $body,
         ];
 
-        $con = $this->libraryClient->index($params)['payload'] ?? null;
+        $index = $this->libraryClient->index($params);
         if ($flush || $this->forceSync) {
             $this->libraryClient->indices()->refresh(['index' => $this->index]);
         }
 
-        return $con;
+        return $index;
     }
 
     public function deleteDocument($id)

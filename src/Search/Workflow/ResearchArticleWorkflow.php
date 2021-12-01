@@ -127,8 +127,10 @@ final class ResearchArticleWorkflow implements Workflow
     public function insert(string $json, string $id)
     {
         // Insert the document.
-        $this->logger->debug('ResearchArticle<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($id, $json);
+        $insert = $this->client->indexJsonDocument($id, $json);
+        $this->logger->debug('ResearchArticle<'.$id.'> importing into Elasticsearch.', [
+            'insert' => $insert,
+        ]);
 
         return [
             'id' => $id,

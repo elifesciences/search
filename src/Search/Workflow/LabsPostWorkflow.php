@@ -68,8 +68,10 @@ final class LabsPostWorkflow implements Workflow
     public function insert(string $json, string $id)
     {
         // Insert the document.
-        $this->logger->debug('LabsPost<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($id, $json);
+        $insert = $this->client->indexJsonDocument($id, $json);
+        $this->logger->debug('LabsPost<'.$id.'> importing into Elasticsearch.', [
+            'insert' => $insert,
+        ]);
 
         return [
             'id' => $id,
