@@ -4,18 +4,27 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
 use eLife\Search\Api\Query\QueryResponse;
+use Psr\Log\LoggerInterface;
 
 class MappedElasticsearchClient
 {
     private $libraryClient;
     private $index;
+    private $logger;
     private $forceSync;
     private $readClientOptions;
 
-    public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $readClientOptions = [])
+    public function __construct(
+        Client $libraryClient,
+        string $index,
+        LoggerInterface $logger,
+        bool $forceSync = false,
+        array $readClientOptions = []
+    )
     {
         $this->libraryClient = $libraryClient;
         $this->index = $index;
+        $this->logger = $logger;
         $this->forceSync = $forceSync;
         $this->readClientOptions = $readClientOptions;
     }
@@ -39,6 +48,9 @@ class MappedElasticsearchClient
             'body' => $body,
         ];
 
+        $this->logger->info("Index document $id:", [
+            'data' => $params,
+        ]);
         $index = $this->libraryClient->index($params);
         if ($flush || $this->forceSync) {
             $this->libraryClient->indices()->refresh(['index' => $this->index]);

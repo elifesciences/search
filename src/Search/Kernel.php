@@ -333,6 +333,7 @@ final class Kernel implements MinimalKernel
             return new MappedElasticsearchClient(
                 $app['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::WRITE),
+                $app['logger'],
                 $app['config']['elastic_force_sync'],
                 $app['config']['elastic_read_client_options']
             );
@@ -342,6 +343,7 @@ final class Kernel implements MinimalKernel
             return new MappedElasticsearchClient(
                 $app['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::READ),
+                $app['logger'],
                 $app['config']['elastic_force_sync'],
                 $app['config']['elastic_read_client_options']
             );
