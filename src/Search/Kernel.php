@@ -74,7 +74,7 @@ final class Kernel implements MinimalKernel
         // Load config
         $config = array_merge([
             'cli' => false,
-            'debug' => false,
+            'debug' => true,
             'validate' => false,
             'annotation_cache' => true,
             'api_url' => '',
@@ -82,7 +82,7 @@ final class Kernel implements MinimalKernel
             'ttl' => 300,
             'rate_limit_minimum_page' => 2,
             'elastic_servers' => ['http://localhost:9200'],
-            'elastic_logging' => false,
+            'elastic_logging' => true,
             'elastic_force_sync' => false,
             'elastic_read_client_options' => [
                 'timeout' => 3,
