@@ -301,6 +301,7 @@ final class Kernel implements MinimalKernel
             // Logging for ElasticSearch.
             if ($app['config']['elastic_logging']) {
                 $client->setLogger($app['logger']);
+                $client->setTracer($app['logger']);
             }
             $client->setSerializer($app['elastic.serializer']);
 
