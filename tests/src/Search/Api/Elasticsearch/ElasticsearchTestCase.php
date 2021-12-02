@@ -4,6 +4,7 @@ namespace tests\eLife\Search\Api\Elasticsearch;
 
 use ComposerLocator;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Elasticsearch\Common\EmptyLogger;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
 use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
 use eLife\Search\Api\Elasticsearch\Response\SearchResponse;
@@ -43,7 +44,7 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
         // Serializer.
         $this->serializer = SerializerBuilder::create()
             ->configureListeners(function (EventDispatcher $dispatcher) {
-                $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
+                $dispatcher->addSubscriber(new ElasticsearchDiscriminator(new EmptyLogger()));
             })
             ->build();
     }

@@ -3,6 +3,7 @@
 namespace tests\eLife\Search\Workflow;
 
 use ComposerLocator;
+use Elasticsearch\Common\EmptyLogger;
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\ApiValidator\SchemaFinder\PathBasedSchemaFinder;
 use eLife\Search\Api\ApiValidator;
@@ -19,7 +20,7 @@ trait GetValidator
     {
         $serializer = SerializerBuilder::create()
             ->configureListeners(function (EventDispatcher $dispatcher) {
-                $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
+                $dispatcher->addSubscriber(new ElasticsearchDiscriminator(new EmptyLogger()));
             })
             ->build();
 
