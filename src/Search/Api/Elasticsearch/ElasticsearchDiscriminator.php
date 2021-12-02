@@ -40,7 +40,7 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
     public function onPreDeserialize(PreDeserializeEvent $event)
     {
         $data = $event->getData();
-        $this->logger->debug('Response received from Elasticsearch', [
+        $this->logger->info('Response received from Elasticsearch.', [
             'data' => $data,
         ]);
 
