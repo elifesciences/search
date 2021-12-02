@@ -155,10 +155,10 @@ final class Kernel implements MinimalKernel
         //#####################################################
 
         // Serializer.
-        $app['serializer'] = function () {
+        $app['serializer'] = function () use ($app) {
             return SerializerBuilder::create()
-                ->configureListeners(function (EventDispatcher $dispatcher) {
-                    $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
+                ->configureListeners(function (EventDispatcher $dispatcher) use ($app) {
+                    $dispatcher->addSubscriber(new ElasticsearchDiscriminator($app['logger']));
                 })
                 ->setCacheDir(self::CACHE_DIR)
                 ->build();

@@ -5,9 +5,17 @@ namespace eLife\Search\Api\Elasticsearch;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\PreDeserializeEvent;
+use Psr\Log\LoggerInterface;
 
 final class ElasticsearchDiscriminator implements EventSubscriberInterface
 {
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * Returns the events to which this class has subscribed.
      *
@@ -32,6 +40,9 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
     public function onPreDeserialize(PreDeserializeEvent $event)
     {
         $data = $event->getData();
+        $this->logger->info('Response received from Elasticsearch', [
+            'data' => $data,
+        ]);
 
         $root = is_array($data) ? current($data) : [];
 
