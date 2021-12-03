@@ -46,7 +46,7 @@ final class BlogArticleWorkflow implements Workflow
      */
     public function index(BlogArticle $blogArticle) : array
     {
-        $this->logger->debug('BlogArticle<'.$blogArticle->getId().'> Indexing '.$blogArticle->getTitle());
+        $this->logger->info('BlogArticle<'.$blogArticle->getId().'> Indexing '.$blogArticle->getTitle());
         // Normalized fields.
         $blogArticleObject = json_decode($this->serialize($blogArticle));
         $blogArticleObject->type = 'blog-article';
@@ -69,7 +69,7 @@ final class BlogArticleWorkflow implements Workflow
     {
         // Insert the document.
         $insert = $this->client->indexJsonDocument($id, $json);
-        $this->logger->debug('BlogArticle<'.$id.'> importing into Elasticsearch.', [
+        $this->logger->info('BlogArticle<'.$id.'> importing into Elasticsearch.', [
             'insert' => $insert,
         ]);
 
