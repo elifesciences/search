@@ -66,11 +66,10 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $return = $this->workflow->index($labsPost);
         $article = $return['json'];
-        $type = $return['type'];
         $id = $return['id'];
         $this->assertJson($article, 'LabsPost is not valid JSON');
-        $this->assertEquals('labs-post', $type, 'A type is required.');
         $this->assertNotNull($id, 'An ID is required.');
+        $this->assertStringStartsWith('labs-post-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
     /**
@@ -80,12 +79,9 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfLabsPost(LabsPost $labsPost)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($labsPost), 'labs-post', $labsPost->getId());
-        $this->assertArrayHasKey('type', $ret);
+        $ret = $this->workflow->insert($this->workflow->serialize($labsPost), $labsPost->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $type = $ret['type'];
-        $this->assertEquals('labs-post', $type);
         $this->assertEquals($labsPost->getId(), $id);
     }
 

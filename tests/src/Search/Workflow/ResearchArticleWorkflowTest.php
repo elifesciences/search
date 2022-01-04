@@ -70,11 +70,10 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $return = $this->workflow->index($researchArticle);
         $article = $return['json'];
-        $type = $return['type'];
         $id = $return['id'];
         $this->assertJson($article, 'Article is not valid JSON');
-        $this->assertEquals('research-article', $type, 'A type is required.');
         $this->assertNotNull($id, 'An ID is required.');
+        $this->assertStringStartsWith('research-article-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
     public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
@@ -115,12 +114,9 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
     {
         // TODO: this should set up an expectation about actual ArticlePoA data being received, as passing in a BlogArticle doesn't break the test
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($researchArticle), 'research-article', $researchArticle->getId());
-        $this->assertArrayHasKey('type', $ret);
+        $ret = $this->workflow->insert($this->workflow->serialize($researchArticle), $researchArticle->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $type = $ret['type'];
-        $this->assertEquals('research-article', $type);
         $this->assertEquals($researchArticle->getId(), $id);
     }
 

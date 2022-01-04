@@ -66,11 +66,10 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
     {
         $return = $this->workflow->index($interview);
         $article = $return['json'];
-        $type = $return['type'];
         $id = $return['id'];
         $this->assertJson($article, 'Interview is not valid JSON');
-        $this->assertEquals('interview', $type, 'A type is required.');
         $this->assertNotNull($id, 'An ID is required.');
+        $this->assertStringStartsWith('interview-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
     /**
@@ -80,12 +79,9 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfInterview(Interview $interview)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($interview), 'interview', $interview->getId());
-        $this->assertArrayHasKey('type', $ret);
+        $ret = $this->workflow->insert($this->workflow->serialize($interview), $interview->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
-        $type = $ret['type'];
-        $this->assertEquals('interview', $type);
         $this->assertEquals($interview->getId(), $id);
     }
 

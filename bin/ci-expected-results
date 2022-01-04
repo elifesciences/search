@@ -34,12 +34,6 @@ if [ ! "$actual_total" -eq "$expected_total" ]; then
     exit 2
 fi
 
-actual_snippet_total=$(bin/console index:snippet:total:read)
-if [ ! "$actual_snippet_total" -eq "$expected_total" ]; then
-    echo "There should be exactly $expected_total results with content snippets in the index"
-    exit 2
-fi
-
 echo "CHECK: Search for article id"
 actual_first_id=$(curl -v "localhost/search?for=04395&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].id")
 expected_first_id='"04395"'

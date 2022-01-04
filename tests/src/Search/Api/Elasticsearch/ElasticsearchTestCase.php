@@ -100,7 +100,10 @@ abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
                     "failed": 0
                 },
                 "hits": {
-                    "total": '.$count.',
+                    "total": {
+                        "value": '.$count.',
+                        "relation": "eq"
+                    },
                     "max_score": 0.30685282,
                     "hits": [
                         '.$hit.'
