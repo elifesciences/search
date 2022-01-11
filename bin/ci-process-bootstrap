@@ -5,9 +5,9 @@
 
 interrupt_fn() {
     echo "interrupt caught, exiting."
-    kill -INT $waitingPid
-    kill -INT $workerPid
-    kill -INT $queueWatchPid
+    kill -n INT "$waitingPid" || echo "'waitingPid' not set"
+    kill -n INT "$workerPid" || echo "'workerPid' not set"
+    kill -n INT "$queueWatchPid" || echo "'queueWatchPid' not set"
 }
 
 trap interrupt_fn EXIT
