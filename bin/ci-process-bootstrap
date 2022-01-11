@@ -1,3 +1,13 @@
-# propagate SIGINT to waiting process
-trap 'kill -INT -$waitingPid' INT
+# propagate SIGINT to waiting processes
 
+# lsh@2022-01: superceded
+# trap 'kill -INT -$waitingPid' INT
+
+interrupt_fn() {
+    echo "interrupt caught, exiting."
+    kill -INT $waitingPid
+    kill -INT $workerPid
+    kill -INT $queueWatchPid
+}
+
+trap interrupt_fn INT
