@@ -10,4 +10,4 @@ interrupt_fn() {
     kill -INT $queueWatchPid
 }
 
-trap interrupt_fn INT
+trap interrupt_fn EXIT
