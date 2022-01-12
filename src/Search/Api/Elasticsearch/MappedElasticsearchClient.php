@@ -67,6 +67,10 @@ class MappedElasticsearchClient
 
     public function getDocumentById($id, $index = null)
     {
+        $fh = fopen("/tmp/mylog", "a");
+        fwrite($fh, "got index " . $index ?? $this->index . " for id " . $id);
+        fclose($fh);
+
         $params = [
             'index' => $index ?? $this->index,
             'id' => $id,
