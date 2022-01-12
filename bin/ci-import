@@ -17,5 +17,13 @@ echo "Starting import"
 echo "Finished launching import"
 
 . bin/ci-wait-steady-state
-. bin/ci-expected-results
+./bin/ci-expected-results || {
+    echo "-----"
+
+    echo "failed expected results. pausing and trying again"
+    
+    sleep 5
+    
+    ./bin/ci-expected-results
+}
 . bin/ci-performance
