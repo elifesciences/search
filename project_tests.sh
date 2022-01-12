@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+sudo systemctl stop elasticsearch
+
 rm -f build/*.xml
 vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
 vendor/bin/phpunit --log-junit build/phpunit.xml
