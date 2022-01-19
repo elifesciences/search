@@ -1,29 +1,24 @@
 #!/bin/bash
 set -ex
 
-es_port=9200
-os_port=9201
-port="$es_port"
-if [ -f /srv/search/.opensearch ]; then
-    port="$os_port"
-fi
+port=9201
 
 while true;
 do
     nodes=$(curl "localhost:$port/_nodes/_local" | jq ".nodes | length")
     if [ "$nodes" -eq 1 ]; then
-        echo "ElasticSearch is ready, seeing $nodes node through _nodes API"
+        echo "OpenSearch is ready, seeing $nodes node through _nodes API"
     else
-        echo "ElasticSearch API not responding yet"
+        echo "OpenSearch API not responding yet"
         sleep 1
         continue
     fi
 
     color=$(curl "localhost:$port/_cluster/health" | jq -r ".status")
     if [ "$color" == "yellow" ]; then
-        echo "ElasticSearch is ready, seeing color $color"
+        echo "OpenSearch is ready, seeing color $color"
     else
-        echo "ElasticSearch is not ready yet, seeing color $color"
+        echo "OpenSearch is not ready yet, seeing color $color"
         sleep 1
         continue
     fi
