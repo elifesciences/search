@@ -21,7 +21,7 @@ elifePipeline {
                     folder: '/srv/search',
                     preliminaryStep: {
                         builderDeployRevision 'search--end2end', commit
-                        builderCmdNode 'search--end2end', 1, 'cd /srv/search; ./bin/wait-for-running-elasticsearch'
+                        builderCmdNode 'search--end2end', 1, 'cd /srv/search; ./bin/wait-for-running-opensearch'
                         builderSmokeTests 'search--end2end', '/srv/search'
                         builderCmdNode 'search--end2end', 1, "cd /srv/search; ./bin/reindex elife_search_${env.BUILD_NUMBER}"
                     }
