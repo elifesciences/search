@@ -70,6 +70,16 @@ if [ "$actual_author_non_authorline_title" != "$expected_author_non_authorline_t
     exit 2
 fi
 
+actual_total=$(curl -v "localhost/search?for=rheumatoid%20arthritis%20(RA)&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".total")
+if [ ! "$actual_total" ]; then
+    actual_total=-1
+fi
+echo "CHECK: Search with reserved character"
+if [ ! "$actual_total" -gte 0 ]; then
+    echo "We should be able to handle reserved characters"
+    exit 2
+fi
+
 echo "CHECK: Search results validate against schema"
 bin/console search:valid
 
