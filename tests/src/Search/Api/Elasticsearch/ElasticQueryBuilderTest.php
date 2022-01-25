@@ -44,6 +44,57 @@ class ElasticQueryBuilderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test
+     * @dataProvider reservedCharsProvider
+     */
+    public function escapesReservedChars(string $search, string $expectedQuery)
+    {
+        $this->queryBuilder->searchFor($search);
+
+        $query = $this->queryBuilder->getRawQuery();
+
+        $this->assertEquals($expectedQuery.'~', $query['body']['query']['bool']['must'][0]['query_string']['query']);
+    }
+
+    public function reservedCharsProvider() : array
+    {
+        return [
+            [
+                '<>',
+                '',
+            ],
+            [
+                '()',
+                '\(\)',
+            ],
+            [
+                '/',
+                '\/',
+            ],
+            [
+                ':',
+                '\:',
+            ],
+            [
+                'http://europepmc.org/article/MED/8777778~',
+                'http\:\/\/europepmc.org\/article\/MED\/8777778\~',
+            ],
+            [
+                'http://europepmc.org/article/MED/8777778',
+                'http\:\/\/europepmc.org\/article\/MED\/8777778',
+            ],
+            [
+                'europepmc.org/article/MED/8777778',
+                'europepmc.org\/article\/MED\/8777778',
+            ],
+            [
+                'rheumatoid arthritis (RA)',
+                'rheumatoid arthritis \(RA\)',
+            ],
+        ];
+    }
+
+    /**
      * Create a dummy search query x words in length.
      */
     private function createSearchString(int $wordLength) : string
