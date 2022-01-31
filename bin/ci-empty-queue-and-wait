@@ -1,0 +1,46 @@
+#!/bin/bash
+set +e
+
+# Clean the SQS Queue
+./bin/console queue:clean
+
+echo -n "Waiting for message queue to empty..."
+for i in $(seq 60); do
+  echo -n "."
+
+  sqs_queue=$(bin/console queue:count)
+  if [ "$sqs_queue" -eq "0" ]; then
+    echo "OK"
+    break
+  fi
+
+  if [ "$i" -eq "0" ]; then
+    echo "FAILED"
+    exit 1
+  fi
+
+  sleep 1
+done
+
+# Clean the Gearman Queue
+gearadmin --show-jobs | cut -f 1 | xargs -I % gearadmin --cancel-job % 2> /dev/null
+
+echo -n "Waiting for job queue to empty..."
+for i in $(seq 60); do
+  echo -n "."
+
+  gearman_queue=$(gearadmin --show-jobs | cut -f 4 | paste -sd+ | bc)
+  if [ "$gearman_queue" -eq "0" ]; then
+    echo "OK"
+    break
+  fi
+
+  if [ "$i" -eq "0" ]; then
+    echo "FAILED"
+    exit 1
+  fi
+
+  sleep 1
+done
+
+set -e
