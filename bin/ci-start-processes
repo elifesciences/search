@@ -4,7 +4,7 @@ echo -n "Waiting for lingering workers to terminate"
 for i in $(seq 60); do
   echo -n "."
 
-  workers=$(pgrep -cf gearman:worker)
+  workers=$(pgrep -cf gearman:worker || true)
   if [ "$workers" -eq "0" ]; then
     echo "OK"
     break
@@ -22,7 +22,7 @@ echo -n "Waiting for lingering watchers to terminate"
 for i in $(seq 60); do
   echo -n "."
 
-  watchers=$(pgrep -cf queue:watch)
+  watchers=$(pgrep -cf queue:watch || true)
   if [ "$watchers" -eq "0" ]; then
     echo "OK"
     break

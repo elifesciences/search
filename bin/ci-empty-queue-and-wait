@@ -1,5 +1,4 @@
 #!/bin/bash
-set +e
 
 # Clean the SQS Queue
 ./bin/console queue:clean
@@ -8,7 +7,7 @@ echo -n "Waiting for message queue to empty..."
 for i in $(seq 60); do
   echo -n "."
 
-  sqs_queue=$(bin/console queue:count)
+  sqs_queue=$(bin/console queue:count || true)
   if [ "$sqs_queue" -eq "0" ]; then
     echo "OK"
     break
@@ -29,7 +28,7 @@ echo -n "Waiting for job queue to empty..."
 for i in $(seq 60); do
   echo -n "."
 
-  gearman_queue=$(gearadmin --show-jobs | cut -f 4 | paste -sd+ | bc)
+  gearman_queue=$(gearadmin --show-jobs | cut -f 4 | paste -sd+ | bc || true)
   if [ "$gearman_queue" -eq "0" ]; then
     echo "OK"
     break
@@ -42,5 +41,3 @@ for i in $(seq 60); do
 
   sleep 1
 done
-
-set -e
