@@ -22,7 +22,7 @@ for i in $(seq 60); do
 done
 
 # Clean the Gearman Queue
-gearadmin --show-jobs | cut -f 1 | xargs -I % gearadmin --cancel-job % 2> /dev/null
+gearadmin --show-jobs | cut -f 1 | xargs -I % gearadmin --cancel-job % > /dev/null 2>&1
 
 echo -n "Waiting for job queue to empty..."
 for i in $(seq 60); do
