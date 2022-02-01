@@ -4,16 +4,20 @@ interrupt_fn() {
   set +e
   echo "Performing cleanup..."
 
-  ps -p "$workerPid" > /dev/null
-  if [ $? -eq 0 ]; then
-    echo "Worker is still running. Terminating..."
-    kill "$workerPid"
+  if [ ! -z "$workerPid" ]; then
+    ps -p "$workerPid" > /dev/null
+    if [ $? -eq 0 ]; then
+      echo "Worker is still running. Terminating..."
+      kill "$workerPid"
+    fi
   fi
 
-  ps -p "$queueWatchPid" > /dev/null
-  if [ $? -eq 0 ]; then
-    echo "Watcher is still running. Terminating..."
-    kill "$queueWatchPid"
+  if [ ! -z "$queueWatchPid" ]; then
+    ps -p "$queueWatchPid" > /dev/null
+    if [ $? -eq 0 ]; then
+      echo "Watcher is still running. Terminating..."
+      kill "$queueWatchPid"
+    fi
   fi
 }
 
