@@ -7,7 +7,7 @@ set -e
 ./bin/console search:setup --index="elife_search" --delete
 
 # Clean the queues
-./ci-empty-queue-and-wait
+./bin/ci-empty-queue-and-wait
 
 . bin/ci-start-processes
 
