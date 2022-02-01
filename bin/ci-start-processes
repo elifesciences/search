@@ -1,7 +1,47 @@
+#!/bin/bash
+
+echo -n "Waiting for lingering workers to terminate..."
+for i in $(seq 60); do
+  echo -n "."
+
+  workers=$(pgrep -cf gearman:worker)
+  if [ "$workers" -eq "0" ]; then
+    echo "OK"
+    break
+  fi
+
+  if [ "$i" -eq "0" ]; then
+    echo "FAILED"
+    exit 1
+  fi
+
+  sleep 1
+done
+
+echo -n "Waiting for lingering watchers to terminate..."
+for i in $(seq 60); do
+  echo -n "."
+
+  watchers=$(pgrep -cf queue:watch)
+  if [ "$watchers" -eq "0" ]; then
+    echo "OK"
+    break
+  fi
+
+  if [ "$i" -eq "0" ]; then
+    echo "FAILED"
+    exit 1
+  fi
+
+  sleep 1
+done
+
 echo "Starting a gearman:worker"
 ./bin/console gearman:worker >> /tmp/gearman-worker.log 2>&1 &
 workerPid=$!
 echo "gearman:worker PID $workerPid"
+
+
 echo "Starting a queue:watch"
 ./bin/console queue:watch >> /tmp/queue-watch.log 2>&1 &
 queueWatchPid=$!
