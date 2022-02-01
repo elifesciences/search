@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+. bin/ci-process-bootstrap
+
+. bin/ci-start-processes
+
+./bin/console rds:reindex
+
+echo "Waiting for empty queues"
+
+. bin/ci-wait-steady-state

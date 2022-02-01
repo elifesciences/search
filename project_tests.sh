@@ -15,4 +15,4 @@ echo "Reindexing api-dummy"
 bin/ci-reindex
 
 echo "Reindexing RDS articles"
-bin/reindex-rds
+bin/ci-reindex-rds
