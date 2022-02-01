@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -n "Waiting for lingering workers to terminate"
+echo -n "Waiting for lingering workers to terminate..."
 for i in $(seq 60); do
   echo -n "."
 
@@ -18,7 +18,7 @@ for i in $(seq 60); do
   sleep 1
 done
 
-echo -n "Waiting for lingering watchers to terminate"
+echo -n "Waiting for lingering watchers to terminate..."
 for i in $(seq 60); do
   echo -n "."
 
