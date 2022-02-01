@@ -41,7 +41,6 @@ echo "Starting a gearman:worker"
 workerPid=$!
 echo "gearman:worker PID $workerPid"
 
-
 echo "Starting a queue:watch"
 ./bin/console queue:watch >> /tmp/queue-watch.log 2>&1 &
 queueWatchPid=$!
