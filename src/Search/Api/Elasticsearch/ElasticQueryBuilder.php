@@ -168,7 +168,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         if ('' !== $string) {
             /* Query all fields for the actual query term*/
             $query = [
-                'query' => $string.'~',
+                'query' => $this->escapeReservedChars($string).'~',
                 'default_operator' => 'AND',
             ];
 
@@ -178,6 +178,22 @@ final class ElasticQueryBuilder implements QueryBuilder
         }
 
         return $this;
+    }
+
+    private function escapeReservedChars(string $string) : string
+    {
+        // See: https://github.com/elastic/elasticsearch-php/issues/620#issuecomment-901727162
+        return preg_replace(
+            [
+                '_[<>]+_',
+                '_[-+=!(){}[\]^"~*?:\\/\\\\]|&(?=&)|\|(?=\|)_',
+            ],
+            [
+                '',
+                '\\\\$0',
+            ],
+            $string
+        );
     }
 
     public function applyWordLimit(string $string, &$overLimit = 0) : string
