@@ -3,12 +3,11 @@ set -e
 . bin/ci-process-bootstrap
 
 ./bin/console keyvalue:setup
-./bin/console keyvalue:store index-metadata '{"write":"elife_search", "read":"elife_search"}'
-./bin/console search:setup --index="elife_search" --delete
+./bin/console keyvalue:store index-metadata '{"write":"ci-import", "read":"ci-import"}'
+./bin/console search:setup --index="ci-import" --delete
 
-./bin/console queue:clean
-# TODO: poll for queue:count == 0, with timeout
-sleep 5
+# Clean the queues
+./bin/ci-empty-queue-and-wait
 
 . bin/ci-start-processes
 
