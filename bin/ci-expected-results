@@ -71,7 +71,7 @@ if [ "$actual_author_non_authorline_title" != "$expected_author_non_authorline_t
 fi
 
 total_with_reserved_chars=$(curl -v "localhost/search?for=rheumatoid%20arthritis%20(RA)&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".total")
-if [ ! -z "$total_with_reserved_chars" ]; then
+if [ -z "$total_with_reserved_chars" ]; then
     total_with_reserved_chars=-1
 fi
 echo "CHECK: Search with reserved character"
