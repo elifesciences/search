@@ -6,6 +6,4 @@ set -e
 
 ./bin/console rds:reindex
 
-echo "Waiting for empty queues"
-
 . bin/ci-wait-steady-state
