@@ -1,11 +1,24 @@
-# will return also on failing conditions such as dead processes
-timeout 60 ./bin/wait-for-empty-queues &
-waitingPid=$!
-wait "$waitingPid"
-waitingReturnCode=$?
-# clean up PHP processes
-kill "$workerPid" "$queueWatchPid";
-if [ ! "$waitingReturnCode" -eq "0" ]; then
-    echo -e "\e[31mThe script './wait-for-empty-queues' timed out\e[39m"
-    exit "$waitingReturnCode"
-fi
+#!/bin/bash
+
+echo -n "Waiting for queues to empty..."
+for i in $(seq 60); do
+  echo -n "."
+
+  sqs_queue=$(bin/console queue:count || true)
+  gearman_queue=$(gearadmin --show-jobs | wc -l || true)
+  # NOTE: gearadmin includes an additional line in it's output that needs to be ignored, hence the 1 rather than 0.
+  if [ "$sqs_queue" -eq "0" ] && [ "$gearman_queue" -eq "1" ]; then
+    echo "OK"
+    break
+  fi
+
+  if [ "$i" -eq "60" ]; then
+    echo "FAILED"
+    exit 1
+  fi
+
+  sleep 1
+done
+
+# Give the opensearch some time to make the content available
+sleep 5
