@@ -52,6 +52,9 @@ class BuildIndexCommand extends Command
             'client' => ['ignore' => [404]],
             'body' => [
                 'mappings' => $mapping,
+                'settings' => [
+                    'max_result_window' => 20000,
+                ],
             ],
         ];
 
