@@ -1,3 +1,22 @@
-# propagate SIGINT to waiting process
-trap 'kill -INT -$waitingPid' INT
+#!/bin/bash
 
+interrupt_fn() {
+  set +e
+  echo "Performing cleanup..."
+
+  if [ -n "$workerPid" ]; then
+    if ps -p "$workerPid" > /dev/null; then
+      echo "Worker is still running. Terminating..."
+      kill "$workerPid"
+    fi
+  fi
+
+  if [ -n "$queueWatchPid" ]; then
+    if ps -p "$queueWatchPid" > /dev/null; then
+      echo "Watcher is still running. Terminating..."
+      kill "$queueWatchPid"
+    fi
+  fi
+}
+
+trap interrupt_fn EXIT
