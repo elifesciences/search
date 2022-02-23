@@ -42,12 +42,12 @@ final class IndexMetadata
 
     public function switchWrite(string $indexName) : IndexMetadata
     {
-        return new self($indexName, $this->read, $this->lastImport);
+        return new self($indexName, $this->read);
     }
 
     public function switchRead(string $indexName) : IndexMetadata
     {
-        return new self($this->write, $indexName, $this->lastImport);
+        return new self($this->write, $indexName);
     }
 
     public function operation($operation) : string
