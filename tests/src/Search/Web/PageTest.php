@@ -40,6 +40,18 @@ final class PageTest extends ElasticTestCase
 
     /**
      * @test
+     */
+    public function itReturnsA400WhenRequestedPageSizeExceedsLimit()
+    {
+        $this->newClient();
+        $this->api->request('GET', '/search?per-page=10&page=1001');
+        $response = $this->getResponse();
+        $this->assertEquals('application/problem+json', $response->headers->get('Content-Type'));
+        $this->assertSame(404, $response->getStatusCode());
+    }
+
+    /**
+     * @test
      * @dataProvider invalidPerPageProvider
      */
     public function itReturnsA400ForAnInvalidPerPage(string $perPage)
