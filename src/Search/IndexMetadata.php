@@ -25,7 +25,7 @@ final class IndexMetadata
 
         return new self(
             $document[self::WRITE],
-            $document[self::READ],
+            $document[self::READ]
         );
     }
 
