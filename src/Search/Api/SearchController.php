@@ -99,6 +99,10 @@ final class SearchController
             throw new BadRequestHttpException('Invalid per-page parameter');
         }
 
+        if ($page * $perPage > 10000) {
+            throw new BadRequestHttpException('Exceeds maximum supported results window');
+        }
+
         if ($endDate || $startDate) {
             $startDateTime = $startDate ? $this->createValidDateTime('Y-m-d H:i:s', $startDate.' 00:00:00') : null;
             $endDateTime = $endDate ? $this->createValidDateTime('Y-m-d H:i:s', $endDate.' 23:59:59') : null;
