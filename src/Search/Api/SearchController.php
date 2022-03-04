@@ -99,6 +99,7 @@ final class SearchController
             throw new BadRequestHttpException('Invalid per-page parameter');
         }
 
+        // NOTE: 10000 mirrors the default value for max_result_window in OpenSearch.
         if ($page * $perPage > 10000) {
             throw new BadRequestHttpException('Exceeds maximum supported results window');
         }
