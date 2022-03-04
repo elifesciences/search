@@ -8,10 +8,8 @@ final class IndexMetadata
 {
     private $write;
     private $read;
-    private $lastImport;
     const WRITE = 'write';
     const READ = 'read';
-    const LAST_IMPORT = 'last_import';
 
     public static function fromFile(string $filename) : IndexMetadata
     {
@@ -24,42 +22,32 @@ final class IndexMetadata
     {
         Assertion::keyExists($document, self::WRITE);
         Assertion::keyExists($document, self::READ);
-        if (!array_key_exists(self::LAST_IMPORT, $document)) {
-            $document[self::LAST_IMPORT] = '19700101000000';
-        }
 
         return new self(
             $document[self::WRITE],
-            $document[self::READ],
-            $document[self::LAST_IMPORT]
+            $document[self::READ]
         );
     }
 
-    public static function fromContents(string $write, string $read, string $lastImport = '19700101000000') : IndexMetadata
+    public static function fromContents(string $write, string $read) : IndexMetadata
     {
-        return new self($write, $read, $lastImport);
+        return new self($write, $read);
     }
 
-    private function __construct(string $write, string $read, string $lastImport = '19700101000000')
+    private function __construct(string $write, string $read)
     {
         $this->write = $write;
         $this->read = $read;
-        $this->lastImport = $lastImport;
     }
 
     public function switchWrite(string $indexName) : IndexMetadata
     {
-        return new self($indexName, $this->read, $this->lastImport);
+        return new self($indexName, $this->read);
     }
 
     public function switchRead(string $indexName) : IndexMetadata
     {
-        return new self($this->write, $indexName, $this->lastImport);
-    }
-
-    public function updateLastImport(string $lastImport) : IndexMetadata
-    {
-        return new self($this->write, $this->read, $lastImport);
+        return new self($this->write, $indexName);
     }
 
     public function operation($operation) : string
@@ -79,17 +67,11 @@ final class IndexMetadata
         return $this->read;
     }
 
-    public function lastImport() : string
-    {
-        return $this->lastImport;
-    }
-
     public function toDocument()
     {
         return [
             self::WRITE => $this->write,
             self::READ => $this->read,
-            self::LAST_IMPORT => $this->lastImport,
         ];
     }
 

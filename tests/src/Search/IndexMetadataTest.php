@@ -8,7 +8,7 @@ class IndexMetadataTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->sample = IndexMetadata::fromContents('search_2', 'search_1', '20000101000000');
+        $this->sample = IndexMetadata::fromContents('search_2', 'search_1');
     }
 
     /**

@@ -114,15 +114,6 @@ final class Console
                 ['name' => 'index_name'],
             ],
         ],
-        'index:lastimport:get' => [
-            'description' => 'Returns the last import date',
-        ],
-        'index:lastimport:update' => [
-            'description' => 'Returns the last import date',
-            'args' => [
-                ['name' => 'date'],
-            ],
-        ],
         'rds:reindex' => [
             'description' => 'Reindex RDS articles to correctly place them in listings',
         ],
@@ -239,19 +230,6 @@ final class Console
         $metadata = $this->kernel->indexMetadata();
         $this->logger->info("Switching index reads from {$metadata->read()} to $indexName");
         $this->kernel->updateIndexMetadata($metadata->switchRead($indexName));
-    }
-
-    public function indexLastImportGetCommand(InputInterface $input, OutputInterface $output)
-    {
-        $metadata = $this->kernel->indexMetadata();
-        $output->writeln($metadata->lastImport());
-    }
-
-    public function indexLastImportUpdateCommand(InputInterface $input, OutputInterface $output)
-    {
-        $newLastImport = $input->getArgument('date');
-        $metadata = $this->kernel->indexMetadata();
-        $this->kernel->updateIndexMetadata($metadata->updateLastImport($newLastImport));
     }
 
     public function indexReadCommand(InputInterface $input, OutputInterface $output)
