@@ -7,7 +7,9 @@ set -e
 ulimit -S -n 2048
 
 function cleanup {
-    ulimit -S n 1024
+    rc=$?
+    ulimit -S -n 1024
+    exit $rc
 }
 trap cleanup EXIT
 
