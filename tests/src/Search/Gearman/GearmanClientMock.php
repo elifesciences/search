@@ -19,9 +19,10 @@ final class GearmanClientMock extends GearmanClient
         };
     }
 
-    public function setCompleteCallback($callback)
+    public function setCompleteCallback($callback): bool
     {
         $this->callback = $callback;
+        return true;
     }
 
     public function addTask($function_name, $workload, $context = null, $unique = null)
@@ -35,12 +36,13 @@ final class GearmanClientMock extends GearmanClient
         $this->tasks[] = $task;
     }
 
-    public function runTasks($data = [])
+    public function runTasks($data = []): bool
     {
         $fn = $this->callback;
         while (!empty($this->tasks)) {
             $task = array_shift($this->tasks);
             $fn($task);
         }
+        return true;
     }
 }
