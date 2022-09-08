@@ -11,7 +11,7 @@ final class TypeTest extends ElasticTestCase
      * @test
      * @dataProvider typeProvider
      */
-    public function itNegotiatesType(string $type, int $statusCode, string $contentType = null)
+    public function itNegotiatesType(string $type, int $statusCode)
     {
         $response = $this->performRequest($type);
         $this->assertSame($statusCode, $response->getStatusCode());
@@ -37,13 +37,13 @@ final class TypeTest extends ElasticTestCase
      * @test
      * @dataProvider contentTypeProvider
      */
-    public function testContentType($type, $contentType)
+    public function testContentType(string $type, string $contentType)
     {
         $response = $this->performRequest($type);
         $this->assertSame($contentType, $response->headers->get('Content-Type'));
     }
 
-    public function contentTypeProvider()
+    public function contentTypeProvider(): Traversable
     {
         $types = [
             'application/vnd.elife.search+json' => 'application/vnd.elife.search+json; version=2',
