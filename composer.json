@@ -50,9 +50,6 @@
         "symfony/var-dumper": "^3.1"
     },
     "config": {
-        "sort-packages": true,
-        "allow-plugins": {
-            "mindplay/composer-locator": true
-        }
+        "sort-packages": true
     }
 }
