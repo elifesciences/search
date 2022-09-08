@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4008feb55cecab45cebb07722491eed8",
+    "content-hash": "b28ef792bc8af14ac1b1e6793f4243d8",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -826,12 +826,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "42c424ea570a1d8c9eed977dd565cad84464de6f"
+                "reference": "acbe0ecba674b9c9a0b5f975d96357b332d193c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/42c424ea570a1d8c9eed977dd565cad84464de6f",
-                "reference": "42c424ea570a1d8c9eed977dd565cad84464de6f",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/acbe0ecba674b9c9a0b5f975d96357b332d193c0",
+                "reference": "acbe0ecba674b9c9a0b5f975d96357b332d193c0",
                 "shasum": ""
             },
             "require": {
@@ -880,7 +880,7 @@
                 "issues": "https://github.com/elifesciences/api-client-php/issues",
                 "source": "https://github.com/elifesciences/api-client-php/tree/master"
             },
-            "time": "2022-08-18T18:50:00+00:00"
+            "time": "2021-06-02T11:18:22+00:00"
         },
         {
             "name": "elife/api-problem",
@@ -936,16 +936,16 @@
         },
         {
             "name": "elife/api-sdk",
-            "version": "dev-feature/reviewed-preprint",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "18bf33c5f2c0e6d2cd213b3cfdc50b0a6a886224"
+                "reference": "5c83812b8d2ffdd4d21e033170b818b391e66479"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/18bf33c5f2c0e6d2cd213b3cfdc50b0a6a886224",
-                "reference": "18bf33c5f2c0e6d2cd213b3cfdc50b0a6a886224",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/5c83812b8d2ffdd4d21e033170b818b391e66479",
+                "reference": "5c83812b8d2ffdd4d21e033170b818b391e66479",
                 "shasum": ""
             },
             "require": {
@@ -1060,7 +1060,7 @@
             "require": {
                 "aws/aws-sdk-php": "^3.19",
                 "doctrine/cache": "^1.6",
-                "elife/api-sdk": "dev-feature/reviewed-preprint",
+                "elife/api-sdk": "^1.0",
                 "elife/logging-sdk": "^1.0",
                 "jms/serializer": "^1.4",
                 "php": "^7.0",
@@ -6914,8 +6914,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~7.2",
-        "ext-gearman": "*"
+        "php": "~7.2"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"

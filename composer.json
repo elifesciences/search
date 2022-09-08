@@ -21,7 +21,7 @@
         "elife/api": "^2.0",
         "elife/api-client": "dev-master",
         "elife/api-problem": "^1.1",
-        "elife/api-sdk": "dev-feature/reviewed-preprint",
+        "elife/api-sdk": "dev-master",
         "elife/api-validator": "dev-master",
         "elife/bus-sdk": "dev-master",
         "elife/content-negotiator": "^1.0",
