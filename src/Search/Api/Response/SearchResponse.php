@@ -55,10 +55,10 @@ final class SearchResponse implements HasHeaders
         $this->types = TypesResponse::fromList($this->items);
     }
 
-    public function getHeaders($version = 1) : array
+    public function getHeaders($version = 2) : array
     {
         return [
-            'Content-Type' => "application/vnd.elife.search+json;version=$version",
+            'Content-Type' => "application/vnd.elife.search+json; version=$version",
         ];
     }
 }
