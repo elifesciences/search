@@ -26,6 +26,7 @@ final class TypeTest extends ElasticTestCase
             'application/vnd.elife.search+json; version=0' => 406,
             'application/vnd.elife.search+json; version=1' => 200,
             'application/vnd.elife.search+json; version=2' => 200,
+            'application/vnd.elife.search+json; version=3' => 406,
             'text/plain' => 406,
         ];
 
