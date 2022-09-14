@@ -135,6 +135,13 @@ final class TypesResponse
      */
     public $podcastEpisode;
 
+    /**
+     * @SerializedName("reviewed-preprint")
+     * @Type("integer")
+     * @Since(version="1")
+     */
+    public $reviewedPreprint;
+
     private function __construct(
         $correction = 0,
         $editorial = 0,
@@ -154,7 +161,8 @@ final class TypesResponse
         $collection = 0,
         $interview = 0,
         $labsPost = 0,
-        $podcastEpisode = 0
+        $podcastEpisode = 0,
+        $reviewedPreprint = 0
     ) {
         $this->correction = $correction;
         $this->editorial = $editorial;
@@ -175,6 +183,7 @@ final class TypesResponse
         $this->interview = $interview;
         $this->labsPost = $labsPost;
         $this->podcastEpisode = $podcastEpisode;
+        $this->reviewedPreprint = $reviewedPreprint;
     }
 
     public static function fromArray(array $type_totals)
@@ -198,7 +207,8 @@ final class TypesResponse
             $type_totals['collection'] ?? 0,
             $type_totals['interview'] ?? 0,
             $type_totals['labs-post'] ?? 0,
-            $type_totals['podcast-episode'] ?? 0
+            $type_totals['podcast-episode'] ?? 0,
+            $type_totals['reviewed-preprint'] ?? 0
         );
     }
 
