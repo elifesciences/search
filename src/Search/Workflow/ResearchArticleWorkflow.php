@@ -31,19 +31,22 @@ final class ResearchArticleWorkflow implements Workflow
     private $client;
     private $validator;
     private $rdsArticles;
+    private $reviewedPreprints;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator,
-        array $rdsArticles = []
+        array $rdsArticles = [],
+        array $reviewedPreprints = []
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
         $this->rdsArticles = $rdsArticles;
+        $this->reviewedPreprints = $reviewedPreprints;
     }
 
     /**
@@ -101,7 +104,11 @@ final class ResearchArticleWorkflow implements Workflow
             'format' => 'json',
             'value' => json_encode($articleObject->dataSets ?? '[]'),
         ];
-        $articleObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($article))];
+
+        // Decorate article snippet with reviewedDate and curationLabels if available.
+        $snippet = array_merge($this->snippet($article), $this->reviewedPreprints[$article->getId()] ?? []);
+
+        $articleObject->snippet = ['format' => 'json', 'value' => json_encode($snippet)];
 
         if (isset($this->rdsArticles[$article->getId()]['date'])) {
             $sortDate = DateTimeImmutable::createFromFormat(DATE_ATOM, $this->rdsArticles[$article->getId()]['date']);
