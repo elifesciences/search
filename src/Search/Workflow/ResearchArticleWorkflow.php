@@ -115,6 +115,7 @@ final class ResearchArticleWorkflow implements Workflow
             ]);
 
             // @todo - if indexContent is set we should set this value and it needs to affect search results.
+            // In fact, ignore above because when decorating article we have all content
         }
 
         $articleObject->snippet = ['format' => 'json', 'value' => json_encode($snippet)];
