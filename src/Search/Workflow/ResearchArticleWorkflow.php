@@ -105,8 +105,17 @@ final class ResearchArticleWorkflow implements Workflow
             'value' => json_encode($articleObject->dataSets ?? '[]'),
         ];
 
+        $snippet = $this->snippet($article);
+
         // Decorate article snippet with reviewedDate and curationLabels if available.
-        $snippet = array_merge($this->snippet($article), $this->reviewedPreprints[$article->getId()] ?? []);
+        if (isset($this->reviewedPreprints[$article->getId()]['reviewedDate'])) {
+            $snippet = $snippet + array_filter([
+                'reviewedDate' => $this->reviewedPreprints[$article->getId()]['reviewedDate'],
+                'curationLabels' => $this->reviewedPreprints[$article->getId()]['curationLabels'] ?? null,
+            ]);
+
+            // @todo - if indexContent is set we should set this value and it needs to affect search results.
+        }
 
         $articleObject->snippet = ['format' => 'json', 'value' => json_encode($snippet)];
 
