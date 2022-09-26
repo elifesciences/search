@@ -241,7 +241,7 @@ final class SearchController
         $headers = [];
         $json = $this->serializer->serialize($data, 'json', $context);
         if ($data instanceof HasHeaders) {
-            $headers = $data->getHeaders();
+            $headers = $version ? $data->getHeaders($version) : $data->getHeaders();
         }
 
         return new Response($json, 200, $headers);
