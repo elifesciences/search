@@ -507,6 +507,7 @@ final class Kernel implements MinimalKernel
     {
         $app->get('/search', [$app['default_controller'], 'indexAction'])
             ->before($app['negotiate.accept'](
+                'application/vnd.elife.search+json; version=2',
                 'application/vnd.elife.search+json; version=1'
             ));
 
