@@ -781,12 +781,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "acbe0ecba674b9c9a0b5f975d96357b332d193c0"
+                "reference": "42c424ea570a1d8c9eed977dd565cad84464de6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/acbe0ecba674b9c9a0b5f975d96357b332d193c0",
-                "reference": "acbe0ecba674b9c9a0b5f975d96357b332d193c0",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/42c424ea570a1d8c9eed977dd565cad84464de6f",
+                "reference": "42c424ea570a1d8c9eed977dd565cad84464de6f",
                 "shasum": ""
             },
             "require": {
@@ -814,6 +814,7 @@
                 "mtdowling/jmespath.php": "^2.0, to use the Result::search() method",
                 "psr/log": "^1.0, to use the WarningCheckingHttpClient adapter"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -834,7 +835,7 @@
                 "issues": "https://github.com/elifesciences/api-client-php/issues",
                 "source": "https://github.com/elifesciences/api-client-php/tree/master"
             },
-            "time": "2021-06-02T11:18:22+00:00"
+            "time": "2022-08-18T18:50:00+00:00"
         },
         {
             "name": "elife/api-problem",
