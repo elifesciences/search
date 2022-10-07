@@ -117,6 +117,9 @@ final class Console
         'rds:reindex' => [
             'description' => 'Reindex RDS articles to correctly place them in listings',
         ],
+        'reviewedPreprint:reindex' => [
+            'description' => 'Reindex reviewed preprints to correctly place them in listings',
+        ],
         'gateway:total' => [
             'description' => 'Get the total number of items that could potentially be indexed from the API gateway',
         ],
@@ -335,6 +338,19 @@ final class Console
         }
         $output->writeln('Queued: '.implode(', ', $ids));
         $this->logger->info('RDS articles added to indexing queue.');
+    }
+
+    public function reviewedPreprintReindexCommand(InputInterface $input, OutputInterface $output)
+    {
+        $this->logger->info('Reindex reviewed preprints...');
+        $ids = [];
+        foreach (array_keys($this->config['reviewed_preprints']) as $id) {
+            $this->logger->info("Queuing reviewed preprint $id");
+            $this->enqueue('reviewed-preprint', $id);
+            $ids[] = $id;
+        }
+        $output->writeln('Queued: '.implode(', ', $ids));
+        $this->logger->info('Reviewed preprints added to indexing queue.');
     }
 
     public function gatewayTotalCommand(InputInterface $input, OutputInterface $output)

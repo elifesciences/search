@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
+./bin/console reviewedPreprint:reindex
+
+. bin/wait-for-empty-queues
