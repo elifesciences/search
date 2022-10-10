@@ -25,6 +25,5 @@ class GearmanTransformer implements QueueItemTransformer
         'podcast-episode' => 'podcast_episode_index',
         'collection' => 'collection_index',
         'article' => 'research_article_index',
-        'reviewed-preprint' => 'reviewed_preprint_index',
     ];
 }

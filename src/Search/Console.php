@@ -5,12 +5,15 @@ namespace eLife\Search;
 use Aws\Sqs\Exception\SqsException;
 use Aws\Sqs\SqsClient;
 use Closure;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
 use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
 use Exception;
+use GearmanClient;
+use JMS\Serializer\Serializer;
 use LogicException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Application;
@@ -340,17 +343,39 @@ final class Console
         $this->logger->info('RDS articles added to indexing queue.');
     }
 
-    public function reviewedPreprintReindexCommand(InputInterface $input, OutputInterface $output)
+    public function reviewedPreprintReindexCommand(InputInterface $input,
+                                                   OutputInterface $output)
     {
         $this->logger->info('Reindex reviewed preprints...');
+        $gearmanTask = 'reviewed_preprint_index';
+        $type = 'reviewed-preprint';
+        $gearmanClient = $this->kernel->get('console.gearman.client');
+        $apiSdk = $this->kernel->get('api.sdk');
+        $serializer = $this->kernel->get('serializer');
         $ids = [];
+
         foreach (array_keys($this->config['reviewed_preprints']) as $id) {
-            $this->logger->info("Queuing reviewed preprint $id");
-            $this->enqueue('reviewed-preprint', $id);
+            $entity = $apiSdk->reviewedPreprints()->get($id)->wait(true);
+            $entityJson = $serializer->serialize($entity, 'json');
+
+            if ($entity && $gearmanTask) {
+                // Run the task.
+                $this->logger->info(__FUNCTION__.' Running gearman task', [
+                    'gearmanTask' => $gearmanTask,
+                    'type' => $type,
+                    'id' => $id,
+                ]);
+                // Set the task to go.
+                $gearmanClient->doLowBackground($gearmanTask, $entityJson, md5($id));
+                $this->logger->info(__FUNCTION__.' Committed task', [
+                    'gearmanTask' => $gearmanTask,
+                    'type' => $type,
+                    'id' => $id,
+                ]);
+            }
             $ids[] = $id;
         }
-        $output->writeln('Queued: '.implode(', ', $ids));
-        $this->logger->info('Reviewed preprints added to indexing queue.');
+        $output->writeln('Pushed to gearman: '.implode(', ', $ids));
     }
 
     public function gatewayTotalCommand(InputInterface $input, OutputInterface $output)
