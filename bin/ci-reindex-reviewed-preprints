@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+. bin/ci-process-bootstrap
+
+. bin/ci-start-processes
+
+./bin/console reviewedPreprints:reindex
+
+. bin/ci-wait-steady-state

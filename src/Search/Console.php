@@ -345,6 +345,8 @@ final class Console
         $this->logger->info('Reindex reviewed preprints...');
         $ids = [];
         foreach (array_keys($this->config['reviewed_preprints']) as $id) {
+            $this->logger->info("Queuing reviewed preprint article $id");
+            $this->enqueue('article', $id);
             $this->logger->info("Queuing reviewed preprint $id");
             $this->enqueue('reviewed-preprint', $id);
             $ids[] = $id;

@@ -31,19 +31,22 @@ final class ResearchArticleWorkflow implements Workflow
     private $client;
     private $validator;
     private $rdsArticles;
+    private $reviewedPreprints;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator,
-        array $rdsArticles = []
+        array $rdsArticles = [],
+        array $reviewedPreprints = []
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
         $this->rdsArticles = $rdsArticles;
+        $this->reviewedPreprints = $reviewedPreprints;
     }
 
     /**
@@ -101,7 +104,20 @@ final class ResearchArticleWorkflow implements Workflow
             'format' => 'json',
             'value' => json_encode($articleObject->dataSets ?? '[]'),
         ];
-        $articleObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($article))];
+
+        $snippet = $this->snippet($article);
+
+        // Decorate article snippet with reviewedDate and curationLabels if available.
+        if (isset($this->reviewedPreprints[$article->getId()]['reviewedDate'])) {
+            // Delete reviewed preprint from index, if present (check elasticsearch).
+
+            $snippet = $snippet + array_filter([
+                    'reviewedDate' => $this->reviewedPreprints[$article->getId()]['reviewedDate'],
+                    'curationLabels' => $this->reviewedPreprints[$article->getId()]['curationLabels'] ?? null,
+                ]);
+        }
+
+        $articleObject->snippet = ['format' => 'json', 'value' => json_encode($snippet)];
 
         if (isset($this->rdsArticles[$article->getId()]['date'])) {
             $sortDate = DateTimeImmutable::createFromFormat(DATE_ATOM, $this->rdsArticles[$article->getId()]['date']);
