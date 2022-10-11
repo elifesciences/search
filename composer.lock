@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e4625330037b4feaf49c5f4d79b933f",
+    "content-hash": "f6ad23ecdd2d695fc4159aea5ac25a2f",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -256,6 +256,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": "react/async",
             "time": "2021-10-20T14:07:33+00:00"
         },
         {
@@ -814,7 +815,6 @@
                 "mtdowling/jmespath.php": "^2.0, to use the Result::search() method",
                 "psr/log": "^1.0, to use the WarningCheckingHttpClient adapter"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -921,7 +921,6 @@
                 "psr/http-message": "^1.0",
                 "squizlabs/php_codesniffer": "^3.5"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -991,16 +990,16 @@
         },
         {
             "name": "elife/bus-sdk",
-            "version": "dev-master",
+            "version": "dev-reviewed-preprints",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "f6e9e7ee6cbb7269066eb1f30e5bed560e7860e1"
+                "reference": "653aac2d510d918c482738342601e113d37a1afc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/f6e9e7ee6cbb7269066eb1f30e5bed560e7860e1",
-                "reference": "f6e9e7ee6cbb7269066eb1f30e5bed560e7860e1",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/653aac2d510d918c482738342601e113d37a1afc",
+                "reference": "653aac2d510d918c482738342601e113d37a1afc",
                 "shasum": ""
             },
             "require": {
@@ -1039,7 +1038,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences Bus SDK",
-            "time": "2021-03-11T10:28:02+00:00"
+            "time": "2022-10-11T19:02:33+00:00"
         },
         {
             "name": "elife/content-negotiator",
@@ -6544,5 +6543,5 @@
         "php": "~7.2"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "1.1.0"
 }
