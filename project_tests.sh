@@ -28,3 +28,6 @@ bin/ci-reindex
 
 echo "Reindexing RDS articles"
 bin/ci-reindex-rds
+
+echo "Reindexing reviewed-preprint articles"
+bin/ci-reindex-reviewed-preprints

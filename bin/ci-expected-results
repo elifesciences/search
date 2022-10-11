@@ -11,7 +11,7 @@ echo "Total results in the index: $actual_total"
 expected_total=$(bin/console gateway:total)
 if [ ! "$actual_total" -eq "$expected_total" ]; then
     echo "There should be exactly $expected_total results in the index"
-    for t in article blog-article collection interview labs-post podcast-episode
+    for t in article blog-article collection interview labs-post podcast-episode reviewed-preprint
     do
         if [ "$t" = "article" ]; then
             t="research-article&type[]=correction&type[]=insight&type[]=tools-resources"

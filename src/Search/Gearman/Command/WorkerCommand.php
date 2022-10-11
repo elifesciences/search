@@ -66,8 +66,8 @@ final class WorkerCommand extends Command
     {
         $this->gearman->registerWorkflow(new BlogArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new InterviewWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
-        $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator, $this->rdsArticles));
-        $this->gearman->registerWorkflow(new ReviewedPreprintWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator, $this->reviewedPreprints));
+        $this->gearman->registerWorkflow(new ResearchArticleWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator, $this->rdsArticles, $this->reviewedPreprints));
+        $this->gearman->registerWorkflow(new ReviewedPreprintWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new LabsPostWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new PodcastEpisodeWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));
         $this->gearman->registerWorkflow(new CollectionWorkflow($this->sdk->getSerializer(), $this->logger, $this->client, $this->validator));

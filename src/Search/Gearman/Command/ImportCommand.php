@@ -117,6 +117,7 @@ final class ImportCommand extends Command
         $events = $this->sdk->articles();
         $this->iterateSerializeTask($events, 'article', 'getId', $events->count(), $skipInvalid = true);
     }
+
     public function importReviewedPreprints()
     {
         $this->logger->info('Importing Reviewed Preprints');

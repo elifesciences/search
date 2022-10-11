@@ -106,6 +106,22 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertSame('2020-09-08T07:06:05Z', $return['sortDate']);
     }
 
+    public function testReviewedDateAndCurationLabelsWhenThereIsAReviewedPreprint()
+    {
+        $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
+            $this->elastic, $this->validator, [], ['article-2' => ['reviewedDate' => '2020-09-08T07:06:05Z', 'curationLabels' => ['foo', 'bar']]]);
+
+        $article = Builder::for(ArticlePoA::class)
+            ->withId('article-2')
+            ->withStatusDate(new DateTimeImmutable('2010-02-03T04:05:06Z'))
+            ->__invoke();
+
+        $return = json_decode($this->workflow->index($article)['json'], true);
+
+        $this->assertSame('2020-09-08T07:06:05Z', $return['reviewedDate']);
+        $this->assertSame(['foo', 'bar'], $return['curationLabels']);
+    }
+
     /**
      * @dataProvider researchArticleProvider
      * @test
