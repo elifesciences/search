@@ -77,6 +77,26 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertJson($article, 'Article is not valid JSON');
         $this->assertNotNull($id, 'An ID is required.');
         $this->assertStringStartsWith('reviewed-preprint-', $id, 'ID should be assigned an appropriate prefix.');
+        $this->assertFalse($return['skipInsert']);
+    }
+
+    /**
+     * @dataProvider reviewedPreprintProvider
+     * @test
+     */
+    public function testIndexOfReviewedPreprintSkipped(ReviewedPreprint $reviewedPreprint)
+    {
+        $this->elastic->shouldReceive('getDocumentById')
+            ->with('research-article-'.$reviewedPreprint->getId())
+            ->andReturnUsing(function () {
+                return 'found';
+            });
+
+        $this->assertSame([
+            'json' => '',
+            'id' => $reviewedPreprint->getId(),
+            'skipInsert' => true,
+        ], $this->workflow->index($reviewedPreprint));
     }
 
     /**
