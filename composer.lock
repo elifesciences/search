@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6ad23ecdd2d695fc4159aea5ac25a2f",
+    "content-hash": "2e4625330037b4feaf49c5f4d79b933f",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -54,16 +54,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.233.3",
+            "version": "3.238.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "0b9277a5c3d2fbccafc16b05a1b53404c9b67d1b"
+                "reference": "14fb64c934614ea5a52c9931189f687f30b6ba3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/0b9277a5c3d2fbccafc16b05a1b53404c9b67d1b",
-                "reference": "0b9277a5c3d2fbccafc16b05a1b53404c9b67d1b",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/14fb64c934614ea5a52c9931189f687f30b6ba3b",
+                "reference": "14fb64c934614ea5a52c9931189f687f30b6ba3b",
                 "shasum": ""
             },
             "require": {
@@ -82,6 +82,7 @@
                 "aws/aws-php-sns-message-validator": "~1.0",
                 "behat/behat": "~3.0",
                 "composer/composer": "^1.10.22",
+                "dms/phpunit-arraysubset-asserts": "^0.4.0",
                 "doctrine/cache": "~1.4",
                 "ext-dom": "*",
                 "ext-openssl": "*",
@@ -89,10 +90,11 @@
                 "ext-sockets": "*",
                 "nette/neon": "^2.3",
                 "paragonie/random_compat": ">= 2",
-                "phpunit/phpunit": "^4.8.35 || ^5.6.3",
+                "phpunit/phpunit": "^4.8.35 || ^5.6.3 || ^9.5",
                 "psr/cache": "^1.0",
                 "psr/simple-cache": "^1.0",
-                "sebastian/comparator": "^1.2.3"
+                "sebastian/comparator": "^1.2.3 || ^4.0",
+                "yoast/phpunit-polyfills": "^1.0"
             },
             "suggest": {
                 "aws/aws-php-sns-message-validator": "To validate incoming SNS notifications",
@@ -137,7 +139,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2022-08-16T18:14:59+00:00"
+            "time": "2022-10-07T18:16:40+00:00"
         },
         {
             "name": "beberlei/assert",
@@ -990,20 +992,20 @@
         },
         {
             "name": "elife/bus-sdk",
-            "version": "dev-reviewed-preprints",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "653aac2d510d918c482738342601e113d37a1afc"
+                "reference": "6a0b51d9d554b2bd3ab2f62ab2fbfdcdc5094c51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/653aac2d510d918c482738342601e113d37a1afc",
-                "reference": "653aac2d510d918c482738342601e113d37a1afc",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/6a0b51d9d554b2bd3ab2f62ab2fbfdcdc5094c51",
+                "reference": "6a0b51d9d554b2bd3ab2f62ab2fbfdcdc5094c51",
                 "shasum": ""
             },
             "require": {
-                "aws/aws-sdk-php": "^3.19",
+                "aws/aws-sdk-php": "^3.238",
                 "doctrine/cache": "^1.6",
                 "elife/api-sdk": "^1.0",
                 "elife/logging-sdk": "^1.0",
@@ -1038,7 +1040,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences Bus SDK",
-            "time": "2022-10-11T19:02:33+00:00"
+            "time": "2021-03-11T10:28:02+00:00"
         },
         {
             "name": "elife/content-negotiator",
@@ -1408,16 +1410,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.5.1",
+            "version": "1.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "fe752aedc9fd8fcca3fe7ad05d419d32998a06da"
+                "reference": "b94b2807d85443f9719887892882d0329d1e2598"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/fe752aedc9fd8fcca3fe7ad05d419d32998a06da",
-                "reference": "fe752aedc9fd8fcca3fe7ad05d419d32998a06da",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/b94b2807d85443f9719887892882d0329d1e2598",
+                "reference": "b94b2807d85443f9719887892882d0329d1e2598",
                 "shasum": ""
             },
             "require": {
@@ -1484,7 +1486,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-22T20:56:57+00:00"
+            "time": "2022-08-28T14:55:35+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
