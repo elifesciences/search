@@ -4,6 +4,6 @@ set -e
 
 . bin/ci-start-processes
 
-./bin/console reviewedPreprints:reindex
+./bin/console reviewedPreprint:reindex
 
 . bin/ci-wait-steady-state
