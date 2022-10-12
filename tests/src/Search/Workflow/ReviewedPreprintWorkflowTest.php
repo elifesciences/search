@@ -80,6 +80,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
+        $this->elastic->shouldReceive('getDocumentById')->with('article-'.$reviewedPreprint->getId());
         $ret = $this->workflow->insert($this->workflow->serialize($reviewedPreprint), $reviewedPreprint->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
