@@ -119,8 +119,9 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
 
         $return = json_decode($this->workflow->index($article)['json'], true);
 
-        $this->assertSame('2020-09-08T07:06:05Z', $return['reviewedDate']);
-        $this->assertSame(['foo', 'bar'], $return['curationLabels']);
+        $snippet = json_decode($return['snippet']['value'], true);
+        $this->assertSame('2020-09-08T07:06:05Z', $snippet['reviewedDate']);
+        $this->assertSame(['foo', 'bar'], $snippet['curationLabels']);
     }
 
     /**
