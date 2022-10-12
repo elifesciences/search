@@ -69,8 +69,7 @@ final class ReviewedPreprintWorkflow implements Workflow
         $reviewedPreprintObject->type = 'reviewed-preprint';
         $reviewedPreprintObject->body = $reviewedPreprint->getIndexContent() ?? '';
 
-        // Fix the apisdk for setting type in snippet
-        $reviewedPreprintObject->snippet = ['format' => 'json', 'value' => json_encode(['type' => 'reviewed-preprint'] + $this->snippet($reviewedPreprint))];
+        $reviewedPreprintObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($reviewedPreprint))];
 
         $this->addSortDate($reviewedPreprintObject, $reviewedPreprint->getReviewedDate());
 
