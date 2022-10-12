@@ -39,7 +39,7 @@ services:
         networks:
             - odfe-net
     api-dummy:
-        image: elifesciences/api-dummy:29d80e7726a513afb2362068de55a9bab7aad0ae
+        image: elifesciences/api-dummy:ffc4b64a5df674c0f39a31a2a40db65e058eb9bf
         container_name: api-dummy
         ports:
             - 5002:8080
