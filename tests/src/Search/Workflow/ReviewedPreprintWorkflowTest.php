@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Workflow;
 
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ReviewedPreprintWorkflow;
@@ -65,6 +66,11 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
      */
     public function testIndexOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
+        $this->elastic->shouldReceive('getDocumentById')
+            ->with('article-'.$reviewedPreprint->getId())
+            ->andReturnUsing(function () {
+                throw new Missing404Exception('missing');
+            });
         $return = $this->workflow->index($reviewedPreprint);
         $article = $return['json'];
         $id = $return['id'];
@@ -80,7 +86,6 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
-        $this->elastic->shouldReceive('getDocumentById')->with('article-'.$reviewedPreprint->getId());
         $ret = $this->workflow->insert($this->workflow->serialize($reviewedPreprint), $reviewedPreprint->getId());
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
