@@ -111,6 +111,7 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
             $this->elastic, $this->validator, [], ['article-2' => ['reviewedDate' => '2020-09-08T07:06:05Z', 'curationLabels' => ['foo', 'bar']]]);
 
+        $this->elastic->shouldReceive('deleteDocument');
         $article = Builder::for(ArticlePoA::class)
             ->withId('article-2')
             ->withStatusDate(new DateTimeImmutable('2010-02-03T04:05:06Z'))
