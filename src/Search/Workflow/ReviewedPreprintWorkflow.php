@@ -4,6 +4,7 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use DateTimeImmutable;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
@@ -13,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
+use function GuzzleHttp\Psr7\try_fopen;
 
 final class ReviewedPreprintWorkflow implements Workflow
 {
@@ -52,15 +54,21 @@ final class ReviewedPreprintWorkflow implements Workflow
      */
     public function index(ReviewedPreprint $reviewedPreprint) : array
     {
+
         // Don't index if article with same id present in index (check elasticsearch).
+        try {
+            $this->client->getDocumentById('research-article-'. $reviewedPreprint->getId());
+            return ['json' => '', 'id' => $reviewedPreprint->getId(), 'skipInsert' => true];
+        } catch (Missing404Exception $exception) {
+            // we are free to index
+        }
 
         $this->logger->debug('ReviewedPreprint<'.$reviewedPreprint->getId().'> Indexing '.$reviewedPreprint->getTitle());
 
         $reviewedPreprintObject = json_decode($this->serialize($reviewedPreprint));
-
+        $reviewedPreprintObject->type = 'reviewed-preprint';
         $reviewedPreprintObject->body = $reviewedPreprint->getIndexContent() ?? '';
 
-        $reviewedPreprintObject->type = 'reviewed-preprint';
         // Fix the apisdk for setting type in snippet
         $reviewedPreprintObject->snippet = ['format' => 'json', 'value' => json_encode(['type' => 'reviewed-preprint'] + $this->snippet($reviewedPreprint))];
 
@@ -71,28 +79,39 @@ final class ReviewedPreprintWorkflow implements Workflow
         return [
             'json' => json_encode($reviewedPreprintObject),
             'id' => $reviewedPreprintObject->type.'-'.$reviewedPreprint->getId(),
+            'skipInsert' => false,
         ];
     }
 
     /**
-     * @GearmanTask(name="reviewed_preprint_insert", next="reviewed_preprint_post_validate", parameters={"json", "id"})
+     * @GearmanTask(name="reviewed_preprint_insert", next="reviewed_preprint_post_validate", parameters={"json", "id", "skipInsert"})
      */
-    public function insert(string $json, string $id)
+    public function insert(string $json, string $id, bool $skipInsert)
     {
+        if ($skipInsert) {
+            $this->logger->debug('ReviewedPreprint<'.$id.'> no need to index.');
+            return ['id' => $id, 'skipValidate' => true];
+        }
         // Insert the document.
         $this->logger->debug('ReviewedPreprint<'.$id.'> importing into Elasticsearch.');
         $this->client->indexJsonDocument($id, $json);
 
         return [
             'id' => $id,
+            'skipValidate' => false,
         ];
     }
 
     /**
-     * @GearmanTask(name="reviewed_preprint_post_validate", parameters={"id"})
+     * @GearmanTask(name="reviewed_preprint_post_validate", parameters={"id", "skipValidate"})
      */
-    public function postValidate(string $id)
+    public function postValidate(string $id, bool $skipValidate)
     {
+        if ($skipValidate) {
+            $this->logger->debug('ReviewedPreprint<'.$id.'> no need to validate.');
+            return self::WORKFLOW_SUCCESS;
+        }
+
         $this->logger->debug('ReviewedPreprint<'.$id.'> post validation.');
         try {
             // Post-validation, we got a document.
