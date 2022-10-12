@@ -23,7 +23,7 @@
         "elife/api-problem": "^1.1",
         "elife/api-sdk": "dev-master",
         "elife/api-validator": "dev-master",
-        "elife/bus-sdk": "dev-reviewed-preprints",
+        "elife/bus-sdk": "dev-master",
         "elife/content-negotiator": "^1.0",
         "elife/logging-sdk": "^1.0@dev",
         "elife/ping": "^1.0",
