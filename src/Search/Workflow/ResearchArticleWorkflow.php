@@ -110,7 +110,8 @@ final class ResearchArticleWorkflow implements Workflow
         // Decorate article snippet with reviewedDate and curationLabels if available.
         if (isset($this->reviewedPreprints[$article->getId()]['reviewedDate'])) {
             // Delete reviewed preprint from index, if present (check elasticsearch).
-
+            $this->client->deleteDocument('reviewed-preprint-'.$article->getId());
+            $this->logger->debug('Article<'.$article->getId().'> delete corresponding reviewed preprint from index, if exists');
             $snippet = $snippet + array_filter([
                     'reviewedDate' => $this->reviewedPreprints[$article->getId()]['reviewedDate'],
                     'curationLabels' => $this->reviewedPreprints[$article->getId()]['curationLabels'] ?? null,
