@@ -67,7 +67,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     public function testIndexOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
         $this->elastic->shouldReceive('getDocumentById')
-            ->with('article-'.$reviewedPreprint->getId())
+            ->with('research-article-'.$reviewedPreprint->getId())
             ->andReturnUsing(function () {
                 throw new Missing404Exception('missing');
             });
@@ -86,7 +86,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     public function testInsertOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
-        $ret = $this->workflow->insert($this->workflow->serialize($reviewedPreprint), $reviewedPreprint->getId());
+        $ret = $this->workflow->insert($this->workflow->serialize($reviewedPreprint), $reviewedPreprint->getId(), false);
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($reviewedPreprint->getId(), $id);
