@@ -364,6 +364,7 @@ final class Console
         $total += $sdk->interviews()->count();
         $total += $sdk->labsPosts()->count();
         $total += $sdk->podcastEpisodes()->count();
+        $total += $sdk->reviewedPreprints()->count();
         $output->writeln($total);
     }
 
