@@ -67,7 +67,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     public function testIndexOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
         $this->elastic->shouldReceive('getDocumentById')
-            ->with('research-article-'.$reviewedPreprint->getId())
+            ->with('research-article-'.$reviewedPreprint->getId(), null, false)
             ->andReturnUsing(function () {
                 throw new Missing404Exception('missing');
             });
@@ -87,7 +87,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     public function testIndexOfReviewedPreprintSkipped(ReviewedPreprint $reviewedPreprint)
     {
         $this->elastic->shouldReceive('getDocumentById')
-            ->with('research-article-'.$reviewedPreprint->getId())
+            ->with('research-article-'.$reviewedPreprint->getId(), null, false)
             ->andReturnUsing(function () {
                 return 'found';
             });
