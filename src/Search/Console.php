@@ -351,7 +351,7 @@ final class Console
             $this->enqueue('reviewed-preprint', $id);
             $ids[] = $id;
         }
-        $output->writeln('Queued: '.implode(', ', $ids) . ' (article and reviewed-preprint)');
+        $output->writeln('Queued: '.implode(', ', $ids));
         $this->logger->info('Reviewed preprints added to indexing queue.');
     }
 

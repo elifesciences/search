@@ -65,13 +65,13 @@ class MappedElasticsearchClient
         return $this->libraryClient->search($query)['payload'] ?? null;
     }
 
-    public function getDocumentById($id, $index = null, $clientOptions = [])
+    public function getDocumentById($id, $index = null)
     {
         $params = [
             'index' => $index ?? $this->index,
             'id' => $id,
         ];
-        $params['client'] = $this->readClientOptions + $clientOptions;
+        $params['client'] = $this->readClientOptions;
 
         return $this->libraryClient->get($params)['payload'] ?? null;
     }
