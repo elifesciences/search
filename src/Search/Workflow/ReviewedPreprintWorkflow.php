@@ -3,13 +3,18 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
+use DateTimeImmutable;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\ApiSdk\Model\ReviewedPreprint;
+use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
+use function GuzzleHttp\Psr7\try_fopen;
 
 final class ReviewedPreprintWorkflow implements Workflow
 {
@@ -50,8 +55,11 @@ final class ReviewedPreprintWorkflow implements Workflow
     public function index(ReviewedPreprint $reviewedPreprint) : array
     {
         // Don't index if article with same id present in index.
-        if ($this->client->getDocumentById('research-article-'. $reviewedPreprint->getId(), null, true)) {
+        try {
+            $this->client->getDocumentById('research-article-'. $reviewedPreprint->getId(), ['ignore' => [404]);
             return ['json' => '', 'id' => $reviewedPreprint->getId(), 'skipInsert' => true];
+        } catch (Missing404Exception $exception) {
+            // we are free to index
         }
 
         $this->logger->debug('ReviewedPreprint<'.$reviewedPreprint->getId().'> Indexing '.$reviewedPreprint->getTitle());
