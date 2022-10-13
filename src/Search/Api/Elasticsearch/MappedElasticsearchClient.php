@@ -3,6 +3,7 @@
 namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\Search\Api\Query\QueryResponse;
 
 class MappedElasticsearchClient
@@ -65,14 +66,22 @@ class MappedElasticsearchClient
         return $this->libraryClient->search($query)['payload'] ?? null;
     }
 
-    public function getDocumentById($id, $index = null, $clientOptions = [])
+    public function getDocumentById($id, $index = null, $ignore404 = false)
     {
         $params = [
             'index' => $index ?? $this->index,
             'id' => $id,
         ];
-        $params['client'] = $this->readClientOptions + $clientOptions;
+        $params['client'] = $this->readClientOptions;
 
-        return $this->libraryClient->get($params)['payload'] ?? null;
+        try {
+            return $this->libraryClient->get($params)['payload'] ?? null;
+        } catch (Missing404Exception $e) {
+            if ($ignore404) {
+                return null;
+            }
+
+            throw $e;
+        }
     }
 }
