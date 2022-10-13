@@ -52,9 +52,10 @@ final class ReviewedPreprintWorkflow implements Workflow
     {
         // Don't index if article with same id present in index.
         try {
-            $this->client->getDocumentById('research-article-'. $reviewedPreprint->getId(), null, false);
+            $this->client->getDocumentById('research-article-'. $reviewedPreprint->getId());
             return ['json' => '', 'id' => $reviewedPreprint->getId(), 'skipInsert' => true];
         } catch (Missing404Exception $e) {
+            // @todo - consider moving catch into getDocumentById.
             // We are free to index the reviewed preprint.
         }
 

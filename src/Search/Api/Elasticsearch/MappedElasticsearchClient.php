@@ -66,7 +66,7 @@ class MappedElasticsearchClient
         return $this->libraryClient->search($query)['payload'] ?? null;
     }
 
-    public function getDocumentById($id, $index = null, $ignore404 = false)
+    public function getDocumentById($id, $index = null)
     {
         $params = [
             'index' => $index ?? $this->index,
@@ -74,14 +74,6 @@ class MappedElasticsearchClient
         ];
         $params['client'] = $this->readClientOptions;
 
-        try {
-            return $this->libraryClient->get($params)['payload'] ?? null;
-        } catch (Missing404Exception $e) {
-            if ($ignore404) {
-                return null;
-            }
-
-            throw $e;
-        }
+        return $this->libraryClient->get($params)['payload'] ?? null;
     }
 }
