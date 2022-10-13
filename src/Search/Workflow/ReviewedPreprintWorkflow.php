@@ -3,7 +3,6 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
-use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
@@ -51,11 +50,8 @@ final class ReviewedPreprintWorkflow implements Workflow
     public function index(ReviewedPreprint $reviewedPreprint) : array
     {
         // Don't index if article with same id present in index.
-        try {
-            $this->client->getDocumentById('research-article-'. $reviewedPreprint->getId(), null, false);
+        if ($this->client->getDocumentById('research-article-'. $reviewedPreprint->getId(), null, true)) {
             return ['json' => '', 'id' => $reviewedPreprint->getId(), 'skipInsert' => true];
-        } catch (Missing404Exception $e) {
-            // We are free to index the reviewed preprint.
         }
 
         $this->logger->debug('ReviewedPreprint<'.$reviewedPreprint->getId().'> Indexing '.$reviewedPreprint->getTitle());
