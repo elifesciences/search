@@ -3,7 +3,6 @@
 namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
-use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\Search\Api\Query\QueryResponse;
 
 class MappedElasticsearchClient
