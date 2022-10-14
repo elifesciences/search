@@ -63,7 +63,7 @@ final class ReviewedPreprintWorkflow implements Workflow
 
         $reviewedPreprintObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($reviewedPreprint))];
 
-        $this->addSortDate($reviewedPreprintObject, $reviewedPreprint->getReviewedDate());
+        $this->addSortDate($reviewedPreprintObject, $reviewedPreprint->getStatusDate());
 
         $this->logger->debug('ReviewedPreprint<'.$reviewedPreprint->getId());
 
