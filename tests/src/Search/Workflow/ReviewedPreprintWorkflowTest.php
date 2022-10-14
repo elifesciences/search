@@ -2,7 +2,6 @@
 
 namespace tests\eLife\Search\Workflow;
 
-use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ReviewedPreprintWorkflow;

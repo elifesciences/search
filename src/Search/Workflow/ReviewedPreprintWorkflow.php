@@ -3,18 +3,14 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
-use DateTimeImmutable;
-use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
-use function GuzzleHttp\Psr7\try_fopen;
 
 final class ReviewedPreprintWorkflow implements Workflow
 {
