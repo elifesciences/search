@@ -11,8 +11,8 @@ final class ArticleElasticsearchTest extends ElasticsearchTestCase
     public function jsonProvider() : array
     {
         return [
-            [$this->getFixtureWithType('article-vor/v5/minimum.json', 'research-article')],
-            [$this->getFixtureWithType('article-vor/v5/complete.json', 'research-article')],
+            [$this->getFixtureWithType('article-vor/v6/minimum.json', 'research-article')],
+            [$this->getFixtureWithType('article-vor/v6/complete.json', 'research-article')],
             [$this->getFixtureWithType('article-poa/v3/minimum.json', 'research-article')],
             [$this->getFixtureWithType('article-poa/v3/complete.json', 'research-article')],
         ];

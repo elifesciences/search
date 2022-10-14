@@ -22,6 +22,7 @@ namespace {
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/InterviewNormalizerTest.php';
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/LabsPostNormalizerTest.php';
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/SubjectNormalizerTest.php';
+    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/ReviewedPreprintNormalizerTest.php';
 
     Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
         'JMS\Serializer\Annotation', __DIR__.'/../vendor/jms/serializer/src'
