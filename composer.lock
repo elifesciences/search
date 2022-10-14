@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2e4625330037b4feaf49c5f4d79b933f",
+    "content-hash": "0da848b3475c4348bc416bf0b2189efd",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -750,35 +750,6 @@
             "time": "2022-02-03T13:40:04+00:00"
         },
         {
-            "name": "elife/api",
-            "version": "2.9.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "c34f4c4a3d9b13b5760de5173137e6873c9e0a42"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/c34f4c4a3d9b13b5760de5173137e6873c9e0a42",
-                "reference": "c34f4c4a3d9b13b5760de5173137e6873c9e0a42",
-                "shasum": ""
-            },
-            "conflict": {
-                "justinrainbow/json-schema": "<3.0.0"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "eLife Sciences API specification",
-            "support": {
-                "issues": "https://github.com/elifesciences/api-raml/issues",
-                "source": "https://github.com/elifesciences/api-raml/tree/2.9.0"
-            },
-            "time": "2022-09-26T15:03:24+00:00"
-        },
-        {
             "name": "elife/api-client",
             "version": "dev-master",
             "source": {
@@ -893,12 +864,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "6a9ecb93f0348a96c673b5f1027ed6c696f708d1"
+                "reference": "7341f666727cbb0289ca524ed0e337aebbd44209"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/6a9ecb93f0348a96c673b5f1027ed6c696f708d1",
-                "reference": "6a9ecb93f0348a96c673b5f1027ed6c696f708d1",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/7341f666727cbb0289ca524ed0e337aebbd44209",
+                "reference": "7341f666727cbb0289ca524ed0e337aebbd44209",
                 "shasum": ""
             },
             "require": {
@@ -939,7 +910,7 @@
                 "MIT"
             ],
             "description": "eLife Sciences API SDK",
-            "time": "2022-10-12T20:06:14+00:00"
+            "time": "2022-10-14T20:19:52+00:00"
         },
         {
             "name": "elife/api-validator",
@@ -4915,6 +4886,31 @@
             "description": "A Cache middleware for GuzzleHttp >= 6.0",
             "abandoned": "kevinrob/guzzle-cache-middleware",
             "time": "2019-11-26T09:34:53+00:00"
+        },
+        {
+            "name": "elife/api",
+            "version": "2.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elifesciences/api-raml.git",
+                "reference": "6ae5549c3f45c2481ee21908182955b3e4110715"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/6ae5549c3f45c2481ee21908182955b3e4110715",
+                "reference": "6ae5549c3f45c2481ee21908182955b3e4110715",
+                "shasum": ""
+            },
+            "conflict": {
+                "justinrainbow/json-schema": "<3.0.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "eLife Sciences API specification",
+            "time": "2022-10-14T19:22:57+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
