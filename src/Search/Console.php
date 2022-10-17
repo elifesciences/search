@@ -120,6 +120,9 @@ final class Console
         'reviewedPreprint:reindex' => [
             'description' => 'Reindex reviewed preprints to correctly place them in listings',
         ],
+        'reviewedPreprint:purge' => [
+            'description' => 'Purge reviewed preprints from the index to remove them from listings',
+        ],
         'gateway:total' => [
             'description' => 'Get the total number of items that could potentially be indexed from the API gateway',
         ],
@@ -353,6 +356,19 @@ final class Console
         }
         $output->writeln('Queued: '.implode(', ', $ids).' (reviewed-preprint and article)');
         $this->logger->info('Reviewed preprints added to indexing queue.');
+    }
+
+    public function reviewedPreprintPurgeCommand(InputInterface $input, OutputInterface $output)
+    {
+        $this->logger->info('Purge reviewed preprints...');
+        $ids = [];
+        foreach (array_keys($this->config['reviewed_preprints']) as $id) {
+            $this->logger->info("Purge reviewed preprint article $id");
+            $this->kernel->get('elastic.client.write')->deleteDocument($id);
+            $ids[] = $id;
+        }
+        $output->writeln('Purged: '.implode(', ', $ids));
+        $this->logger->info('Reviewed preprints purge from index.');
     }
 
     public function gatewayTotalCommand(InputInterface $input, OutputInterface $output)
