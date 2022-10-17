@@ -364,7 +364,7 @@ final class Console
         $ids = [];
         foreach (array_keys($this->config['reviewed_preprints']) as $id) {
             $this->logger->info("Purge reviewed preprint article $id");
-            $this->kernel->get('elastic.client.write')->deleteDocument($id);
+            $this->kernel->get('elastic.client.write')->deleteDocument('reviewed-preprint-'.$id);
             $ids[] = $id;
         }
         $output->writeln('Purged: '.implode(', ', $ids));
