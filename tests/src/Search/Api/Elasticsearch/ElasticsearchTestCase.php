@@ -10,9 +10,9 @@ use eLife\Search\Api\Elasticsearch\Response\SearchResponse;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-abstract class ElasticsearchTestCase extends PHPUnit_Framework_TestCase
+abstract class ElasticsearchTestCase extends TestCase
 {
     /** @var Serializer */
     private $serializer;
