@@ -46,8 +46,9 @@ services:
         networks:
             - odfe-net
     gearman:
-        image: artefactual/gearmand:latest
-        container_name: gearman
+        build:
+            context: .
+            dockerfile: Dockerfile
         ports:
             - 4730:4730
     gearmanui:
