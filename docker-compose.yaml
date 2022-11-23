@@ -1,0 +1,93 @@
+version: '3'
+services:
+
+    opensearch-node1:
+        image: opensearchproject/opensearch:latest
+        container_name: opensearch-node1
+        environment:
+            - cluster.name=opensearch-cluster
+            - node.name=opensearch-node1
+            - discovery.type=single-node
+            - DISABLE_SECURITY_PLUGIN=true
+            - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536 # maximum number of open files for the OpenSearch user, set to at least 65536 on modern systems
+                hard: 65536
+        volumes:
+            - opensearch-data1:/usr/share/opensearch/data
+            - ./logs:/usr/share/opensearch/logs
+        ports:
+            - '9200:9200'
+            - '9600:9600' # required for Performance Analyzer
+        networks:
+            - opensearch-net
+
+    opensearch-dashboards:
+        image: opensearchproject/opensearch-dashboards:latest
+        container_name: opensearch-dashboards
+        ports:
+            - '5601:5601'
+        expose:
+            - "5601"
+        environment:
+            OPENSEARCH_HOSTS: '["https://opensearch-node1:9200"]'
+            OPENSEARCH_SSL_VERIFICATION: none
+            OPENSEARCH_SSL_ENABLED: false
+        networks:
+            - opensearch-net
+    api-dummy:
+        image: elifesciences/api-dummy:29d80e7726a513afb2362068de55a9bab7aad0ae
+        container_name: api-dummy
+        ports:
+            - '5002:8080'
+        networks:
+            - opensearch-net
+    gearman:
+        image: artefactual/gearmand:latest
+        container_name: gearman
+        ports:
+            - '4730:4730'
+        networks:
+            - opensearch-net
+    gearmanui:
+        image: koryonik/gearman-ui
+        container_name: gearmanui
+        ports:
+            - "8085:80"
+        depends_on:
+            - gearman
+    goaws:
+        image: pafortin/goaws
+        container_name: goaws
+        volumes:
+            - ./.docker/goaws.yaml:/conf/goaws.yaml
+            - ./.docker/.aws:/root/.aws
+        ports:
+            - '4100:4100'
+        networks:
+            - opensearch-net
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            -   .:/app
+        networks:
+            - opensearch-net
+        depends_on:
+            - opensearch-node1
+            - gearman
+            - goaws
+        stdin_open: true
+        tty: true
+
+volumes:
+    opensearch-data1:
+
+networks:
+    opensearch-net:
+        driver: bridge
