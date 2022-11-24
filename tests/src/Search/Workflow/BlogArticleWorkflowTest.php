@@ -53,30 +53,7 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
     use HttpMocks;
     use GetSerializer;
     use GetValidator;
-    private static $classes = [
-        'annotation' => Annotation::class,
-        'annual-report' => AnnualReport::class,
-        'article-poa' =>  ArticlePoA::class,
-        'article-vor' => ArticleVoR::class,
-        'blog-article' => BlogArticle::class,
-        'collection' => Collection::class,
-        'cover' => Cover::class,
-        'digest' => Digest::class,
-        'event' => Event::class,
-        'external-article' => ExternalArticle::class,
-        'highlight' => Highlight::class,
-        'interview' => Interview::class,
-        'job-advert' => JobAdvert::class,
-        'labs-post' => LabsPost::class,
-        'person' => Person::class,
-        'podcast-episode' => PodcastEpisode::class,
-        'podcast-episode-chapter' => PodcastEpisodeChapterModel::class,
-        'press-package' => PressPackage::class,
-        'profile' => Profile::class,
-        'promotional-collection' => PromotionalCollection::class,
-        'reviewed-preprint' => ReviewedPreprint::class,
-        'subject' => Subject::class,
-    ];
+
     /**
      * @var BlogArticleWorkflow
      */
@@ -146,29 +123,41 @@ class BlogArticleWorkflowTest extends PHPUnit_Framework_TestCase
 
     public function blogArticleProvider()
     {
-       // return (new BlogArticleNormalizerTest())->normalizeProvider();
-        $model = 'blog-article';
-        $version = 2;
-
-        $samples = Finder::create()->files()->in(ComposerLocator::getPath('elife/api')."/dist/samples/{$model}/v{$version}");
         $date = new DateTimeImmutable('yesterday', new DateTimeZone('Z'));
         $updatedDate = new DateTimeImmutable('now', new DateTimeZone('Z'));
-        $banner = new Image('', 'https://iiif.elifesciences.org/banner.jpg', new EmptySequence(), new File('image/jpeg', 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg', 'banner.jpg'), 1800, 900, 50, 50);
-        $thumbnail = new Image('', 'https://iiif.elifesciences.org/banner.jpg', new EmptySequence(), new File('image/jpeg', 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg', 'banner.jpg'), 1800, 900, 50, 50);
-        $socialImage = new Image('', 'https://iiif.elifesciences.org/banner.jpg', new EmptySequence(), new File('image/jpeg', 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg', 'banner.jpg'), 1800, 900, 50, 50);
+        $banner = new Image('', 'https://iiif.elifesciences.org/banner.jpg',
+            new EmptySequence(),
+            new File('image/jpeg', 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg', 'banner.jpg'),
+            1800, 900, 50, 50);
+
+        $thumbnail = new Image('', 'https://iiif.elifesciences.org/banner.jpg',
+            new EmptySequence(),
+            new File('image/jpeg', 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg', 'banner.jpg'),
+            1800, 900, 50, 50);
+
+        $socialImage = new Image(
+            '',
+            'https://iiif.elifesciences.org/banner.jpg',
+            new EmptySequence(),
+            new File('image/jpeg', 'https://iiif.elifesciences.org/banner.jpg/full/full/0/default.jpg', 'banner.jpg'),
+            1800, 900, 50, 50);
 
         $subject = new Subject('subject1', 'Subject 1 name', promise_for('Subject subject1 impact statement'),
             new EmptySequence(), promise_for($banner), promise_for($thumbnail), promise_for($socialImage));
 
-        foreach ($samples as $sample) {
-            $name = "{$model}/v{$version}/{$sample->getBasename()}";
-            $contents = json_decode($sample->getContents(), true);
-            yield $name => [
-                new BlogArticle('id', 'title', $date, $updatedDate, 'impact statement', promise_for(Builder::for(Image::class)->sample('social')), new ArraySequence([new Paragraph('text')]),
-                    new ArraySequence([$subject])),
-                [],
-                $contents
-            ];
-        }
+        return [
+            'complete' => [
+                new BlogArticle('id',
+                    'title', $date, $updatedDate, 'impact statement',
+                    promise_for($socialImage),
+                    new ArraySequence([new Paragraph('text')]),
+                    new ArraySequence([$subject])
+                ),
+            ],
+            'minimum' => [
+                new BlogArticle('id', 'title', $date, null, null, promise_for(null), new ArraySequence([new Paragraph('text')]),
+                    new EmptySequence()),
+            ],
+        ];
     }
 }
