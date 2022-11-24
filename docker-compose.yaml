@@ -25,20 +25,6 @@ services:
             - '9600:9600' # required for Performance Analyzer
         networks:
             - opensearch-net
-
-    opensearch-dashboards:
-        image: opensearchproject/opensearch-dashboards:latest
-        container_name: opensearch-dashboards
-        ports:
-            - '5601:5601'
-        expose:
-            - "5601"
-        environment:
-            OPENSEARCH_HOSTS: '["https://opensearch-node1:9200"]'
-            OPENSEARCH_SSL_VERIFICATION: none
-            OPENSEARCH_SSL_ENABLED: false
-        networks:
-            - opensearch-net
     api-dummy:
         image: elifesciences/api-dummy:29d80e7726a513afb2362068de55a9bab7aad0ae
         container_name: api-dummy
@@ -53,13 +39,6 @@ services:
             - '4730:4730'
         networks:
             - opensearch-net
-    gearmanui:
-        image: koryonik/gearman-ui
-        container_name: gearmanui
-        ports:
-            - "8085:80"
-        depends_on:
-            - gearman
     goaws:
         image: pafortin/goaws
         container_name: goaws
