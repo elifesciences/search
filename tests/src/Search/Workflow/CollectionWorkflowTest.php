@@ -2,23 +2,17 @@
 
 namespace tests\eLife\Search\Workflow;
 
+use eLife\ApiClient\ApiClient\CollectionsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\Collection;
+use eLife\ApiSdk\Serializer\CollectionNormalizer;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\CollectionWorkflow;
 use Mockery;
-use PHPUnit_Framework_TestCase;
-use test\eLife\ApiSdk\Serializer\CollectionNormalizerTest;
-use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\ExceptionNullLogger;
-use tests\eLife\Search\HttpMocks;
 
-class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
+class CollectionWorkflowTest extends WorkflowTestCase
 {
-    use AsyncAssert;
-    use HttpMocks;
-    use GetSerializer;
-    use GetValidator;
-
     /**
      * @var CollectionWorkflow
      */
@@ -34,14 +28,31 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
         $this->workflow = new CollectionWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
     }
 
-    public function asyncTearDown()
+    protected function setUpSerializer()
     {
-        Mockery::close();
-        parent::tearDown();
+        $apiSdk = new ApiSdk($this->getHttpClient());
+        $this->denormalizer = new CollectionNormalizer(new CollectionsClient($this->getHttpClient()));
+        $this->denormalizer->setNormalizer($apiSdk->getSerializer());
+        $this->denormalizer->setDenormalizer($apiSdk->getSerializer());
+    }
+
+    protected function getModel()
+    {
+        return 'collection';
+    }
+
+    protected function getModelClass()
+    {
+        return Collection::class;
+    }
+
+    protected function getVersion()
+    {
+        return 2;
     }
 
     /**
-     * @dataProvider collectionProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testSerializationSmokeTest(Collection $collection, array $context = [], array $expected = [])
@@ -59,7 +70,7 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider collectionProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testIndexOfCollection(Collection $collection)
@@ -73,7 +84,7 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider collectionProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testInsertOfCollection(Collection $collection)
@@ -83,10 +94,5 @@ class CollectionWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($collection->getId(), $id);
-    }
-
-    public function collectionProvider() : array
-    {
-        return (new CollectionNormalizerTest())->normalizeProvider();
     }
 }
