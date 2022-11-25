@@ -35,7 +35,7 @@ class LabsPostWorkflowTest extends WorkflowTestCase
         return 'labs-post';
     }
 
-    protected function getVersion()
+    protected function getVersion() : int
     {
         return 2;
     }

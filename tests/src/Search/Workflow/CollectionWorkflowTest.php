@@ -25,17 +25,17 @@ class CollectionWorkflowTest extends WorkflowTestCase
         $this->workflow = new CollectionWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
     }
 
-    protected function getModel()
+    protected function getModel() : string
     {
         return 'collection';
     }
 
-    protected function getModelClass()
+    protected function getModelClass() : string
     {
         return Collection::class;
     }
 
-    protected function getVersion()
+    protected function getVersion() : int
     {
         return 2;
     }

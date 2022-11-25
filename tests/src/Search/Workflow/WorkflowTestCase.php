@@ -8,6 +8,7 @@ use PHPUnit_Framework_TestCase;
 use Symfony\Component\Finder\Finder;
 use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\HttpMocks;
+use Traversable;
 use function GuzzleHttp\json_decode;
 
 abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
@@ -17,11 +18,20 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
     use GetSerializer;
     use GetValidator;
 
-    abstract protected function getModel();
+    protected function getModel() : ?string
+    {
+        return null;
+    }
 
-    abstract protected function getModelClass();
+    protected function getModelClass() : ?string
+    {
+        return null;
+    }
 
-    abstract protected function getVersion();
+    protected function getVersion() : ?int
+    {
+        return null;
+    }
 
     public function asyncTearDown()
     {
@@ -29,21 +39,21 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
-    final public function workflowProvider() : \Traversable
+    public function workflowProvider(string $model = null, string $modelClass = null, int $version = null) : Traversable
     {
-        foreach ($this->findSamples() as $sample) {
-            $object = $this->getSerializer()->denormalize($sample[1], $this->getModelClass());
+        foreach ($this->findSamples($this->getModel() ?? $model, $this->getVersion() ?? $version) as $sample) {
+            $object = $this->getSerializer()->denormalize($sample[1], $this->getModelClass() ?? $modelClass);
             yield [$sample[0] => $object];
         }
     }
 
-    public function findSamples()
+    final protected function findSamples(string $model, int $version) : Traversable
     {
         $samples = Finder::create()->files()->in(
-            ComposerLocator::getPath('elife/api')."/dist/samples/{$this->getModel()}/v{$this->getVersion()}"
+            ComposerLocator::getPath('elife/api')."/dist/samples/{$model}/v{$version}"
         );
         foreach ($samples as $sample) {
-            $name = "{$this->getModel()}/v{$this->getVersion()}/{$sample->getBasename()}";
+            $name = "{$model}/v{$version}/{$sample->getBasename()}";
             $contents = json_decode($sample->getContents(), true);
 
             yield [$name, $contents];
