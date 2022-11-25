@@ -10,26 +10,16 @@ use eLife\ApiSdk\Serializer\LabsPostNormalizer;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\LabsPostWorkflow;
 use Mockery;
-use PHPUnit_Framework_TestCase;
-use Symfony\Component\Finder\Finder;
-use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\ExceptionNullLogger;
-use tests\eLife\Search\HttpMocks;
 
-class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
+class LabsPostWorkflowTest extends WorkflowTestCase
 {
-    use AsyncAssert;
-    use HttpMocks;
-    use GetSerializer;
-    use GetValidator;
-
     /**
      * @var LabsPostWorkflow
      */
     private $workflow;
     private $elastic;
     private $validator;
-    private $denormalizer;
 
     public function setUp()
     {
@@ -37,12 +27,6 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
         $logger = new ExceptionNullLogger();
         $this->validator = $this->getValidator();
         $this->workflow = new LabsPostWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
-    }
-
-    public function asyncTearDown()
-    {
-        Mockery::close();
-        parent::tearDown();
     }
 
     protected function getModelClass(): string
@@ -69,7 +53,7 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider labsPostProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testSerializationSmokeTest(LabsPost $labsPost, array $context = [], array $expected = [])
@@ -87,7 +71,7 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider labsPostProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testIndexOfLabsPost(LabsPost $labsPost)
@@ -101,7 +85,7 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider labsPostProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testInsertOfLabsPost(LabsPost $labsPost)
@@ -111,27 +95,5 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($labsPost->getId(), $id);
-    }
-
-    final public function labsPostProvider() : \Traversable
-    {
-        $this->setUpSerializer();
-        foreach ($this->findSamples() as $sample) {
-            $object = $this->denormalizer->denormalize($sample[1], $this->getModelClass());
-            yield [$sample[0] => $object];
-        }
-    }
-
-    public function findSamples()
-    {
-        $samples = Finder::create()->files()->in(
-            ComposerLocator::getPath('elife/api')."/dist/samples/{$this->getModel()}/v{$this->getVersion()}"
-        );
-        foreach ($samples as $sample) {
-            $name = "{$this->getModel()}/v{$this->getVersion()}/{$sample->getBasename()}";
-            $contents = json_decode($sample->getContents(), true);
-
-            yield [$name, $contents];
-        }
     }
 }
