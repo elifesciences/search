@@ -6,6 +6,6 @@ RUN docker-php-ext-enable gearman \
     && docker-php-ext-configure pcntl --enable-pcntl \
     &&  docker-php-ext-install pcntl
 
+COPY .docker/php.ini /usr/local/etc/php/php.ini
+
 WORKDIR /app
-
-
