@@ -2,11 +2,7 @@
 
 namespace tests\eLife\Search\Workflow;
 
-use ComposerLocator;
-use eLife\ApiClient\ApiClient\LabsClient;
-use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\LabsPost;
-use eLife\ApiSdk\Serializer\LabsPostNormalizer;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\LabsPostWorkflow;
 use Mockery;
@@ -42,14 +38,6 @@ class LabsPostWorkflowTest extends WorkflowTestCase
     protected function getVersion()
     {
         return 2;
-    }
-
-    protected function setUpSerializer()
-    {
-        $apiSdk = new ApiSdk($this->getHttpClient());
-        $this->denormalizer = new LabsPostNormalizer(new LabsClient($this->getHttpClient()));
-        $this->denormalizer->setNormalizer($apiSdk->getSerializer());
-        $this->denormalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**

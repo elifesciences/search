@@ -2,19 +2,11 @@
 
 namespace tests\eLife\Search\Workflow;
 
-use eLife\ApiClient\ApiClient\InterviewsClient;
-use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\Interview;
-use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\InterviewWorkflow;
 use Mockery;
-use PHPUnit_Framework_TestCase;
-use test\eLife\ApiSdk\Serializer\InterviewNormalizerTest;
-use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\ExceptionNullLogger;
-use tests\eLife\Search\HttpMocks;
 
 class InterviewWorkflowTest extends WorkflowTestCase
 {
@@ -31,14 +23,6 @@ class InterviewWorkflowTest extends WorkflowTestCase
         $logger = new ExceptionNullLogger();
         $this->validator = $this->getValidator();
         $this->workflow = new InterviewWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
-    }
-
-    protected function setUpSerializer()
-    {
-        $apiSdk = new ApiSdk($this->getHttpClient());
-        $this->denormalizer = new InterviewNormalizer(new InterviewsClient($this->getHttpClient()));
-        $this->denormalizer->setNormalizer($apiSdk->getSerializer());
-        $this->denormalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     protected function getModel() : string

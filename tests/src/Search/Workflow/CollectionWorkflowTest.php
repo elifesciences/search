@@ -2,10 +2,7 @@
 
 namespace tests\eLife\Search\Workflow;
 
-use eLife\ApiClient\ApiClient\CollectionsClient;
-use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\Collection;
-use eLife\ApiSdk\Serializer\CollectionNormalizer;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\CollectionWorkflow;
 use Mockery;
@@ -26,14 +23,6 @@ class CollectionWorkflowTest extends WorkflowTestCase
         $logger = new ExceptionNullLogger();
         $this->validator = $this->getValidator();
         $this->workflow = new CollectionWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
-    }
-
-    protected function setUpSerializer()
-    {
-        $apiSdk = new ApiSdk($this->getHttpClient());
-        $this->denormalizer = new CollectionNormalizer(new CollectionsClient($this->getHttpClient()));
-        $this->denormalizer->setNormalizer($apiSdk->getSerializer());
-        $this->denormalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     protected function getModel()

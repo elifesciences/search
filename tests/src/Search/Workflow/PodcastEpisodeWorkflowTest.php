@@ -2,11 +2,8 @@
 
 namespace tests\eLife\Search\Workflow;
 
-use eLife\ApiClient\ApiClient\PodcastClient;
-use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Mode\FundingAward;
 use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\ApiSdk\Serializer\PodcastEpisodeNormalizer;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
 use Mockery;
@@ -27,14 +24,6 @@ class PodcastEpisodeWorkflowTest extends WorkflowTestCase
         $logger = new ExceptionNullLogger();
         $this->validator = $this->getValidator();
         $this->workflow = new PodcastEpisodeWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
-    }
-
-    protected function setUpSerializer()
-    {
-        $apiSdk = new ApiSdk($this->getHttpClient());
-        $this->denormalizer = new PodcastEpisodeNormalizer(new PodcastClient($this->getHttpClient()));
-        $this->denormalizer->setNormalizer($apiSdk->getSerializer());
-        $this->denormalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     protected function getModel() : string

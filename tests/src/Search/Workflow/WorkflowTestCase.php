@@ -17,12 +17,6 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
     use GetSerializer;
     use GetValidator;
 
-    protected $apiSdk;
-    protected $denormalizer;
-    protected $model;
-
-    abstract protected function setUpSerializer();
-
     abstract protected function getModel();
 
     abstract protected function getModelClass();
@@ -37,9 +31,8 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
 
     final public function workflowProvider() : \Traversable
     {
-        $this->setUpSerializer();
         foreach ($this->findSamples() as $sample) {
-            $object = $this->denormalizer->denormalize($sample[1], $this->getModelClass());
+            $object = $this->getSerializer()->denormalize($sample[1], $this->getModelClass());
             yield [$sample[0] => $object];
         }
     }

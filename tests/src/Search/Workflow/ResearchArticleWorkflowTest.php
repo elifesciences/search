@@ -7,7 +7,6 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
 use Mockery;
-use Mockery\Mock;
 use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
 use test\eLife\ApiSdk\Serializer\ArticlePoANormalizerTest;
