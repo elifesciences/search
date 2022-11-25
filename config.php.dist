@@ -6,7 +6,7 @@ return [
     'debug' => true,
     'validate' => false,
     'ttl' => 0,
-    'elastic_servers' => ['http://opensearch-node1:9200'],
+    'elastic_servers' => ['http://opensearch:9200'],
     'elastic_logging' => true,
     'elastic_force_sync' => true,
     'elastic_ssl_verification' => false,

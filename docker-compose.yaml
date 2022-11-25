@@ -3,10 +3,10 @@ services:
 
     opensearch:
         image: opensearchproject/opensearch:latest
-        container_name: opensearch-node1
+        container_name: opensearch
         environment:
             - cluster.name=opensearch-cluster
-            - node.name=opensearch-node1
+            - node.name=opensearch
             - discovery.type=single-node
             - DISABLE_SECURITY_PLUGIN=true
             - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
@@ -58,7 +58,7 @@ services:
         networks:
             - opensearch-net
         depends_on:
-            - opensearch-node1
+            - opensearch
             - gearman
             - goaws
         stdin_open: true
