@@ -2,7 +2,11 @@
 
 namespace tests\eLife\Search\Workflow;
 
+use eLife\ApiClient\ApiClient\InterviewsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\Interview;
+use eLife\ApiSdk\Model\PodcastEpisode;
+use eLife\ApiSdk\Serializer\InterviewNormalizer;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\InterviewWorkflow;
 use Mockery;
@@ -12,13 +16,8 @@ use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\ExceptionNullLogger;
 use tests\eLife\Search\HttpMocks;
 
-class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
+class InterviewWorkflowTest extends WorkflowTestCase
 {
-    use AsyncAssert;
-    use HttpMocks;
-    use GetSerializer;
-    use GetValidator;
-
     /**
      * @var InterviewWorkflow
      */
@@ -34,14 +33,31 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
         $this->workflow = new InterviewWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
     }
 
-    public function asyncTearDown()
+    protected function setUpSerializer()
     {
-        Mockery::close();
-        parent::tearDown();
+        $apiSdk = new ApiSdk($this->getHttpClient());
+        $this->denormalizer = new InterviewNormalizer(new InterviewsClient($this->getHttpClient()));
+        $this->denormalizer->setNormalizer($apiSdk->getSerializer());
+        $this->denormalizer->setDenormalizer($apiSdk->getSerializer());
+    }
+
+    protected function getModel() : string
+    {
+        return 'interview';
+    }
+
+    protected function getModelClass() : string
+    {
+        return Interview::class;
+    }
+
+    protected function getVersion() : int
+    {
+        return 1;
     }
 
     /**
-     * @dataProvider interviewProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testSerializationSmokeTest(Interview $interview, array $context = [], array $expected = [])
@@ -59,7 +75,7 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider interviewProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testIndexOfInterview(Interview $interview)
@@ -73,7 +89,7 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider interviewProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testInsertOfInterview(Interview $interview)
@@ -83,10 +99,5 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($interview->getId(), $id);
-    }
-
-    public function interviewProvider() : array
-    {
-        return (new InterviewNormalizerTest())->normalizeProvider();
     }
 }
