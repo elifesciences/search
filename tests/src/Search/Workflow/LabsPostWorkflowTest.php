@@ -2,12 +2,16 @@
 
 namespace tests\eLife\Search\Workflow;
 
+use ComposerLocator;
+use eLife\ApiClient\ApiClient\LabsClient;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Model\LabsPost;
+use eLife\ApiSdk\Serializer\LabsPostNormalizer;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\LabsPostWorkflow;
 use Mockery;
 use PHPUnit_Framework_TestCase;
-use test\eLife\ApiSdk\Serializer\LabsPostNormalizerTest;
+use Symfony\Component\Finder\Finder;
 use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\ExceptionNullLogger;
 use tests\eLife\Search\HttpMocks;
@@ -25,6 +29,7 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
     private $workflow;
     private $elastic;
     private $validator;
+    private $denormalizer;
 
     public function setUp()
     {
@@ -38,6 +43,29 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
     {
         Mockery::close();
         parent::tearDown();
+    }
+
+    protected function getModelClass(): string
+    {
+        return LabsPost::class;
+    }
+
+    protected function getModel(): string
+    {
+        return 'labs-post';
+    }
+
+    protected function getVersion()
+    {
+        return 2;
+    }
+
+    protected function setUpSerializer()
+    {
+        $apiSdk = new ApiSdk($this->getHttpClient());
+        $this->denormalizer = new LabsPostNormalizer(new LabsClient($this->getHttpClient()));
+        $this->denormalizer->setNormalizer($apiSdk->getSerializer());
+        $this->denormalizer->setDenormalizer($apiSdk->getSerializer());
     }
 
     /**
@@ -85,8 +113,25 @@ class LabsPostWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($labsPost->getId(), $id);
     }
 
-    public function labsPostProvider() : array
+    final public function labsPostProvider() : \Traversable
     {
-        return (new LabsPostNormalizerTest())->normalizeProvider();
+        $this->setUpSerializer();
+        foreach ($this->findSamples() as $sample) {
+            $object = $this->denormalizer->denormalize($sample[1], $this->getModelClass());
+            yield [$sample[0] => $object];
+        }
+    }
+
+    public function findSamples()
+    {
+        $samples = Finder::create()->files()->in(
+            ComposerLocator::getPath('elife/api')."/dist/samples/{$this->getModel()}/v{$this->getVersion()}"
+        );
+        foreach ($samples as $sample) {
+            $name = "{$this->getModel()}/v{$this->getVersion()}/{$sample->getBasename()}";
+            $contents = json_decode($sample->getContents(), true);
+
+            yield [$name, $contents];
+        }
     }
 }
