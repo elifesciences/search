@@ -47,12 +47,12 @@
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/browser-kit": "^3.1",
         "symfony/var-dumper": "^3.1",
-      "ext-gearman": "*"
+        "ext-gearman": "*"
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "mindplay/composer-locator": true
+        "mindplay/composer-locator": true
         }
     }
 }
