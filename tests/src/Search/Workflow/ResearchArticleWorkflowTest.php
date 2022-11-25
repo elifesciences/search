@@ -4,23 +4,17 @@ namespace tests\eLife\Search\Workflow;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticlePoA;
+use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
 use Mockery;
-use PHPUnit_Framework_TestCase;
 use test\eLife\ApiSdk\Builder;
-use test\eLife\ApiSdk\Serializer\ArticlePoANormalizerTest;
-use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\ExceptionNullLogger;
-use tests\eLife\Search\HttpMocks;
+use Traversable;
 
-class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
+class ResearchArticleWorkflowTest extends WorkflowTestCase
 {
-    use AsyncAssert;
-    use HttpMocks;
-    use GetSerializer;
-    use GetValidator;
-
     /**
      * @var ResearchArticleWorkflow
      */
@@ -37,17 +31,11 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
     }
 
-    public function asyncTearDown()
-    {
-        Mockery::close();
-        parent::tearDown();
-    }
-
     /**
-     * @dataProvider researchArticleProvider
+     * @dataProvider workflowProvider
      * @test
      */
-    public function testSerializationSmokeTest(ArticlePoA $researchArticle, array $context = [], array $expected = [])
+    public function testSerializationSmokeTest(ArticleVersion $researchArticle)
     {
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();
@@ -55,17 +43,17 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $serialized = $this->workflow->serialize($researchArticle);
         /** @var ArticlePoA $deserialized */
         $deserialized = $this->workflow->deserialize($serialized);
-        $this->assertInstanceOf(ArticlePoA::class, $deserialized);
+        $this->assertInstanceOf(ArticleVersion::class, $deserialized);
         // Check B to A
         $final_serialized = $this->workflow->serialize($deserialized);
         $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
     /**
-     * @dataProvider researchArticleProvider
+     * @dataProvider workflowProvider
      * @test
      */
-    public function testIndexOfResearchArticle(ArticlePoA $researchArticle)
+    public function testIndexOfResearchArticle(ArticleVersion $researchArticle)
     {
         $return = $this->workflow->index($researchArticle);
         $article = $return['json'];
@@ -124,10 +112,10 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider researchArticleProvider
+     * @dataProvider workflowProvider
      * @test
      */
-    public function testInsertOfResearchArticle(ArticlePoA $researchArticle)
+    public function testInsertOfResearchArticle(ArticleVersion $researchArticle)
     {
         // TODO: this should set up an expectation about actual ArticlePoA data being received, as passing in a BlogArticle doesn't break the test
         $this->elastic->shouldReceive('indexJsonDocument');
@@ -137,8 +125,13 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($researchArticle->getId(), $id);
     }
 
-    public function researchArticleProvider() : array
+    public function workflowProvider(string $model = null, string $modelClass = null, int $version = null) : Traversable
     {
-        return (new ArticlePoANormalizerTest())->normalizeProvider();
+        foreach (array_merge(
+            iterator_to_array(parent::workflowProvider('article-vor', ArticleVoR::class, 6)),
+            iterator_to_array(parent::workflowProvider('article-poa', ArticlePoA::class, 3))
+        ) as $k => $v) {
+            yield $k => $v;
+        }
     }
 }

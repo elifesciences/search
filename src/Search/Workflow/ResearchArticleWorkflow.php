@@ -63,7 +63,8 @@ final class ResearchArticleWorkflow implements Workflow
         $articleObject = json_decode($this->serialize($article));
         // Fix author name.
         $articleObject->authors = array_map(function ($author) {
-            if (is_string($author->name)) {
+            // @todo - investigate whether it is right to assume that name property exists.
+            if (is_string($author->name ?? null)) {
                 $author->name = ['value' => $author->name];
             }
 

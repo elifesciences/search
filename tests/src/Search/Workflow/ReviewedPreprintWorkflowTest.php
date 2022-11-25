@@ -6,19 +6,10 @@ use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ReviewedPreprintWorkflow;
 use Mockery;
-use PHPUnit_Framework_TestCase;
-use test\eLife\ApiSdk\Serializer\ReviewedPreprintNormalizerTest;
-use tests\eLife\Search\AsyncAssert;
 use tests\eLife\Search\ExceptionNullLogger;
-use tests\eLife\Search\HttpMocks;
 
-class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
+class ReviewedPreprintWorkflowTest extends WorkflowTestCase
 {
-    use AsyncAssert;
-    use HttpMocks;
-    use GetSerializer;
-    use GetValidator;
-
     /**
      * @var ReviewedPreprintWorkflow
      */
@@ -35,14 +26,23 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
         $this->workflow = new ReviewedPreprintWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
     }
 
-    public function asyncTearDown()
+    protected function getModel() : string
     {
-        Mockery::close();
-        parent::tearDown();
+        return 'reviewed-preprint';
+    }
+
+    protected function getModelClass() : string
+    {
+        return ReviewedPreprint::class;
+    }
+
+    protected function getVersion() : int
+    {
+        return 1;
     }
 
     /**
-     * @dataProvider reviewedPreprintProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testSerializationSmokeTest(ReviewedPreprint $reviewedPreprint, array $context = [], array $expected = [])
@@ -60,7 +60,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider reviewedPreprintProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testIndexOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
@@ -78,7 +78,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider reviewedPreprintProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testIndexOfReviewedPreprintSkipped(ReviewedPreprint $reviewedPreprint)
@@ -95,7 +95,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider reviewedPreprintProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testInsertOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
@@ -105,10 +105,5 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($reviewedPreprint->getId(), $id);
-    }
-
-    public function reviewedPreprintProvider() : array
-    {
-        return (new ReviewedPreprintNormalizerTest())->normalizeProvider();
     }
 }

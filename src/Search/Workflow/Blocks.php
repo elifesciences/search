@@ -18,7 +18,7 @@ trait Blocks
             $block->label ?? null,
             $block->title ?? null,
             $block->alt ?? null,
-            $block->text ?? null,
+            is_array($block->text ?? null) ? $this->flattenBlocks($block->text) : ($block->text ?? null),
             $block->caption->text ?? null,
             $block->question ?? null,
             $this->flattenBlocks($block->answer ?? []),
