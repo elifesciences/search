@@ -8,9 +8,6 @@
 // @todo fix autoloading
 namespace {
     require_once __DIR__ . '/../vendor/autoload.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/TestCase.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/ApiTestCase.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/ApiSdkTest.php';
     require_once __DIR__ . '/../vendor/elife/api-sdk/test/Builder.php';
 
     Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
