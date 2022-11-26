@@ -3,26 +3,23 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\LabsPost;
+use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\LabsPostWorkflow;
-use Mockery;
-use tests\eLife\Search\ExceptionNullLogger;
+use eLife\Search\Workflow\Workflow;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\Serializer;
 
-class LabsPostWorkflowTest extends WorkflowTestCase
+final class LabsPostWorkflowTest extends WorkflowTestCase
 {
-    /**
-     * @var LabsPostWorkflow
-     */
-    private $workflow;
-    private $elastic;
-    private $validator;
-
-    public function setUp()
+    protected function setWorkflow(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        ApiValidator $validator
+    ) : Workflow
     {
-        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
-        $logger = new ExceptionNullLogger();
-        $this->validator = $this->getValidator();
-        $this->workflow = new LabsPostWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
+        return new LabsPostWorkflow($serializer, $logger, $client, $validator);
     }
 
     protected function getModelClass(): string

@@ -6,29 +6,26 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
-use Mockery;
+use eLife\Search\Workflow\Workflow;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\Serializer;
 use test\eLife\ApiSdk\Builder;
 use tests\eLife\Search\ExceptionNullLogger;
 use Traversable;
 
-class ResearchArticleWorkflowTest extends WorkflowTestCase
+final class ResearchArticleWorkflowTest extends WorkflowTestCase
 {
-    /**
-     * @var ResearchArticleWorkflow
-     */
-    private $workflow;
-    private $elastic;
-    private $validator;
-
-    public function setUp()
+    protected function setWorkflow(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        ApiValidator $validator
+    ) : Workflow
     {
-        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
-
-        $logger = new ExceptionNullLogger();
-        $this->validator = $this->getValidator();
-        $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
+        return new ResearchArticleWorkflow($serializer, $logger, $client, $validator);
     }
 
     /**

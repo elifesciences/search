@@ -4,26 +4,23 @@ namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Mode\FundingAward;
 use eLife\ApiSdk\Model\PodcastEpisode;
+use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
-use Mockery;
-use tests\eLife\Search\ExceptionNullLogger;
+use eLife\Search\Workflow\Workflow;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\Serializer;
 
-class PodcastEpisodeWorkflowTest extends WorkflowTestCase
+final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
 {
-    /**
-     * @var PodcastEpisodeWorkflow
-     */
-    private $workflow;
-    private $elastic;
-    private $validator;
-
-    public function setUp()
+    protected function setWorkflow(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        ApiValidator $validator
+    ) : Workflow
     {
-        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
-        $logger = new ExceptionNullLogger();
-        $this->validator = $this->getValidator();
-        $this->workflow = new PodcastEpisodeWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
+        return new PodcastEpisodeWorkflow($serializer, $logger, $client, $validator);
     }
 
     protected function getModel() : string
