@@ -10,3 +10,8 @@ Installation
 2. Run `docker-compose up --build`
 
 Important : Rename `config.php.dist` on local to `config.php` because config.php is in .gitignore.
+
+Testing
+-------
+
+To run the tests: `docker-compose exec app vendor/bin/phpunit`
