@@ -2,12 +2,9 @@
 
 namespace tests\eLife\Search\Workflow;
 
-use DateTimeImmutable;
-use eLife\ApiSdk\Collection\EmptySequence;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\ApiSdk\Model\Copyright;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
@@ -16,7 +13,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use tests\eLife\Search\ExceptionNullLogger;
 use Traversable;
-use function GuzzleHttp\Promise\promise_for;
 
 final class ResearchArticleWorkflowTest extends WorkflowTestCase
 {
@@ -67,7 +63,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
             $this->elastic, $this->validator, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
 
-        $article = $this->getArticle('article-1');
+        $article = $this->getArticle();
 
         $return = json_decode($this->workflow->index($article)['json'], true);
 
@@ -79,7 +75,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
             $this->elastic, $this->validator, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
 
-        $article = $this->getArticle();
+        $article = $this->getArticle(2);
 
         $return = json_decode($this->workflow->index($article)['json'], true);
 
@@ -92,7 +88,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
             $this->elastic, $this->validator, [], ['article-2' => ['reviewedDate' => '2020-09-08T07:06:05Z', 'curationLabels' => ['foo', 'bar']]]);
 
         $this->elastic->shouldReceive('deleteDocument');
-        $article = $this->getArticle();
+        $article = $this->getArticle(2);
 
         $return = json_decode($this->workflow->index($article)['json'], true);
 
@@ -125,22 +121,23 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         }
     }
 
-    private function getArticle($id = 'article-2')
+    private function getArticle($id = 1)
     {
-        return new ArticlePoA(
-            $id,
-            'published',
-            4,
-            'research-article',
-            'DOI',
-            null, null, 'title', null, null,
-            new DateTimeImmutable('2010-02-03T04:05:06Z'),
-            1, 'elocationId', null, null, null,
-            promise_for(''),
-            new EmptySequence(), [], null, promise_for(''),
-            promise_for(new Copyright('', '')),
-            new EmptySequence(), new EmptySequence(), new EmptySequence(), promise_for(''),
-            new EmptySequence(), new EmptySequence(), new EmptySequence(), new EmptySequence()
-        );
+        return $this->getSerializer()->denormalize([
+            'id' => 'article-'.$id,
+            'stage' => 'published',
+            'version' => 4,
+            'type' => 'research-article',
+            'doi' => 'DOI',
+            'title' => 'title',
+            'statusDate' => '2010-02-03T04:05:06Z',
+            'volume' => 1,
+            'elocationId' => 'elocationId',
+            'copyright' => [
+                'license' => 'license',
+                'statement' => 'statement',
+            ],
+            'status' => 'poa',
+        ], ArticlePoA::class);
     }
 }

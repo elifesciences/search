@@ -41,7 +41,7 @@ final class LabsPostWorkflowTest extends WorkflowTestCase
      * @dataProvider workflowProvider
      * @test
      */
-    public function testSerializationSmokeTest(LabsPost $labsPost, array $context = [], array $expected = [])
+    public function testSerializationSmokeTest(LabsPost $labsPost)
     {
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();

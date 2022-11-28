@@ -41,7 +41,7 @@ final class CollectionWorkflowTest extends WorkflowTestCase
      * @dataProvider workflowProvider
      * @test
      */
-    public function testSerializationSmokeTest(Collection $collection, array $context = [], array $expected = [])
+    public function testSerializationSmokeTest(Collection $collection)
     {
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();

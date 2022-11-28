@@ -42,7 +42,7 @@ final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
      * @dataProvider workflowProvider
      * @test
      */
-    public function testSerializationSmokeTest(PodcastEpisode $podcastEpisode, array $context = [], array $expected = [])
+    public function testSerializationSmokeTest(PodcastEpisode $podcastEpisode)
     {
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();

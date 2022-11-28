@@ -66,9 +66,9 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
 
     public function workflowProvider(string $model = null, string $modelClass = null, int $version = null) : Traversable
     {
-        foreach ($this->findSamples($this->getModel() ?? $model, $this->getVersion() ?? $version) as $sample) {
-            $object = $this->getSerializer()->denormalize($sample[1], $this->getModelClass() ?? $modelClass);
-            yield [$sample[0] => $object];
+        foreach ($this->findSamples($this->getModel() ?? $model, $this->getVersion() ?? $version) as $name => $sample) {
+            $object = $this->getSerializer()->denormalize($sample, $this->getModelClass() ?? $modelClass);
+            yield $name => [$object];
         }
     }
 
@@ -78,10 +78,7 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
             ComposerLocator::getPath('elife/api')."/dist/samples/{$model}/v{$version}"
         );
         foreach ($samples as $sample) {
-            $name = "{$model}/v{$version}/{$sample->getBasename()}";
-            $contents = json_decode($sample->getContents(), true);
-
-            yield [$name, $contents];
+            yield "{$model}/v{$version}/{$sample->getBasename()}" => json_decode($sample->getContents(), true);
         }
     }
 }

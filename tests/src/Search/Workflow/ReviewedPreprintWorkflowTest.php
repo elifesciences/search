@@ -41,7 +41,7 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
      * @dataProvider workflowProvider
      * @test
      */
-    public function testSerializationSmokeTest(ReviewedPreprint $reviewedPreprint, array $context = [], array $expected = [])
+    public function testSerializationSmokeTest(ReviewedPreprint $reviewedPreprint)
     {
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();
