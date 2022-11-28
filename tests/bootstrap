@@ -7,13 +7,6 @@
 
 // @todo fix autoloading
 namespace {
-    require_once __DIR__ . '/../vendor/autoload.php';
-
-    Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
-        'JMS\Serializer\Annotation', __DIR__.'/../vendor/jms/serializer/src'
-    );
-
-
     if (!class_exists('GearmanClient')) {
         class GearmanClient
         {
