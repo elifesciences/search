@@ -5,7 +5,6 @@ namespace tests\eLife\Search\Workflow;
 use ComposerLocator;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Workflow\BlogArticleWorkflow;
 use eLife\Search\Workflow\Workflow;
 use Mockery;
 use PHPUnit_Framework_TestCase;
@@ -26,7 +25,7 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
     use GetValidator;
 
     /**
-     * @var BlogArticleWorkflow
+     * @var Workflow
      */
     protected $workflow;
     protected $elastic;
@@ -66,19 +65,18 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
 
     public function workflowProvider(string $model = null, string $modelClass = null, int $version = null) : Traversable
     {
-        foreach ($this->findSamples($this->getModel() ?? $model, $this->getVersion() ?? $version) as $name => $sample) {
-            $object = $this->getSerializer()->denormalize($sample, $this->getModelClass() ?? $modelClass);
-            yield $name => [$object];
-        }
-    }
+        $model = $this->getModel() ?? $model;
+        $version = $this->getVersion() ?? $version;
 
-    final protected function findSamples(string $model, int $version) : Traversable
-    {
         $samples = Finder::create()->files()->in(
             ComposerLocator::getPath('elife/api')."/dist/samples/{$model}/v{$version}"
         );
+
         foreach ($samples as $sample) {
-            yield "{$model}/v{$version}/{$sample->getBasename()}" => json_decode($sample->getContents(), true);
+            $name = "{$model}/v{$version}/{$sample->getBasename()}";
+            $contents = json_decode($sample->getContents(), true);
+            $object = $this->getSerializer()->denormalize($contents, $this->getModelClass() ?? $modelClass);
+            yield $name => [$object];
         }
     }
 }
