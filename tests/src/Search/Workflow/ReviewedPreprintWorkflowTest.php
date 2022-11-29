@@ -3,49 +3,45 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\ReviewedPreprint;
+use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ReviewedPreprintWorkflow;
-use Mockery;
-use PHPUnit_Framework_TestCase;
-use test\eLife\ApiSdk\Serializer\ReviewedPreprintNormalizerTest;
-use tests\eLife\Search\AsyncAssert;
-use tests\eLife\Search\ExceptionNullLogger;
-use tests\eLife\Search\HttpMocks;
+use eLife\Search\Workflow\Workflow;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\Serializer;
 
-class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
+final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
 {
-    use AsyncAssert;
-    use HttpMocks;
-    use GetSerializer;
-    use GetValidator;
-
-    /**
-     * @var ReviewedPreprintWorkflow
-     */
-    private $workflow;
-    private $elastic;
-    private $validator;
-
-    public function setUp()
+    protected function setWorkflow(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        ApiValidator $validator
+    ) : Workflow
     {
-        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
-
-        $logger = new ExceptionNullLogger();
-        $this->validator = $this->getValidator();
-        $this->workflow = new ReviewedPreprintWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
+        return new ReviewedPreprintWorkflow($serializer, $logger, $client, $validator);
     }
 
-    public function asyncTearDown()
+    protected function getModel() : string
     {
-        Mockery::close();
-        parent::tearDown();
+        return 'reviewed-preprint';
+    }
+
+    protected function getModelClass() : string
+    {
+        return ReviewedPreprint::class;
+    }
+
+    protected function getVersion() : int
+    {
+        return 1;
     }
 
     /**
-     * @dataProvider reviewedPreprintProvider
+     * @dataProvider workflowProvider
      * @test
      */
-    public function testSerializationSmokeTest(ReviewedPreprint $reviewedPreprint, array $context = [], array $expected = [])
+    public function testSerializationSmokeTest(ReviewedPreprint $reviewedPreprint)
     {
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();
@@ -60,7 +56,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider reviewedPreprintProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testIndexOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
@@ -78,7 +74,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider reviewedPreprintProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testIndexOfReviewedPreprintSkipped(ReviewedPreprint $reviewedPreprint)
@@ -95,7 +91,7 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider reviewedPreprintProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testInsertOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
@@ -105,10 +101,5 @@ class ReviewedPreprintWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($reviewedPreprint->getId(), $id);
-    }
-
-    public function reviewedPreprintProvider() : array
-    {
-        return (new ReviewedPreprintNormalizerTest())->normalizeProvider();
     }
 }

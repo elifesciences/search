@@ -3,48 +3,45 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\Interview;
+use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\InterviewWorkflow;
-use Mockery;
-use PHPUnit_Framework_TestCase;
-use test\eLife\ApiSdk\Serializer\InterviewNormalizerTest;
-use tests\eLife\Search\AsyncAssert;
-use tests\eLife\Search\ExceptionNullLogger;
-use tests\eLife\Search\HttpMocks;
+use eLife\Search\Workflow\Workflow;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\Serializer;
 
-class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
+final class InterviewWorkflowTest extends WorkflowTestCase
 {
-    use AsyncAssert;
-    use HttpMocks;
-    use GetSerializer;
-    use GetValidator;
-
-    /**
-     * @var InterviewWorkflow
-     */
-    private $workflow;
-    private $elastic;
-    private $validator;
-
-    public function setUp()
+    protected function setWorkflow(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        ApiValidator $validator
+    ) : Workflow
     {
-        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
-        $logger = new ExceptionNullLogger();
-        $this->validator = $this->getValidator();
-        $this->workflow = new InterviewWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
+        return new InterviewWorkflow($serializer, $logger, $client, $validator);
     }
 
-    public function asyncTearDown()
+    protected function getModel() : string
     {
-        Mockery::close();
-        parent::tearDown();
+        return 'interview';
+    }
+
+    protected function getModelClass() : string
+    {
+        return Interview::class;
+    }
+
+    protected function getVersion() : int
+    {
+        return 1;
     }
 
     /**
-     * @dataProvider interviewProvider
+     * @dataProvider workflowProvider
      * @test
      */
-    public function testSerializationSmokeTest(Interview $interview, array $context = [], array $expected = [])
+    public function testSerializationSmokeTest(Interview $interview)
     {
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();
@@ -59,7 +56,7 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider interviewProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testIndexOfInterview(Interview $interview)
@@ -73,7 +70,7 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider interviewProvider
+     * @dataProvider workflowProvider
      * @test
      */
     public function testInsertOfInterview(Interview $interview)
@@ -83,10 +80,5 @@ class InterviewWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($interview->getId(), $id);
-    }
-
-    public function interviewProvider() : array
-    {
-        return (new InterviewNormalizerTest())->normalizeProvider();
     }
 }

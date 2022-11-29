@@ -7,28 +7,6 @@
 
 // @todo fix autoloading
 namespace {
-    require_once __DIR__ . '/../vendor/autoload.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/TestCase.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/ApiTestCase.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/ApiSdkTest.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Builder.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/NormalizerSamplesTestCase.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/BlogArticleNormalizerTest.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/CollectionNormalizerTest.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/ArticlePoANormalizerTest.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/PodcastEpisodeNormalizerTest.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/ArticleVoRNormalizerTest.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/EventNormalizerTest.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/InterviewNormalizerTest.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/LabsPostNormalizerTest.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/SubjectNormalizerTest.php';
-    require_once __DIR__ . '/../vendor/elife/api-sdk/test/Serializer/ReviewedPreprintNormalizerTest.php';
-
-    Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
-        'JMS\Serializer\Annotation', __DIR__.'/../vendor/jms/serializer/src'
-    );
-
-
     if (!class_exists('GearmanClient')) {
         class GearmanClient
         {
