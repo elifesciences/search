@@ -2,53 +2,35 @@
 
 namespace tests\eLife\Search\Workflow;
 
-use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticlePoA;
+use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
-use Mockery;
-use Mockery\Mock;
-use PHPUnit_Framework_TestCase;
-use test\eLife\ApiSdk\Builder;
-use test\eLife\ApiSdk\Serializer\ArticlePoANormalizerTest;
-use tests\eLife\Search\AsyncAssert;
+use eLife\Search\Workflow\Workflow;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\Serializer;
 use tests\eLife\Search\ExceptionNullLogger;
-use tests\eLife\Search\HttpMocks;
+use Traversable;
 
-class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
+final class ResearchArticleWorkflowTest extends WorkflowTestCase
 {
-    use AsyncAssert;
-    use HttpMocks;
-    use GetSerializer;
-    use GetValidator;
-
-    /**
-     * @var ResearchArticleWorkflow
-     */
-    private $workflow;
-    private $elastic;
-    private $validator;
-
-    public function setUp()
+    protected function setWorkflow(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        ApiValidator $validator
+    ) : Workflow
     {
-        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
-
-        $logger = new ExceptionNullLogger();
-        $this->validator = $this->getValidator();
-        $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
-    }
-
-    public function asyncTearDown()
-    {
-        Mockery::close();
-        parent::tearDown();
+        return new ResearchArticleWorkflow($serializer, $logger, $client, $validator);
     }
 
     /**
-     * @dataProvider researchArticleProvider
+     * @dataProvider workflowProvider
      * @test
      */
-    public function testSerializationSmokeTest(ArticlePoA $researchArticle, array $context = [], array $expected = [])
+    public function testSerializationSmokeTest(ArticleVersion $researchArticle)
     {
         // Mock the HTTP call that's made for subjects.
         $this->mockSubjects();
@@ -56,17 +38,17 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $serialized = $this->workflow->serialize($researchArticle);
         /** @var ArticlePoA $deserialized */
         $deserialized = $this->workflow->deserialize($serialized);
-        $this->assertInstanceOf(ArticlePoA::class, $deserialized);
+        $this->assertInstanceOf(ArticleVersion::class, $deserialized);
         // Check B to A
         $final_serialized = $this->workflow->serialize($deserialized);
         $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
     /**
-     * @dataProvider researchArticleProvider
+     * @dataProvider workflowProvider
      * @test
      */
-    public function testIndexOfResearchArticle(ArticlePoA $researchArticle)
+    public function testIndexOfResearchArticle(ArticleVersion $researchArticle)
     {
         $return = $this->workflow->index($researchArticle);
         $article = $return['json'];
@@ -81,10 +63,7 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
             $this->elastic, $this->validator, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
 
-        $article = Builder::for(ArticlePoA::class)
-            ->withId('article-1')
-            ->withStatusDate(new DateTimeImmutable('2010-02-03T04:05:06Z'))
-            ->__invoke();
+        $article = $this->getArticle();
 
         $return = json_decode($this->workflow->index($article)['json'], true);
 
@@ -96,10 +75,7 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
             $this->elastic, $this->validator, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
 
-        $article = Builder::for(ArticlePoA::class)
-            ->withId('article-2')
-            ->withStatusDate(new DateTimeImmutable('2010-02-03T04:05:06Z'))
-            ->__invoke();
+        $article = $this->getArticle(2);
 
         $return = json_decode($this->workflow->index($article)['json'], true);
 
@@ -112,10 +88,7 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
             $this->elastic, $this->validator, [], ['article-2' => ['reviewedDate' => '2020-09-08T07:06:05Z', 'curationLabels' => ['foo', 'bar']]]);
 
         $this->elastic->shouldReceive('deleteDocument');
-        $article = Builder::for(ArticlePoA::class)
-            ->withId('article-2')
-            ->withStatusDate(new DateTimeImmutable('2010-02-03T04:05:06Z'))
-            ->__invoke();
+        $article = $this->getArticle(2);
 
         $return = json_decode($this->workflow->index($article)['json'], true);
 
@@ -125,10 +98,10 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider researchArticleProvider
+     * @dataProvider workflowProvider
      * @test
      */
-    public function testInsertOfResearchArticle(ArticlePoA $researchArticle)
+    public function testInsertOfResearchArticle(ArticleVersion $researchArticle)
     {
         // TODO: this should set up an expectation about actual ArticlePoA data being received, as passing in a BlogArticle doesn't break the test
         $this->elastic->shouldReceive('indexJsonDocument');
@@ -138,8 +111,33 @@ class ResearchArticleWorkflowTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($researchArticle->getId(), $id);
     }
 
-    public function researchArticleProvider() : array
+    public function workflowProvider(string $model = null, string $modelClass = null, int $version = null) : Traversable
     {
-        return (new ArticlePoANormalizerTest())->normalizeProvider();
+        foreach (array_merge(
+            iterator_to_array(parent::workflowProvider('article-vor', ArticleVoR::class, 6)),
+            iterator_to_array(parent::workflowProvider('article-poa', ArticlePoA::class, 3))
+        ) as $k => $v) {
+            yield $k => $v;
+        }
+    }
+
+    private function getArticle($id = 1)
+    {
+        return $this->getSerializer()->denormalize([
+            'id' => 'article-'.$id,
+            'stage' => 'published',
+            'version' => 4,
+            'type' => 'research-article',
+            'doi' => 'DOI',
+            'title' => 'title',
+            'statusDate' => '2010-02-03T04:05:06Z',
+            'volume' => 1,
+            'elocationId' => 'elocationId',
+            'copyright' => [
+                'license' => 'license',
+                'statement' => 'statement',
+            ],
+            'status' => 'poa',
+        ], ArticlePoA::class);
     }
 }
