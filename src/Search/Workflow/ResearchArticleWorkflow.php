@@ -5,6 +5,8 @@ namespace eLife\Search\Workflow;
 use Assert\Assertion;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\HasReviewedPreprint;
+use eLife\ApiSdk\Model\IsReviewedPreprint;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
@@ -109,7 +111,7 @@ final class ResearchArticleWorkflow implements Workflow
         $snippet = $this->snippet($article);
 
         // Decorate article snippet with reviewedDate and curationLabels, if available.
-        if (isset($this->reviewedPreprints[$article->getId()]['reviewedDate'])) {
+        if ($article instanceof IsReviewedPreprint && $article->isReviewedPreprint()) {
             // Delete reviewed preprint from index, if present.
             $this->client->deleteDocument('reviewed-preprint-'.$article->getId());
             $this->logger->debug('Article<'.$article->getId().'> delete corresponding reviewed preprint from index, if exists');
