@@ -144,7 +144,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
 
     public function getArticleVor()
     {
-       return $this->getSerializer()->denormalize([
+        return $this->getSerializer()->denormalize([
             "status" => "vor",
             "id" => "article-2",
             "version" => 1,
