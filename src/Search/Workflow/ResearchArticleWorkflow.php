@@ -5,7 +5,6 @@ namespace eLife\Search\Workflow;
 use Assert\Assertion;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
-use eLife\ApiSdk\Model\HasReviewedPreprint;
 use eLife\ApiSdk\Model\IsReviewedPreprint;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
