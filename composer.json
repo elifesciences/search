@@ -52,7 +52,7 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-        "mindplay/composer-locator": true
+            "mindplay/composer-locator": true
         }
     }
 }
