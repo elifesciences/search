@@ -89,7 +89,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
             $this->elastic, $this->validator);
 
         $this->elastic->shouldReceive('deleteDocument');
-        $article = $this->getArticleVor();
+        $article = $this->getArticle(1, 'vor');
 
         $return = json_decode($this->workflow->index($article)['json'], true);
 
@@ -122,9 +122,11 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         }
     }
 
-    private function getArticle($id = 1)
+    private function getArticle($id = 1, $status = 'poa')
     {
-        return $this->getSerializer()->denormalize([
+        $sanitisedStatus = ($status === 'vor') ? 'vor' : 'poa';
+
+        return $this->getSerializer()->denormalize(array_filter([
             'id' => 'article-'.$id,
             'stage' => 'published',
             'version' => 4,
@@ -138,33 +140,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
                 'license' => 'license',
                 'statement' => 'statement',
             ],
-            'status' => 'poa',
-        ], ArticlePoA::class);
-    }
-
-    public function getArticleVor()
-    {
-        return $this->getSerializer()->denormalize([
-            "status" => "vor",
-            "id" => "article-2",
-            "version" => 1,
-            "type" => "research-article",
-            "doi" => "10.7554/eLife.09560",
-            "title" => "<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa",
-            "stage" => "published",
-            "published" => "2015-09-10T00:00:00Z",
-            "reviewedDate" => "2020-09-08T07:06:05Z",
-            "statusDate" => "2015-09-10T00:00:00Z",
-            "volume" => 4,
-            "elocationId" => "e09560",
-            "copyright" =>  [
-                "license" => "CC0-1.0",
-                "statement" => "This is an open-access article, free of all copyright, and may be freely reproduced, distributed, transmitted, modified, built upon, or otherwise used by anyone for any lawful purpose. The work is made available under the <a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons CC0 public domain dedication</a>."
-            ],
-            'curationLabels' => [
-                'foo', 'bar'
-            ],
-            "body" => [
+            'body' => ($sanitisedStatus === 'vor') ? [
                 [
                     "type" => "section",
                     "id" => "s-1",
@@ -172,11 +148,12 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
                     "content" => [
                         [
                             "type" => "paragraph",
-                            "text" => "Fossil hominins were first recognized in the Dinaledi Chamber in the Rising Star cave system in October 2013. During a relatively short excavation, our team recovered an extensive collection of 1550 hominin specimens, representing nearly every element of the skeleton multiple times (Figure 1), including many complete elements and morphologically informative fragments, some in articulation, as well as smaller fragments many of which could be refit into more complete elements. The collection is a morphologically homogeneous sample that can be attributed to no previously-known hominin species. Here we describe this new species, <i>Homo naledi</i>. We have not defined <i>H. naledi</i> narrowly based on a single jaw or skull because the entire body of material has informed our understanding of its biology."
+                            "text" => "Introduction text."
                         ]
                     ]
                 ]
-                ]
-            ], ArticleVoR::class);
+            ] : null,
+            'status' => $sanitisedStatus,
+        ]), ($sanitisedStatus === 'vor') ? ArticleVoR::class : ArticlePoA::class);
     }
 }
