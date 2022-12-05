@@ -50,6 +50,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
      */
     public function testIndexOfResearchArticle(ArticleVersion $researchArticle)
     {
+        $this->elastic->shouldReceive('deleteDocument');
         $return = $this->workflow->index($researchArticle);
         $article = $return['json'];
         $id = $return['id'];
@@ -85,7 +86,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
     public function testReviewedDateAndCurationLabelsWhenThereIsAReviewedPreprint()
     {
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
-            $this->elastic, $this->validator, [], ['article-2' => ['reviewedDate' => '2020-09-08T07:06:05Z', 'curationLabels' => ['foo', 'bar']]]);
+            $this->elastic, $this->validator);
 
         $this->elastic->shouldReceive('deleteDocument');
         $article = $this->getArticleVor();
