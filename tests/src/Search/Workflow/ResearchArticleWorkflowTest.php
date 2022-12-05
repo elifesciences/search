@@ -5,7 +5,6 @@ namespace tests\eLife\Search\Workflow;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\ApiSdk\Model\HasReviewedPreprint;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
@@ -153,12 +152,16 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
             "title" => "<i>Homo naledi</i>, a new species of the genus <i>Homo</i> from the Dinaledi Chamber, South Africa",
             "stage" => "published",
             "published" => "2015-09-10T00:00:00Z",
+            "reviewedDate" => "2020-09-08T07:06:05Z",
             "statusDate" => "2015-09-10T00:00:00Z",
             "volume" => 4,
             "elocationId" => "e09560",
             "copyright" =>  [
                 "license" => "CC0-1.0",
                 "statement" => "This is an open-access article, free of all copyright, and may be freely reproduced, distributed, transmitted, modified, built upon, or otherwise used by anyone for any lawful purpose. The work is made available under the <a href=\"http://creativecommons.org/publicdomain/zero/1.0/\">Creative Commons CC0 public domain dedication</a>."
+            ],
+            'curationLabels' => [
+                'foo', 'bar'
             ],
             "body" => [
                 [
