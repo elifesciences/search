@@ -1,5 +1,4 @@
-#FROM composer:2.4 as composer
-FROM php:7.4-cli as php
+FROM php:7.4-cli
 
 USER root
 
