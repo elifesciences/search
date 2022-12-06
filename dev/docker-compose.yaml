@@ -54,7 +54,9 @@ services:
             context: .
             dockerfile: Dockerfile
         volumes:
-            -   .:/app
+            - ..:/app
+        ports:
+            - '8888:8888'
         networks:
             - opensearch-net
         depends_on:

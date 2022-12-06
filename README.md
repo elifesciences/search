@@ -10,7 +10,9 @@ Installation
 
 1. Clone the project `git clone https://github.com/elifesciences/search.git`
 2. Rename `config.php.dist` on local to `config.php` because config.php is in .gitignore.
-3. Run `docker-compose up --build`
+3. Run `docker-compose -f ./dev/docker-compose.yml up --build`
+
+Access to api will be possible through port 8888.
 
 Testing
 -------
