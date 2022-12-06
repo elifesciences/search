@@ -134,6 +134,8 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
             'doi' => 'DOI',
             'title' => 'title',
             'statusDate' => '2010-02-03T04:05:06Z',
+            'reviewedDate' => '2020-09-08T07:06:05Z',
+            'curationLabels' => ['foo', 'bar'],
             'volume' => 1,
             'elocationId' => 'elocationId',
             'copyright' => [
