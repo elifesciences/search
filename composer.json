@@ -38,7 +38,8 @@
         "symfony/monolog-bridge": "^3.2",
         "symfony/psr-http-message-bridge": "^0.2.0",
         "willdurand/negotiation": "^2.3",
-        "zendframework/zend-diactoros": "^1.3"
+        "zendframework/zend-diactoros": "^1.3",
+        "ext-gearman": "*"
     },
     "require-dev": {
         "csa/guzzle-cache-middleware": "^1.0",
@@ -46,8 +47,7 @@
         "phpunit/phpunit": "^5.5",
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/browser-kit": "^3.1",
-        "symfony/var-dumper": "^3.1",
-        "ext-gearman": "*"
+        "symfony/var-dumper": "^3.1"
     },
     "config": {
         "sort-packages": true,

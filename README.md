@@ -9,12 +9,41 @@ Installation
 ------------
 
 1. Clone the project `git clone https://github.com/elifesciences/search.git`
-2. Rename `config.php.dist` on local to `config.php` because config.php is in .gitignore.
-3. Run `docker-compose -f ./dev/docker-compose.yml up --build`
+2. Rename `config.php.dist` on local to `config.php` 
+3. Run `docker-compose -f dev/docker-compose.yaml up --build`
 
-Access to api will be possible through port 8888.
+## Setup
+
+Follow the steps below to set up the project:
+
+1. Go to `app` container:
+
+```bash 
+$ docker-compose -f dev/docker-compose.yaml exec app bin/bash
+```
+
+2. Run following commands in order:
+
+```bash 
+$ bin/console queue:create
+$ bin/console search:setup # will create necessary indices in Elasticsearch
+$ bin/console keyvalue:setup
+```
+
+3. The `bin/console queue:import` command imports items from API and adds them into the queue:
+
+```bash
+$ bin/console queue:import all # other possible values can be found in src/Search/Gearman/Command/ImportCommand.php 
+```
+
+4. After adding items to the queue, running the following command will index them in Elasticsearch:
+```bash
+$ bin/console queue:watch
+```
+
+Now you can access the search API on http://localhost:8888/search 
 
 Testing
 -------
 
-To run the tests: `docker-compose exec app vendor/bin/phpunit`
+To run the tests: `docker-compose -f dev/docker-compose.yaml exec app vendor/bin/phpunit`
