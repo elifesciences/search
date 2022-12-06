@@ -5,6 +5,7 @@ namespace eLife\Search;
 use Aws\Sqs\Exception\SqsException;
 use Aws\Sqs\SqsClient;
 use Closure;
+use eLife\ApiSdk\ApiSdk;
 use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
@@ -347,7 +348,11 @@ final class Console
     {
         $this->logger->info('Reindex reviewed preprints...');
         $ids = [];
-        foreach (array_keys($this->config['reviewed_preprints']) as $id) {
+        /** @var ApiSdk $sdk */
+        $sdk = $this->kernel->get('api.sdk');
+        $reviewedPreprints = $sdk->reviewedPreprints()->slice(0)->wait();
+        foreach ($reviewedPreprints as $reviewedPreprint) {
+            $id = $reviewedPreprint->getId();
             $this->logger->info("Queuing reviewed preprint article $id");
             $this->enqueue('article', $id);
             $this->logger->info("Queuing reviewed preprint $id");
@@ -362,7 +367,11 @@ final class Console
     {
         $this->logger->info('Purge reviewed preprints...');
         $ids = [];
-        foreach (array_keys($this->config['reviewed_preprints']) as $id) {
+        /** @var ApiSdk $sdk */
+        $sdk = $this->kernel->get('api.sdk');
+        $reviewedPreprints = $sdk->reviewedPreprints()->slice(0)->wait();
+        foreach ($reviewedPreprints as $reviewedPreprint) {
+            $id = $reviewedPreprint->getId();
             $this->logger->info("Purge reviewed preprint article $id");
             $this->kernel->get('elastic.client.write')->deleteDocument('reviewed-preprint-'.$id);
             $ids[] = $id;
