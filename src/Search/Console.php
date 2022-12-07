@@ -118,9 +118,6 @@ final class Console
         'rds:reindex' => [
             'description' => 'Reindex RDS articles to correctly place them in listings',
         ],
-        'reviewedPreprint:reindex' => [
-            'description' => 'Reindex reviewed preprints to correctly place them in listings',
-        ],
         'reviewedPreprint:purge' => [
             'description' => 'Purge reviewed preprints from the index to remove them from listings',
         ],
@@ -342,25 +339,6 @@ final class Console
         }
         $output->writeln('Queued: '.implode(', ', $ids));
         $this->logger->info('RDS articles added to indexing queue.');
-    }
-
-    public function reviewedPreprintReindexCommand(InputInterface $input, OutputInterface $output)
-    {
-        $this->logger->info('Reindex reviewed preprints...');
-        $ids = [];
-        /** @var ApiSdk $sdk */
-        $sdk = $this->kernel->get('api.sdk');
-        $reviewedPreprints = $sdk->reviewedPreprints()->slice(0)->wait();
-        foreach ($reviewedPreprints as $reviewedPreprint) {
-            $id = $reviewedPreprint->getId();
-            $this->logger->info("Queuing reviewed preprint article $id");
-            $this->enqueue('article', $id);
-            $this->logger->info("Queuing reviewed preprint $id");
-            $this->enqueue('reviewed-preprint', $id);
-            $ids[] = $id;
-        }
-        $output->writeln('Queued: '.implode(', ', $ids).' (reviewed-preprint and article)');
-        $this->logger->info('Reviewed preprints added to indexing queue.');
     }
 
     public function reviewedPreprintPurgeCommand(InputInterface $input, OutputInterface $output)
