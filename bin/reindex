@@ -29,6 +29,14 @@ echo "Importing all API content"
 echo "Waiting for empty queues"
 ./bin/wait-for-empty-queues
 
+echo "Check for empty index"
+index_check=`.bin/console index:total:write`
+
+if [ "$index_check" -eq "0" ]; then
+    echo "Index is empty"
+    exit 2
+fi
+
 echo "Switching reads to new index $index_name"
 ./bin/console index:switch:read "$index_name"
 # we should restart processes, but they never should use IndexMetadata::READ
