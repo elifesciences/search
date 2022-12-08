@@ -19,7 +19,7 @@ Follow the steps below to set up the project:
 1. Go to `app` container:
 
 ```bash 
-$ docker-compose -f dev/docker-compose.yaml exec app bin/bash
+$ docker-compose -f dev/docker-compose.yaml exec app /bin/bash
 ```
 
 2. Run following commands in order:
