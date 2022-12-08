@@ -10,6 +10,7 @@ use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
+use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
 use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
 use Exception;
 use LogicException;
@@ -345,11 +346,11 @@ final class Console
     {
         $this->logger->info('Purge reviewed preprints...');
         $ids = [];
-        /** @var ApiSdk $sdk */
-        $sdk = $this->kernel->get('api.sdk');
-        $reviewedPreprints = $sdk->reviewedPreprints()->slice(0)->wait();
+        $query = new ElasticQueryBuilder($this->kernel->indexMetadata()->read());
+        $query = $query->whereType(['reviewed-preprint']);
+        $reviewedPreprints = $this->kernel->get('elastic.client.read')->searchDocuments($query->getRawQuery());
         foreach ($reviewedPreprints as $reviewedPreprint) {
-            $id = $reviewedPreprint->getId();
+            $id = $reviewedPreprint['id'];
             $this->logger->info("Purge reviewed preprint article $id");
             $this->kernel->get('elastic.client.write')->deleteDocument('reviewed-preprint-'.$id);
             $ids[] = $id;
