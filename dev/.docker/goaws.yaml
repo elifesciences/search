@@ -1,8 +1,6 @@
-Dev:                                # Another environment
+Dev:
   Host: goaws
   Port: 4100
-  # SqsPort: 9324
-  # SnsPort: 9292
   Region: us-east-1
   LogToFile: true
   LogFile: ./goaws_messages.log
