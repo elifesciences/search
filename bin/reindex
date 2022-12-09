@@ -35,8 +35,8 @@ index_check=`.bin/console index:total:write`
 
 if [ "$index_check" -eq "0" ]; then
 
-    # To do: Consider adding additional treshhold if items are indexed but
-    # are very different then expected
+    # To do: Consider adding additional threshold if items are indexed but
+    # are very different than expected
     echo "We cannot switch to an index that is empty when performing a reindex"
 
     echo "Switching writes back to current index $write_index_backup"
