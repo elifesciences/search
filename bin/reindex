@@ -33,7 +33,7 @@ echo "Waiting for empty queues"
 echo "Check for empty index"
 index_check=`.bin/console index:total:write`
 
-if [ "$index_check" -eq "0" ]; then
+if [ "$index_check" -eq "0" ] || [ "$index_check" -eq "1" ]; then
 
     # To do: Consider adding additional threshold if items are indexed but
     # are very different than expected
