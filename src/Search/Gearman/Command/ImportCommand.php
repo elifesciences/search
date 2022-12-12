@@ -13,6 +13,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
@@ -51,7 +52,8 @@ final class ImportCommand extends Command
             ->setName('queue:import')
             ->setDescription('Import items from API.')
             ->setHelp('Lists entities from API and enqueues them')
-            ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>');
+            ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>')
+            ->addOption('ids', 'i', InputOption::VALUE_OPTIONAL, 'Import IDs, comma separated');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -77,8 +79,13 @@ final class ImportCommand extends Command
                     }
                 }
             } else {
-                // Run the item.
-                $this->{'import'.$entity}();
+                if ('ReviewedPreprints' === $entity) {
+                    $ids = explode(',', $input->getOption('ids'));
+                    $this->importReviewedPreprints($ids);
+                } else {
+                    // Run the item.
+                    $this->{'import'.$entity}();
+                }
             }
             // Reporting.
             $this->logger->info("\nAll entities queued.");
@@ -118,11 +125,21 @@ final class ImportCommand extends Command
         $this->iterateSerializeTask($events, 'article', 'getId', $events->count(), $skipInvalid = true);
     }
 
-    public function importReviewedPreprints()
+    public function importReviewedPreprints($ids = null)
     {
-        $this->logger->info('Importing Reviewed Preprints');
+        $this->logger->info('Importing Reviewed Preprints.'.$ids);
         $events = $this->sdk->reviewedPreprints();
-        $this->iterateSerializeTask($events, 'reviewed-preprint', 'getId', $events->count(), $skipInvalid = true);
+        $rpIds = [];
+        if (is_array($ids )) {
+            foreach ($ids as $id) {
+                $rpIds[] = $this->sdk->reviewedPreprints()->get($id)->wait();
+            }
+            $reviewedPreprints = new \ArrayIterator($rpIds);
+            $this->iterateSerializeTask($reviewedPreprints, 'reviewed-preprint', 'getId', $reviewedPreprints->count(), $skipInvalid = true);
+        } else {
+            $this->iterateSerializeTask($events, 'reviewed-preprint', 'getId', $events->count());
+        }
+
     }
 
     public function importInterviews()
