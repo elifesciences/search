@@ -33,10 +33,10 @@ echo "Waiting for empty queues"
 echo "Check for empty index"
 index_check=`.bin/console index:total:write`
 
-if [ "$index_check" -eq "0" ] || [ "$index_check" -eq "1" ]; then
+if [ "$index_check" -eq "0" ] || true; then
 
     # To do: Consider adding additional threshold if items are indexed but
-    # are very different than expected
+    # are very different than expected - https://github.com/elifesciences/issues/issues/7982
     echo "We cannot switch to an index that is empty when performing a reindex"
 
     echo "Switching writes back to current index $write_index_backup"
@@ -45,7 +45,7 @@ if [ "$index_check" -eq "0" ] || [ "$index_check" -eq "1" ]; then
     echo "Deleting unused indexes"
     ./bin/console index:delete:unused
 
-    exit 0
+    exit 1
 fi
 
 echo "Switching reads to new index $index_name"
