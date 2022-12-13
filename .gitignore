@@ -5,4 +5,6 @@
 /.php_cs.cache
 /var/
 /vendor/
+/logs
+/dev/logs
 !.gitkeep
