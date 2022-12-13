@@ -5,7 +5,7 @@ namespace eLife\Search;
 use Aws\Sqs\Exception\SqsException;
 use Aws\Sqs\SqsClient;
 use Closure;
-use eLife\ApiSdk\ApiSdk;
+use Elasticsearch\Common\Exceptions\ElasticsearchException;
 use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
@@ -348,7 +348,18 @@ final class Console
         $ids = [];
         $query = new ElasticQueryBuilder($this->kernel->indexMetadata()->read());
         $query = $query->whereType(['reviewed-preprint']);
-        $reviewedPreprints = $this->kernel->get('elastic.client.read')->searchDocuments($query->getRawQuery());
+        try {
+            $reviewedPreprints = $this->kernel->get('elastic.client.read')->searchDocuments($query->getRawQuery());
+        } catch (ElasticsearchException $e) {
+
+            $this->logger->error('Elasticsearch exception during reviewed preprint purge', [
+                'error' => $e,
+            ]);
+
+            $output->write(sprintf('<error>%s</error>', $e->getMessage()));
+            return;
+        }
+
         foreach ($reviewedPreprints as $reviewedPreprint) {
             $id = $reviewedPreprint['id'];
             $this->logger->info("Purge reviewed preprint article $id");
