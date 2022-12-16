@@ -33,7 +33,7 @@ echo "Waiting for empty queues"
 echo "Check for empty index"
 index_check=$(./bin/console index:total:write)
 
-if [ "$index_check" -eq "0" ] || true; then
+if [ "$index_check" -eq "0" ]; then
     echo "Refusing to switch read-index to an empty write-index during a reindex."
     echo "Switching writes back to original write index $write_index_backup"
     ./bin/console index:switch:write "$write_index_backup"
