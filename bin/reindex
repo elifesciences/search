@@ -7,7 +7,7 @@ if [ "$#" -lt 1 ]; then
     exit 1
 fi
 
-write_index_backup=$(./bin/console keyvalue:load:write)
+write_index_backup=$(./bin/console index:read)
 index_name="$1"
 
 echo "Stopping gearman:worker instances"
