@@ -7,6 +7,7 @@ if [ "$#" -lt 1 ]; then
     exit 1
 fi
 
+write_index_backup=$(./bin/console index:read)
 index_name="$1"
 
 echo "Stopping gearman:worker instances"
@@ -29,6 +30,26 @@ echo "Importing all API content"
 echo "Waiting for empty queues"
 ./bin/wait-for-empty-queues
 
+echo "Check for empty index"
+index_check=$(./bin/console index:total:write)
+
+if [ "$index_check" -eq "0" ]; then
+    echo "Refusing to switch read-index to an empty write-index during a reindex."
+    echo "Switching writes back to original write index $write_index_backup"
+    ./bin/console index:switch:write "$write_index_backup"
+
+    echo "Restarting processes"
+    sudo systemctl start search-gearman-worker-controller.target
+    sudo systemctl start search-queue-watch-controller.target
+
+    echo "Deleting unused indexes"
+    ./bin/console index:delete:unused
+
+    echo "Warning: any new content indexed during this failed reindex has been lost."
+
+    exit 1
+fi
+
 echo "Switching reads to new index $index_name"
 ./bin/console index:switch:read "$index_name"
 # we should restart processes, but they never should use IndexMetadata::READ
@@ -36,4 +57,4 @@ echo "Switching reads to new index $index_name"
 ./smoke_tests.sh
 
 echo "Deleting unused indexes"
-bin/console index:delete:unused
+./bin/console index:delete:unused
