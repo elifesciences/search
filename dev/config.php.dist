@@ -19,7 +19,7 @@ return [
         'queue_name' => 'search--dev',
         'credential_file' => false,
         'region' => 'us-east-1',
-        'endpoint' => 'http://goaws:4100',
+        'endpoint' => 'http://localstack:4566',
     ],
     'rds_articles' => [
         '10627' => [

@@ -26,7 +26,7 @@ services:
         networks:
             - opensearch-net
     api-dummy:
-        image: elifesciences/api-dummy:29d80e7726a513afb2362068de55a9bab7aad0ae
+        image: elifesciences/api-dummy:34fa87c3706aa83dc8690297efe4928905a2ddce
         container_name: api-dummy
         ports:
             - '5002:8080'
@@ -39,23 +39,26 @@ services:
             - '4730:4730'
         networks:
             - opensearch-net
-    goaws:
-        image: pafortin/goaws
-        container_name: goaws
-        volumes:
-            - ./.docker/goaws.yaml:/conf/goaws.yaml
-            - ./.docker/.aws:/root/.aws
+
+    localstack:
+        image: localstack/localstack:latest
+        environment:
+            - SERVICES=sqs
+            - AWS_DEFAULT_REGION=eu-central-1
+            - EDGE_PORT=4566
+            - HOSTNAME_EXTERNAL=localstack
         ports:
-            - '4100:4100'
+            - '4566:4566'
         networks:
             - opensearch-net
+
     app:
         build:
             context: .
             dockerfile: Dockerfile
         volumes:
             - ..:/app
-            - ./config.php:/app/config.php
+            - ./config.php.dist:/app/config.php
         ports:
             - '8888:8888'
         networks:
@@ -63,7 +66,7 @@ services:
         depends_on:
             - opensearch
             - gearman
-            - goaws
+            - localstack
         stdin_open: true
         tty: true
 
