@@ -25,7 +25,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @property LoggerInterface temp_logger
@@ -351,7 +350,6 @@ final class Console
         try {
             $reviewedPreprints = $this->kernel->get('elastic.client.read')->searchDocuments($query->getRawQuery());
         } catch (ElasticsearchException $e) {
-
             $this->logger->error('Elasticsearch exception during reviewed preprint purge', [
                 'error' => $e,
             ]);
