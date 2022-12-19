@@ -10,8 +10,7 @@ Important: Keep in mind that docker is just used to improve the developer experi
 
 1. Clone the project `git clone https://github.com/elifesciences/search.git`
 2. Rename `/dev/config.php.dist` on local to `/dev/config.php`
-3. Run `mkdir logs && sudo chmod 777 ./logs`
-4. Run `docker-compose -f dev/docker-compose.yaml up --build`
+3. Run `docker-compose -f dev/docker-compose.yaml up --build`
 
 ### Setup
 

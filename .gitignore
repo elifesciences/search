@@ -6,5 +6,5 @@
 /var/
 /vendor/
 /logs
-/dev/logs
-!.gitkeep
+/dev/logs/*
+!/dev/.gitkeep
