@@ -83,21 +83,6 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         $this->assertSame('2020-09-08T07:06:05Z', $return['sortDate']);
     }
 
-    public function testReviewedDateAndCurationLabelsWhenThereIsAReviewedPreprint()
-    {
-        $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
-            $this->elastic, $this->validator);
-
-        $this->elastic->shouldReceive('deleteDocument');
-        $article = $this->getArticle(1, 'vor');
-
-        $return = json_decode($this->workflow->index($article)['json'], true);
-
-        $snippet = json_decode($return['snippet']['value'], true);
-        $this->assertSame('2020-09-08T07:06:05Z', $snippet['reviewedDate']);
-        $this->assertSame(['foo', 'bar'], $snippet['curationLabels']);
-    }
-
     /**
      * @dataProvider workflowProvider
      * @test
