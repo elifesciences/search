@@ -1,5 +1,7 @@
 #!/bin/bash
 
+gearman_hostname=${GEARMAN_HOSTNAME:-localhost}
+
 # Clean the SQS Queue
 ./bin/console queue:clean
 
@@ -22,13 +24,13 @@ for i in $(seq 60); do
 done
 
 # Clean the Gearman Queue
-gearadmin --show-jobs | cut -f 1 | xargs -I % gearadmin --cancel-job % > /dev/null 2>&1
+gearadmin --host=${gearman_hostname} --show-jobs | cut -f 1 | xargs -I % gearadmin --cancel-job % > /dev/null 2>&1
 
 echo -n "Waiting for job queue to empty..."
 for i in $(seq 60); do
   echo -n "."
 
-  gearman_queue=$(gearadmin --show-jobs | cut -f 4 | paste -sd+ | bc || true)
+  gearman_queue=$(gearadmin --host=${gearman_hostname} --show-jobs | cut -f 4 | paste -sd+ | bc || true)
   if [ "$gearman_queue" -eq "0" ]; then
     echo "OK"
     break

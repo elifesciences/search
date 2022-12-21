@@ -24,6 +24,22 @@ services:
             - '9600:9600' # required for Performance Analyzer
         networks:
             - opensearch-net
+
+    opensearch-dashboards:
+        build:
+            context: .
+            dockerfile: Dockerfile.opensearch-dashboards
+        container_name: opensearch-dashboards
+        ports:
+            - '5601:5601'
+        expose:
+            - '5601'
+        environment:
+            OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
+        networks:
+            - opensearch-net
+        depends_on:
+            - opensearch
     api-dummy:
         image: elifesciences/api-dummy:34fa87c3706aa83dc8690297efe4928905a2ddce
         container_name: api-dummy
@@ -55,6 +71,9 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        environment:
+            - API_DUMMY_HOSTNAME=api-dummy
+            - GEARMAN_HOSTNAME=gearman
         volumes:
             - ..:/app
             - ./config.php.dist:/app/config.php

@@ -25,25 +25,7 @@ $ docker-compose -f dev/docker-compose.yaml exec app /bin/bash
 2. Run following commands in order:
 
 ```bash 
-$ bin/console queue:create
-$ bin/console search:setup # will create necessary indices in Elasticsearch
-$ bin/console keyvalue:setup
-```
-
-3. The `bin/console queue:import` command imports items from API and adds them into the queue:
-
-```bash
-$ bin/console queue:import all # other possible values can be found in src/Search/Gearman/Command/ImportCommand.php 
-```
-
-4. After adding items to the queue, running the following command will index them in Elasticsearch:
-```bash
-$ bin/console queue:watch
-```
-
-5. In another session run the command below:
-```bash
-$ bin/console gearman:worker
+$ bin/console queue:create && ./project_tests.sh
 ```
 
 Now you can access the search API on http://localhost:8888/search
