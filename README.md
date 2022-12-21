@@ -41,6 +41,11 @@ $ bin/console queue:import all # other possible values can be found in src/Searc
 $ bin/console queue:watch
 ```
 
+5. In another session run the command below:
+```bash
+$ bin/console gearman:worker
+```
+
 Now you can access the search API on http://localhost:8888/search
 
 ### Testing
