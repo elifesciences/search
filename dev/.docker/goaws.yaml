@@ -1,8 +1,0 @@
-Dev:
-  Host: goaws
-  Port: 4100
-  Region: us-east-1
-  LogToFile: true
-  LogFile: ./goaws_messages.log
-  Queues:
-    - Name: search--dev
