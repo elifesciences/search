@@ -3,6 +3,8 @@
 # we start from an empty index
 set -e
 
+api_dummy_hostname=${API_DUMMY_HOSTNAME:-localhost}
+
 actual_total=$(curl localhost/search | jq ".total")
 if [ ! "$actual_total" ]; then
     actual_total=-1
@@ -22,7 +24,7 @@ if [ ! "$actual_total" -eq "$expected_total" ]; then
         else
             id_field=".id"
         fi
-        expected_t=$(curl "localhost:8080/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
+        expected_t=$(curl "${api_dummy_hostname}:8080/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
         actual_t=$(curl "localhost/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
         if [ "$actual_t" != "$expected_t" ]; then
             echo "${t} expected: \"${expected_t}\", actual: \"${actual_t}\""
