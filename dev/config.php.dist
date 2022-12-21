@@ -20,6 +20,8 @@ return [
         'credential_file' => false,
         'region' => 'us-east-1',
         'endpoint' => 'http://localstack:4566',
+        'key' => '-----------------------',
+        'secret' => '-------------------------------',
     ],
     'rds_articles' => [
         '10627' => [
