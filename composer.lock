@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cdac1a53eddee179f6aa187bd88d3bf7",
+    "content-hash": "7c6136c2a54dc824415863367e003743",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -796,16 +796,16 @@
         },
         {
             "name": "elife/api",
-            "version": "2.10.0",
+            "version": "2.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "6ae5549c3f45c2481ee21908182955b3e4110715"
+                "reference": "b0fcfa2b76b61b71ab830bcd41929f1758375851"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/6ae5549c3f45c2481ee21908182955b3e4110715",
-                "reference": "6ae5549c3f45c2481ee21908182955b3e4110715",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/b0fcfa2b76b61b71ab830bcd41929f1758375851",
+                "reference": "b0fcfa2b76b61b71ab830bcd41929f1758375851",
                 "shasum": ""
             },
             "conflict": {
@@ -819,9 +819,9 @@
             "description": "eLife Sciences API specification",
             "support": {
                 "issues": "https://github.com/elifesciences/api-raml/issues",
-                "source": "https://github.com/elifesciences/api-raml/tree/2.10.0"
+                "source": "https://github.com/elifesciences/api-raml/tree/2.13.0"
             },
-            "time": "2022-10-14T19:22:57+00:00"
+            "time": "2022-11-30T12:56:45+00:00"
         },
         {
             "name": "elife/api-client",
@@ -963,7 +963,7 @@
             },
             "require-dev": {
                 "csa/guzzle-cache-middleware": "^1.0",
-                "elife/api": "^2.9",
+                "elife/api": "^2.13.0",
                 "elife/api-validator": "^1.0@dev",
                 "guzzlehttp/guzzle": "^6.0",
                 "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
@@ -6917,8 +6917,9 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~7.2"
+        "php": "~7.2",
+        "ext-gearman": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -14,11 +14,12 @@
     },
     "require": {
         "php": "~7.2",
+        "ext-gearman": "*",
         "aws/aws-sdk-php": "^3.19",
         "clue/block-react": "^1.1",
         "doctrine/cache": "^1.6",
         "elasticsearch/elasticsearch": "^7.11",
-        "elife/api": "^2.10.0",
+        "elife/api": "2.13",
         "elife/api-client": "dev-master",
         "elife/api-problem": "^1.1",
         "elife/api-sdk": "dev-master",

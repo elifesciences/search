@@ -1,0 +1,42 @@
+<?php
+
+use Psr\Log\LogLevel;
+
+return [
+    'debug' => true,
+    'validate' => false,
+    'ttl' => 0,
+    'elastic_servers' => ['http://opensearch:9200'],
+    'elastic_logging' => true,
+    'elastic_force_sync' => true,
+    'elastic_ssl_verification' => false,
+    'gearman_servers' => ['gearman'],
+    'api_url' => 'http://api-dummy:8080',
+    'api_requests_batch' => 10,
+    'rate_limit_minimum_page' => 2,
+    'logger.level' => LogLevel::DEBUG,
+    'aws' => [
+        'queue_name' => 'search--dev',
+        'credential_file' => false,
+        'region' => 'us-east-1',
+        'endpoint' => 'http://localstack:4566',
+        'key' => '-----------------------',
+        'secret' => '-------------------------------',
+    ],
+    'rds_articles' => [
+        '10627' => [
+            'date' => '2030-01-01T00:00:00Z',
+            'display' => 'https://example.com/articles/10627',
+            'download' => 'https://example.com/articles/10627',
+        ],
+    ],
+    'reviewed_preprints' => [
+        '10627' => [
+            'reviewedDate' => '2022-01-01T00:00:00Z',
+            'curationLabels' => [
+                'Groundbreaking',
+                'Convincing',
+            ],
+        ],
+    ],
+];
