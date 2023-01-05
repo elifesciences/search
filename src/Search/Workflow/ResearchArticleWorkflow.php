@@ -5,6 +5,7 @@ namespace eLife\Search\Workflow;
 use Assert\Assertion;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
@@ -31,22 +32,19 @@ final class ResearchArticleWorkflow implements Workflow
     private $client;
     private $validator;
     private $rdsArticles;
-    private $reviewedPreprints;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator,
-        array $rdsArticles = [],
-        array $reviewedPreprints = []
+        array $rdsArticles = []
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
         $this->rdsArticles = $rdsArticles;
-        $this->reviewedPreprints = $reviewedPreprints;
     }
 
     /**
@@ -108,15 +106,9 @@ final class ResearchArticleWorkflow implements Workflow
 
         $snippet = $this->snippet($article);
 
-        // Decorate article snippet with reviewedDate and curationLabels, if available.
-        if (isset($this->reviewedPreprints[$article->getId()]['reviewedDate'])) {
-            // Delete reviewed preprint from index, if present.
-            $this->client->deleteDocument('reviewed-preprint-'.$article->getId());
+        if ($article instanceof ArticleVoR) {
             $this->logger->debug('Article<'.$article->getId().'> delete corresponding reviewed preprint from index, if exists');
-            $snippet = $snippet + array_filter([
-                    'reviewedDate' => $this->reviewedPreprints[$article->getId()]['reviewedDate'],
-                    'curationLabels' => $this->reviewedPreprints[$article->getId()]['curationLabels'] ?? null,
-                ]);
+            $this->client->deleteDocument('reviewed-preprint-'.$article->getId());
         }
 
         $articleObject->snippet = ['format' => 'json', 'value' => json_encode($snippet)];

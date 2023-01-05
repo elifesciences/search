@@ -50,6 +50,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
      */
     public function testIndexOfResearchArticle(ArticleVersion $researchArticle)
     {
+        $this->elastic->shouldReceive('deleteDocument');
         $return = $this->workflow->index($researchArticle);
         $article = $return['json'];
         $id = $return['id'];
@@ -82,21 +83,6 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         $this->assertSame('2020-09-08T07:06:05Z', $return['sortDate']);
     }
 
-    public function testReviewedDateAndCurationLabelsWhenThereIsAReviewedPreprint()
-    {
-        $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
-            $this->elastic, $this->validator, [], ['article-2' => ['reviewedDate' => '2020-09-08T07:06:05Z', 'curationLabels' => ['foo', 'bar']]]);
-
-        $this->elastic->shouldReceive('deleteDocument');
-        $article = $this->getArticle(2);
-
-        $return = json_decode($this->workflow->index($article)['json'], true);
-
-        $snippet = json_decode($return['snippet']['value'], true);
-        $this->assertSame('2020-09-08T07:06:05Z', $snippet['reviewedDate']);
-        $this->assertSame(['foo', 'bar'], $snippet['curationLabels']);
-    }
-
     /**
      * @dataProvider workflowProvider
      * @test
@@ -121,9 +107,11 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         }
     }
 
-    private function getArticle($id = 1)
+    private function getArticle($id = 1, $status = 'poa')
     {
-        return $this->getSerializer()->denormalize([
+        $sanitisedStatus = ($status === 'vor') ? 'vor' : 'poa';
+
+        return $this->getSerializer()->denormalize(array_filter([
             'id' => 'article-'.$id,
             'stage' => 'published',
             'version' => 4,
@@ -131,13 +119,28 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
             'doi' => 'DOI',
             'title' => 'title',
             'statusDate' => '2010-02-03T04:05:06Z',
+            'reviewedDate' => '2020-09-08T07:06:05Z',
+            'curationLabels' => ['foo', 'bar'],
             'volume' => 1,
             'elocationId' => 'elocationId',
             'copyright' => [
                 'license' => 'license',
                 'statement' => 'statement',
             ],
-            'status' => 'poa',
-        ], ArticlePoA::class);
+            'body' => ($sanitisedStatus === 'vor') ? [
+                [
+                    "type" => "section",
+                    "id" => "s-1",
+                    "title" => "Introduction",
+                    "content" => [
+                        [
+                            "type" => "paragraph",
+                            "text" => "Introduction text."
+                        ]
+                    ]
+                ]
+            ] : null,
+            'status' => $sanitisedStatus,
+        ]), ($sanitisedStatus === 'vor') ? ArticleVoR::class : ArticlePoA::class);
     }
 }

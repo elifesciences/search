@@ -5,10 +5,12 @@ namespace eLife\Search;
 use Aws\Sqs\Exception\SqsException;
 use Aws\Sqs\SqsClient;
 use Closure;
+use Elasticsearch\Common\Exceptions\ElasticsearchException;
 use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Annotation\Register;
+use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
 use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
 use Exception;
 use LogicException;
@@ -23,7 +25,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @property LoggerInterface temp_logger
@@ -116,9 +117,6 @@ final class Console
         ],
         'rds:reindex' => [
             'description' => 'Reindex RDS articles to correctly place them in listings',
-        ],
-        'reviewedPreprint:reindex' => [
-            'description' => 'Reindex reviewed preprints to correctly place them in listings',
         ],
         'reviewedPreprint:purge' => [
             'description' => 'Purge reviewed preprints from the index to remove them from listings',
@@ -343,26 +341,25 @@ final class Console
         $this->logger->info('RDS articles added to indexing queue.');
     }
 
-    public function reviewedPreprintReindexCommand(InputInterface $input, OutputInterface $output)
-    {
-        $this->logger->info('Reindex reviewed preprints...');
-        $ids = [];
-        foreach (array_keys($this->config['reviewed_preprints']) as $id) {
-            $this->logger->info("Queuing reviewed preprint article $id");
-            $this->enqueue('article', $id);
-            $this->logger->info("Queuing reviewed preprint $id");
-            $this->enqueue('reviewed-preprint', $id);
-            $ids[] = $id;
-        }
-        $output->writeln('Queued: '.implode(', ', $ids).' (reviewed-preprint and article)');
-        $this->logger->info('Reviewed preprints added to indexing queue.');
-    }
-
     public function reviewedPreprintPurgeCommand(InputInterface $input, OutputInterface $output)
     {
         $this->logger->info('Purge reviewed preprints...');
         $ids = [];
-        foreach (array_keys($this->config['reviewed_preprints']) as $id) {
+        $query = new ElasticQueryBuilder($this->kernel->indexMetadata()->read());
+        $query = $query->whereType(['reviewed-preprint']);
+        try {
+            $reviewedPreprints = $this->kernel->get('elastic.client.read')->searchDocuments($query->getRawQuery());
+        } catch (ElasticsearchException $e) {
+            $this->logger->error('Elasticsearch exception during reviewed preprint purge', [
+                'error' => $e,
+            ]);
+
+            $output->write(sprintf('<error>%s</error>', $e->getMessage()));
+            return;
+        }
+
+        foreach ($reviewedPreprints as $reviewedPreprint) {
+            $id = $reviewedPreprint['id'];
             $this->logger->info("Purge reviewed preprint article $id");
             $this->kernel->get('elastic.client.write')->deleteDocument('reviewed-preprint-'.$id);
             $ids[] = $id;
