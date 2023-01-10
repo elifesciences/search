@@ -13,6 +13,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
@@ -27,6 +28,7 @@ final class ImportCommand extends Command
     private $monitoring;
     private $queue;
     private $limit;
+    private $dateFrom = null;
 
     public function __construct(
         ApiSdk $sdk,
@@ -51,7 +53,8 @@ final class ImportCommand extends Command
             ->setName('queue:import')
             ->setDescription('Import items from API.')
             ->setHelp('Lists entities from API and enqueues them')
-            ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>');
+            ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>')
+            ->addOption('dateFrom', '-d', InputOption::VALUE_OPTIONAL, 'Date filter');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -63,6 +66,13 @@ final class ImportCommand extends Command
             $this->logger->error('Entity with name '.$entity.' not supported.');
 
             return;
+        }
+
+        if ($input->getOption('dateFrom') !== null) {
+            $this->dateFrom = new \DateTimeImmutable($input->getOption('dateFrom'));
+            if ($this->dateFrom < (new \DateTimeImmutable('-30 days'))) {
+                throw new \Exception('Date must not be bigger than 30 days');
+            }
         }
 
         try {
@@ -157,6 +167,12 @@ final class ImportCommand extends Command
                     $items->next();
                     continue;
                 }
+
+                if (!is_null($this->dateFrom) && ($item->getPublishedDate() < $this->dateFrom)) {
+                    $items->next();
+                    continue;
+                }
+
                 $this->enqueue($type, $item->$method());
             } catch (Throwable $e) {
                 $item = $item ?? null;
