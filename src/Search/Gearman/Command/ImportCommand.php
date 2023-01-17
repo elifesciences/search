@@ -2,10 +2,15 @@
 
 namespace eLife\Search\Gearman\Command;
 
+use DateTimeImmutable;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\HasPublishedDate;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
+use Exception;
 use Iterator;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -69,9 +74,9 @@ final class ImportCommand extends Command
         }
 
         if ($input->getOption('dateFrom') !== null) {
-            $this->dateFrom = new \DateTimeImmutable($input->getOption('dateFrom'));
-            if ($this->dateFrom < (new \DateTimeImmutable('-30 days'))) {
-                throw new \Exception('Date must not be bigger than 30 days');
+            $this->dateFrom = DateTimeImmutable::createFromFormat(DATE_ATOM, $input->getOption('dateFrom'));
+            if ($this->dateFrom < (new DateTimeImmutable('-30 days'))) {
+                throw new Exception('Date must not be bigger than 30 days');
             }
         }
 
@@ -168,7 +173,16 @@ final class ImportCommand extends Command
                     continue;
                 }
 
-                if (!is_null($this->dateFrom) && ($item->getPublishedDate() < $this->dateFrom)) {
+                if ($item instanceof ArticleVersion || $item instanceof ReviewedPreprint) {
+                    $date = $item->getStatusDate();
+                } elseif ($item instanceof HasPublishedDate) {
+                    $date = $item->getPublishedDate();
+                } else {
+                    $items->next();
+                    continue;
+                }
+
+                if (!is_null($this->dateFrom) && ($date < $this->dateFrom)) {
                     $items->next();
                     continue;
                 }
