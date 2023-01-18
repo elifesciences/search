@@ -172,17 +172,14 @@ final class ImportCommand extends Command
                     $items->next();
                     continue;
                 }
-
+                $dateFrom = null;
                 if ($item instanceof ArticleVersion || $item instanceof ReviewedPreprint) {
-                    $date = $item->getStatusDate();
+                    $dateFrom = $item->getStatusDate();
                 } elseif ($item instanceof HasPublishedDate) {
-                    $date = $item->getPublishedDate();
-                } else {
-                    $items->next();
-                    continue;
+                    $dateFrom = $item->getPublishedDate();
                 }
 
-                if (!is_null($this->dateFrom) && ($date < $this->dateFrom)) {
+                if (!is_null($dateFrom) && !is_null($this->dateFrom) && ($dateFrom < $this->dateFrom)) {
                     $items->next();
                     continue;
                 }
