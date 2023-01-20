@@ -10,7 +10,6 @@ use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
-use Exception;
 use Iterator;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -75,9 +74,6 @@ final class ImportCommand extends Command
 
         if ($input->getOption('dateFrom') !== null) {
             $this->dateFrom = DateTimeImmutable::createFromFormat(DATE_ATOM, $input->getOption('dateFrom'));
-            if ($this->dateFrom < (new DateTimeImmutable('-30 days'))) {
-                throw new Exception('Date must not be bigger than 30 days');
-            }
         }
 
         try {
@@ -168,18 +164,20 @@ final class ImportCommand extends Command
             $progress->advance();
             try {
                 $item = $items->current();
-                if (null === $item) {
-                    $items->next();
-                    continue;
-                }
                 $dateFrom = null;
-                if ($item instanceof ArticleVersion || $item instanceof ReviewedPreprint) {
-                    $dateFrom = $item->getStatusDate();
-                } elseif ($item instanceof HasPublishedDate) {
-                    $dateFrom = $item->getPublishedDate();
+                if (!is_null($this->dateFrom)) {
+                    $dateFrom = ($item instanceof ArticleVersion || $item instanceof ReviewedPreprint) ?
+                        $item->getStatusDate() :
+                        ($item instanceof HasPublishedDate ? $item->getPublishedDate() : null);
                 }
 
-                if (!is_null($dateFrom) && !is_null($this->dateFrom) && ($dateFrom < $this->dateFrom)) {
+                if (
+                    null === $item ||
+                    (
+                        !is_null($dateFrom) &&
+                        $dateFrom < $this->dateFrom
+                    )
+                ) {
                     $items->next();
                     continue;
                 }
