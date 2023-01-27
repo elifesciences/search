@@ -2,7 +2,11 @@
 
 namespace eLife\Search\Gearman\Command;
 
+use DateTimeImmutable;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\HasPublishedDate;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
@@ -13,6 +17,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
@@ -27,6 +32,7 @@ final class ImportCommand extends Command
     private $monitoring;
     private $queue;
     private $limit;
+    private $dateFrom = null;
 
     public function __construct(
         ApiSdk $sdk,
@@ -51,7 +57,8 @@ final class ImportCommand extends Command
             ->setName('queue:import')
             ->setDescription('Import items from API.')
             ->setHelp('Lists entities from API and enqueues them')
-            ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>');
+            ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>')
+            ->addOption('dateFrom', '-d', InputOption::VALUE_OPTIONAL, 'Date filter');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -63,6 +70,10 @@ final class ImportCommand extends Command
             $this->logger->error('Entity with name '.$entity.' not supported.');
 
             return;
+        }
+
+        if ($input->getOption('dateFrom') !== null) {
+            $this->dateFrom = DateTimeImmutable::createFromFormat(DATE_ATOM, $input->getOption('dateFrom'));
         }
 
         try {
@@ -153,10 +164,24 @@ final class ImportCommand extends Command
             $progress->advance();
             try {
                 $item = $items->current();
-                if (null === $item) {
+                $dateFrom = null;
+                if (!is_null($this->dateFrom)) {
+                    $dateFrom = ($item instanceof ArticleVersion || $item instanceof ReviewedPreprint) ?
+                        $item->getStatusDate() :
+                        ($item instanceof HasPublishedDate ? $item->getPublishedDate() : null);
+                }
+
+                if (
+                    null === $item ||
+                    (
+                        !is_null($dateFrom) &&
+                        $dateFrom < $this->dateFrom
+                    )
+                ) {
                     $items->next();
                     continue;
                 }
+
                 $this->enqueue($type, $item->$method());
             } catch (Throwable $e) {
                 $item = $item ?? null;
