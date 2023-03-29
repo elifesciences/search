@@ -1,3 +1,5 @@
+CI is failing on develop branch
+
 # eLife Search
 
 This project is using elasticsearch to index content of the eLife articles and provide a full-text search for Journal.
