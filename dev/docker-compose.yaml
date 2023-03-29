@@ -25,7 +25,7 @@ services:
         networks:
             - opensearch-net
     api-dummy:
-        image: elifesciences/api-dummy:34fa87c3706aa83dc8690297efe4928905a2ddce
+        image: elifesciences/api-dummy:93ebc521225b62aef9be4c4b4bc51ed030e2faa4
         container_name: api-dummy
         ports:
             - '5002:8080'
