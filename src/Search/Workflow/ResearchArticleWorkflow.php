@@ -87,6 +87,9 @@ final class ResearchArticleWorkflow implements Workflow
             $articleObject->body .= $this->flattenBlocks($articleObject->publicReviews ?? []);
             $articleObject->body .= $this->flattenBlocks($articleObject->elifeAssessment->content ?? []);
             $articleObject->body .= $this->flattenBlocks($articleObject->recommendationsForAuthors->content ?? []);
+            unset($articleObject->publicReviews);
+            unset($articleObject->elifeAssessment);
+            unset($articleObject->recommendationsForAuthors);
         }
         if (!empty($articleObject->appendices)) {
             $appendices = '';
