@@ -92,6 +92,12 @@ properties:
     type: text
   authorResponse:
     type: text
+  elifeAssessment:
+    type: text
+  publicReviews:
+    type: text
+  recommendationsForAuthors:
+    type: text
   funding.format:
     type: keyword
   funding.value:
