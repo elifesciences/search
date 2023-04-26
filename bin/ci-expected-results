@@ -80,6 +80,16 @@ if [ "$total_with_reserved_chars" -lt 0 ]; then
     exit 2
 fi
 
+echo "CHECK: Search for reviewed preprint"
+actual_reviewed_preprint_title=$(curl -v "localhost/search?type[]=reviewed-preprint&order=desc&per-page=100" | jq ".items[0].title")
+expected_reviewed_preprint_title='"The locus coeruleus broadcasts prediction errors across the cortex to promote sensorimotor plasticity"'
+if [ "$actual_reviewed_preprint_title" != "$expected_reviewed_preprint_title" ]; then
+    echo "When searching for reviewed-preprints the most recent updated preprint should be the first result"
+    echo "Expected title $expected_reviewed_preprint_title, actual title $actual_reviewed_preprint_title"
+    exit 2
+fi
+
+
 echo "CHECK: Search results validate against schema"
 bin/console search:valid
 
