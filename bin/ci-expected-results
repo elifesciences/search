@@ -8,7 +8,11 @@ if [ ! "$actual_total" ]; then
     actual_total=-1
 fi
 echo "Total results in the index: $actual_total"
-expected_total=$(bin/console gateway:total)
+gateway_total=$(bin/console gateway:total)
+gateway_search_rp=$(curl "localhost:8080/search?per-page=1&type[]=reviewed-preprint" | jq ".total")
+gateway_rp=$(curl "localhost:8080/reviewed-preprints" | jq ".total")
+# Expected total must offset reviewed-preprints which are also in article store
+expected_total=$((gateway_total + gateway_search_rp - gateway_rp))
 if [ ! "$actual_total" -eq "$expected_total" ]; then
     echo "There should be exactly $expected_total results in the index"
     for t in article blog-article collection interview labs-post podcast-episode reviewed-preprint
