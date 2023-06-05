@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "73cbce98e9ba24fb911f9486cbe787bf",
+    "content-hash": "7376f728dae9d3bdf09a5e06a6d9347b",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -840,16 +840,16 @@
         },
         {
             "name": "elife/api",
-            "version": "2.16.0",
+            "version": "2.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "3f09734870eac743f5856f80643a984e54d7544b"
+                "reference": "dc41f529a0408242a97dc79bec4035e13a9ceaa5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/3f09734870eac743f5856f80643a984e54d7544b",
-                "reference": "3f09734870eac743f5856f80643a984e54d7544b",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/dc41f529a0408242a97dc79bec4035e13a9ceaa5",
+                "reference": "dc41f529a0408242a97dc79bec4035e13a9ceaa5",
                 "shasum": ""
             },
             "conflict": {
@@ -863,9 +863,9 @@
             "description": "eLife Sciences API specification",
             "support": {
                 "issues": "https://github.com/elifesciences/api-raml/issues",
-                "source": "https://github.com/elifesciences/api-raml/tree/2.16.0"
+                "source": "https://github.com/elifesciences/api-raml/tree/2.21.0"
             },
-            "time": "2023-02-08T07:54:22+00:00"
+            "time": "2023-05-24T08:11:39+00:00"
         },
         {
             "name": "elife/api-client",
@@ -987,12 +987,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "ef0202c58b966dc8c945febe7c1d8564dfa26959"
+                "reference": "299f196aba6dacb5d9b09d5812115a5e317182ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/ef0202c58b966dc8c945febe7c1d8564dfa26959",
-                "reference": "ef0202c58b966dc8c945febe7c1d8564dfa26959",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/299f196aba6dacb5d9b09d5812115a5e317182ed",
+                "reference": "299f196aba6dacb5d9b09d5812115a5e317182ed",
                 "shasum": ""
             },
             "require": {
@@ -1007,7 +1007,7 @@
             },
             "require-dev": {
                 "csa/guzzle-cache-middleware": "^1.0",
-                "elife/api": "^2.15",
+                "elife/api": "^2.20",
                 "elife/api-validator": "^1.0@dev",
                 "guzzlehttp/guzzle": "^6.0",
                 "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
@@ -1038,7 +1038,7 @@
                 "issues": "https://github.com/elifesciences/api-sdk-php/issues",
                 "source": "https://github.com/elifesciences/api-sdk-php/tree/master"
             },
-            "time": "2023-02-21T16:25:06+00:00"
+            "time": "2023-05-22T15:56:31+00:00"
         },
         {
             "name": "elife/api-validator",
