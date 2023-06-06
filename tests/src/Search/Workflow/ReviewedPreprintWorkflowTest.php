@@ -103,6 +103,26 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
      * @dataProvider workflowProvider
      * @test
      */
+    public function testIndexOfReviewedPreprintSkippedToolsResources(ReviewedPreprint $reviewedPreprint)
+    {
+        $this->elastic->shouldReceive('getDocumentById')
+            ->with('research-article-'.$reviewedPreprint->getId(), null, true)
+            ->andReturn(null);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->with('tools-resources-'.$reviewedPreprint->getId(), null, true)
+            ->andReturn('found');
+
+        $this->assertSame([
+            'json' => '',
+            'id' => $reviewedPreprint->getId(),
+            'skipInsert' => true,
+        ], $this->workflow->index($reviewedPreprint));
+    }
+
+    /**
+     * @dataProvider workflowProvider
+     * @test
+     */
     public function testInsertOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
         $this->elastic->shouldReceive('indexJsonDocument');
