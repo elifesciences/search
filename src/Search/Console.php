@@ -165,9 +165,10 @@ final class Console
             'labs-post',
             'podcast-episode',
             'collection',
+            'reviewed-preprint',
         ], 0);
         $type = $helper->ask($input, $output, $choice);
-        // Ge the Id.
+        // Get the ID.
         $choice = new Question('<question>Whats the ID of the item to import: </question>');
         $id = $helper->ask($input, $output, $choice);
         // Enqueue.
