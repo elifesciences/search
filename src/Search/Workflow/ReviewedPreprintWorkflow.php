@@ -51,8 +51,15 @@ final class ReviewedPreprintWorkflow implements Workflow
     public function index(ReviewedPreprint $reviewedPreprint) : array
     {
         // Don't index if article with same id present in index.
-        if ($this->client->getDocumentById('research-article-'. $reviewedPreprint->getId(), null, true) !== null) {
-            return ['json' => '', 'id' => $reviewedPreprint->getId(), 'skipInsert' => true];
+        foreach ([
+            'research-article',
+            'tools-resources',
+            'short-report',
+            'research-advance',
+        ] as $type) {
+            if ($this->client->getDocumentById($type.'-'. $reviewedPreprint->getId(), null, true) !== null) {
+                return ['json' => '', 'id' => $reviewedPreprint->getId(), 'skipInsert' => true];
+            }
         }
 
         $this->logger->debug('ReviewedPreprint<'.$reviewedPreprint->getId().'> Indexing '.$reviewedPreprint->getTitle());
