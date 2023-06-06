@@ -64,6 +64,15 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
         $this->elastic->shouldReceive('getDocumentById')
             ->with('research-article-'.$reviewedPreprint->getId(), null, true)
             ->andReturn(null);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->with('tools-resources-'.$reviewedPreprint->getId(), null, true)
+            ->andReturn(null);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->with('short-report-'.$reviewedPreprint->getId(), null, true)
+            ->andReturn(null);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->with('research-advance-'.$reviewedPreprint->getId(), null, true)
+            ->andReturn(null);
         $return = $this->workflow->index($reviewedPreprint);
         $article = $return['json'];
         $id = $return['id'];
