@@ -102,6 +102,18 @@ if [ "$actual_reviewed_preprint_title" != "$expected_reviewed_preprint_title" ];
     exit 2
 fi
 
+
+echo "CHECK: search query has - "
+actual_search_result_title=$(curl -v "localhost/search?for=Dehaene-Lambertz" | jq ".items[0].title")
+expected_search_result_title='"Humans parsimoniously represent auditory sequences by pruning and completing the underlying network structure"'
+if [ "$actual_search_result_title" != "$expected_search_result_title" ]; then
+    echo "When search query has -, it should ignore it"
+    echo "Expected title $expected_search_result_title, actual title $actual_search_result_title"
+    exit 2
+fi
+
+
+
 echo "CHECK: Search results validate against schema"
 bin/console search:valid
 

@@ -90,7 +90,7 @@ final class SearchController
         $endDate = $request->query->get('end-date');
         $startDateTime = null;
         $endDateTime = null;
-
+        $for = str_replace('-', ' ', $for);
         if ($page < 1) {
             throw new BadRequestHttpException('Invalid page parameter');
         }
