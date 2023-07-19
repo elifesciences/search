@@ -151,6 +151,9 @@ final class ElasticQueryBuilder implements QueryBuilder
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['abstract']]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['digest']]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['impactStatement']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['elifeAssessment']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['publicReviews']]]]];
+            $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 3, 'filter' => ['query_string' => $query + ['fields' => ['recommendationsForAuthors']]]]];
 
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['appendices']]]]];
             $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => $query + ['fields' => ['authorResponse']]]]];
