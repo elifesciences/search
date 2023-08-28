@@ -37,10 +37,11 @@ use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\SearchResponseSerializer;
 use eLife\Search\Api\SearchController;
-use eLife\Search\Gearman\Command\ImportCommand;
-use eLife\Search\Gearman\Command\QueueWatchCommand;
-use eLife\Search\Gearman\Command\WorkerCommand;
+use eLife\Search\Queue\Command\ImportCommand;
+use eLife\Search\Queue\Command\QueueWatchCommand;
+use eLife\Search\Queue\Command\WorkerCommand;
 use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
+use eLife\Search\Queue\Workflow;
 use GearmanClient;
 use GearmanWorker;
 use GuzzleHttp\Client;
@@ -447,13 +448,23 @@ final class Kernel implements MinimalKernel
             );
         };
 
+        $app['workflow'] = function (Application $app) {
+            return new Workflow(
+                $app['api.sdk']->getSerializer(),
+                $app['logger'],
+                $app['elastic.client.write'],
+                $app['validator'],
+                $app['config']['rds_articles']
+            );
+        };
+
         $app['console.gearman.queue'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
                 return new QueueWatchCommand(
                     $app['mocks.queue'],
                     $app['mocks.queue_transformer'],
-                    $app['gearman.client'],
+                    $app['workflow'],
                     true,
                     $app['config']['aws']['queue_name'],
                     $app['logger'],
@@ -465,7 +476,7 @@ final class Kernel implements MinimalKernel
             return new QueueWatchCommand(
                 $app['aws.queue'],
                 $app['aws.queue_transformer'],
-                $app['gearman.client'],
+                $app['workflow'],
                 false,
                 $app['config']['aws']['queue_name'],
                 $app['logger'],
