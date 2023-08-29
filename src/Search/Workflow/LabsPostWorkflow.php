@@ -8,11 +8,12 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Queue\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class LabsPostWorkflow implements Workflow
+final class LabsPostWorkflow implements WorkflowInterface
 {
     use Blocks;
     use JsonSerializeTransport;

@@ -3,11 +3,18 @@
 namespace eLife\Search\Queue;
 
 use eLife\Bus\Queue\QueueItem;
+use eLife\Bus\Queue\QueueItemTransformer;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 
+use eLife\Search\Workflow\BlogArticleWorkflow;
+use eLife\Search\Workflow\CollectionWorkflow;
+use eLife\Search\Workflow\InterviewWorkflow;
+use eLife\Search\Workflow\LabsPostWorkflow;
+use eLife\Search\Workflow\PodcastEpisodeWorkflow;
+use eLife\Search\Workflow\ReviewedPreprintWorkflow;
 use Symfony\Component\Serializer\Serializer;
-
+use eLife\Search\Workflow\ResearchArticleWorkflow;
 use Psr\Log\LoggerInterface;
 
 class Workflow
@@ -19,12 +26,14 @@ class Workflow
     private $client;
     private $validator;
     private $rdsArticles;
+    private $transformer;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator,
+        QueueItemTransformer $transformer,
         array $rdsArticles = []
     ) {
         $this->serializer = $serializer;
@@ -32,27 +41,40 @@ class Workflow
         $this->client = $client;
         $this->validator = $validator;
         $this->rdsArticles = $rdsArticles;
+        $this->transformer = $transformer;
     }
 
-    public function create(QueueItem $item)
+    public function getWorkflow(QueueItem $item): WorkflowInterface
     {
         $type = $item->getType();
 
         switch ($type) {
             case 'article':
                 return new ResearchArticleWorkflow($this->serializer, $this->logger, $this->client, $this->validator, $this->rdsArticles);
+            case 'blog-article':
+                return new BlogArticleWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
+            case 'interview':
+                return new InterviewWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
+            case 'reviewed-preprint':
+                return new ReviewedPreprintWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
+            case 'labs-post':
+                return new LabsPostWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
+            case 'podcast-episode':
+                return new PodcastEpisodeWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
+            case 'collection':
+                return new CollectionWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
         }
+
+        throw new \InvalidArgumentException("The {$item->getType()} is not valid.");
     }
 
-    /**
-     * @param WorkflowInterface $workflow
-     * @param $model
-     */
-    public function process(WorkflowInterface $workflow, $model)
+    public function process(QueueItem $item)
     {
-        var_dump("COMING FROM PROCESS");
-        $res = $workflow->index($model);
-        $workflow->insert($res['json'], $res['id']);
-        $workflow->postValidate($res['id']);
+        $workflow = $this->getWorkflow($item);
+        $entity = $this->transformer->transform($item, false);
+
+        list($json, $id) = $workflow->index($entity);
+        $workflow->insert($json, $id);
+        $workflow->postValidate($id);
     }
 }

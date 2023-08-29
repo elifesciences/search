@@ -29,7 +29,6 @@ use eLife\ContentNegotiator\Silex\ContentNegotiationProvider;
 use eLife\Logging\Monitoring;
 use eLife\Logging\Silex\LoggerProvider;
 use eLife\Ping\Silex\PingControllerProvider;
-use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
@@ -39,11 +38,8 @@ use eLife\Search\Api\Elasticsearch\SearchResponseSerializer;
 use eLife\Search\Api\SearchController;
 use eLife\Search\Queue\Command\ImportCommand;
 use eLife\Search\Queue\Command\QueueWatchCommand;
-use eLife\Search\Queue\Command\WorkerCommand;
 use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
 use eLife\Search\Queue\Workflow;
-use GearmanClient;
-use GearmanWorker;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -91,7 +87,6 @@ final class Kernel implements MinimalKernel
             ],
             'logger.path' => self::ROOT.'/var/logs',
             'logger.level' => LogLevel::INFO,
-            'gearman_worker_timeout' => 20000,
             'process_memory_limit' => 256,
             'aws' => array_merge([
                 'credential_file' => false,
@@ -358,39 +353,6 @@ final class Kernel implements MinimalKernel
         // ------------------ Console DI ----------------------
         //#####################################################
 
-        $app['gearman.client'] = function (Application $app) {
-            $worker = new GearmanClient();
-            foreach ($app['config']['gearman_servers'] as $server) {
-                $worker->addServer($server);
-            }
-
-            return $worker;
-        };
-
-        $app['gearman.worker'] = function (Application $app) {
-            $worker = new GearmanWorker();
-            foreach ($app['config']['gearman_servers'] as $server) {
-                try {
-                    $worker->addServer($server);
-                } catch (Throwable $e) {
-                }
-            }
-            $worker->setTimeout($app['config']['gearman_worker_timeout']);
-
-            return $worker;
-        };
-
-        $app['console.gearman.task_driver'] = function (Application $app) {
-            return new GearmanTaskDriver(
-                $app['annotations.reader'],
-                $app['gearman.worker'],
-                $app['gearman.client'],
-                $app['logger'],
-                $app['monitoring'],
-                $app['limit.long_running']
-            );
-        };
-
         $app['aws.sqs'] = function (Application $app) {
             $config = [
                 'version' => '2012-11-05',
@@ -425,20 +387,8 @@ final class Kernel implements MinimalKernel
             return new QueueItemTransformerMock($app['api.sdk']);
         };
 
-        $app['console.gearman.worker'] = function (Application $app) {
-            return new WorkerCommand(
-                $app['api.sdk'],
-                $app['serializer'],
-                $app['console.gearman.task_driver'],
-                $app['elastic.client.write'],
-                $app['validator'],
-                $app['logger'],
-                $app['config']['rds_articles']
-            );
-        };
-
         // TODO: rename key
-        $app['console.gearman.client'] = function (Application $app) {
+        $app['console.command.import'] = function (Application $app) {
             return new ImportCommand(
                 $app['api.sdk'],
                 $app['aws.queue'],
@@ -454,11 +404,12 @@ final class Kernel implements MinimalKernel
                 $app['logger'],
                 $app['elastic.client.write'],
                 $app['validator'],
+                $app['aws.queue_transformer'],
                 $app['config']['rds_articles']
             );
         };
 
-        $app['console.gearman.queue'] = function (Application $app) {
+        $app['console.command.queue'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
                 return new QueueWatchCommand(

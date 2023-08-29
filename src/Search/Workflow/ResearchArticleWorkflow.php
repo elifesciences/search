@@ -10,12 +10,13 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Queue\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class ResearchArticleWorkflow implements Workflow
+final class ResearchArticleWorkflow implements WorkflowInterface
 {
     use Blocks;
     use JsonSerializeTransport;
