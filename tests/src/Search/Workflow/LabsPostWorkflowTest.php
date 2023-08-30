@@ -7,6 +7,7 @@ use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\LabsPostWorkflow;
 use eLife\Search\Workflow\Workflow;
+use eLife\Search\Workflow\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -17,7 +18,7 @@ final class LabsPostWorkflowTest extends WorkflowTestCase
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator
-    ) : Workflow
+    ) : WorkflowInterface
     {
         return new LabsPostWorkflow($serializer, $logger, $client, $validator);
     }

@@ -6,6 +6,7 @@ use ComposerLocator;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\Workflow;
+use eLife\Search\Workflow\WorkflowInterface;
 use Mockery;
 use PHPUnit_Framework_TestCase;
 use Psr\Log\LoggerInterface;
@@ -40,7 +41,7 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
         $this->workflow = $this->setWorkflow($this->getSerializer(), $logger, $this->elastic, $this->validator);
     }
 
-    abstract protected function setWorkflow(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator) : Workflow;
+    abstract protected function setWorkflow(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator) : WorkflowInterface;
 
     protected function getModel() : ?string
     {

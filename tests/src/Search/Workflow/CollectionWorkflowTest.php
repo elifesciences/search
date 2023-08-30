@@ -7,6 +7,7 @@ use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\CollectionWorkflow;
 use eLife\Search\Workflow\Workflow;
+use eLife\Search\Workflow\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -17,7 +18,7 @@ final class CollectionWorkflowTest extends WorkflowTestCase
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator
-    ) : Workflow
+    ) : WorkflowInterface
     {
         return new CollectionWorkflow($serializer, $logger, $client, $validator);
     }

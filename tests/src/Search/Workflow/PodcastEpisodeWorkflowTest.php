@@ -8,6 +8,7 @@ use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
 use eLife\Search\Workflow\Workflow;
+use eLife\Search\Workflow\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -18,7 +19,7 @@ final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator
-    ) : Workflow
+    ) : WorkflowInterface
     {
         return new PodcastEpisodeWorkflow($serializer, $logger, $client, $validator);
     }
