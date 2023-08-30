@@ -13,6 +13,7 @@ use eLife\Search\Workflow\InterviewWorkflow;
 use eLife\Search\Workflow\LabsPostWorkflow;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
 use eLife\Search\Workflow\ReviewedPreprintWorkflow;
+use eLife\Search\Workflow\WorkflowInterface;
 use Symfony\Component\Serializer\Serializer;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
 use Psr\Log\LoggerInterface;
@@ -70,11 +71,11 @@ class Workflow
 
     public function process(QueueItem $item)
     {
-        $workflow = $this->getWorkflow($item);
+        // convert $item to sdk class e.g. ArticleVersion
         $entity = $this->transformer->transform($item, false);
 
-        list($json, $id) = $workflow->index($entity);
-        $workflow->insert($json, $id);
-        $workflow->postValidate($id);
+        // get corresponding workflow
+        $workflow = $this->getWorkflow($item);
+        $workflow->run($entity);
     }
 }

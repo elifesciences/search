@@ -388,7 +388,7 @@ final class Kernel implements MinimalKernel
         };
 
         // TODO: rename key
-        $app['console.command.import'] = function (Application $app) {
+        $app['console.queue.import'] = function (Application $app) {
             return new ImportCommand(
                 $app['api.sdk'],
                 $app['aws.queue'],
@@ -409,7 +409,7 @@ final class Kernel implements MinimalKernel
             );
         };
 
-        $app['console.command.queue'] = function (Application $app) {
+        $app['console.queue.watch'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
                 return new QueueWatchCommand(

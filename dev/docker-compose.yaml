@@ -31,13 +31,6 @@ services:
             - '5002:8080'
         networks:
             - opensearch-net
-    gearman:
-        image: artefactual/gearmand:latest
-        container_name: gearman
-        ports:
-            - '4730:4730'
-        networks:
-            - opensearch-net
 
     localstack:
         image: localstack/localstack:latest
@@ -64,7 +57,6 @@ services:
             - opensearch-net
         depends_on:
             - opensearch
-            - gearman
             - localstack
         stdin_open: true
         tty: true

@@ -8,7 +8,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Queue\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -38,14 +37,18 @@ final class InterviewWorkflow implements WorkflowInterface
         $this->validator = $validator;
     }
 
+    public function run($entity): int
+    {
+        $result = $this->index($entity);
+        $result = $this->insert($result['json'], $result['id']);
+        return $this->postValidate($result['id']);
+    }
+
     /**
-     * @GearmanTask(
-     *     name="interview_index",
-     *     next="interview_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param Interview $interview
+     * @return array
      */
-    public function index(Interview $interview) : array
+    public function index($interview) : array
     {
         $this->logger->debug('Interview<'.$interview->getId().'> Indexing '.$interview->getTitle());
 

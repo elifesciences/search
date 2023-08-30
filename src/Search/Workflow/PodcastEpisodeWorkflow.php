@@ -8,7 +8,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Queue\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -37,14 +36,18 @@ final class PodcastEpisodeWorkflow implements WorkflowInterface
         $this->validator = $validator;
     }
 
+    public function run($entity): int
+    {
+        $result = $this->index($entity);
+        $result = $this->insert($result['json'], $result['id']);
+        return $this->postValidate($result['id']);
+    }
+
     /**
-     * @GearmanTask(
-     *     name="podcast_episode_index",
-     *     next="podcast_episode_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param PodcastEpisode $podcastEpisode
+     * @return array
      */
-    public function index(PodcastEpisode $podcastEpisode) : array
+    public function index($podcastEpisode) : array
     {
         $this->logger->debug('indexing '.$podcastEpisode->getTitle());
 

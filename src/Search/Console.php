@@ -293,10 +293,6 @@ final class Console
         $this->logger = $this->kernel->get('logger');
         $this->root = __DIR__.'/../..';
 
-        if (!defined('GEARMAN_INSTALLED')) {
-            define('GEARMAN_INSTALLED', class_exists('GearmanClient'));
-        }
-
         // Some annotations
         Register::registerLoader();
 
@@ -304,17 +300,14 @@ final class Console
         $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_OPTIONAL, 'The Environment name. Deprecated and not used', 'dev'));
 
         // Add commands from the DI container. (for more complex commands.)
-        if (GEARMAN_INSTALLED) {
-            try {
+        try {
                 $this->console->addCommands([
-                    $this->kernel->get('console.gearman.worker'),
-                    $this->kernel->get('console.gearman.client'),
-                    $this->kernel->get('console.gearman.queue'),
+                    $this->kernel->get('console.queue.import'),
+                    $this->kernel->get('console.queue.watch'),
                     $this->kernel->get('console.build_index'),
                 ]);
-            } catch (SqsException $e) {
-                $this->logger->debug('Cannot connect to SQS so some commands are not available', ['exception' => $e]);
-            }
+        } catch (SqsException $e) {
+            $this->logger->debug('Cannot connect to SQS so some commands are not available', ['exception' => $e]);
         }
     }
 

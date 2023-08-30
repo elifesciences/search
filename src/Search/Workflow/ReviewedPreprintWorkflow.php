@@ -8,7 +8,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Queue\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -42,14 +41,17 @@ final class ReviewedPreprintWorkflow implements WorkflowInterface
         $this->validator = $validator;
     }
 
+    public function run($entity): int
+    {
+        $result = $this->index($entity);
+        $result = $this->insert($result['json'], $result['id'], $result['skipInsert']);
+        return $this->postValidate($result['id'], $result['skipValidate']);
+    }
+
     /**
-     * @GearmanTask(
-     *     name="reviewed_preprint_index",
-     *     next="reviewed_preprint_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param ReviewedPreprint $reviewedPreprint
      */
-    public function index(ReviewedPreprint $reviewedPreprint) : array
+    public function index($reviewedPreprint) : array
     {
         // Don't index if article with same id present in index.
         foreach ([

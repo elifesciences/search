@@ -10,7 +10,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Queue\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
@@ -48,14 +47,18 @@ final class ResearchArticleWorkflow implements WorkflowInterface
         $this->rdsArticles = $rdsArticles;
     }
 
+    public function run($entity): int
+    {
+        $result = $this->index($entity);
+        $result = $this->insert($result['json'], $result['id']);
+        return $this->postValidate($result['id']);
+    }
+
     /**
-     * @GearmanTask(
-     *     name="research_article_index",
-     *     next="research_article_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param ArticleVersion $article
+     * @return array
      */
-    public function index(ArticleVersion $article) : array
+    public function index($article) : array
     {
         $this->logger->debug('ResearchArticle<'.$article->getId().'> Indexing '.$article->getTitle());
 

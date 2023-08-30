@@ -8,7 +8,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Queue\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -38,14 +37,19 @@ final class CollectionWorkflow implements WorkflowInterface
         $this->validator = $validator;
     }
 
+
+    public function run($entity): int
+    {
+        $result = $this->index($entity);
+        $result = $this->insert($result['json'], $result['id']);
+        return $this->postValidate($result['id']);
+    }
+
     /**
-     * @GearmanTask(
-     *     name="collection_index",
-     *     next="collection_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param Collection $collection
+     * @return array
      */
-    public function index(Collection $collection) : array
+    public function index($collection) : array
     {
         $this->logger->debug('Collection<'.$collection->getId().'> Indexing '.$collection->getTitle());
         // Normalized fields.

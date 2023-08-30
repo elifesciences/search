@@ -8,7 +8,6 @@ use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
-use eLife\Search\Queue\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -38,14 +37,18 @@ final class LabsPostWorkflow implements WorkflowInterface
         $this->validator = $validator;
     }
 
+    public function run($entity): int
+    {
+        $result = $this->index($entity);
+        $result = $this->insert($result['json'], $result['id']);
+        return $this->postValidate($result['id']);
+    }
+
     /**
-     * @GearmanTask(
-     *     name="labs_post_index",
-     *     next="labs_post_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param LabsPost $labsPost
+     * @return array
      */
-    public function index(LabsPost $labsPost) : array
+    public function index($labsPost) : array
     {
         $this->logger->debug('LabsPost<'.$labsPost->getId().'> Indexing '.$labsPost->getTitle());
 
