@@ -4,7 +4,6 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use eLife\ApiSdk\Model\LabsPost;
-use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -66,9 +65,6 @@ final class LabsPostWorkflow implements WorkflowInterface
         ];
     }
 
-    /**
-     * @GearmanTask(name="labs_post_insert", next="labs_post_post_validate", parameters={"json", "id"})
-     */
     public function insert(string $json, string $id)
     {
         // Insert the document.
@@ -80,9 +76,6 @@ final class LabsPostWorkflow implements WorkflowInterface
         ];
     }
 
-    /**
-     * @GearmanTask(name="labs_post_post_validate", parameters={"id"})
-     */
     public function postValidate(string $id)
     {
         try {

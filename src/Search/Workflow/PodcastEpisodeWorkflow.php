@@ -4,7 +4,6 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -64,13 +63,6 @@ final class PodcastEpisodeWorkflow implements WorkflowInterface
         ];
     }
 
-    /**
-     * @GearmanTask(
-     *     name="podcast_episode_insert",
-     *     parameters={"json", "id"},
-     *     next="podcast_episode_post_validate"
-     * )
-     */
     public function insert(string $json, string $id)
     {
         // Insert the document.
@@ -82,12 +74,6 @@ final class PodcastEpisodeWorkflow implements WorkflowInterface
         ];
     }
 
-    /**
-     * @GearmanTask(
-     *     name="podcast_episode_post_validate",
-     *     parameters={"id"}
-     * )
-     */
     public function postValidate($id)
     {
         try {

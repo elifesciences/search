@@ -6,7 +6,6 @@ use Assert\Assertion;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -143,9 +142,6 @@ final class ResearchArticleWorkflow implements WorkflowInterface
         ];
     }
 
-    /**
-     * @GearmanTask(name="research_article_insert", next="research_article_post_validate", parameters={"json", "id"})
-     */
     public function insert(string $json, string $id)
     {
         // Insert the document.
@@ -157,9 +153,6 @@ final class ResearchArticleWorkflow implements WorkflowInterface
         ];
     }
 
-    /**
-     * @GearmanTask(name="research_article_post_validate", parameters={"id"})
-     */
     public function postValidate(string $id)
     {
         $this->logger->debug('ResearchArticle<'.$id.'> post validation.');

@@ -4,7 +4,6 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use eLife\ApiSdk\Model\ReviewedPreprint;
-use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -84,9 +83,6 @@ final class ReviewedPreprintWorkflow implements WorkflowInterface
         ];
     }
 
-    /**
-     * @GearmanTask(name="reviewed_preprint_insert", next="reviewed_preprint_post_validate", parameters={"json", "id", "skipInsert"})
-     */
     public function insert(string $json, string $id, bool $skipInsert)
     {
         if ($skipInsert) {
@@ -103,9 +99,6 @@ final class ReviewedPreprintWorkflow implements WorkflowInterface
         ];
     }
 
-    /**
-     * @GearmanTask(name="reviewed_preprint_post_validate", parameters={"id", "skipValidate"})
-     */
     public function postValidate(string $id, bool $skipValidate)
     {
         if ($skipValidate) {

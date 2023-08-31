@@ -4,7 +4,6 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use eLife\ApiSdk\Model\Interview;
-use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -67,9 +66,6 @@ final class InterviewWorkflow implements WorkflowInterface
         ];
     }
 
-    /**
-     * @GearmanTask(name="interview_insert", next="interview_post_validate", parameters={"json", "id"})
-     */
     public function insert(string $json, string $id)
     {
         // Insert the document.
