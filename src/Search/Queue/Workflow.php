@@ -28,7 +28,15 @@ class Workflow
     private $validator;
     private $rdsArticles;
     private $transformer;
-
+    private $workflowClasses = [
+        'article' => ResearchArticleWorkflow::class,
+        'blog-article' => BlogArticleWorkflow::class,
+        'interview' => InterviewWorkflow::class,
+        'reviewed-preprint' => ReviewedPreprintWorkflow::class,
+        'labs-post' => LabsPostWorkflow::class,
+        'podcast-episode' => PodcastEpisodeWorkflow::class,
+        'collection' => CollectionWorkflow::class,
+    ];
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
@@ -49,24 +57,11 @@ class Workflow
     {
         $type = $item->getType();
 
-        switch ($type) {
-            case 'article':
-                return new ResearchArticleWorkflow($this->serializer, $this->logger, $this->client, $this->validator, $this->rdsArticles);
-            case 'blog-article':
-                return new BlogArticleWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
-            case 'interview':
-                return new InterviewWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
-            case 'reviewed-preprint':
-                return new ReviewedPreprintWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
-            case 'labs-post':
-                return new LabsPostWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
-            case 'podcast-episode':
-                return new PodcastEpisodeWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
-            case 'collection':
-                return new CollectionWorkflow($this->serializer, $this->logger, $this->client, $this->validator);
+        if (isset($this->workflowClasses[$type])) {
+            return new $this->workflowClasses[$type]($this->serializer, $this->logger, $this->client, $this->validator, ...$this->getExtraArguments($type));
         }
 
-        throw new \InvalidArgumentException("The {$item->getType()} is not valid.");
+        throw new \InvalidArgumentException("The {$type} is not valid.");
     }
 
     public function process(QueueItem $item)
@@ -74,8 +69,16 @@ class Workflow
         // convert $item to sdk class e.g. ArticleVersion
         $entity = $this->transformer->transform($item, false);
 
-        // get corresponding workflow
-        $workflow = $this->getWorkflow($item);
-        $workflow->run($entity);
+        // get corresponding workflow and run it
+        $this->getWorkflow($item)->run($entity);
+    }
+
+    private function getExtraArguments(string $type): array
+    {
+        if ($type === 'article') {
+            return [$this->rdsArticles];
+        }
+
+        return [];
     }
 }

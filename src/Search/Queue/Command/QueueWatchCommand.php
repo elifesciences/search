@@ -44,7 +44,6 @@ class QueueWatchCommand extends QueueCommand
 
     protected function process(InputInterface $input, QueueItem $item, $entity = null)
     {
-        var_dump($item->getType());
         $this->workflow->process($item);
     }
 }
