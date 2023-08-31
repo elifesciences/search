@@ -9,7 +9,6 @@ use Elasticsearch\Common\Exceptions\ElasticsearchException;
 use eLife\ApiValidator\Exception\InvalidMessage;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
-use eLife\Search\Annotation\Register;
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
 use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
 use Exception;
@@ -294,7 +293,7 @@ final class Console
         $this->root = __DIR__.'/../..';
 
         // Some annotations
-        Register::registerLoader();
+//        Register::registerLoader();
 
         // TODO: remove when it is *never* passed in by the formula or anything else
         $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_OPTIONAL, 'The Environment name. Deprecated and not used', 'dev'));
