@@ -2,7 +2,7 @@ FROM php:7.4-cli
 
 USER root
 
-RUN apt update && apt install zip unzip bc procps jq -y
+RUN apt update && apt install zip unzip bc procps jq apache2-utils -y
 
 RUN docker-php-ext-configure pcntl --enable-pcntl \
     &&  docker-php-ext-install pcntl

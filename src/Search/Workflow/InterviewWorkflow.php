@@ -77,9 +77,6 @@ final class InterviewWorkflow implements WorkflowInterface
         ];
     }
 
-    /**
-     * @GearmanTask(name="interview_post_validate", parameters={"id"})
-     */
     public function postValidate(string $id)
     {
         try {
