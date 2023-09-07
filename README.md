@@ -41,13 +41,8 @@ $ bin/console queue:import all # other possible values can be found in src/Searc
 $ bin/console queue:watch
 ```
 
-5. In another session run the command below:
-```bash
-$ bin/console gearman:worker
-```
-
 Now you can access the search API on http://localhost:8888/search
 
 ### Testing
 
-To run the tests: `docker-compose -f dev/docker-compose.yaml exec app vendor/bin/phpunit`
+To run the tests: `docker-compose -f dev/docker-compose.yaml exec app ./project_tests.sh`
