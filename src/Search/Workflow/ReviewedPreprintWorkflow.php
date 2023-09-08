@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class ReviewedPreprintWorkflow implements WorkflowInterface
+final class ReviewedPreprintWorkflow extends AbstractWorkflow
 {
     use Blocks;
     use JsonSerializeTransport;
@@ -38,13 +38,6 @@ final class ReviewedPreprintWorkflow implements WorkflowInterface
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
-    }
-
-    public function run($entity): int
-    {
-        $result = $this->index($entity);
-        $result = $this->insert($result['json'], $result['id'], $result['skipInsert']);
-        return $this->postValidate($result['id'], $result['skipValidate']);
     }
 
     /**

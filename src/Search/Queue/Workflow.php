@@ -7,6 +7,7 @@ use eLife\Bus\Queue\QueueItemTransformer;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 
+use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use eLife\Search\Workflow\CollectionWorkflow;
 use eLife\Search\Workflow\InterviewWorkflow;
@@ -53,7 +54,7 @@ class Workflow
         $this->transformer = $transformer;
     }
 
-    public function getWorkflow(QueueItem $item): WorkflowInterface
+    public function getWorkflow(QueueItem $item): AbstractWorkflow
     {
         $type = $item->getType();
 

@@ -5,9 +5,8 @@ namespace tests\eLife\Search\Workflow;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\ReviewedPreprintWorkflow;
-use eLife\Search\Workflow\Workflow;
-use eLife\Search\Workflow\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -18,7 +17,7 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator
-    ) : WorkflowInterface
+    ) : AbstractWorkflow
     {
         return new ReviewedPreprintWorkflow($serializer, $logger, $client, $validator);
     }

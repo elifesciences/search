@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class LabsPostWorkflow implements WorkflowInterface
+final class LabsPostWorkflow extends AbstractWorkflow
 {
     use Blocks;
     use JsonSerializeTransport;
@@ -34,13 +34,6 @@ final class LabsPostWorkflow implements WorkflowInterface
         $this->client = $client;
         $this->logger = $logger;
         $this->validator = $validator;
-    }
-
-    public function run($entity): int
-    {
-        $result = $this->index($entity);
-        $result = $this->insert($result['json'], $result['id']);
-        return $this->postValidate($result['id']);
     }
 
     /**

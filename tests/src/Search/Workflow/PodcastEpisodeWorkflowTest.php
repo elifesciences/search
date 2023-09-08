@@ -2,13 +2,11 @@
 
 namespace tests\eLife\Search\Workflow;
 
-use eLife\ApiSdk\Mode\FundingAward;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
-use eLife\Search\Workflow\Workflow;
-use eLife\Search\Workflow\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -19,7 +17,7 @@ final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator
-    ) : WorkflowInterface
+    ) : AbstractWorkflow
     {
         return new PodcastEpisodeWorkflow($serializer, $logger, $client, $validator);
     }

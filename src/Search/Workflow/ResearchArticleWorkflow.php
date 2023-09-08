@@ -14,7 +14,7 @@ use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class ResearchArticleWorkflow implements WorkflowInterface
+final class ResearchArticleWorkflow extends AbstractWorkflow
 {
     use Blocks;
     use JsonSerializeTransport;
@@ -44,13 +44,6 @@ final class ResearchArticleWorkflow implements WorkflowInterface
         $this->client = $client;
         $this->validator = $validator;
         $this->rdsArticles = $rdsArticles;
-    }
-
-    public function run($entity): int
-    {
-        $result = $this->index($entity);
-        $result = $this->insert($result['json'], $result['id']);
-        return $this->postValidate($result['id']);
     }
 
     /**

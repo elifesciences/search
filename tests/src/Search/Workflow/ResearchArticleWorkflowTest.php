@@ -7,9 +7,8 @@ use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
-use eLife\Search\Workflow\Workflow;
-use eLife\Search\Workflow\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use tests\eLife\Search\ExceptionNullLogger;
@@ -22,7 +21,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator
-    ) : WorkflowInterface
+    ) : AbstractWorkflow
     {
         return new ResearchArticleWorkflow($serializer, $logger, $client, $validator);
     }
