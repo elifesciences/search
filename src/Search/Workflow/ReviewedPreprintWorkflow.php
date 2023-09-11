@@ -3,6 +3,7 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
@@ -43,7 +44,7 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
     /**
      * @param ReviewedPreprint $reviewedPreprint
      */
-    public function index($reviewedPreprint) : array
+    public function index(Model $reviewedPreprint) : array
     {
         // Don't index if article with same id present in index.
         foreach ([
@@ -92,7 +93,7 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function postValidate(string $id, bool $skipValidate)
+    public function postValidate(string $id, bool $skipValidate) : int
     {
         if ($skipValidate) {
             $this->logger->debug('ReviewedPreprint<'.$id.'> no need to validate.');

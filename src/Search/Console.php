@@ -292,9 +292,6 @@ final class Console
         $this->logger = $this->kernel->get('logger');
         $this->root = __DIR__.'/../..';
 
-        // Some annotations
-//        Register::registerLoader();
-
         // TODO: remove when it is *never* passed in by the formula or anything else
         $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_OPTIONAL, 'The Environment name. Deprecated and not used', 'dev'));
 

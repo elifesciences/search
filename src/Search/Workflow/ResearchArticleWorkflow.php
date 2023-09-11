@@ -6,6 +6,7 @@ use Assert\Assertion;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
+use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -50,7 +51,7 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
      * @param ArticleVersion $article
      * @return array
      */
-    public function index($article) : array
+    public function index(Model $article) : array
     {
         $this->logger->debug('ResearchArticle<'.$article->getId().'> Indexing '.$article->getTitle());
 
@@ -146,7 +147,7 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function postValidate(string $id, bool $skipValidate = false)
+    public function postValidate(string $id, bool $skipValidate = false) : int
     {
         $this->logger->debug('ResearchArticle<'.$id.'> post validation.');
         try {

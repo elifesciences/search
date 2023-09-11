@@ -4,6 +4,7 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use eLife\ApiSdk\Model\Interview;
+use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -40,7 +41,7 @@ final class InterviewWorkflow extends AbstractWorkflow
      * @param Interview $interview
      * @return array
      */
-    public function index($interview) : array
+    public function index(Model $interview) : array
     {
         $this->logger->debug('Interview<'.$interview->getId().'> Indexing '.$interview->getTitle());
 
@@ -70,7 +71,7 @@ final class InterviewWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function postValidate(string $id, bool $skipValidate = false)
+    public function postValidate(string $id, bool $skipValidate = false) : int
     {
         try {
             // Post-validation, we got a document.

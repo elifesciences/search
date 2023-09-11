@@ -4,6 +4,7 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use eLife\ApiSdk\Model\Collection;
+use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -40,7 +41,7 @@ final class CollectionWorkflow extends AbstractWorkflow
      * @param Collection $collection
      * @return array
      */
-    public function index($collection) : array
+    public function index(Model $collection) : array
     {
         $this->logger->debug('Collection<'.$collection->getId().'> Indexing '.$collection->getTitle());
         // Normalized fields.

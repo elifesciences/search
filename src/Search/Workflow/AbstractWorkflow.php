@@ -2,15 +2,17 @@
 
 namespace eLife\Search\Workflow;
 
+use eLife\ApiSdk\Model\Model;
+
 abstract class AbstractWorkflow
 {
     abstract public function getSdkClass();
 
-    abstract public function index($entity);
+    abstract public function index(Model $entity);
 
     abstract public function insert(string $json, string $id, bool $skipInsert);
 
-    abstract public function postValidate(string $id, bool $skipValidate);
+    abstract public function postValidate(string $id, bool $skipValidate) : int;
 
     public function run($entity) {
         $skipInsert = false;

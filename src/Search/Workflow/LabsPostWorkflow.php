@@ -4,6 +4,7 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use eLife\ApiSdk\Model\LabsPost;
+use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -40,7 +41,7 @@ final class LabsPostWorkflow extends AbstractWorkflow
      * @param LabsPost $labsPost
      * @return array
      */
-    public function index($labsPost) : array
+    public function index(Model $labsPost) : array
     {
         $this->logger->debug('LabsPost<'.$labsPost->getId().'> Indexing '.$labsPost->getTitle());
 
@@ -69,7 +70,7 @@ final class LabsPostWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function postValidate(string $id, bool $skipValidate = false)
+    public function postValidate(string $id, bool $skipValidate = false) : int
     {
         try {
             // Post-validation, we got a document.

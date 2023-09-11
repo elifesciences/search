@@ -3,6 +3,7 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
@@ -39,7 +40,7 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
      * @param PodcastEpisode $podcastEpisode
      * @return array
      */
-    public function index($podcastEpisode) : array
+    public function index(Model $podcastEpisode) : array
     {
         $this->logger->debug('indexing '.$podcastEpisode->getTitle());
 
@@ -67,7 +68,7 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function postValidate($id, bool $skipValidate = false)
+    public function postValidate($id, bool $skipValidate = false) : int
     {
         try {
             // Post-validation, we got a document.

@@ -4,6 +4,7 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use eLife\ApiSdk\Model\BlogArticle;
+use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -40,7 +41,7 @@ final class BlogArticleWorkflow extends AbstractWorkflow
      * @param BlogArticle $blogArticle
      * @return array
      */
-    public function index($blogArticle) : array
+    public function index(Model $blogArticle) : array
     {
         $this->logger->debug('BlogArticle<'.$blogArticle->getId().'> Indexing '.$blogArticle->getTitle());
         // Normalized fields.
