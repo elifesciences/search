@@ -58,7 +58,7 @@ final class LabsPostWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function insert(string $json, string $id)
+    public function insert(string $json, string $id, bool $skipInsert = false)
     {
         // Insert the document.
         $this->logger->debug('LabsPost<'.$id.'> importing into Elasticsearch.');
@@ -69,7 +69,7 @@ final class LabsPostWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function postValidate(string $id)
+    public function postValidate(string $id, bool $skipValidate = false)
     {
         try {
             // Post-validation, we got a document.

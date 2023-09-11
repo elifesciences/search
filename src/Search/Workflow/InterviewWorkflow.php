@@ -59,7 +59,7 @@ final class InterviewWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function insert(string $json, string $id)
+    public function insert(string $json, string $id, bool $skipInsert = false)
     {
         // Insert the document.
         $this->logger->debug('Interview<'.$id.'> importing into Elasticsearch.');
@@ -70,7 +70,7 @@ final class InterviewWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function postValidate(string $id)
+    public function postValidate(string $id, bool $skipValidate = false)
     {
         try {
             // Post-validation, we got a document.

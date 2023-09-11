@@ -56,7 +56,7 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function insert(string $json, string $id)
+    public function insert(string $json, string $id, bool $skipInsert = false)
     {
         // Insert the document.
         $this->logger->debug('PodcastEpisode<'.$id.'> importing into Elasticsearch.');
@@ -67,7 +67,7 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function postValidate($id)
+    public function postValidate($id, bool $skipValidate = false)
     {
         try {
             // Post-validation, we got a document.

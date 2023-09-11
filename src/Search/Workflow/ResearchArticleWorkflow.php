@@ -135,7 +135,7 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function insert(string $json, string $id)
+    public function insert(string $json, string $id, bool $skipInsert = false)
     {
         // Insert the document.
         $this->logger->debug('ResearchArticle<'.$id.'> importing into Elasticsearch.');
@@ -146,7 +146,7 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function postValidate(string $id)
+    public function postValidate(string $id, bool $skipValidate = false)
     {
         $this->logger->debug('ResearchArticle<'.$id.'> post validation.');
         try {

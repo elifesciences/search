@@ -57,7 +57,7 @@ final class CollectionWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function insert(string $json, string $id) : array
+    public function insert(string $json, string $id, bool $skipInsert = false) : array
     {
         // Insert the document.
         $this->logger->debug('Collection<'.$id.'> importing into Elasticsearch.');
@@ -68,7 +68,7 @@ final class CollectionWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function postValidate(string $id) : int
+    public function postValidate(string $id, bool $skipValidate = false) : int
     {
         try {
             // Post-validation, we got a document.
