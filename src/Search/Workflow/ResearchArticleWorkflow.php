@@ -28,7 +28,6 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
      * @var Serializer
      */
     private $serializer;
-    private $logger;
     private $client;
     private $validator;
     private $rdsArticles;

@@ -25,7 +25,6 @@ final class InterviewWorkflow extends AbstractWorkflow
      * @var Serializer
      */
     private $serializer;
-    private $logger;
     private $client;
     private $validator;
 
