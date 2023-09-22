@@ -10,19 +10,11 @@ fi
 write_index_backup=$(./bin/console index:read)
 index_name="$1"
 
-echo "Stopping gearman:worker instances"
-sudo systemctl stop search-gearman-worker-controller.target
-sudo systemctl stop search-queue-watch-controller.target
-
 echo "Creating new index $index_name"
 ./bin/console search:setup --index="$index_name" --delete
 
 echo "Switching writes to new index $index_name"
 ./bin/console index:switch:write "$index_name"
-
-echo "Restarting processes"
-sudo systemctl start search-gearman-worker-controller.target
-sudo systemctl start search-queue-watch-controller.target
 
 echo "Importing all API content"
 ./bin/console queue:import all
@@ -37,10 +29,6 @@ if [ "$index_check" -eq "0" ]; then
     echo "Refusing to switch read-index to an empty write-index during a reindex."
     echo "Switching writes back to original write index $write_index_backup"
     ./bin/console index:switch:write "$write_index_backup"
-
-    echo "Restarting processes"
-    sudo systemctl start search-gearman-worker-controller.target
-    sudo systemctl start search-queue-watch-controller.target
 
     echo "Deleting unused indexes"
     ./bin/console index:delete:unused
