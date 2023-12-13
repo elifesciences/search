@@ -164,7 +164,6 @@ final class ImportCommand extends Command
         for ($batchIndex = 0; $batchIndex < $numBatches; $batchIndex++) {
             $batchItems = $items->slice($batchIndex * $batchSize, $batchSize);
             foreach ($batchItems as $item) {
-
                 if ($limit->hasBeenReached()) {
                     throw new RuntimeException('Command cannot complete because: ' . implode(', ', $limit->getReasons()));
                 }
