@@ -4,6 +4,7 @@ namespace eLife\Search\Queue\Command;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\ApiSdk;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\HasPublishedDate;
 use eLife\ApiSdk\Model\ReviewedPreprint;
@@ -150,45 +151,49 @@ final class ImportCommand extends Command
         $this->iterateSerializeTask($articles, 'blog-article', 'getId', $articles->count());
     }
 
-    private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
+    private function iterateSerializeTask(Sequence $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
         $this->logger->info("Importing $count items of type $type");
         $progress = new ProgressBar($this->output, $count);
         $limit = $this->limit;
 
-        $items->rewind();
-        while ($items->valid()) {
-            if ($limit->hasBeenReached()) {
-                throw new RuntimeException('Command cannot complete because: '.implode(', ', $limit->getReasons()));
-            }
-            $progress->advance();
-            try {
-                $item = $items->current();
-                $dateFrom = null;
-                if (!is_null($this->dateFrom)) {
-                    $dateFrom = ($item instanceof ArticleVersion || $item instanceof ReviewedPreprint) ?
-                        $item->getStatusDate() :
-                        ($item instanceof HasPublishedDate ? $item->getPublishedDate() : null);
-                }
+        $totalItems = $items->count();
+        $batchSize = 100;
+        $numBatches = ceil($totalItems / $batchSize);
 
-                if (
-                    null === $item ||
-                    (
-                        !is_null($dateFrom) &&
-                        $dateFrom < $this->dateFrom
-                    )
-                ) {
-                    $items->next();
-                    continue;
-                }
+        for ($batchIndex = 0; $batchIndex < $numBatches; $batchIndex++) {
+            $batchItems = $items->slice($batchIndex * $batchSize, $batchSize);
+            foreach ($batchItems as $item) {
 
-                $this->enqueue($type, $item->$method());
-            } catch (Throwable $e) {
-                $item = $item ?? null;
-                $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
-                $this->monitoring->recordException($e, 'Skipping import on a '.get_class($item));
+                if ($limit->hasBeenReached()) {
+                    throw new RuntimeException('Command cannot complete because: ' . implode(', ', $limit->getReasons()));
+                }
+                $progress->advance();
+                try {
+                    $dateFrom = null;
+                    if (!is_null($this->dateFrom)) {
+                        $dateFrom = ($item instanceof ArticleVersion || $item instanceof ReviewedPreprint) ?
+                            $item->getStatusDate() :
+                            ($item instanceof HasPublishedDate ? $item->getPublishedDate() : null);
+                    }
+
+                    if (
+                        null === $item ||
+                        (
+                            !is_null($dateFrom) &&
+                            $dateFrom < $this->dateFrom
+                        )
+                    ) {
+                        continue;
+                    }
+
+                    $this->enqueue($type, $item->$method());
+                } catch (Throwable $e) {
+                    $item = $item ?? null;
+                    $this->logger->error('Skipping import on a ' . get_class($item), ['exception' => $e]);
+                    $this->monitoring->recordException($e, 'Skipping import on a ' . get_class($item));
+                }
             }
-            $items->next();
         }
         $progress->finish();
         $progress->clear();

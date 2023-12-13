@@ -16,11 +16,11 @@ echo "Creating new index $index_name"
 echo "Switching writes to new index $index_name"
 ./bin/console index:switch:write "$index_name"
 
-echo "Importing all API content"
-./bin/console queue:import all
-
 echo "Running queue:watch"
 ./bin/console queue:watch > /dev/null 2>&1 &
+
+echo "Importing all API content"
+./bin/console queue:import all
 
 echo "Waiting for empty queues"
 ./bin/wait-for-empty-queues
