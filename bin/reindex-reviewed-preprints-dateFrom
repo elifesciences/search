@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-DATE=${1:-$(date +"%Y-%m-%dT%H:%M:%SZ")}
+DATE=${1:-$(date +"%Y-%m-%dT00:00:00Z")}
 
 ./bin/console queue:import ReviewedPreprints --dateFrom="$DATE"
 
