@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -e
+
+DATE=${1:-$(date +"%Y-%m-%dT%H:%M:%SZ")}
+
+./bin/console queue:import ReviewedPreprints --dateFrom="$DATE"
+
+. bin/wait-for-empty-queues
