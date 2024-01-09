@@ -187,6 +187,8 @@ final class ImportCommand extends Command
                 $item = $item ?? null;
                 $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
                 $this->monitoring->recordException($e, 'Skipping import on a '.get_class($item));
+
+                throw $e;
             }
             $items->next();
         }
