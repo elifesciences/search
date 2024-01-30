@@ -377,8 +377,7 @@ final class Console
         if (!$type || !in_array($type, $types)) {
             throw new Exception("Type $type not found. Allowed types: ". implode(', ', $types));
         }
-        $this->logger->info('Purge command for: ' . $type);
-
+        $this->logger->info(sprintf('Purge command for: %', $type));
         $ids = [];
         $query = new ElasticQueryBuilder($this->kernel->indexMetadata()->read());
         $query = $query->whereType([$type]);
@@ -400,7 +399,7 @@ final class Console
             $ids[] = $id;
         }
         $output->writeln('Purged: '.implode(', ', $ids));
-        $this->logger->info('Reviewed preprints purge from index.');
+        $this->logger->info(sprintf('%s purged from index.', $type));
     }
 
     public function gatewayTotalCommand(InputInterface $input, OutputInterface $output)
