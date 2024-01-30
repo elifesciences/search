@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -ex
 
-[ $(curl --write-out %{http_code} --silent --output /dev/null localhost/ping) == 200 ]
+test1=$(curl --write-out '%{http_code}' --silent --output /dev/null localhost/ping)
+[[ "$test1" == "200" ]]
