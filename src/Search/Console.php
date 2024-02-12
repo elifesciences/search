@@ -115,11 +115,17 @@ final class Console
                 ['name' => 'index_name'],
             ],
         ],
+        'index:purge' => [
+            'description' => 'Purge a type from the index to remove them from listings',
+            'args' => [
+                [
+                    'name' => 'type',
+                    'mode' => InputArgument::REQUIRED,
+                ],
+            ],
+        ],
         'rds:reindex' => [
             'description' => 'Reindex RDS articles to correctly place them in listings',
-        ],
-        'reviewedPreprint:purge' => [
-            'description' => 'Purge reviewed preprints from the index to remove them from listings',
         ],
         'gateway:total' => [
             'description' => 'Get the total number of items that could potentially be indexed from the API gateway',
@@ -342,14 +348,41 @@ final class Console
         $this->logger->info('RDS articles added to indexing queue.');
     }
 
-    public function reviewedPreprintPurgeCommand(InputInterface $input, OutputInterface $output)
+    public function indexPurgeCommand(InputInterface $input, OutputInterface $output)
     {
-        $this->logger->info('Purge reviewed preprints...');
+        $types = [
+            'correction',
+            'editorial',
+            'feature',
+            'insight',
+            'research-advance',
+            'research-article',
+            'research-communication',
+            'retraction',
+            'registered-report',
+            'replication-study',
+            'review-article',
+            'scientific-correspondence',
+            'short-report',
+            'tools-resources',
+            'blog-article',
+            'collection',
+            'interview',
+            'labs-post',
+            'podcast-episode',
+            'reviewed-preprint',
+        ];
+
+        $type = trim($input->getArgument('type'));
+        if (!$type || !in_array($type, $types)) {
+            throw new Exception("Type $type not found. Allowed types: ". implode(', ', $types));
+        }
+        $this->logger->info(sprintf('Purge command for: %', $type));
         $ids = [];
         $query = new ElasticQueryBuilder($this->kernel->indexMetadata()->read());
-        $query = $query->whereType(['reviewed-preprint']);
+        $query = $query->whereType([$type]);
         try {
-            $reviewedPreprints = $this->kernel->get('elastic.client.read')->searchDocuments($query->getRawQuery());
+            $articles = $this->kernel->get('elastic.client.read')->searchDocuments($query->getRawQuery());
         } catch (ElasticsearchException $e) {
             $this->logger->error('Elasticsearch exception during reviewed preprint purge', [
                 'error' => $e,
@@ -359,14 +392,14 @@ final class Console
             return;
         }
 
-        foreach ($reviewedPreprints as $reviewedPreprint) {
-            $id = $reviewedPreprint['id'];
-            $this->logger->info("Purge reviewed preprint article $id");
-            $this->kernel->get('elastic.client.write')->deleteDocument('reviewed-preprint-'.$id);
+        foreach ($articles as $article) {
+            $id = $article['id'];
+            $this->logger->info("Purge $type article $id");
+            $this->kernel->get('elastic.client.write')->deleteDocument($type.'-'.$id);
             $ids[] = $id;
         }
         $output->writeln('Purged: '.implode(', ', $ids));
-        $this->logger->info('Reviewed preprints purge from index.');
+        $this->logger->info(sprintf('%s purged from index.', $type));
     }
 
     public function gatewayTotalCommand(InputInterface $input, OutputInterface $output)

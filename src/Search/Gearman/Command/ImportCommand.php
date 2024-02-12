@@ -33,6 +33,7 @@ final class ImportCommand extends Command
     private $queue;
     private $limit;
     private $dateFrom = null;
+    private $useDate = null;
 
     public function __construct(
         ApiSdk $sdk,
@@ -58,7 +59,8 @@ final class ImportCommand extends Command
             ->setDescription('Import items from API.')
             ->setHelp('Lists entities from API and enqueues them')
             ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>')
-            ->addOption('dateFrom', '-d', InputOption::VALUE_OPTIONAL, 'Date filter');
+            ->addOption('dateFrom', '-d', InputOption::VALUE_OPTIONAL, 'Start date filter')
+            ->addOption('useDate', '-u', InputOption::VALUE_OPTIONAL, 'Use date filter');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -74,6 +76,10 @@ final class ImportCommand extends Command
 
         if ($input->getOption('dateFrom') !== null) {
             $this->dateFrom = DateTimeImmutable::createFromFormat(DATE_ATOM, $input->getOption('dateFrom'));
+        }
+
+        if ($input->getOption('useDate') !== null) {
+            $this->useDate = $input->getOption('useDate');
         }
 
         try {
@@ -133,6 +139,15 @@ final class ImportCommand extends Command
     {
         $this->logger->info('Importing Reviewed Preprints');
         $events = $this->sdk->reviewedPreprints();
+
+        if (!is_null($this->useDate)) {
+            $events = $events->useDate($this->useDate);
+        }
+
+        if (!is_null($this->dateFrom)) {
+            $events = $events->startDate($this->dateFrom);
+        }
+
         $this->iterateSerializeTask($events, 'reviewed-preprint', 'getId', $events->count(), $skipInvalid = true);
     }
 
@@ -164,24 +179,10 @@ final class ImportCommand extends Command
             $progress->advance();
             try {
                 $item = $items->current();
-                $dateFrom = null;
-                if (!is_null($this->dateFrom)) {
-                    $dateFrom = ($item instanceof ArticleVersion || $item instanceof ReviewedPreprint) ?
-                        $item->getStatusDate() :
-                        ($item instanceof HasPublishedDate ? $item->getPublishedDate() : null);
-                }
-
-                if (
-                    null === $item ||
-                    (
-                        !is_null($dateFrom) &&
-                        $dateFrom < $this->dateFrom
-                    )
-                ) {
+                if (null === $item) {
                     $items->next();
                     continue;
                 }
-
                 $this->enqueue($type, $item->$method());
             } catch (Throwable $e) {
                 $item = $item ?? null;
