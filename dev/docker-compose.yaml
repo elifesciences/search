@@ -2,7 +2,10 @@ version: '3'
 services:
 
     opensearch:
-        image: opensearchproject/opensearch:latest
+        build:
+            context: .
+            dockerfile: Dockerfile.opensearch
+
         container_name: opensearch
         restart: on-failure
         environment:
@@ -26,7 +29,7 @@ services:
         networks:
             - opensearch-net
     api-dummy:
-        image: elifesciences/api-dummy:87ad4221aa0e2390766b7a570ec492372ebf151c
+        image: elifesciences/api-dummy:c66acdb349850d31b4e7a0f578ffdc87e2fada96
         container_name: api-dummy
         ports:
             - '5002:8080'
@@ -50,6 +53,8 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+        environment:
+            - GEARMAN_HOST=gearman
         volumes:
             - ..:/app
             - ./config.php.dist:/app/config.php
