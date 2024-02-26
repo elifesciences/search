@@ -31,3 +31,6 @@ bin/ci-reindex-rds
 
 echo "Reindexing reviewed-preprint articles"
 bin/ci-reindex-reviewed-preprints
+
+echo "Reindexing reviewed-preprint articles with dateFrom parameter"
+bin/ci-reindex-reviewed-preprints-dateFrom
