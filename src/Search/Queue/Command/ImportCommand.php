@@ -166,7 +166,7 @@ final class ImportCommand extends Command
         $this->iterateSerializeTask($articles, 'blog-article', 'getId', $articles->count());
     }
 
-    private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
+    private function iterateSerializeTask(Sequence $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
         $this->logger->info("Importing $count items of type $type");
         $progress = new ProgressBar($this->output, $count);
