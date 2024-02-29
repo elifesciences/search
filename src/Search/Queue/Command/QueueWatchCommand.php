@@ -8,7 +8,6 @@ use eLife\Bus\Queue\QueueItemTransformer;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
 use eLife\Search\Queue\Workflow;
-use eLife\Search\Queue\WorkflowInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,12 +22,11 @@ class QueueWatchCommand extends QueueCommand
         QueueItemTransformer $transformer,
         Workflow $workflow,
         bool $isMock,
-        string $topic,
         LoggerInterface $logger,
         Monitoring $monitoring,
         callable $limit
     ) {
-        parent::__construct($logger, $queue, $transformer, $monitoring, $limit);
+        parent::__construct($logger, $queue, $transformer, $monitoring, $limit, false);
         $this->isMock = $isMock;
         $this->workflow = $workflow;
     }
@@ -44,6 +42,6 @@ class QueueWatchCommand extends QueueCommand
 
     protected function process(InputInterface $input, QueueItem $item, $entity = null)
     {
-        $this->workflow->process($item);
+        $this->workflow->process($item, $entity);
     }
 }

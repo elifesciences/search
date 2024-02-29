@@ -24,7 +24,7 @@ class Workflow
     private $client;
     private $validator;
     private $rdsArticles;
-    private $transformer;
+
     private $workflowClasses = [
         'article' => ResearchArticleWorkflow::class,
         'blog-article' => BlogArticleWorkflow::class,
@@ -34,12 +34,12 @@ class Workflow
         'podcast-episode' => PodcastEpisodeWorkflow::class,
         'collection' => CollectionWorkflow::class,
     ];
+
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator,
-        QueueItemTransformer $transformer,
         array $rdsArticles = []
     ) {
         $this->serializer = $serializer;
@@ -47,7 +47,6 @@ class Workflow
         $this->client = $client;
         $this->validator = $validator;
         $this->rdsArticles = $rdsArticles;
-        $this->transformer = $transformer;
     }
 
     public function getWorkflow(QueueItem $item): AbstractWorkflow
@@ -61,13 +60,10 @@ class Workflow
         throw new \InvalidArgumentException("The {$type} is not valid.");
     }
 
-    public function process(QueueItem $item)
+    public function process(QueueItem $item, $entity)
     {
-        // convert $item to sdk class e.g. ArticleVersion
-        $entity = $this->transformer->transform($item, false);
-
-        // get corresponding workflow and run it
-        $this->getWorkflow($item)->run($entity);
+        $workflow = $this->getWorkflow($item);
+        $workflow->run($entity);
     }
 
     private function getExtraArguments(string $type): array

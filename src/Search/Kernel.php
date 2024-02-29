@@ -166,18 +166,7 @@ final class Kernel implements MinimalKernel
         $app['cache'] = function () {
             return new FilesystemCache(self::CACHE_DIR);
         };
-        // Annotation reader.
-        $app['annotations.reader'] = function (Application $app) {
-            if (false === $app['config']['annotation_cache']) {
-                return new AnnotationReader();
-            }
 
-            return new CachedReader(
-                new AnnotationReader(),
-                $app['cache'],
-                $app['config']['debug']
-            );
-        };
         // PSR-7 Bridge
         $app['psr7.bridge'] = function () {
             return new DiactorosFactory();
@@ -404,7 +393,6 @@ final class Kernel implements MinimalKernel
                 $app['logger'],
                 $app['elastic.client.write'],
                 $app['validator'],
-                $app['aws.queue_transformer'],
                 $app['config']['rds_articles']
             );
         };
@@ -417,7 +405,6 @@ final class Kernel implements MinimalKernel
                     $app['mocks.queue_transformer'],
                     $app['workflow'],
                     true,
-                    $app['config']['aws']['queue_name'],
                     $app['logger'],
                     $app['monitoring'],
                     $app['limit.long_running']
@@ -429,7 +416,6 @@ final class Kernel implements MinimalKernel
                 $app['aws.queue_transformer'],
                 $app['workflow'],
                 false,
-                $app['config']['aws']['queue_name'],
                 $app['logger'],
                 $app['monitoring'],
                 $app['limit.long_running']
