@@ -11,9 +11,6 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 require_once __DIR__.'/../src/bootstrap.php';
 set_time_limit(0);
 
-if (!defined('GEARMAN_INSTALLED')) {
-    define('GEARMAN_INSTALLED', class_exists('GearmanClient'));
-}
 $app = new Kernel($config);
 $input = new ArgvInput();
 $output = new ConsoleOutput();

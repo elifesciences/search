@@ -29,7 +29,6 @@ use eLife\ContentNegotiator\Silex\ContentNegotiationProvider;
 use eLife\Logging\Monitoring;
 use eLife\Logging\Silex\LoggerProvider;
 use eLife\Ping\Silex\PingControllerProvider;
-use eLife\Search\Annotation\GearmanTaskDriver;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
@@ -37,12 +36,10 @@ use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\SearchResponseSerializer;
 use eLife\Search\Api\SearchController;
-use eLife\Search\Gearman\Command\ImportCommand;
-use eLife\Search\Gearman\Command\QueueWatchCommand;
-use eLife\Search\Gearman\Command\WorkerCommand;
+use eLife\Search\Queue\Command\ImportCommand;
+use eLife\Search\Queue\Command\QueueWatchCommand;
 use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
-use GearmanClient;
-use GearmanWorker;
+use eLife\Search\Queue\Workflow;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -90,7 +87,6 @@ final class Kernel implements MinimalKernel
             ],
             'logger.path' => self::ROOT.'/var/logs',
             'logger.level' => LogLevel::INFO,
-            'gearman_worker_timeout' => 20000,
             'process_memory_limit' => 256,
             'aws' => array_merge([
                 'credential_file' => false,
@@ -170,18 +166,7 @@ final class Kernel implements MinimalKernel
         $app['cache'] = function () {
             return new FilesystemCache(self::CACHE_DIR);
         };
-        // Annotation reader.
-        $app['annotations.reader'] = function (Application $app) {
-            if (false === $app['config']['annotation_cache']) {
-                return new AnnotationReader();
-            }
 
-            return new CachedReader(
-                new AnnotationReader(),
-                $app['cache'],
-                $app['config']['debug']
-            );
-        };
         // PSR-7 Bridge
         $app['psr7.bridge'] = function () {
             return new DiactorosFactory();
@@ -357,39 +342,6 @@ final class Kernel implements MinimalKernel
         // ------------------ Console DI ----------------------
         //#####################################################
 
-        $app['gearman.client'] = function (Application $app) {
-            $worker = new GearmanClient();
-            foreach ($app['config']['gearman_servers'] as $server) {
-                $worker->addServer($server);
-            }
-
-            return $worker;
-        };
-
-        $app['gearman.worker'] = function (Application $app) {
-            $worker = new GearmanWorker();
-            foreach ($app['config']['gearman_servers'] as $server) {
-                try {
-                    $worker->addServer($server);
-                } catch (Throwable $e) {
-                }
-            }
-            $worker->setTimeout($app['config']['gearman_worker_timeout']);
-
-            return $worker;
-        };
-
-        $app['console.gearman.task_driver'] = function (Application $app) {
-            return new GearmanTaskDriver(
-                $app['annotations.reader'],
-                $app['gearman.worker'],
-                $app['gearman.client'],
-                $app['logger'],
-                $app['monitoring'],
-                $app['limit.long_running']
-            );
-        };
-
         $app['aws.sqs'] = function (Application $app) {
             $config = [
                 'version' => '2012-11-05',
@@ -424,20 +376,8 @@ final class Kernel implements MinimalKernel
             return new QueueItemTransformerMock($app['api.sdk']);
         };
 
-        $app['console.gearman.worker'] = function (Application $app) {
-            return new WorkerCommand(
-                $app['api.sdk'],
-                $app['serializer'],
-                $app['console.gearman.task_driver'],
-                $app['elastic.client.write'],
-                $app['validator'],
-                $app['logger'],
-                $app['config']['rds_articles']
-            );
-        };
-
         // TODO: rename key
-        $app['console.gearman.client'] = function (Application $app) {
+        $app['console.queue.import'] = function (Application $app) {
             return new ImportCommand(
                 $app['api.sdk'],
                 $app['aws.queue'],
@@ -447,15 +387,24 @@ final class Kernel implements MinimalKernel
             );
         };
 
-        $app['console.gearman.queue'] = function (Application $app) {
+        $app['workflow'] = function (Application $app) {
+            return new Workflow(
+                $app['api.sdk']->getSerializer(),
+                $app['logger'],
+                $app['elastic.client.write'],
+                $app['validator'],
+                $app['config']['rds_articles']
+            );
+        };
+
+        $app['console.queue.watch'] = function (Application $app) {
             $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
                 return new QueueWatchCommand(
                     $app['mocks.queue'],
                     $app['mocks.queue_transformer'],
-                    $app['gearman.client'],
+                    $app['workflow'],
                     true,
-                    $app['config']['aws']['queue_name'],
                     $app['logger'],
                     $app['monitoring'],
                     $app['limit.long_running']
@@ -465,9 +414,8 @@ final class Kernel implements MinimalKernel
             return new QueueWatchCommand(
                 $app['aws.queue'],
                 $app['aws.queue_transformer'],
-                $app['gearman.client'],
+                $app['workflow'],
                 false,
-                $app['config']['aws']['queue_name'],
                 $app['logger'],
                 $app['monitoring'],
                 $app['limit.long_running']

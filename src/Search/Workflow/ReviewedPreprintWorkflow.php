@@ -3,8 +3,8 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\ReviewedPreprint;
-use eLife\Search\Annotation\GearmanTask;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class ReviewedPreprintWorkflow implements Workflow
+final class ReviewedPreprintWorkflow extends AbstractWorkflow
 {
     use Blocks;
     use JsonSerializeTransport;
@@ -25,7 +25,6 @@ final class ReviewedPreprintWorkflow implements Workflow
      * @var Serializer
      */
     private $serializer;
-    private $logger;
     private $client;
     private $validator;
 
@@ -42,13 +41,9 @@ final class ReviewedPreprintWorkflow implements Workflow
     }
 
     /**
-     * @GearmanTask(
-     *     name="reviewed_preprint_index",
-     *     next="reviewed_preprint_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param ReviewedPreprint $reviewedPreprint
      */
-    public function index(ReviewedPreprint $reviewedPreprint) : array
+    public function index(Model $reviewedPreprint) : array
     {
         // Don't index if article with same id present in index.
         foreach ([
@@ -81,9 +76,6 @@ final class ReviewedPreprintWorkflow implements Workflow
         ];
     }
 
-    /**
-     * @GearmanTask(name="reviewed_preprint_insert", next="reviewed_preprint_post_validate", parameters={"json", "id", "skipInsert"})
-     */
     public function insert(string $json, string $id, bool $skipInsert)
     {
         if ($skipInsert) {
@@ -100,10 +92,7 @@ final class ReviewedPreprintWorkflow implements Workflow
         ];
     }
 
-    /**
-     * @GearmanTask(name="reviewed_preprint_post_validate", parameters={"id", "skipValidate"})
-     */
-    public function postValidate(string $id, bool $skipValidate)
+    public function postValidate(string $id, bool $skipValidate) : int
     {
         if ($skipValidate) {
             $this->logger->debug('ReviewedPreprint<'.$id.'> no need to validate.');

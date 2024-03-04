@@ -10,7 +10,6 @@ return [
     'elastic_logging' => true,
     'elastic_force_sync' => true,
     'elastic_ssl_verification' => false,
-    'gearman_servers' => ['gearman'],
     'api_url' => 'http://api-dummy:8080',
     'api_requests_batch' => 10,
     'rate_limit_minimum_page' => 2,

@@ -2,13 +2,16 @@ FROM php:7.4-cli
 
 USER root
 
-RUN apt update && apt install libgearman-dev zip unzip gearman-tools bc procps jq -y && pecl install gearman
+RUN apt update && apt install zip unzip bc procps jq apache2-utils -y
 
-RUN docker-php-ext-enable gearman \
-    && docker-php-ext-configure pcntl --enable-pcntl \
+RUN docker-php-ext-configure pcntl --enable-pcntl \
     &&  docker-php-ext-install pcntl
 
+RUN pecl install xdebug-3.1.5 \
+      && docker-php-ext-enable xdebug
+
 COPY .docker/php.ini /usr/local/etc/php/php.ini
+COPY .docker/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 WORKDIR /app
 
