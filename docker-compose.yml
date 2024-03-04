@@ -1,0 +1,76 @@
+version: '3'
+services:
+  opensearch-node1:
+    image:
+      opensearchproject/opensearch:1.2.1
+    container_name: opensearch-node1
+    environment:
+      - cluster.name=opensearch-cluster
+      - node.name=opensearch-node1
+      - discovery.seed_hosts=opensearch-node1
+      - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+      - "OPENSEARCH_JAVA_OPTS=-Xms1512m -Xmx1512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+      - "DISABLE_INSTALL_DEMO_CONFIG=true"
+      - "DISABLE_SECURITY_PLUGIN=true"
+      - "action.destructive_requires_name=true"
+      - "discovery.type=single-node"
+      - "plugins.index_state_management.enabled=false"
+      - "logger.level=debug"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536 # maximum number of open files for the OpenSearch user, set to at least 65536 on modern systems
+        hard: 65536
+    ports:
+      - 9200:9200
+      - 9600:9600 # required for Performance Analyzer
+    networks:
+      - opensearch-net
+  opensearch-dashboards:
+    image:
+      opensearchproject/opensearch-dashboards:1.2.0
+    container_name: opensearch-dashboards
+    ports:
+      - 5601:5601
+    expose:
+      - "5601"
+    environment:
+      - 'OPENSEARCH_HOSTS=[
+  "http://opensearch-node1:9200"
+]' # must be a string with no spaces when specified as an environment variable
+      - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
+    networks:
+      - opensearch-net
+  api-dummy:
+    image: elifesciences/api-dummy:ffc4b64a5df674c0f39a31a2a40db65e058eb9bf
+    container_name: api-dummy
+    ports:
+      - 5002:8080
+    networks:
+      - opensearch-net
+  gearman:
+    image: artefactual/gearmand:latest
+    container_name: gearman
+    ports:
+      - 4731:4730
+  gearmanui:
+    image: koryonik/gearman-ui
+    container_name: gearmanui
+    ports:
+      - "8085:80"
+    links:
+      - gearman
+  goaws:
+    image: pafortin/goaws
+    container_name: goaws
+    volumes:
+      - ./.docker/goaws.yaml:/conf/goaws.yaml
+    ports:
+      - 4100:4100
+    networks:
+      - opensearch-net
+
+networks:
+  opensearch-net:
