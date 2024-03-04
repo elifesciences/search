@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -e
 
-#echo "Stopping queue:watch"
-#sudo systemctl start search-queue-watch-controller.target
-
 echo "Clean up the queue"
 ./bin/console queue:clean
 
