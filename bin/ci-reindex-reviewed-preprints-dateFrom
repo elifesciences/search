@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -e
+
+echo "Clean up the queue"
+./bin/console queue:clean
+
+echo "importing reviewed preprints from 2022-07-03"
+./bin/console queue:import ReviewedPreprints --dateFrom="2022-07-03T00:00:00Z"
+
+expected_total=$(bin/console queue:count)
+actual_total=$(curl "localhost:8080/reviewed-preprints?start-date=2022-07-03" | jq ".items | length")
+
+echo "Check if queue contains exactly $expected_total items"
+if [ ! "$expected_total" -eq "$actual_total" ]; then
+  echo "There should be exactly $expected_total in the queue when filtering by start-date, but $actual_total items found"
+  exit 1
+fi
+
+echo "Clean up"
+./bin/console queue:clean
