@@ -3,14 +3,15 @@
 namespace eLife\Search\Gearman\Command;
 
 use DateTimeImmutable;
-use eLife\ApiClient\HttpClient\ForbiddingHttpClient;
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Collection\Sequence;
+use eLife\ApiSdk\Model\ArticleVersion;
+use eLife\ApiSdk\Model\HasPublishedDate;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
+use Iterator;
 use Psr\Log\LoggerInterface;
-use ReflectionProperty;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -164,56 +165,34 @@ final class ImportCommand extends Command
         $this->iterateSerializeTask($articles, 'blog-article', 'getId', $articles->count());
     }
 
-    private function iterateSerializeTask(Sequence $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
+    private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
         $this->logger->info("Importing $count items of type $type");
         $progress = new ProgressBar($this->output, $count);
         $limit = $this->limit;
 
-        // lazy iterate here instead of relying on the SDK methods
-        foreach ($this->lazySlices($items) as $item) {
+        $items->rewind();
+        while ($items->valid()) {
             if ($limit->hasBeenReached()) {
                 throw new RuntimeException('Command cannot complete because: '.implode(', ', $limit->getReasons()));
             }
             $progress->advance();
             try {
+                $item = $items->current();
+                if (null === $item) {
+                    $items->next();
+                    continue;
+                }
                 $this->enqueue($type, $item->$method());
             } catch (Throwable $e) {
                 $item = $item ?? null;
                 $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
                 $this->monitoring->recordException($e, 'Skipping import on a '.get_class($item));
             }
+            $items->next();
         }
         $progress->finish();
         $progress->clear();
-    }
-
-    private function lazySlices(Sequence $items): \Generator
-    {
-        $denormalizerProperty = new ReflectionProperty($items, 'denormalizer');
-        $denormalizerProperty->setAccessible(true);
-
-        // create 100-item slices
-        $total = $items->count();
-        $sliceStart = 0;
-        $sliceSize = 100;
-        while ($total >= $sliceStart) {
-            foreach ($items->slice($sliceStart, $sliceSize)->toArray() as $item) {
-                // create a Generator to iterate over items in a slice
-                yield $item;
-            }
-            $sliceStart += $sliceSize;
-
-            // This is the magic memory fixer. Without resetting the serialiser, memory continues to grow
-            $denormalizerProperty->setValue($items, $this->getNewSerializer());
-        }
-        return;
-    }
-
-    private function getNewSerializer()
-    {
-        $client = new ApiSdk(new ForbiddingHttpClient());
-        return $client->getSerializer();
     }
 
     private function enqueue($type, $identifier)
