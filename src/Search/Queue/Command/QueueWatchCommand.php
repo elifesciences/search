@@ -43,5 +43,6 @@ class QueueWatchCommand extends QueueCommand
     protected function process(InputInterface $input, QueueItem $item, $entity = null)
     {
         $this->workflow->process($item, $entity);
+        sleep(0.5);
     }
 }
