@@ -3,14 +3,12 @@
 namespace eLife\Search\Queue\Command;
 
 use DateTimeImmutable;
-use eLife\ApiClient\HttpClient\ForbiddingHttpClient;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\Sequence;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
 use Psr\Log\LoggerInterface;
-use ReflectionProperty;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -190,9 +188,6 @@ final class ImportCommand extends Command
 
     private function lazySlices(Sequence $items): \Generator
     {
-        $denormalizerProperty = new ReflectionProperty($items, 'denormalizer');
-        $denormalizerProperty->setAccessible(true);
-
         // create 100-item slices
         $total = $items->count();
         $sliceStart = 0;
@@ -203,17 +198,7 @@ final class ImportCommand extends Command
                 yield $item;
             }
             $sliceStart += $sliceSize;
-
-            // This is the magic memory fixer. Without resetting the serialiser, memory continues to grow
-            $denormalizerProperty->setValue($items, $this->getNewSerializer());
         }
-        return;
-    }
-
-    private function getNewSerializer()
-    {
-        $client = new ApiSdk(new ForbiddingHttpClient());
-        return $client->getSerializer();
     }
 
     private function enqueue($type, $identifier)
