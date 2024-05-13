@@ -86,7 +86,7 @@ final class ImportCommand extends Command
                 foreach (self::$supports as $e) {
                     if ('all' !== $e) {
                         // Run the item.
-
+                        $output->writeln('<comment>'.$e.'</comment>');
                         $this->{'import'.$e}();
                     }
                 }

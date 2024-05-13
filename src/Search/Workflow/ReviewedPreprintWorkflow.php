@@ -21,6 +21,19 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
 
+    const VOR_TYPES = [
+        'research-article',
+        'tools-resources',
+        'short-report',
+        'research-advance',
+        'correction',
+        'editorial',
+        'feature',
+        'insight',
+        'retraction',
+        'review-article',
+        'scientific-correspondence',
+    ];
     /**
      * @var Serializer
      */

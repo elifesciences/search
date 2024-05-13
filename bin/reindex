@@ -16,6 +16,9 @@ echo "Creating new index $index_name"
 echo "Switching writes to new index $index_name"
 ./bin/console index:switch:write "$index_name"
 
+echo "Restarting services"
+sudo systemctl restart queuewatch.service
+
 echo "Importing all API content"
 ./bin/console queue:import all
 

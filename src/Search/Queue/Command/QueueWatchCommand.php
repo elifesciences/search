@@ -36,13 +36,14 @@ class QueueWatchCommand extends QueueCommand
         $this
             ->setName('queue:watch')
             ->setDescription('Create queue watcher')
-            ->setHelp('Creates process that will watch for incoming items on a queue')
-            ->addArgument('id', InputArgument::OPTIONAL, 'Identifier to distinguish workers from each other');
+            ->setHelp('Creates process that will watch for incoming items on a queue');
     }
 
     protected function process(InputInterface $input, QueueItem $item, $entity = null)
     {
-        $this->workflow->process($item, $entity);
-        sleep(0.5);
+        $entity = $this->transform($item);
+        if ($entity) {
+            $this->workflow->getWorkflow($item)->run($entity);
+        }
     }
 }
