@@ -399,10 +399,13 @@ final class Kernel implements MinimalKernel
                 $config['endpoint'] = $app['config']['aws']['endpoint'];
             }
             if (!isset($app['config']['aws']['credential_file']) || false === $app['config']['aws']['credential_file']) {
-                $config['credentials'] = [
-                    'key' => $app['config']['aws']['key'],
-                    'secret' => $app['config']['aws']['secret'],
-                ];
+                $config['credentials'] = false;
+                if (isset($app['config']['aws']['credentials']) && $app['config']['aws']['credentials'] === false) {
+                    $config['credentials'] = [
+                        'key' => $app['config']['aws']['key'],
+                        'secret' => $app['config']['aws']['secret'],
+                    ];
+                }
             }
 
             return new SqsClient($config);
