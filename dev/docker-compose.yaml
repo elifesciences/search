@@ -35,23 +35,17 @@ services:
             - '5002:8080'
         networks:
             - opensearch-net
-    gearman:
-        image: artefactual/gearmand:latest
-        container_name: gearman
-        ports:
-            - '4730:4730'
-        networks:
-            - opensearch-net
 
     localstack:
         image: localstack/localstack:2.3.2
         environment:
             - SERVICES=sqs
             - AWS_DEFAULT_REGION=eu-central-1
-            - EDGE_PORT=4566
+            - HOSTNAME=localstack
             - HOSTNAME_EXTERNAL=localstack
         ports:
-            - '4566:4566'
+            - "127.0.0.1:4566:4566"            # LocalStack Gateway
+            - "127.0.0.1:4510-4559:4510-4559"  # external services port range
         networks:
             - opensearch-net
 
@@ -70,7 +64,6 @@ services:
             - opensearch-net
         depends_on:
             - opensearch
-            - gearman
             - localstack
         stdin_open: true
         tty: true

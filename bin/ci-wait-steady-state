@@ -5,9 +5,7 @@ for i in $(seq 60); do
   echo -n "."
 
   sqs_queue=$(bin/console queue:count || true)
-  gearman_queue=$(gearadmin --show-jobs | wc -l || true)
-  # NOTE: gearadmin includes an additional line in it's output that needs to be ignored, hence the 1 rather than 0.
-  if [ "$sqs_queue" -eq "0" ] && [ "$gearman_queue" -eq "1" ]; then
+  if [ "$sqs_queue" -eq "0" ]; then
     echo "OK"
     break
   fi

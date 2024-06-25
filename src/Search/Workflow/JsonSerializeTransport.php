@@ -26,6 +26,9 @@ trait JsonSerializeTransport
     {
         $this->checkSerializer();
 
+        return $this->serializer->deserialize($json, $this->getSdkClass(), 'json');
+
+        //todo: the following code causes a conflict when reading from $cache
         $key = sha1($json);
         if (!isset(self::$cache[$key])) {
             self::$cache[$key] = $this->serializer->deserialize($json, $this->getSdkClass(), 'json');
@@ -38,6 +41,9 @@ trait JsonSerializeTransport
     {
         $this->checkSerializer();
 
+        return $this->serializer->serialize($item, 'json');
+
+        //todo: the following code causes a conflict when reading from $cache
         $key = spl_object_hash($item);
         if (!isset(self::$cache[$key])) {
             self::$cache[$key] = $this->serializer->serialize($item, 'json');

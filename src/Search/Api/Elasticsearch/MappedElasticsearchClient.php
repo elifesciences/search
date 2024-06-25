@@ -26,7 +26,7 @@ class MappedElasticsearchClient
         $this->index = $indexName;
     }
 
-    public function index() : string
+    public function index(): string
     {
         return $this->index;
     }
@@ -59,7 +59,7 @@ class MappedElasticsearchClient
         return $this->libraryClient->delete($params)['payload'] ?? null;
     }
 
-    public function searchDocuments(array $query) : QueryResponse
+    public function searchDocuments(array $query): QueryResponse
     {
         $query['client'] = $this->readClientOptions;
 
@@ -83,5 +83,25 @@ class MappedElasticsearchClient
 
             throw $e;
         }
+    }
+
+    public function articleExists($id, array $types): bool
+    {
+        $params = [
+            'index' => $this->index,
+            'body'  => [
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            ['terms' => ['type.keyword' => $types]],
+                            ['term' => ['id' => $id]]
+                        ]
+                    ]
+                ],
+                'size' => 1
+            ]
+        ];
+        $response = $this->searchDocuments($params);
+        return count($response->toArray()) > 0;
     }
 }
