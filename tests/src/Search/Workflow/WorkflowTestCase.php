@@ -66,17 +66,27 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
 
     public function workflowProvider(string $model = null, string $modelClass = null, int $version = null) : Traversable
     {
+        $paths = [];
         $model = $this->getModel() ?? $model;
         $version = $this->getVersion() ?? $version;
+        $modelClass = $this->getModelClass() ?? $modelClass;
 
-        $samples = Finder::create()->files()->in(
-            ComposerLocator::getPath('elife/api')."/dist/samples/{$model}/v{$version}"
-        );
+        $paths[] = ComposerLocator::getPath('elife/api') . "/dist/samples/{$model}/v{$version}";
 
-        foreach ($samples as $sample) {
-            $name = "{$model}/v{$version}/{$sample->getBasename()}";
-            $contents = json_decode($sample->getContents(), true);
-            $object = $this->getSerializer()->denormalize($contents, $this->getModelClass() ?? $modelClass);
+        // Collect local fixtures
+        if (is_dir($localPath = __DIR__ . "/../../../Fixtures/{$model}/v{$version}")) {
+            $paths[] = $localPath;
+        }
+
+        $finder = new Finder();
+
+        $finder->files()->in($paths)->name('*.json');
+
+        // Iterate over files found by Finder
+        foreach ($finder as $file) {
+            $name = "{$model}/v{$version}/{$file->getBasename()}";
+            $contents = json_decode($file->getContents(), true);
+            $object = $this->getSerializer()->denormalize($contents, $modelClass);
             yield $name => [$object];
         }
     }
