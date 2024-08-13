@@ -86,6 +86,7 @@ services:
             dockerfile: Dockerfile
         environment:
             - GEARMAN_HOST=gearman
+            - GATEWAY_HOST=api-dummy:8080
         volumes:
             - ./:/app
             - ./config.php:/app/config.php
