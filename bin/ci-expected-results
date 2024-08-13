@@ -9,8 +9,8 @@ if [ ! "$actual_total" ]; then
 fi
 echo "Total results in the index: $actual_total"
 gateway_total=$(bin/console gateway:total)
-gateway_search_rp=$(curl "localhost/search?per-page=1&type[]=reviewed-preprint" | jq ".total")
-gateway_rp=$(curl "localhost/reviewed-preprints" | jq ".total")
+gateway_search_rp=$(curl "${GATEWAY_HOST:-"localhost:8080"}/search?per-page=1&type[]=reviewed-preprint" | jq ".total")
+gateway_rp=$(curl "${GATEWAY_HOST:-"localhost:8080"}/reviewed-preprints" | jq ".total")
 # Expected total must offset reviewed-preprints which are also in article store
 expected_total=$((gateway_total + gateway_search_rp - gateway_rp))
 if [ ! "$actual_total" -eq "$expected_total" ]; then
@@ -26,7 +26,7 @@ if [ ! "$actual_total" -eq "$expected_total" ]; then
         else
             id_field=".id"
         fi
-        expected_t=$(curl "localhost/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
+        expected_t=$(curl "${GATEWAY_HOST:-"localhost:8080"}/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
         actual_t=$(curl "localhost/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
         if [ "$actual_t" != "$expected_t" ]; then
             echo "${t} expected: \"${expected_t}\", actual: \"${actual_t}\""
