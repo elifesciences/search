@@ -35,6 +35,11 @@ services:
         container_name: api-dummy
         ports:
             - '5002:8080'
+        healthcheck:
+            test: ["CMD-SHELL", "curl --silent --fail localhost:8080/articles || exit 1"]
+            interval: 2s
+            timeout: 2s
+            retries: 10
 
     gearman:
         image: artefactual/gearmand:latest
@@ -94,6 +99,8 @@ services:
         depends_on:
             setup:
                 condition: service_completed_successfully
+            api-dummy:
+                condition: service_healthy
         stdin_open: true
         tty: true
 
