@@ -62,8 +62,8 @@ services:
         environment:
             - GEARMAN_HOST=gearman
         volumes:
-            - ..:/app
-            - ./config.php.dist:/app/config.php
+            - ./:/app
+            - ./config.php:/app/config.php
         ports:
             - '8888:80'
         networks:

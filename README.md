@@ -9,45 +9,35 @@ To reliably recreate any issue experienced in CI or Prod you should continue to 
 Important: Keep in mind that docker is just used to improve the developer experience.
 
 1. Clone the project `git clone https://github.com/elifesciences/search.git`
-2. Rename `/dev/config.php.dist` on local to `/dev/config.php`
-3. Run `docker-compose -f dev/docker-compose.yaml up --build`
+2. Rename `config.php.dist` on local to `/dev/config.php`
+3. Run `docker-compose up --build`
 
 ### Setup
 
-Follow the steps below to set up the project:
+1. Run following commands in order to set up the project:
+    ```bash
+    $ docker-compose exec app bin/console queue:create
+    $ docker-compose exec app bin/console search:setup # will create necessary indices in Elasticsearch
+    $ docker-compose exec app bin/console keyvalue:setup
+    ```
 
-1. Go to `app` container:
+1. The `bin/console queue:import` command imports items from API and adds them into the queue:
+    ```bash
+    $ docker-compose exec app bin/console queue:import all # other possible values can be found in src/Search/Gearman/Command/ImportCommand.php
+    ```
 
-```bash 
-$ docker-compose -f dev/docker-compose.yaml exec app /bin/bash
-```
+1. After adding items to the queue, running the following command will index them in Elasticsearch:
+    ```bash
+    $ docker-compose exec app bin/console queue:watch
+    ```
 
-2. Run following commands in order:
-
-```bash 
-$ bin/console queue:create
-$ bin/console search:setup # will create necessary indices in Elasticsearch
-$ bin/console keyvalue:setup
-```
-
-3. The `bin/console queue:import` command imports items from API and adds them into the queue:
-
-```bash
-$ bin/console queue:import all # other possible values can be found in src/Search/Gearman/Command/ImportCommand.php 
-```
-
-4. After adding items to the queue, running the following command will index them in Elasticsearch:
-```bash
-$ bin/console queue:watch
-```
-
-5. In another session run the command below:
-```bash
-$ bin/console gearman:worker
-```
+1. In another session run the command below:
+    ```bash
+    $ docker-compose exec app bin/console gearman:worker
+    ```
 
 Now you can access the search API on http://localhost:8888/search
 
 ### Testing
 
-To run the tests: `docker-compose -f dev/docker-compose.yaml exec app vendor/bin/phpunit`
+To run the tests: `docker-compose exec app vendor/bin/phpunit`
