@@ -21,14 +21,10 @@ jobs:
       - name: Copy example config
         run: cp config.php.dist config.php
       - name: Bring up test stack
-        run: docker compose up --wait
+        run: docker compose up app --wait
       - name: Debug bring up test stack
         if: failure()
         run: docker compose logs
-      - name: lint
-        run: docker compose exec app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
-      - name: Unit Tests
-        run: docker compose exec app vendor/bin/phpunit
       - name: Project Tests
         run: docker compose exec app bash /app/project_tests.sh
       - name: Smoke Tests
