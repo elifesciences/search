@@ -6,8 +6,6 @@ services:
             context: .
             dockerfile: Dockerfile.opensearch
 
-        container_name: opensearch
-        restart: on-failure
         environment:
             - cluster.name=opensearch-cluster
             - node.name=opensearch
@@ -26,22 +24,26 @@ services:
         ports:
             - '9200:9200'
             - '9600:9600' # required for Performance Analyzer
-        networks:
-            - opensearch-net
+        healthcheck:
+            test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+            interval: 2s
+            timeout: 2s
+            retries: 10
+
     api-dummy:
         image: elifesciences/api-dummy:c66acdb349850d31b4e7a0f578ffdc87e2fada96
         container_name: api-dummy
         ports:
             - '5002:8080'
-        networks:
-            - opensearch-net
+
     gearman:
         image: artefactual/gearmand:latest
         container_name: gearman
-        ports:
-            - '4730:4730'
-        networks:
-            - opensearch-net
+        healthcheck:
+            test: ["CMD-SHELL", "gearadmin --status"]
+            interval: 2s
+            timeout: 2s
+            retries: 3
 
     localstack:
         image: localstack/localstack:2.3.2
@@ -52,8 +54,30 @@ services:
             - HOSTNAME_EXTERNAL=localstack
         ports:
             - '4566:4566'
-        networks:
-            - opensearch-net
+
+    setup:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            - GEARMAN_HOST=gearman
+        command:
+        - /bin/bash
+        - "-c"
+        - |
+            php bin/console queue:create;
+            php bin/console search:setup;
+            php bin/console keyvalue:setup
+        volumes:
+            - ./:/app
+            - ./config.php:/app/config.php
+        depends_on:
+            opensearch:
+                condition: service_healthy
+            gearman:
+                condition: service_healthy
+            localstack:
+                condition: service_healthy
 
     app:
         build:
@@ -66,14 +90,40 @@ services:
             - ./config.php:/app/config.php
         ports:
             - '8888:80'
-        networks:
-            - opensearch-net
         depends_on:
-            - opensearch
-            - gearman
-            - localstack
+            setup:
+                condition: service_completed_successfully
         stdin_open: true
         tty: true
+
+    gearman-worker:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        command: bin/console gearman:worker
+        environment:
+            - GEARMAN_HOST=gearman
+        volumes:
+            - ./:/app
+            - ./config.php:/app/config.php
+        depends_on:
+            setup:
+                condition: service_completed_successfully
+
+    queue-watcher:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        command: bin/console queue:watch
+        environment:
+            - GEARMAN_HOST=gearman
+        volumes:
+            - ./:/app
+            - ./config.php:/app/config.php
+        depends_on:
+            setup:
+                condition: service_completed_successfully
+
 
 volumes:
     opensearch-data1:

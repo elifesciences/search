@@ -15,6 +15,6 @@ WORKDIR /app
 COPY --from=composer:2.4 /usr/bin/composer /usr/bin/composer
 COPY . /app/
 
-ENTRYPOINT ["php", "-S", "0.0.0.0:80", "-t", "./web", "./web/app_dev.php"]
+CMD ["php", "-S", "0.0.0.0:80", "-t", "./web", "./web/app_dev.php"]
 
 EXPOSE 80
