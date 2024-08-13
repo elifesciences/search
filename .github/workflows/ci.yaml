@@ -20,8 +20,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Copy example config
         run: cp config.php.dist config.php
-      - name: Composer install
-        run: docker compose run --rm app composer install
       - name: Bring up test stack
         run: docker compose up --wait
       - name: Debug bring up test stack
