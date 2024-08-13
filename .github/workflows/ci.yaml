@@ -1,0 +1,78 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy example config
+        run: cp config.php.dist config.php
+      - name: linting
+        run: docker compose exec app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bring up test stack
+        run: docker compose up --wait
+      - name: Debug bring up browser test stack
+        if: failure()
+        run: docker compose logs app
+      - name: Unit Tests
+        run: docker compose exec app vendor/bin/phpunit
+      - name: Project Tests
+        run: docker compose exec app bash /app/project_tests.sh
+      - name: Smoke Tests
+        run: docker compose exec app bash /app/smoke_tests.sh
+      - name: Take down browser test stack
+        if: always()
+        run: docker compose down
+  build-and-push:
+    needs: [lint, tests]
+    runs-on: ubuntu-latest
+    # if: github.ref == 'refs/heads/master'
+    env:
+      IMAGE_REPO: ghcr.io/elifesciences/search
+    outputs:
+      image_tag: master-${{ steps.commit_sha.outputs.commit_sha }}-${{ steps.date.outputs.date }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get current date
+        id: date
+        run: echo "date=$(date --utc +%Y%m%d.%H%M)" >> $GITHUB_OUTPUT
+      - name: Get sha with 8 chars long
+        id: commit_sha
+        run: echo "commit_sha=${GITHUB_SHA:0:8}" >> $GITHUB_OUTPUT
+      - name: Build and push client image
+        uses: docker/build-push-action@v5
+        with:
+          # push: true
+          push: false
+          load: false
+          platforms: linux/amd64,linux/arm64
+          tags: |
+            ${{ env.IMAGE_REPO }}:latest
+            ${{ env.IMAGE_REPO }}:${{ github.sha }}
+            ${{ env.IMAGE_REPO }}:master-${{ steps.commit_sha.outputs.commit_sha }}-${{ steps.date.outputs.date }}
