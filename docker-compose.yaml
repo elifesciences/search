@@ -127,7 +127,3 @@ services:
 
 volumes:
     opensearch-data1:
-
-networks:
-    opensearch-net:
-        driver: bridge
