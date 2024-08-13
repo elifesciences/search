@@ -20,8 +20,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Copy example config
         run: cp config.php.dist config.php
-      - name: linting
-        run: docker compose run --rm app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
       - name: Bring up test stack
         run: docker compose up --wait
       - name: Debug bring up test stack
@@ -29,6 +27,8 @@ jobs:
         run: docker compose logs
       - name: Composer install
         run: docker compose exec app composer install
+      - name: lint
+        run: docker compose exec app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
       - name: Unit Tests
         run: docker compose exec app vendor/bin/phpunit
       - name: Project Tests
