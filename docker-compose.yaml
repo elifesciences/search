@@ -65,6 +65,7 @@ services:
         - /bin/bash
         - "-c"
         - |
+            composer install
             php bin/console queue:create;
             php bin/console search:setup;
             php bin/console keyvalue:setup
