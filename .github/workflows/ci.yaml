@@ -14,18 +14,14 @@ on:
       - '*'
 
 jobs:
-  lint:
+  tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Copy example config
         run: cp config.php.dist config.php
       - name: linting
-        run: docker compose run app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+        run: docker compose run --rm app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
       - name: Bring up test stack
         run: docker compose up --wait
       - name: Debug bring up browser test stack
@@ -41,7 +37,7 @@ jobs:
         if: always()
         run: docker compose down
   build-and-push:
-    needs: [lint, tests]
+    needs: [tests]
     runs-on: ubuntu-latest
     # if: github.ref == 'refs/heads/master'
     env:
