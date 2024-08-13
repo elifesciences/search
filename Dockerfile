@@ -2,7 +2,7 @@ FROM php:7.4-cli
 
 USER root
 
-RUN apt update && apt install libgearman-dev zip unzip gearman-tools bc procps jq apache2-utils -y && pecl install gearman
+RUN apt update && apt install libgearman-dev zip unzip gearman-tools bc procps jq apache2-utils retry -y && pecl install gearman
 
 RUN docker-php-ext-enable gearman \
     && docker-php-ext-configure pcntl --enable-pcntl \
