@@ -24,7 +24,7 @@ jobs:
         run: docker compose run --rm app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
       - name: Bring up test stack
         run: docker compose up --wait
-      - name: Debug bring up browser test stack
+      - name: Debug bring up test stack
         if: failure()
         run: docker compose logs app
       - name: Unit Tests
@@ -33,7 +33,7 @@ jobs:
         run: docker compose exec app bash /app/project_tests.sh
       - name: Smoke Tests
         run: docker compose exec app bash /app/smoke_tests.sh
-      - name: Take down browser test stack
+      - name: Take down test stack
         if: always()
         run: docker compose down
   build-and-push:
