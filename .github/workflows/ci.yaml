@@ -25,6 +25,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Bring up test stack
         run: docker compose up --wait
       - name: Debug bring up browser test stack
