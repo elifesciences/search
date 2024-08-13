@@ -21,7 +21,7 @@ jobs:
       - name: Copy example config
         run: cp config.php.dist config.php
       - name: linting
-        run: docker compose exec app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
+        run: docker compose run app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
   tests:
     runs-on: ubuntu-latest
     steps:
