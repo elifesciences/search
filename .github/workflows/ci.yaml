@@ -27,6 +27,8 @@ jobs:
       - name: Debug bring up test stack
         if: failure()
         run: docker compose logs
+      - name: Composer install
+        run: docker compose exec app composer install
       - name: Unit Tests
         run: docker compose exec app vendor/bin/phpunit
       - name: Project Tests
