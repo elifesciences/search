@@ -73,7 +73,7 @@ services:
             composer install
             php bin/console queue:create;
             php bin/console search:setup;
-            php bin/console keyvalue:setup;
+            php bin/console keyvalue:setup
         volumes:
             - ./:/app
             - ./config.php:/app/config.php
