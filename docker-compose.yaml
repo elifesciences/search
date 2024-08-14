@@ -1,6 +1,4 @@
-version: '3'
 services:
-
     opensearch:
         build:
             context: .
@@ -32,7 +30,6 @@ services:
 
     api-dummy:
         image: elifesciences/api-dummy:c66acdb349850d31b4e7a0f578ffdc87e2fada96
-        container_name: api-dummy
         ports:
             - '5002:8080'
         healthcheck:
@@ -43,7 +40,6 @@ services:
 
     gearman:
         image: artefactual/gearmand:latest
-        container_name: gearman
         healthcheck:
             test: ["CMD-SHELL", "gearadmin --status"]
             interval: 2s
@@ -64,8 +60,6 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        environment:
-            - GEARMAN_HOST=gearman
         command:
         - /bin/bash
         - "-c"
@@ -124,8 +118,6 @@ services:
             context: .
             dockerfile: Dockerfile
         command: bin/console queue:watch
-        environment:
-            - GEARMAN_HOST=gearman
         volumes:
             - ./:/app
             - ./config.php:/app/config.php
