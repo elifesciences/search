@@ -39,7 +39,7 @@ jobs:
     env:
       IMAGE_REPO: ghcr.io/elifesciences/search
     outputs:
-      image_tag: master-${{ steps.commit_sha.outputs.commit_sha }}-${{ steps.date.outputs.date }}
+      image_tag: test-${{ steps.commit_sha.outputs.commit_sha }}-${{ steps.date.outputs.date }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up QEMU
@@ -62,7 +62,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           # push: true
-          push: false
+          push: true
           load: false
           platforms: linux/amd64,linux/arm64
           tags: |
