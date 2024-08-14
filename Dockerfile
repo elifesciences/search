@@ -34,6 +34,8 @@ COPY --from=deps /app/vendor /app/vendor
 #
 FROM app as dev
 
+COPY --from=composer:2.4 /usr/bin/composer /usr/bin/composer
+
 # Install additional tools needed for tests
 RUN apt update && apt install apache2-utils retry -y
 
