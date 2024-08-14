@@ -61,10 +61,10 @@ jobs:
       - name: Build and push client image
         uses: docker/build-push-action@v5
         with:
-          # push: true
           push: true
           load: false
           platforms: linux/amd64,linux/arm64
+          target: prod
           tags: |
             ${{ env.IMAGE_REPO }}:latest
             ${{ env.IMAGE_REPO }}:${{ github.sha }}
