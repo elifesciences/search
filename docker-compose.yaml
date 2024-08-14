@@ -60,6 +60,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+            target: dev
         command:
         - /bin/bash
         - "-c"
@@ -104,6 +105,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+            target: dev
         command: bin/console gearman:worker
         environment:
             - GEARMAN_HOST=gearman
@@ -118,6 +120,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+            target: dev
         command: bin/console queue:watch
         volumes:
             - ./:/app
