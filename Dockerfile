@@ -5,7 +5,7 @@ FROM php:7.4-apache AS base
 
 USER root
 
-RUN apt update && apt install libgearman-dev zip unzip gearman-tools bc procps jq apache2-utils retry -y && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install libgearman-dev zip unzip gearman-tools bc procps jq -y && rm -rf /var/lib/apt/lists/*
 RUN pecl install gearman && docker-php-ext-enable gearman
 RUN docker-php-ext-configure pcntl --enable-pcntl &&  docker-php-ext-install pcntl
 
@@ -38,7 +38,7 @@ FROM app AS dev
 COPY --from=composer:2.4 /usr/bin/composer /usr/bin/composer
 
 # Install additional tools needed for tests
-RUN apt update && apt install apache2-utils retry -y
+RUN apt-get update && apt-get install retry -y
 
 # Use the PHP dev server to run the app
 CMD ["php", "-S", "0.0.0.0:80", "-t", "./web", "./web/app_dev.php"]
