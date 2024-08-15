@@ -92,21 +92,6 @@ services:
         stdin_open: true
         tty: true
 
-    gearman-worker:
-        build:
-            context: .
-            dockerfile: Dockerfile
-            target: dev
-        command: bin/console gearman:worker
-        environment:
-            - GEARMAN_HOST=gearman
-        volumes:
-            - ./:/app
-            - ./config.php:/app/config.php
-        depends_on:
-            setup:
-                condition: service_completed_successfully
-
     queue-watcher:
         build:
             context: .
