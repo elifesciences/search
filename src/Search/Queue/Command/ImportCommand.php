@@ -1,16 +1,13 @@
 <?php
 
-namespace eLife\Search\Gearman\Command;
+namespace eLife\Search\Queue\Command;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Model\ArticleVersion;
-use eLife\ApiSdk\Model\HasPublishedDate;
-use eLife\ApiSdk\Model\ReviewedPreprint;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
-use Iterator;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
@@ -89,7 +86,7 @@ final class ImportCommand extends Command
                 foreach (self::$supports as $e) {
                     if ('all' !== $e) {
                         // Run the item.
-
+                        $output->writeln('<comment>'.$e.'</comment>');
                         $this->{'import'.$e}();
                     }
                 }
@@ -165,34 +162,43 @@ final class ImportCommand extends Command
         $this->iterateSerializeTask($articles, 'blog-article', 'getId', $articles->count());
     }
 
-    private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
+    private function iterateSerializeTask(Sequence $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
         $this->logger->info("Importing $count items of type $type");
         $progress = new ProgressBar($this->output, $count);
         $limit = $this->limit;
 
-        $items->rewind();
-        while ($items->valid()) {
+        // lazy iterate here instead of relying on the SDK methods
+        foreach ($this->lazySlices($items) as $item) {
             if ($limit->hasBeenReached()) {
                 throw new RuntimeException('Command cannot complete because: '.implode(', ', $limit->getReasons()));
             }
             $progress->advance();
             try {
-                $item = $items->current();
-                if (null === $item) {
-                    $items->next();
-                    continue;
-                }
                 $this->enqueue($type, $item->$method());
             } catch (Throwable $e) {
                 $item = $item ?? null;
                 $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
                 $this->monitoring->recordException($e, 'Skipping import on a '.get_class($item));
             }
-            $items->next();
         }
         $progress->finish();
         $progress->clear();
+    }
+
+    private function lazySlices(Sequence $items): \Generator
+    {
+        // create 100-item slices
+        $total = $items->count();
+        $sliceStart = 0;
+        $sliceSize = 100;
+        while ($total >= $sliceStart) {
+            foreach ($items->slice($sliceStart, $sliceSize)->toArray() as $item) {
+                // create a Generator to iterate over items in a slice
+                yield $item;
+            }
+            $sliceStart += $sliceSize;
+        }
     }
 
     private function enqueue($type, $identifier)

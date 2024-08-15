@@ -5,8 +5,8 @@ namespace tests\eLife\Search\Workflow;
 use eLife\ApiSdk\Model\Interview;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\InterviewWorkflow;
-use eLife\Search\Workflow\Workflow;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -17,7 +17,7 @@ final class InterviewWorkflowTest extends WorkflowTestCase
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator
-    ) : Workflow
+    ) : AbstractWorkflow
     {
         return new InterviewWorkflow($serializer, $logger, $client, $validator);
     }

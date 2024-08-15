@@ -6,7 +6,7 @@ use Assert\Assertion;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\Search\Annotation\GearmanTask;
+use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -15,7 +15,7 @@ use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class ResearchArticleWorkflow implements Workflow
+final class ResearchArticleWorkflow extends AbstractWorkflow
 {
     use Blocks;
     use JsonSerializeTransport;
@@ -28,7 +28,6 @@ final class ResearchArticleWorkflow implements Workflow
      * @var Serializer
      */
     private $serializer;
-    private $logger;
     private $client;
     private $validator;
     private $rdsArticles;
@@ -48,13 +47,10 @@ final class ResearchArticleWorkflow implements Workflow
     }
 
     /**
-     * @GearmanTask(
-     *     name="research_article_index",
-     *     next="research_article_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param ArticleVersion $article
+     * @return array
      */
-    public function index(ArticleVersion $article) : array
+    public function index(Model $article) : array
     {
         $this->logger->debug('ResearchArticle<'.$article->getId().'> Indexing '.$article->getTitle());
 
@@ -139,10 +135,7 @@ final class ResearchArticleWorkflow implements Workflow
         ];
     }
 
-    /**
-     * @GearmanTask(name="research_article_insert", next="research_article_post_validate", parameters={"json", "id"})
-     */
-    public function insert(string $json, string $id)
+    public function insert(string $json, string $id, bool $skipInsert = false)
     {
         // Insert the document.
         $this->logger->debug('ResearchArticle<'.$id.'> importing into Elasticsearch.');
@@ -153,10 +146,7 @@ final class ResearchArticleWorkflow implements Workflow
         ];
     }
 
-    /**
-     * @GearmanTask(name="research_article_post_validate", parameters={"id"})
-     */
-    public function postValidate(string $id)
+    public function postValidate(string $id, bool $skipValidate = false) : int
     {
         $this->logger->debug('ResearchArticle<'.$id.'> post validation.');
         try {

@@ -20,24 +20,3 @@ for i in $(seq 60); do
 
   sleep 1
 done
-
-# Clean the Gearman Queue
-gearadmin -h ${GEARMAN_HOST:-localhost} --show-jobs | cut -f 1 | xargs -I % gearadmin -h ${GEARMAN_HOST:-localhost} --cancel-job % > /dev/null 2>&1
-
-echo -n "Waiting for job queue to empty..."
-for i in $(seq 60); do
-  echo -n "."
-
-  gearman_queue=$(gearadmin -h ${GEARMAN_HOST:-localhost} --show-jobs | cut -f 4 | paste -sd+ | bc || true)
-  if [ "$gearman_queue" -eq "0" ]; then
-    echo "OK"
-    break
-  fi
-
-  if [ "$i" -eq "60" ]; then
-    echo "FAILED"
-    exit 1
-  fi
-
-  sleep 1
-done
