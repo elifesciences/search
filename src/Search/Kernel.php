@@ -287,6 +287,12 @@ final class Kernel implements MinimalKernel
             if ($app['config']['elastic_logging']) {
                 $client->setLogger($app['logger']);
             }
+            if ($app['config']['elastic_username'] && $app['config']['elastic_password']) {
+                $client->setBasicAuthentication($app['config']['elastic_username'], $app['config']['elastic_password']);
+            }
+            if ($app['config']['elastic_ssl_verification']) {
+                $client->setSSLVerification($app['config']['elastic_ssl_verification']);
+            }
             $client->setSerializer($app['elastic.serializer']);
 
             return $client->build();
@@ -299,6 +305,12 @@ final class Kernel implements MinimalKernel
             // Logging for ElasticSearch.
             if ($app['config']['elastic_logging']) {
                 $client->setLogger($app['logger']);
+            }
+            if ($app['config']['elastic_username'] && $app['config']['elastic_password']) {
+                $client->setBasicAuthentication($app['config']['elastic_username'], $app['config']['elastic_password']);
+            }
+            if ($app['config']['elastic_ssl_verification']) {
+                $client->setSSLVerification($app['config']['elastic_ssl_verification']);
             }
 
             return $client->build();
