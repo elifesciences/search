@@ -287,10 +287,10 @@ final class Kernel implements MinimalKernel
             if ($app['config']['elastic_logging']) {
                 $client->setLogger($app['logger']);
             }
-            if ($app['config']['elastic_username'] && $app['config']['elastic_password']) {
+            if (isset($app['config']['elastic_username']) && isset($app['config']['elastic_password'])) {
                 $client->setBasicAuthentication($app['config']['elastic_username'], $app['config']['elastic_password']);
             }
-            if ($app['config']['elastic_ssl_verification']) {
+            if (isset($app['config']['elastic_ssl_verification'])) {
                 $client->setSSLVerification($app['config']['elastic_ssl_verification']);
             }
             $client->setSerializer($app['elastic.serializer']);
