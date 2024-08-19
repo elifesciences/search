@@ -10,6 +10,10 @@ on:
   push:
     branches:
       - master
+<<<<<<< HEAD
+=======
+      - develop
+>>>>>>> origin/develop
     tags:
       - '*'
 
@@ -35,7 +39,7 @@ jobs:
   build-and-push:
     needs: [tests]
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
     env:
       IMAGE_REPO: ghcr.io/elifesciences/search
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}

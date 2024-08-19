@@ -36,6 +36,7 @@ docker compose exec app bin/console queue:import all
 If you are running the queue watcher, you should now see the results by accessing the search API on http://localhost:8888/search
 
 If you are not running the watcher, inspect the queue count via
+
 ```shell
 docker compose exec app bin/console queue:count
 ```
