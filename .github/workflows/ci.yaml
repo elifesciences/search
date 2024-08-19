@@ -10,10 +10,7 @@ on:
   push:
     branches:
       - master
-<<<<<<< HEAD
-=======
       - develop
->>>>>>> origin/develop
     tags:
       - '*'
 
