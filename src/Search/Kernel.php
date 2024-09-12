@@ -84,6 +84,9 @@ final class Kernel implements MinimalKernel
             'elastic_servers' => ['http://localhost:9200'],
             'elastic_logging' => false,
             'elastic_force_sync' => false,
+            'elastic_username' => false,
+            'elastic_password' => false,
+            'elastic_ssl_verification' => true,
             'elastic_read_client_options' => [
                 'timeout' => 3,
                 'connect_timeout' => 0.5,
@@ -302,6 +305,11 @@ final class Kernel implements MinimalKernel
             if ($app['config']['elastic_logging']) {
                 $client->setLogger($app['logger']);
             }
+            if ($app['config']['elastic_username'] && $app['config']['elastic_password']) {
+                $client->setBasicAuthentication($app['config']['elastic_username'], $app['config']['elastic_password']);
+            }
+            $client->setSSLVerification($app['config']['elastic_ssl_verification']);
+
             $client->setSerializer($app['elastic.serializer']);
 
             return $client->build();
@@ -315,6 +323,10 @@ final class Kernel implements MinimalKernel
             if ($app['config']['elastic_logging']) {
                 $client->setLogger($app['logger']);
             }
+            if ($app['config']['elastic_username'] && $app['config']['elastic_password']) {
+                $client->setBasicAuthentication($app['config']['elastic_username'], $app['config']['elastic_password']);
+            }
+            $client->setSSLVerification($app['config']['elastic_ssl_verification']);
 
             return $client->build();
         };
