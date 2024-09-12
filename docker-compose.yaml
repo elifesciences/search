@@ -1,13 +1,9 @@
-version: '3'
 services:
-
     opensearch:
         build:
             context: .
             dockerfile: Dockerfile.opensearch
 
-        container_name: opensearch
-        restart: on-failure
         environment:
             - cluster.name=opensearch-cluster
             - node.name=opensearch
@@ -26,15 +22,21 @@ services:
         ports:
             - '9200:9200'
             - '9600:9600' # required for Performance Analyzer
-        networks:
-            - opensearch-net
+        healthcheck:
+            test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+            interval: 2s
+            timeout: 2s
+            retries: 10
+
     api-dummy:
         image: elifesciences/api-dummy:c66acdb349850d31b4e7a0f578ffdc87e2fada96
-        container_name: api-dummy
         ports:
             - '5002:8080'
-        networks:
-            - opensearch-net
+        healthcheck:
+            test: ["CMD-SHELL", "curl --silent --fail localhost:8080/articles || exit 1"]
+            interval: 2s
+            timeout: 2s
+            retries: 10
 
     localstack:
         image: localstack/localstack:2.3.2
@@ -46,31 +48,63 @@ services:
         ports:
             - "127.0.0.1:4566:4566"            # LocalStack Gateway
             - "127.0.0.1:4510-4559:4510-4559"  # external services port range
-        networks:
-            - opensearch-net
+
+    setup:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: dev
+        command:
+        - /bin/bash
+        - "-c"
+        - |
+            composer install
+            php bin/console queue:create;
+            php bin/console search:setup;
+            php bin/console keyvalue:setup
+        volumes:
+            - ./:/app
+            - ./config.php:/app/config.php
+        depends_on:
+            opensearch:
+                condition: service_healthy
+            localstack:
+                condition: service_healthy
 
     app:
         build:
             context: .
             dockerfile: Dockerfile
+            target: dev
         environment:
             - GEARMAN_HOST=gearman
+            - GATEWAY_HOST=api-dummy:8080
         volumes:
-            - ..:/app
-            - ./config.php.dist:/app/config.php
+            - ./:/app
+            - ./config.php:/app/config.php
         ports:
             - '8888:80'
-        networks:
-            - opensearch-net
         depends_on:
-            - opensearch
-            - localstack
+            setup:
+                condition: service_completed_successfully
+            api-dummy:
+                condition: service_healthy
         stdin_open: true
         tty: true
 
+    queue-watcher:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: dev
+        command: bin/console queue:watch
+        volumes:
+            - ./:/app
+            - ./config.php:/app/config.php
+        depends_on:
+            setup:
+                condition: service_completed_successfully
+
+
 volumes:
     opensearch-data1:
-
-networks:
-    opensearch-net:
-        driver: bridge
