@@ -92,6 +92,7 @@ services:
         volumes:
             - ./:/app
             - ./config.php:/app/config.php
+            - ./.docker/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
         ports:
             - '8888:80'
         depends_on:
@@ -101,6 +102,8 @@ services:
                 condition: service_healthy
         stdin_open: true
         tty: true
+        extra_hosts:
+            host.docker.internal: host-gateway
 
     gearman-worker:
         build:
