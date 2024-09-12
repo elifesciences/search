@@ -1,0 +1,138 @@
+services:
+    opensearch:
+        build:
+            context: .
+            dockerfile: Dockerfile.opensearch
+
+        environment:
+            - cluster.name=opensearch-cluster
+            - node.name=opensearch
+            - discovery.type=single-node
+            - DISABLE_SECURITY_PLUGIN=true
+            - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536 # maximum number of open files for the OpenSearch user, set to at least 65536 on modern systems
+                hard: 65536
+        volumes:
+            - opensearch-data1:/usr/share/opensearch/data
+        ports:
+            - '9200:9200'
+            - '9600:9600' # required for Performance Analyzer
+        healthcheck:
+            test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+            interval: 2s
+            timeout: 2s
+            retries: 10
+
+    api-dummy:
+        image: elifesciences/api-dummy:c66acdb349850d31b4e7a0f578ffdc87e2fada96
+        ports:
+            - '5002:8080'
+        healthcheck:
+            test: ["CMD-SHELL", "curl --silent --fail localhost:8080/articles || exit 1"]
+            interval: 2s
+            timeout: 2s
+            retries: 10
+
+    gearman:
+        image: artefactual/gearmand:latest
+        healthcheck:
+            test: ["CMD-SHELL", "gearadmin --status"]
+            interval: 2s
+            timeout: 2s
+            retries: 3
+
+    localstack:
+        image: localstack/localstack:2.3.2
+        environment:
+            - SERVICES=sqs
+            - AWS_DEFAULT_REGION=eu-central-1
+            - HOSTNAME=localstack
+            - HOSTNAME_EXTERNAL=localstack
+        ports:
+            - "127.0.0.1:4566:4566"            # LocalStack Gateway
+            - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+
+    setup:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: dev
+        command:
+        - /bin/bash
+        - "-c"
+        - |
+            composer install
+            php bin/console queue:create;
+            php bin/console search:setup;
+            php bin/console keyvalue:setup
+        volumes:
+            - ./:/app
+            - ./config.php:/app/config.php
+        depends_on:
+            opensearch:
+                condition: service_healthy
+            gearman:
+                condition: service_healthy
+            localstack:
+                condition: service_healthy
+
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: dev
+        environment:
+            - GEARMAN_HOST=gearman
+            - GATEWAY_HOST=api-dummy:8080
+        volumes:
+            - ./:/app
+            - ./config.php:/app/config.php
+            - ./.docker/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+        ports:
+            - '8888:80'
+        depends_on:
+            setup:
+                condition: service_completed_successfully
+            api-dummy:
+                condition: service_healthy
+        stdin_open: true
+        tty: true
+        extra_hosts:
+            host.docker.internal: host-gateway
+
+    gearman-worker:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: dev
+        command: bin/console gearman:worker
+        environment:
+            - GEARMAN_HOST=gearman
+        volumes:
+            - ./:/app
+            - ./config.php:/app/config.php
+        depends_on:
+            setup:
+                condition: service_completed_successfully
+
+    queue-watcher:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: dev
+        command: bin/console queue:watch
+        volumes:
+            - ./:/app
+            - ./config.php:/app/config.php
+        depends_on:
+            setup:
+                condition: service_completed_successfully
+
+
+volumes:
+    opensearch-data1:

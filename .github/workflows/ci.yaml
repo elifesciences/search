@@ -1,0 +1,71 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+  push:
+    branches:
+      - master
+      - develop
+    tags:
+      - '*'
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy example config
+        run: cp config.php.dist config.php
+      - name: Bring up test stack
+        run: docker compose up app --wait
+      - name: Debug bring up test stack
+        if: failure()
+        run: docker compose logs
+      - name: Project Tests
+        run: docker compose exec app bash /app/project_tests.sh
+      - name: Smoke Tests
+        run: docker compose exec app bash /app/smoke_tests.sh
+      - name: Take down test stack
+        if: always()
+        run: docker compose down
+  build-and-push:
+    needs: [tests]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+    env:
+      IMAGE_REPO: ghcr.io/elifesciences/search
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get current date
+        id: date
+        run: echo "date=$(date --utc +%Y%m%d.%H%M)" >> $GITHUB_OUTPUT
+      - name: Get sha with 8 chars long
+        id: commit_sha
+        run: echo "commit_sha=${GITHUB_SHA:0:8}" >> $GITHUB_OUTPUT
+      - name: Build and push client image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          load: false
+          platforms: linux/amd64,linux/arm64
+          target: prod
+          tags: |
+            ${{ env.IMAGE_REPO }}:latest
+            ${{ env.IMAGE_REPO }}:${{ github.sha }}
+            ${{ env.IMAGE_REPO }}:${{ env.BRANCH_NAME }}-${{ steps.commit_sha.outputs.commit_sha }}-${{ steps.date.outputs.date }}
