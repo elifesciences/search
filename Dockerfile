@@ -39,9 +39,11 @@ COPY --from=composer:2.4 /usr/bin/composer /usr/bin/composer
 # Install additional tools needed for tests
 RUN apt-get update && apt-get install retry -y
 
+# install tools and config for xdebug
+RUN pecl install xdebug-3.1.6 && docker-php-ext-enable xdebug
+
 # Use the PHP dev server to run the app
 CMD ["php", "-S", "0.0.0.0:80", "-t", "./web", "./web/app_dev.php"]
-
 
 ##
 ## Prod environment
