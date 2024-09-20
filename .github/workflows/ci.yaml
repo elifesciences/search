@@ -11,6 +11,7 @@ on:
     branches:
       - master
       - develop
+      - remove-gearman
     tags:
       - '*'
 
@@ -36,7 +37,7 @@ jobs:
   build-and-push:
     needs: [tests]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop'
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/remove-gearman'
     env:
       IMAGE_REPO: ghcr.io/elifesciences/search
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
