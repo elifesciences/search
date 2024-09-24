@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9ecf3e481d2cfa05798b1a7a4724c0d",
+    "content-hash": "93e46280efaea256e2ef9060b9081e91",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -837,35 +837,6 @@
                 "search"
             ],
             "time": "2022-09-30T12:28:55+00:00"
-        },
-        {
-            "name": "elife/api",
-            "version": "2.27.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/elifesciences/api-raml.git",
-                "reference": "1e8c848afb350650b6512f618117ec19e5b7b736"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/1e8c848afb350650b6512f618117ec19e5b7b736",
-                "reference": "1e8c848afb350650b6512f618117ec19e5b7b736",
-                "shasum": ""
-            },
-            "conflict": {
-                "justinrainbow/json-schema": "<3.0.0"
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "eLife Sciences API specification",
-            "support": {
-                "issues": "https://github.com/elifesciences/api-raml/issues",
-                "source": "https://github.com/elifesciences/api-raml/tree/2.27.0"
-            },
-            "time": "2024-02-06T11:13:31+00:00"
         },
         {
             "name": "elife/api-client",
@@ -5227,6 +5198,35 @@
             },
             "abandoned": "kevinrob/guzzle-cache-middleware",
             "time": "2019-11-26T09:34:53+00:00"
+        },
+        {
+            "name": "elife/api",
+            "version": "2.30.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/elifesciences/api-raml.git",
+                "reference": "952cbe319d3ed651e1e2e74d6f917d54202d1de9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/elifesciences/api-raml/zipball/952cbe319d3ed651e1e2e74d6f917d54202d1de9",
+                "reference": "952cbe319d3ed651e1e2e74d6f917d54202d1de9",
+                "shasum": ""
+            },
+            "conflict": {
+                "justinrainbow/json-schema": "<3.0.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "eLife Sciences API specification",
+            "support": {
+                "issues": "https://github.com/elifesciences/api-raml/issues",
+                "source": "https://github.com/elifesciences/api-raml/tree/2.30.0"
+            },
+            "time": "2024-08-28T10:05:55+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
