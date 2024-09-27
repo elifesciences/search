@@ -22,6 +22,13 @@ final class TypesResponse
     public $editorial;
 
     /**
+     * @SerializedName("expression-concern")
+     * @Type("integer")
+     * @Since(version="1")
+     */
+    public $expressionConcern;
+
+    /**
      * @Type("integer")
      * @Since(version="1")
      */
@@ -162,7 +169,8 @@ final class TypesResponse
         $interview = 0,
         $labsPost = 0,
         $podcastEpisode = 0,
-        $reviewedPreprint = 0
+        $reviewedPreprint = 0,
+        $expressionConcern = 0
     ) {
         $this->correction = $correction;
         $this->editorial = $editorial;
@@ -184,6 +192,7 @@ final class TypesResponse
         $this->labsPost = $labsPost;
         $this->podcastEpisode = $podcastEpisode;
         $this->reviewedPreprint = $reviewedPreprint;
+        $this->expressionConcern = $expressionConcern;
     }
 
     public static function fromArray(array $type_totals)
@@ -208,7 +217,8 @@ final class TypesResponse
             $type_totals['interview'] ?? 0,
             $type_totals['labs-post'] ?? 0,
             $type_totals['podcast-episode'] ?? 0,
-            $type_totals['reviewed-preprint'] ?? 0
+            $type_totals['reviewed-preprint'] ?? 0,
+            $type_totals['expression-concern'] ?? 0
         );
     }
 
