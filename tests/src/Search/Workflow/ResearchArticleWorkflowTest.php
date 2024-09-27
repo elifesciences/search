@@ -100,8 +100,8 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
     public function workflowProvider(string $model = null, string $modelClass = null, int $version = null) : Traversable
     {
         foreach (array_merge(
-            iterator_to_array(parent::workflowProvider('article-vor', ArticleVoR::class, 6)),
-            iterator_to_array(parent::workflowProvider('article-poa', ArticlePoA::class, 3))
+            iterator_to_array(parent::workflowProvider('article-vor', ArticleVoR::class, 8)),
+            iterator_to_array(parent::workflowProvider('article-poa', ArticlePoA::class, 4))
         ) as $k => $v) {
             yield $k => $v;
         }
