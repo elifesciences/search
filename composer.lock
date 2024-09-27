@@ -958,12 +958,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "a17a626911664a2c89012359ab7bb79a26ba40b4"
+                "reference": "fa98aa37bbe0ab28891de0a505aae7f54ae0bb30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/a17a626911664a2c89012359ab7bb79a26ba40b4",
-                "reference": "a17a626911664a2c89012359ab7bb79a26ba40b4",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/fa98aa37bbe0ab28891de0a505aae7f54ae0bb30",
+                "reference": "fa98aa37bbe0ab28891de0a505aae7f54ae0bb30",
                 "shasum": ""
             },
             "require": {
@@ -1009,7 +1009,7 @@
                 "issues": "https://github.com/elifesciences/api-sdk-php/issues",
                 "source": "https://github.com/elifesciences/api-sdk-php/tree/master"
             },
-            "time": "2024-09-24T14:19:55+00:00"
+            "time": "2024-09-27T09:14:39+00:00"
         },
         {
             "name": "elife/api-validator",
@@ -6976,5 +6976,5 @@
         "ext-gearman": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
