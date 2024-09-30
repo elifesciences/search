@@ -3,6 +3,7 @@
 namespace eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\Model;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 abstract class AbstractWorkflow
@@ -23,7 +24,7 @@ abstract class AbstractWorkflow
         $result = $this->insert($result['json'], $result['id'], $skipInsert);
         $skipValidate = $result['skipValidate'] ?? false;
         if (-1 === $this->postValidate($result['id'], $skipValidate)) {
-            throw new \Exception("post validate failed. Retrying...");
+            throw new Exception('post validate failed. Retrying...');
         }
     }
 }

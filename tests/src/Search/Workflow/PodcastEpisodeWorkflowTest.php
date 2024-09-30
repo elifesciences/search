@@ -3,10 +3,14 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\PodcastEpisode;
+use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
+use Exception;
+use Mockery;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -16,10 +20,11 @@ final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
+        ApiValidator $validator,
+        WatchableQueue $queue
     ) : AbstractWorkflow
     {
-        return new PodcastEpisodeWorkflow($serializer, $logger, $client, $validator);
+        return new PodcastEpisodeWorkflow($serializer, $logger, $client, $validator, $queue);
     }
 
     protected function getModel() : string
@@ -80,5 +85,51 @@ final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($podcastEpisode->getNumber(), $id);
+    }
+
+    /**
+     * @dataProvider workflowProvider
+     * @test
+     */
+    public function testPostValidateOfPodcastEpisode(PodcastEpisode $podcastEpisode)
+    {
+        $document = Mockery::mock(DocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with($podcastEpisode->getNumber())
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andReturn(true);
+        $ret = $this->workflow->postValidate($podcastEpisode->getNumber());
+        $this->assertEquals(1, $ret);
+    }
+
+    /**
+     * @test
+     */
+    public function testPostValidateOfPodcastEpisodeFailure()
+    {
+        $document = Mockery::mock(DocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with(1)
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andThrow(Exception::class);
+        $this->elastic->shouldReceive('deleteDocument')
+            ->once()
+            ->with(1);
+        $this->queue->shouldReceive('enqueue')
+            ->once();
+        $ret = $this->workflow->postValidate(1);
+        $this->assertEquals(-1, $ret);
     }
 }

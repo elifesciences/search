@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Type;
 
-final class DocumentResponse implements ElasticResponse
+class DocumentResponse implements ElasticResponse
 {
     /**
      * @Type("array")

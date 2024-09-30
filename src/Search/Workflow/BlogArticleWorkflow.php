@@ -5,6 +5,8 @@ namespace eLife\Search\Workflow;
 use Assert\Assertion;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Model;
+use eLife\Bus\Queue\InternalSqsMessage;
+use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -27,13 +29,21 @@ final class BlogArticleWorkflow extends AbstractWorkflow
     private $serializer;
     private $client;
     private $validator;
+    private $queue;
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
+    public function __construct(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        ApiValidator $validator,
+        WatchableQueue $queue
+    )
     {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
+        $this->queue = $queue;
     }
 
     /**
@@ -83,6 +93,7 @@ final class BlogArticleWorkflow extends AbstractWorkflow
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($id);
+            $this->queue->enqueue(new InternalSqsMessage('blog-article', $id));
 
             // We failed.
             return self::WORKFLOW_FAILURE;

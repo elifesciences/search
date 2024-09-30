@@ -3,10 +3,14 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\BlogArticle;
+use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\BlogArticleWorkflow;
+use Exception;
+use Mockery;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -16,10 +20,11 @@ final class BlogArticleWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
+        ApiValidator $validator,
+        WatchableQueue $queue
     ) : AbstractWorkflow
     {
-        return new BlogArticleWorkflow($serializer, $logger, $client, $validator);
+        return new BlogArticleWorkflow($serializer, $logger, $client, $validator, $queue);
     }
 
     protected function getModel() : string
@@ -80,5 +85,51 @@ final class BlogArticleWorkflowTest extends WorkflowTestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($blogArticle->getId(), $id);
+    }
+
+    /**
+     * @dataProvider workflowProvider
+     * @test
+     */
+    public function testPostValidateOfBlogArticle(BlogArticle $blogArticle)
+    {
+        $document = Mockery::mock(DocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with($blogArticle->getId())
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andReturn(true);
+        $ret = $this->workflow->postValidate($blogArticle->getId());
+        $this->assertEquals(1, $ret);
+    }
+
+    /**
+     * @test
+     */
+    public function testPostValidateOfBlogArticleFailure()
+    {
+        $document = Mockery::mock(DocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with('id')
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andThrow(Exception::class);
+        $this->elastic->shouldReceive('deleteDocument')
+            ->once()
+            ->with('id');
+        $this->queue->shouldReceive('enqueue')
+            ->once();
+        $ret = $this->workflow->postValidate('id');
+        $this->assertEquals(-1, $ret);
     }
 }

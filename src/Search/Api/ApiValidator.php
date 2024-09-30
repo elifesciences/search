@@ -4,7 +4,6 @@ namespace eLife\Search\Api;
 
 use eLife\ApiValidator\MessageValidator\JsonMessageValidator;
 use eLife\Search\Api\Response\SearchResponse;
-use eLife\Search\Api\Response\SearchResult;
 use eLife\Search\Api\Response\TypesResponse;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
@@ -12,7 +11,7 @@ use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-final class ApiValidator
+class ApiValidator
 {
     private $serializer;
     private $context;

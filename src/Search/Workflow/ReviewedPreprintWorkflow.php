@@ -5,6 +5,8 @@ namespace eLife\Search\Workflow;
 use Assert\Assertion;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\ReviewedPreprint;
+use eLife\Bus\Queue\InternalSqsMessage;
+use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -40,17 +42,21 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
     private $serializer;
     private $client;
     private $validator;
+    private $queue;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
-    ) {
+        ApiValidator $validator,
+        WatchableQueue $queue
+    )
+    {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
+        $this->queue = $queue;
     }
 
     /**
@@ -125,6 +131,7 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($id);
+            $this->queue->enqueue(new InternalSqsMessage('reviewed-preprint', $id));
 
             // We failed.
             return self::WORKFLOW_FAILURE;

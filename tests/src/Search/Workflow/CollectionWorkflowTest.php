@@ -3,10 +3,14 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\Collection;
+use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\CollectionWorkflow;
+use Exception;
+use Mockery;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -16,10 +20,11 @@ final class CollectionWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
+        ApiValidator $validator,
+        WatchableQueue $queue
     ) : AbstractWorkflow
     {
-        return new CollectionWorkflow($serializer, $logger, $client, $validator);
+        return new CollectionWorkflow($serializer, $logger, $client, $validator, $queue);
     }
 
     protected function getModel() : string
@@ -80,5 +85,51 @@ final class CollectionWorkflowTest extends WorkflowTestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($collection->getId(), $id);
+    }
+
+    /**
+     * @dataProvider workflowProvider
+     * @test
+     */
+    public function testPostValidateOfCollection(Collection $collection)
+    {
+        $document = Mockery::mock(DocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with($collection->getId())
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andReturn(true);
+        $ret = $this->workflow->postValidate($collection->getId());
+        $this->assertEquals(1, $ret);
+    }
+
+    /**
+     * @test
+     */
+    public function testPostValidateOfCollectionFailure()
+    {
+        $document = Mockery::mock(DocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with('id')
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andThrow(Exception::class);
+        $this->elastic->shouldReceive('deleteDocument')
+            ->once()
+            ->with('id');
+        $this->queue->shouldReceive('enqueue')
+            ->once();
+        $ret = $this->workflow->postValidate('id');
+        $this->assertEquals(-1, $ret);
     }
 }
