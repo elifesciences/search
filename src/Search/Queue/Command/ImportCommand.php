@@ -31,6 +31,7 @@ final class ImportCommand extends Command
     private $limit;
     private $dateFrom = null;
     private $useDate = null;
+    private $applyLimit = null;
 
     public function __construct(
         ApiSdk $sdk,
@@ -57,7 +58,8 @@ final class ImportCommand extends Command
             ->setHelp('Lists entities from API and enqueues them')
             ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>')
             ->addOption('dateFrom', '-d', InputOption::VALUE_OPTIONAL, 'Start date filter')
-            ->addOption('useDate', '-u', InputOption::VALUE_OPTIONAL, 'Use date filter');
+            ->addOption('useDate', '-u', InputOption::VALUE_OPTIONAL, 'Use date filter')
+            ->addOption('limit', '-l', InputOption::VALUE_OPTIONAL, 'Limit items to import per entity');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -77,6 +79,10 @@ final class ImportCommand extends Command
 
         if ($input->getOption('useDate') !== null) {
             $this->useDate = $input->getOption('useDate');
+        }
+
+        if ($input->getOption('limit') !== null) {
+            $this->applyLimit = (int) $input->getOption('limit');
         }
 
         try {
@@ -164,8 +170,9 @@ final class ImportCommand extends Command
 
     private function iterateSerializeTask(Sequence $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
     {
-        $this->logger->info("Importing $count items of type $type");
-        $progress = new ProgressBar($this->output, $count);
+        $total = $this->applyLimit ?? $count;
+        $this->logger->info(sprintf('Importing %d items of type %s', $total, $type));
+        $progress = new ProgressBar($this->output, $total);
         $limit = $this->limit;
 
         // lazy iterate here instead of relying on the SDK methods
@@ -189,11 +196,19 @@ final class ImportCommand extends Command
     private function lazySlices(Sequence $items): \Generator
     {
         // create 100-item slices
-        $total = $items->count();
+        $total = $this->applyLimit ?? $items->count();
         $sliceStart = 0;
         $sliceSize = 100;
+        $count = 0;
         while ($total >= $sliceStart) {
             foreach ($items->slice($sliceStart, $sliceSize)->toArray() as $item) {
+                if ($this->applyLimit !== null) {
+                    if ($count >= $this->applyLimit) {
+                        break 2;
+                    }
+                    $count += 1;
+                }
+
                 // create a Generator to iterate over items in a slice
                 yield $item;
             }
