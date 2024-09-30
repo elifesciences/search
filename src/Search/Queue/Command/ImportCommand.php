@@ -8,6 +8,7 @@ use eLife\ApiSdk\Collection\Sequence;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
+use Generator;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
@@ -20,10 +21,18 @@ use Throwable;
 
 final class ImportCommand extends Command
 {
-    private static $supports = ['all', 'BlogArticles', 'Interviews', 'LabsPosts', 'PodcastEpisodes', 'Collections', 'ResearchArticles', 'ReviewedPreprints'];
+    private static $supports = [
+        'all',
+        'BlogArticles',
+        'Interviews',
+        'LabsPosts',
+        'PodcastEpisodes',
+        'Collections',
+        'ResearchArticles',
+        'ReviewedPreprints',
+    ];
 
     private $sdk;
-    private $serializer;
     private $output;
     private $logger;
     private $monitoring;
@@ -56,7 +65,11 @@ final class ImportCommand extends Command
             ->setName('queue:import')
             ->setDescription('Import items from API.')
             ->setHelp('Lists entities from API and enqueues them')
-            ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>')
+            ->addArgument(
+                'entity',
+                InputArgument::REQUIRED,
+                'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>'
+            )
             ->addOption('dateFrom', '-d', InputOption::VALUE_OPTIONAL, 'Start date filter')
             ->addOption('useDate', '-u', InputOption::VALUE_OPTIONAL, 'Use date filter')
             ->addOption('limit', '-l', InputOption::VALUE_OPTIONAL, 'Limit items to import per entity');
@@ -168,7 +181,13 @@ final class ImportCommand extends Command
         $this->iterateSerializeTask($articles, 'blog-article', 'getId', $articles->count());
     }
 
-    private function iterateSerializeTask(Sequence $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
+    private function iterateSerializeTask(
+        Sequence $items,
+        string $type,
+        $method = 'getId',
+        int $count = 0,
+        $skipInvalid = false
+    )
     {
         $total = $this->applyLimit ?? $count;
         $this->logger->info(sprintf('Importing %d items of type %s', $total, $type));
@@ -193,7 +212,7 @@ final class ImportCommand extends Command
         $progress->clear();
     }
 
-    private function lazySlices(Sequence $items): \Generator
+    private function lazySlices(Sequence $items): Generator
     {
         // create 100-item slices
         $total = $this->applyLimit ?? $items->count();
