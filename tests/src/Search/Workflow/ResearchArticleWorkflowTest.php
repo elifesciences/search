@@ -65,7 +65,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
     public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
     {
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
-            $this->elastic, $this->validator, $this->queue, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
+            $this->elastic, $this->validator, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
 
         $article = $this->getArticle();
 
@@ -77,7 +77,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
     public function testRdsDateIsUsedAsTheSortDateWhenThereIsAnRdsArticle()
     {
         $this->workflow = new ResearchArticleWorkflow($this->getSerializer(), new ExceptionNullLogger(),
-            $this->elastic, $this->validator, $this->queue, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
+            $this->elastic, $this->validator, ['article-2' => ['date' => '2020-09-08T07:06:05Z']]);
 
         $article = $this->getArticle(2);
 
