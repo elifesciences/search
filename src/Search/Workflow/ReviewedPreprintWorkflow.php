@@ -27,7 +27,6 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
     private $serializer;
     private $client;
     private $validator;
-    private $queue;
 
     public function __construct(
         Serializer $serializer,
