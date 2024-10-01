@@ -4,7 +4,7 @@ namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
 use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\ReviewedPreprintWorkflow;
@@ -141,7 +141,7 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
      */
     public function testPostValidateOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
-        $document = Mockery::mock(DocumentResponse::class);
+        $document = Mockery::mock(IsDocumentResponse::class);
         $this->elastic->shouldReceive('getDocumentById')
             ->once()
             ->with($reviewedPreprint->getId())
@@ -161,7 +161,7 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
      */
     public function testPostValidateOfResearchArticleFailure()
     {
-        $document = Mockery::mock(DocumentResponse::class);
+        $document = Mockery::mock(IsDocumentResponse::class);
         $this->elastic->shouldReceive('getDocumentById')
             ->once()
             ->with('id')

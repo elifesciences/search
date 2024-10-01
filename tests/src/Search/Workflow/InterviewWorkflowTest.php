@@ -4,7 +4,7 @@ namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\Interview;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
 use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\InterviewWorkflow;
@@ -91,7 +91,7 @@ final class InterviewWorkflowTest extends WorkflowTestCase
      */
     public function testPostValidateOfInterview(Interview $interview)
     {
-        $document = Mockery::mock(DocumentResponse::class);
+        $document = Mockery::mock(IsDocumentResponse::class);
         $this->elastic->shouldReceive('getDocumentById')
             ->once()
             ->with($interview->getId())
@@ -111,7 +111,7 @@ final class InterviewWorkflowTest extends WorkflowTestCase
      */
     public function testPostValidateOfInterviewFailure()
     {
-        $document = Mockery::mock(DocumentResponse::class);
+        $document = Mockery::mock(IsDocumentResponse::class);
         $this->elastic->shouldReceive('getDocumentById')
             ->once()
             ->with('id')

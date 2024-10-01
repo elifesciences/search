@@ -4,7 +4,7 @@ namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\Collection;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
 use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\CollectionWorkflow;
@@ -91,7 +91,7 @@ final class CollectionWorkflowTest extends WorkflowTestCase
      */
     public function testPostValidateOfCollection(Collection $collection)
     {
-        $document = Mockery::mock(DocumentResponse::class);
+        $document = Mockery::mock(IsDocumentResponse::class);
         $this->elastic->shouldReceive('getDocumentById')
             ->once()
             ->with($collection->getId())
@@ -111,7 +111,7 @@ final class CollectionWorkflowTest extends WorkflowTestCase
      */
     public function testPostValidateOfCollectionFailure()
     {
-        $document = Mockery::mock(DocumentResponse::class);
+        $document = Mockery::mock(IsDocumentResponse::class);
         $this->elastic->shouldReceive('getDocumentById')
             ->once()
             ->with('id')

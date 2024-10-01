@@ -3,7 +3,6 @@
 namespace eLife\Search\Queue;
 
 use eLife\Bus\Queue\QueueItem;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;

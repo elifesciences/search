@@ -4,7 +4,7 @@ namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
 use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\PodcastEpisodeWorkflow;
@@ -91,7 +91,7 @@ final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
      */
     public function testPostValidateOfPodcastEpisode(PodcastEpisode $podcastEpisode)
     {
-        $document = Mockery::mock(DocumentResponse::class);
+        $document = Mockery::mock(IsDocumentResponse::class);
         $this->elastic->shouldReceive('getDocumentById')
             ->once()
             ->with($podcastEpisode->getNumber())
@@ -111,7 +111,7 @@ final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
      */
     public function testPostValidateOfPodcastEpisodeFailure()
     {
-        $document = Mockery::mock(DocumentResponse::class);
+        $document = Mockery::mock(IsDocumentResponse::class);
         $this->elastic->shouldReceive('getDocumentById')
             ->once()
             ->with(1)
