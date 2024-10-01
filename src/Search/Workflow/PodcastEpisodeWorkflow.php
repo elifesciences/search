@@ -24,8 +24,6 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
      * @var Serializer
      */
     private $serializer;
-    private $client;
-    private $validator;
 
     public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
     {
@@ -54,42 +52,6 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
             'json' => json_encode($podcastEpisodeObject),
             'id' => $podcastEpisodeObject->type.'-'.$podcastEpisode->getNumber(),
         ];
-    }
-
-    public function insert(string $json, string $id, bool $skipInsert = false)
-    {
-        // Insert the document.
-        $this->logger->debug('PodcastEpisode<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($id, $json);
-
-        return [
-            'id' => $id,
-        ];
-    }
-
-    public function postValidate($id, bool $skipValidate = false) : int
-    {
-        try {
-            // Post-validation, we got a document.
-            $document = $this->client->getDocumentById($id);
-            Assertion::isInstanceOf($document, DocumentResponse::class);
-            $result = $document->unwrap();
-            // That podcast episode is valid JSON.
-            $this->validator->validateSearchResult($result, true);
-        } catch (Throwable $e) {
-            $this->logger->error('PodcastEpisode<'.$id.'> rolling back', [
-                'exception' => $e,
-                'document' => $result ?? null,
-            ]);
-            $this->client->deleteDocument($id);
-
-            // We failed.
-            return self::WORKFLOW_FAILURE;
-        }
-
-        $this->logger->info('PodcastEpisode<'.$id.'> successfully imported.');
-
-        return self::WORKFLOW_SUCCESS;
     }
 
     public function getSdkClass() : string

@@ -25,8 +25,6 @@ final class InterviewWorkflow extends AbstractWorkflow
      * @var Serializer
      */
     private $serializer;
-    private $client;
-    private $validator;
 
     public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
     {
@@ -59,40 +57,6 @@ final class InterviewWorkflow extends AbstractWorkflow
         ];
     }
 
-    public function insert(string $json, string $id, bool $skipInsert = false)
-    {
-        // Insert the document.
-        $this->logger->debug('Interview<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($id, $json);
-
-        return [
-            'id' => $id,
-        ];
-    }
-
-    public function postValidate(string $id, bool $skipValidate = false) : int
-    {
-        try {
-            // Post-validation, we got a document.
-            $document = $this->client->getDocumentById($id);
-            Assertion::isInstanceOf($document, DocumentResponse::class);
-            $result = $document->unwrap();
-            // That interview is valid JSON.
-            $this->validator->validateSearchResult($result, true);
-        } catch (Throwable $e) {
-            $this->logger->error('Interview<'.$id.'> rolling back', [
-                'exception' => $e,
-            ]);
-            $this->client->deleteDocument($id);
-
-            // We failed.
-            return self::WORKFLOW_FAILURE;
-        }
-
-        $this->logger->info('Interview<'.$id.'> successfully imported.');
-
-        return self::WORKFLOW_SUCCESS;
-    }
 
     public function deserialize(string $json) : Interview
     {
