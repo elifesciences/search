@@ -7,9 +7,9 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Model;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
@@ -36,7 +36,7 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator,
+        HasSearchResultValidator $validator,
         array $rdsArticles = []
     ) {
         $this->serializer = $serializer;

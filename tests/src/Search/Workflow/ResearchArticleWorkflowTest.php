@@ -5,9 +5,9 @@ namespace tests\eLife\Search\Workflow;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
 use Exception;
@@ -23,7 +23,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
+        HasSearchResultValidator $validator
     ): AbstractWorkflow
     {
         return new ResearchArticleWorkflow($serializer, $logger, $client, $validator);

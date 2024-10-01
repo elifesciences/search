@@ -3,8 +3,8 @@
 namespace tests\eLife\Search\Workflow;
 
 use ComposerLocator;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Queue\Workflow;
 use eLife\Search\Workflow\AbstractWorkflow;
 use Mockery;
@@ -37,7 +37,7 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
         $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
 
         $logger = new ExceptionNullLogger();
-        $this->validator = Mockery::mock(ApiValidator::class);
+        $this->validator = Mockery::mock(HasSearchResultValidator::class);
         $this->workflow = $this->setWorkflow(
             $this->getSerializer(),
             $logger,
@@ -50,7 +50,7 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
+        HasSearchResultValidator $validator
     ) : AbstractWorkflow;
 
     protected function getModel() : ?string

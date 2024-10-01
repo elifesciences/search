@@ -11,7 +11,7 @@ use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
-class ApiValidator
+final class ApiValidator implements HasSearchResultValidator
 {
     private $serializer;
     private $context;

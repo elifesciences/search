@@ -5,6 +5,7 @@ namespace eLife\Search\Queue;
 use eLife\Bus\Queue\QueueItem;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use eLife\Search\Workflow\CollectionWorkflow;
@@ -38,7 +39,7 @@ class Workflow
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator,
+        HasSearchResultValidator $validator,
         array $rdsArticles = []
     ) {
         $this->serializer = $serializer;

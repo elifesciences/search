@@ -3,9 +3,9 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\Interview;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\InterviewWorkflow;
 use Exception;
@@ -19,7 +19,7 @@ final class InterviewWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
+        HasSearchResultValidator $validator
     ) : AbstractWorkflow
     {
         return new InterviewWorkflow($serializer, $logger, $client, $validator);
