@@ -30,38 +30,42 @@ abstract class AbstractWorkflow
 
     public function postValidate($id)
     {
+        // Post-validation, we got a document.
+        $document = $this->client->getDocumentById($id);
+        Assertion::isInstanceOf($document, DocumentResponse::class);
+        $result = $document->unwrap();
+        // That the document is valid JSON.
+        $this->validator->validateSearchResult($result, true);
+    }
+
+    public function run($entity) {
+        $result = $this->index($entity);
+        $docId = $result['id'];
+
+        if ($result['skipInsert']) {
+            $this->logger->debug($docId.' skipping indexing.');
+            return;
+        }
+        $doc = $result['json'];
+
+        $this->insert($doc, $docId);
         try {
-            // Post-validation, we got a document.
-            $document = $this->client->getDocumentById($id);
-            Assertion::isInstanceOf($document, DocumentResponse::class);
-            $result = $document->unwrap();
-            // That podcast episode is valid JSON.
-            $this->validator->validateSearchResult($result, true);
+            $this->postValidate($docId);
         } catch (Throwable $e) {
-            $this->logger->error($id.' rolling back.', [
+            $this->logger->error($docId.' rolling back.', [
                 'exception' => $e,
                 'document' => $result ?? null,
             ]);
-            $this->client->deleteDocument($id);
+            $this->client->deleteDocument($docId);
 
             // We failed.
             throw new \Exception("Post validate failed.");
         }
 
-        $this->logger->info($id.' successfully imported.');
+        $this->logger->info($docId.' successfully imported.');
 
         return [
-            'id' => $id,
+            'id' => $docId,
         ];
-    }
-
-    public function run($entity) {
-        $result = $this->index($entity);
-        if ($result['skipInsert']) {
-            $this->logger->debug($result['id'].' skipping indexing.');
-            return;
-        }
-        $this->insert($result['json'], $result['id']);
-        $this->postValidate($result['id']);
     }
 }
