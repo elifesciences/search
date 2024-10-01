@@ -41,9 +41,6 @@ class QueueWatchCommand extends QueueCommand
 
     protected function process(InputInterface $input, QueueItem $item, $entity = null)
     {
-        $entity = $this->transform($item);
-        if ($entity) {
-            $this->workflow->getWorkflow($item)->run($entity);
-        }
+        $this->workflow->process($item, $entity);
     }
 }
