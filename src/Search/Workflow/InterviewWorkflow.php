@@ -5,8 +5,6 @@ namespace eLife\Search\Workflow;
 use Assert\Assertion;
 use eLife\ApiSdk\Model\Interview;
 use eLife\ApiSdk\Model\Model;
-use eLife\Bus\Queue\InternalSqsMessage;
-use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -91,7 +89,6 @@ final class InterviewWorkflow extends AbstractWorkflow
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($id);
-            $this->queue->enqueue(new InternalSqsMessage('interview', $id));
 
             // We failed.
             return self::WORKFLOW_FAILURE;
