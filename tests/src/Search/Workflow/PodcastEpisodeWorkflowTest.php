@@ -3,7 +3,6 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -20,11 +19,10 @@ final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator,
-        WatchableQueue $queue
+        ApiValidator $validator
     ) : AbstractWorkflow
     {
-        return new PodcastEpisodeWorkflow($serializer, $logger, $client, $validator, $queue);
+        return new PodcastEpisodeWorkflow($serializer, $logger, $client, $validator);
     }
 
     protected function getModel() : string
@@ -127,8 +125,6 @@ final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
         $this->elastic->shouldReceive('deleteDocument')
             ->once()
             ->with(1);
-        $this->queue->shouldReceive('enqueue')
-            ->once();
         $ret = $this->workflow->postValidate(1);
         $this->assertEquals(-1, $ret);
     }

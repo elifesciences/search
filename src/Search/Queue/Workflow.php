@@ -3,8 +3,6 @@
 namespace eLife\Search\Queue;
 
 use eLife\Bus\Queue\QueueItem;
-use eLife\Bus\Queue\QueueItemTransformer;
-use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Workflow\AbstractWorkflow;
@@ -24,7 +22,6 @@ class Workflow
     private $logger;
     private $client;
     private $validator;
-    private $queue;
     private $rdsArticles;
 
     private $workflowClasses = [
@@ -42,14 +39,12 @@ class Workflow
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator,
-        WatchableQueue $queue,
         array $rdsArticles = []
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
-        $this->queue = $queue;
         $this->rdsArticles = $rdsArticles;
     }
 
@@ -63,7 +58,6 @@ class Workflow
                 $this->logger,
                 $this->client,
                 $this->validator,
-                $this->queue,
                 ...$this->getExtraArguments($type)
             );
         }

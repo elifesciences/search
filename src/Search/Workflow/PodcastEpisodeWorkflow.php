@@ -5,8 +5,6 @@ namespace eLife\Search\Workflow;
 use Assert\Assertion;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\Bus\Queue\InternalSqsMessage;
-use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -28,21 +26,18 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
     private $serializer;
     private $client;
     private $validator;
-    private $queue;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator,
-        WatchableQueue $queue
+        ApiValidator $validator
     )
     {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
-        $this->queue = $queue;
     }
 
     /**
@@ -92,7 +87,6 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
                 'document' => $result ?? null,
             ]);
             $this->client->deleteDocument($id);
-            $this->queue->enqueue(new InternalSqsMessage('podcast-episode', $id));
 
             // We failed.
             return self::WORKFLOW_FAILURE;

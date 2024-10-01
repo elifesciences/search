@@ -7,8 +7,6 @@ use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Model;
-use eLife\Bus\Queue\InternalSqsMessage;
-use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -32,7 +30,6 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
     private $serializer;
     private $client;
     private $validator;
-    private $queue;
     private $rdsArticles;
 
     public function __construct(
@@ -40,14 +37,12 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
         ApiValidator $validator,
-        WatchableQueue $queue,
         array $rdsArticles = []
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
-        $this->queue = $queue;
         $this->rdsArticles = $rdsArticles;
     }
 
@@ -166,7 +161,6 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
                 'exception' => $e,
             ]);
             $this->client->deleteDocument($id);
-            $this->queue->enqueue(new InternalSqsMessage('article', $id));
 
             // We failed.
             return self::WORKFLOW_FAILURE;

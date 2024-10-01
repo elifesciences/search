@@ -3,7 +3,6 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\LabsPost;
-use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -20,11 +19,10 @@ final class LabsPostWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator,
-        WatchableQueue $queue
+        ApiValidator $validator
     ) : AbstractWorkflow
     {
-        return new LabsPostWorkflow($serializer, $logger, $client, $validator, $queue);
+        return new LabsPostWorkflow($serializer, $logger, $client, $validator);
     }
 
     protected function getModelClass(): string
@@ -127,8 +125,6 @@ final class LabsPostWorkflowTest extends WorkflowTestCase
         $this->elastic->shouldReceive('deleteDocument')
             ->once()
             ->with('id');
-        $this->queue->shouldReceive('enqueue')
-            ->once();
         $ret = $this->workflow->postValidate('id');
         $this->assertEquals(-1, $ret);
     }

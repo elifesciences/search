@@ -29,21 +29,18 @@ final class InterviewWorkflow extends AbstractWorkflow
     private $serializer;
     private $client;
     private $validator;
-    private $queue;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator,
-        WatchableQueue $queue
+        ApiValidator $validator
     )
     {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->validator = $validator;
-        $this->queue = $queue;
     }
 
     /**

@@ -404,7 +404,6 @@ final class Kernel implements MinimalKernel
                 $app['logger'],
                 $app['elastic.client.write'],
                 $app['validator'],
-                $app['aws.queue'],
                 $app['config']['rds_articles']
             );
         };

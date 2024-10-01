@@ -5,7 +5,6 @@ namespace tests\eLife\Search\Workflow;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\Bus\Queue\WatchableQueue;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
@@ -24,11 +23,10 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator,
-        WatchableQueue $queue
+        ApiValidator $validator
     ): AbstractWorkflow
     {
-        return new ResearchArticleWorkflow($serializer, $logger, $client, $validator, $queue);
+        return new ResearchArticleWorkflow($serializer, $logger, $client, $validator);
     }
 
     /**
@@ -142,8 +140,6 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         $this->elastic->shouldReceive('deleteDocument')
             ->once()
             ->with('id');
-        $this->queue->shouldReceive('enqueue')
-            ->once();
         $ret = $this->workflow->postValidate('id');
         $this->assertEquals(-1, $ret);
     }
