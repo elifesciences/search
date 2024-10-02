@@ -3,9 +3,8 @@
 namespace eLife\Search\Queue;
 
 use eLife\Bus\Queue\QueueItem;
-use eLife\Bus\Queue\QueueItemTransformer;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\BlogArticleWorkflow;
 use eLife\Search\Workflow\CollectionWorkflow;
@@ -39,7 +38,7 @@ class Workflow
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator,
+        HasSearchResultValidator $validator,
         array $rdsArticles = []
     ) {
         $this->serializer = $serializer;
@@ -54,7 +53,13 @@ class Workflow
         $type = $item->getType();
 
         if (isset($this->workflowClasses[$type])) {
-            return new $this->workflowClasses[$type]($this->serializer, $this->logger, $this->client, $this->validator, ...$this->getExtraArguments($type));
+            return new $this->workflowClasses[$type](
+                $this->serializer,
+                $this->logger,
+                $this->client,
+                $this->validator,
+                ...$this->getExtraArguments($type)
+            );
         }
 
         throw new \InvalidArgumentException("The {$type} is not valid.");

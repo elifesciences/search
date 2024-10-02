@@ -5,9 +5,9 @@ namespace eLife\Search\Workflow;
 use Assert\Assertion;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\ReviewedPreprint;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -21,19 +21,6 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
     const WORKFLOW_SUCCESS = 1;
     const WORKFLOW_FAILURE = -1;
 
-    const VOR_TYPES = [
-        'research-article',
-        'tools-resources',
-        'short-report',
-        'research-advance',
-        'correction',
-        'editorial',
-        'feature',
-        'insight',
-        'retraction',
-        'review-article',
-        'scientific-correspondence',
-    ];
     /**
      * @var Serializer
      */
@@ -45,8 +32,9 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
-    ) {
+        HasSearchResultValidator $validator
+    )
+    {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
@@ -116,7 +104,7 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
         try {
             // Post-validation, we got a document.
             $document = $this->client->getDocumentById($id);
-            Assertion::isInstanceOf($document, DocumentResponse::class);
+            Assertion::isInstanceOf($document, IsDocumentResponse::class);
             $result = $document->unwrap();
             // That research reviewed preprint is valid JSON.
             $this->validator->validateSearchResult($result, true);

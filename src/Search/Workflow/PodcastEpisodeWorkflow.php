@@ -5,9 +5,9 @@ namespace eLife\Search\Workflow;
 use Assert\Assertion;
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -27,11 +27,16 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
     private $client;
     private $validator;
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
+    public function __construct(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        HasSearchResultValidator $validator
+    )
     {
         $this->serializer = $serializer;
-        $this->client = $client;
         $this->logger = $logger;
+        $this->client = $client;
         $this->validator = $validator;
     }
 
@@ -72,7 +77,7 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
         try {
             // Post-validation, we got a document.
             $document = $this->client->getDocumentById($id);
-            Assertion::isInstanceOf($document, DocumentResponse::class);
+            Assertion::isInstanceOf($document, IsDocumentResponse::class);
             $result = $document->unwrap();
             // That podcast episode is valid JSON.
             $this->validator->validateSearchResult($result, true);
