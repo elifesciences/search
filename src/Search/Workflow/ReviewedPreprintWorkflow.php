@@ -15,20 +15,6 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
     use JsonSerializeTransport;
     use SortDate;
 
-    const VOR_TYPES = [
-        'research-article',
-        'tools-resources',
-        'short-report',
-        'research-advance',
-        'correction',
-        'editorial',
-        'feature',
-        'insight',
-        'retraction',
-        'review-article',
-        'scientific-correspondence',
-    ];
-
     /**
      * @param ReviewedPreprint $reviewedPreprint
      */
