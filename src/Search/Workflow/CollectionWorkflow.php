@@ -40,7 +40,6 @@ final class CollectionWorkflow extends AbstractWorkflow
      */
     public function index(Model $collection) : array
     {
-        $this->logger->debug('Collection<'.$collection->getId().'> Indexing '.$collection->getTitle());
         // Normalized fields.
         $collectionObject = json_decode($this->serialize($collection));
         $collectionObject->type = 'collection';

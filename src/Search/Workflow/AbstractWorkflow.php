@@ -21,7 +21,6 @@ abstract class AbstractWorkflow
     public function insert(string $json, string $id)
     {
         // Insert the document.
-        $this->logger->debug($id.' importing into Elasticsearch.');
         $this->client->indexJsonDocument($id, $json);
         return [
             'id' => $id,
@@ -39,30 +38,36 @@ abstract class AbstractWorkflow
     }
 
     public function run($entity) {
+        $debugId = '<'.$entity->getIdentifier().'>';
+
         $result = $this->index($entity);
-        $docId = $result['id'];
 
         if ($result['skipInsert']) {
-            $this->logger->debug($docId.' skipping indexing.');
+            $this->logger->debug($debugId.' skipping indexing.');
             return;
         }
-        $doc = $result['json'];
+        $this->logger->debug($debugId.' indexing '.$entity->getTitle());
 
+        $doc = $result['json'];
+        $docId = $result['id'];
+        $this->logger->debug($debugId.' importing into Elasticsearch.');
         $this->insert($doc, $docId);
+
+        $this->logger->debug($debugId.' post validating.');
         try {
             $this->postValidate($docId);
         } catch (Throwable $e) {
-            $this->logger->error($docId.' rolling back.', [
+            $this->logger->error($debugId.' rolling back.', [
                 'exception' => $e,
                 'document' => $result ?? null,
             ]);
             $this->client->deleteDocument($docId);
 
             // We failed.
-            throw new \Exception("Post validate failed.");
+            throw new \Exception($debugId.' post validate failed.');
         }
 
-        $this->logger->info($docId.' successfully imported.');
+        $this->logger->info($debugId.' successfully imported.');
 
         return [
             'id' => $docId,

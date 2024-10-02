@@ -39,8 +39,6 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
      */
     public function index(Model $podcastEpisode) : array
     {
-        $this->logger->debug('indexing '.$podcastEpisode->getTitle());
-
         // Normalized fields.
         $podcastEpisodeObject = json_decode($this->serialize($podcastEpisode));
         $podcastEpisodeObject->type = 'podcast-episode';

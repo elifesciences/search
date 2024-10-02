@@ -40,8 +40,6 @@ final class LabsPostWorkflow extends AbstractWorkflow
      */
     public function index(Model $labsPost) : array
     {
-        $this->logger->debug('LabsPost<'.$labsPost->getId().'> Indexing '.$labsPost->getTitle());
-
         // Normalized fields.
         $labsPostObject = json_decode($this->serialize($labsPost));
         $labsPostObject->type = 'labs-post';

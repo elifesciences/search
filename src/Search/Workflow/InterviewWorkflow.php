@@ -40,8 +40,6 @@ final class InterviewWorkflow extends AbstractWorkflow
      */
     public function index(Model $interview) : array
     {
-        $this->logger->debug('Interview<'.$interview->getId().'> Indexing '.$interview->getTitle());
-
         // Normalized fields.
         $interviewObject = json_decode($this->serialize($interview));
         $interviewObject->type = 'interview';

@@ -50,8 +50,6 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
      */
     public function index(Model $article) : array
     {
-        $this->logger->debug('ResearchArticle<'.$article->getId().'> Indexing '.$article->getTitle());
-
         $articleObject = json_decode($this->serialize($article));
         // Fix author name.
         $articleObject->authors = array_map(function ($author) {

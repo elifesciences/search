@@ -40,7 +40,6 @@ final class BlogArticleWorkflow extends AbstractWorkflow
      */
     public function index(Model $blogArticle) : array
     {
-        $this->logger->debug('BlogArticle<'.$blogArticle->getId().'> Indexing '.$blogArticle->getTitle());
         // Normalized fields.
         $blogArticleObject = json_decode($this->serialize($blogArticle));
         $blogArticleObject->type = 'blog-article';
