@@ -16,19 +16,6 @@ final class InterviewWorkflow extends AbstractWorkflow
     use SortDate;
 
     /**
-     * @var Serializer
-     */
-    private $serializer;
-
-    public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
-    {
-        $this->serializer = $serializer;
-        $this->logger = $logger;
-        $this->client = $client;
-        $this->validator = $validator;
-    }
-
-    /**
      * @param Interview $interview
      * @return array
      */

@@ -9,12 +9,26 @@ use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use Symfony\Component\Serializer\Serializer;
 
 abstract class AbstractWorkflow
 {
     protected LoggerInterface $logger;
     protected MappedElasticsearchClient $client;
     protected ApiValidator $validator;
+    protected Serializer $serializer;
+
+    public function __construct(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        ApiValidator $validator
+    ) {
+        $this->serializer = $serializer;
+        $this->logger = $logger;
+        $this->client = $client;
+        $this->validator = $validator;
+    }
 
     abstract public function index(Model $entity);
 

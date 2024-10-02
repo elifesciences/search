@@ -15,19 +15,6 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
     use SortDate;
 
     /**
-     * @var Serializer
-     */
-    private $serializer;
-
-    public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
-    {
-        $this->serializer = $serializer;
-        $this->client = $client;
-        $this->logger = $logger;
-        $this->validator = $validator;
-    }
-
-    /**
      * @param PodcastEpisode $podcastEpisode
      * @return array
      */

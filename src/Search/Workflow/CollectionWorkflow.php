@@ -16,19 +16,6 @@ final class CollectionWorkflow extends AbstractWorkflow
     use SortDate;
 
     /**
-     * @var Serializer
-     */
-    private $serializer;
-
-    public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
-    {
-        $this->serializer = $serializer;
-        $this->logger = $logger;
-        $this->client = $client;
-        $this->validator = $validator;
-    }
-
-    /**
      * @param Collection $collection
      * @return array
      */

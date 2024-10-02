@@ -18,10 +18,6 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
     use JsonSerializeTransport;
     use SortDate;
 
-    /**
-     * @var Serializer
-     */
-    private $serializer;
     private $rdsArticles;
 
     public function __construct(
@@ -31,10 +27,7 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
         ApiValidator $validator,
         array $rdsArticles = []
     ) {
-        $this->serializer = $serializer;
-        $this->logger = $logger;
-        $this->client = $client;
-        $this->validator = $validator;
+        parent::__construct($serializer, $logger, $client, $validator);
         $this->rdsArticles = $rdsArticles;
     }
 

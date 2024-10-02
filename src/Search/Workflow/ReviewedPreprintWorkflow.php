@@ -28,22 +28,6 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
         'review-article',
         'scientific-correspondence',
     ];
-    /**
-     * @var Serializer
-     */
-    private $serializer;
-
-    public function __construct(
-        Serializer $serializer,
-        LoggerInterface $logger,
-        MappedElasticsearchClient $client,
-        ApiValidator $validator
-    ) {
-        $this->serializer = $serializer;
-        $this->logger = $logger;
-        $this->client = $client;
-        $this->validator = $validator;
-    }
 
     /**
      * @param ReviewedPreprint $reviewedPreprint
