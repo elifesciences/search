@@ -32,7 +32,6 @@ final class InterviewWorkflow extends AbstractWorkflow
         ];
     }
 
-
     public function deserialize(string $json) : Interview
     {
         return $this->serializer->deserialize($json, Interview::class, 'json');

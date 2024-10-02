@@ -3,10 +3,13 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\ReviewedPreprint;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\ReviewedPreprintWorkflow;
+use Exception;
+use Mockery;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -21,7 +24,7 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
+        HasSearchResultValidator $validator
     ) : AbstractWorkflow
     {
         return new ReviewedPreprintWorkflow($serializer, $logger, $client, $validator);
@@ -52,7 +55,7 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
         $this->mockSubjects();
         // Check A to B
         $serialized = $this->workflow->serialize($reviewedPreprint);
-        /** @var BlogArticle $deserialized */
+        /** @var ReviewedPreprint $deserialized */
         $deserialized = $this->workflow->deserialize($serialized);
         $this->assertInstanceOf(ReviewedPreprint::class, $deserialized);
         // Check B to A
@@ -135,5 +138,46 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($reviewedPreprint->getId(), $id);
+    }
+
+    /**
+     * @dataProvider workflowProvider
+     * @test
+     */
+    public function testPostValidateOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
+    {
+        $document = Mockery::mock(IsDocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with($reviewedPreprint->getId())
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andReturn(true);
+        $ret = $this->workflow->postValidate($reviewedPreprint->getId());
+        $this->assertNull($ret);
+    }
+
+    /**
+     * @test
+     */
+    public function testPostValidateOfResearchArticleFailure()
+    {
+        $document = Mockery::mock(IsDocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with('id')
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andThrow(Exception::class);
+        $this->expectException(\Exception::class);
+        $this->workflow->postValidate('id');
     }
 }

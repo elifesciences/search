@@ -5,10 +5,13 @@ namespace tests\eLife\Search\Workflow;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\ResearchArticleWorkflow;
+use Exception;
+use Mockery;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use tests\eLife\Search\ExceptionNullLogger;
@@ -25,8 +28,8 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
-    ) : AbstractWorkflow
+        HasSearchResultValidator $validator
+    ): AbstractWorkflow
     {
         return new ResearchArticleWorkflow($serializer, $logger, $client, $validator);
     }
@@ -100,6 +103,47 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($researchArticle->getId(), $id);
+    }
+
+    /**
+     * @dataProvider workflowProvider
+     * @test
+     */
+    public function testPostValidateOfResearchArticle(ArticleVersion $researchArticle)
+    {
+        $document = Mockery::mock(IsDocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with($researchArticle->getId())
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andReturn(true);
+        $ret = $this->workflow->postValidate($researchArticle->getId());
+        $this->assertNull($ret);
+    }
+
+    /**
+     * @test
+     */
+    public function testPostValidateOfResearchArticleFailure()
+    {
+        $document = Mockery::mock(IsDocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with('id')
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andThrow(Exception::class);
+        $this->expectException(\Exception::class);
+        $this->workflow->postValidate('id');
     }
 
     public function workflowProvider(string $model = null, string $modelClass = null, int $version = null) : Traversable

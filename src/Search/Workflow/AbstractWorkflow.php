@@ -6,23 +6,23 @@ use Throwable;
 use Assert\Assertion;
 use Psr\Log\LoggerInterface;
 use eLife\ApiSdk\Model\Model;
-use eLife\Search\Api\ApiValidator;
+use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
 use Symfony\Component\Serializer\Serializer;
 
 abstract class AbstractWorkflow
 {
     protected LoggerInterface $logger;
     protected MappedElasticsearchClient $client;
-    protected ApiValidator $validator;
+    protected HasSearchResultValidator $validator;
     protected Serializer $serializer;
 
     public function __construct(
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
+        HasSearchResultValidator $validator
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
@@ -45,7 +45,7 @@ abstract class AbstractWorkflow
     {
         // Post-validation, we got a document.
         $document = $this->client->getDocumentById($id);
-        Assertion::isInstanceOf($document, DocumentResponse::class);
+        Assertion::isInstanceOf($document, IsDocumentResponse::class);
         $result = $document->unwrap();
         // That the document is valid JSON.
         $this->validator->validateSearchResult($result, true);
