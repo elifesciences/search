@@ -4,10 +4,6 @@ namespace eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\Search\Api\ApiValidator;
-use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Serializer\Serializer;
 
 final class PodcastEpisodeWorkflow extends AbstractWorkflow
 {
