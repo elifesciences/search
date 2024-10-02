@@ -33,6 +33,19 @@ jobs:
       - name: Take down test stack
         if: always()
         run: docker compose down
+  approval:
+    needs: [tests]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with: 
+          ref: 'approved'
+      - name: reset approved branch
+        run: git reset --hard ${{ github.sha }}
+      - name: push branch
+        run: git push origin approved
   build-and-push:
     needs: [tests]
     runs-on: ubuntu-latest
