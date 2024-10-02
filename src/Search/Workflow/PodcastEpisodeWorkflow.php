@@ -18,7 +18,7 @@ final class PodcastEpisodeWorkflow extends AbstractWorkflow
      * @param PodcastEpisode $podcastEpisode
      * @return array
      */
-    public function index(Model $podcastEpisode) : array
+    public function prepare(Model $podcastEpisode) : array
     {
         // Normalized fields.
         $podcastEpisodeObject = json_decode($this->serialize($podcastEpisode));

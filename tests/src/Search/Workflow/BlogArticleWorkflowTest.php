@@ -12,6 +12,11 @@ use Symfony\Component\Serializer\Serializer;
 
 final class BlogArticleWorkflowTest extends WorkflowTestCase
 {
+    /**
+     * @var BlogArticleWorkflow
+     */
+    protected $workflow;
+
     protected function setWorkflow(
         Serializer $serializer,
         LoggerInterface $logger,
@@ -61,7 +66,7 @@ final class BlogArticleWorkflowTest extends WorkflowTestCase
      */
     public function testIndexOfBlogArticle(BlogArticle $blogArticle)
     {
-        $return = $this->workflow->index($blogArticle);
+        $return = $this->workflow->prepare($blogArticle);
         $article = $return['json'];
         $id = $return['id'];
         $this->assertJson($article, 'Article is not valid JSON');

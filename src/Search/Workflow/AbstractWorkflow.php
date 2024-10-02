@@ -30,7 +30,7 @@ abstract class AbstractWorkflow
         $this->validator = $validator;
     }
 
-    abstract public function index(Model $entity);
+    abstract public function prepare(Model $entity);
 
     public function insert(string $json, string $id)
     {
@@ -54,7 +54,8 @@ abstract class AbstractWorkflow
     public function run($entity) {
         $debugId = '<'.$entity->getIdentifier().'>';
 
-        $result = $this->index($entity);
+        $this->logger->debug($debugId.' preparing for indexing.');
+        $result = $this->prepare($entity);
 
         if ($result['skipInsert']) {
             $this->logger->debug($debugId.' skipping indexing.');

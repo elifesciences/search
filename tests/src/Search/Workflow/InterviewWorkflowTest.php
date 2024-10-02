@@ -12,6 +12,11 @@ use Symfony\Component\Serializer\Serializer;
 
 final class InterviewWorkflowTest extends WorkflowTestCase
 {
+    /**
+     * @var InterviewWorkflow
+     */
+    protected $workflow;
+
     protected function setWorkflow(
         Serializer $serializer,
         LoggerInterface $logger,
@@ -61,7 +66,7 @@ final class InterviewWorkflowTest extends WorkflowTestCase
      */
     public function testIndexOfInterview(Interview $interview)
     {
-        $return = $this->workflow->index($interview);
+        $return = $this->workflow->prepare($interview);
         $article = $return['json'];
         $id = $return['id'];
         $this->assertJson($article, 'Interview is not valid JSON');

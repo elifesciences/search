@@ -19,7 +19,7 @@ final class InterviewWorkflow extends AbstractWorkflow
      * @param Interview $interview
      * @return array
      */
-    public function index(Model $interview) : array
+    public function prepare(Model $interview) : array
     {
         // Normalized fields.
         $interviewObject = json_decode($this->serialize($interview));

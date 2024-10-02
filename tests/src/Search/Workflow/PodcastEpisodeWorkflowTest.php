@@ -61,7 +61,7 @@ final class PodcastEpisodeWorkflowTest extends WorkflowTestCase
      */
     public function testIndexOfPodcastEpisode(PodcastEpisode $podcastEpisode)
     {
-        $return = $this->workflow->index($podcastEpisode);
+        $return = $this->workflow->prepare($podcastEpisode);
         $article = $return['json'];
         $id = $return['id'];
         $this->assertJson($article, 'PodcastEpisode is not valid JSON');

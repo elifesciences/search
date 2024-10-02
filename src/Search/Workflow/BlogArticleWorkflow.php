@@ -19,7 +19,7 @@ final class BlogArticleWorkflow extends AbstractWorkflow
      * @param BlogArticle $blogArticle
      * @return array
      */
-    public function index(Model $blogArticle) : array
+    public function prepare(Model $blogArticle) : array
     {
         // Normalized fields.
         $blogArticleObject = json_decode($this->serialize($blogArticle));

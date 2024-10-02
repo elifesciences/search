@@ -35,7 +35,7 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
      * @param ArticleVersion $article
      * @return array
      */
-    public function index(Model $article) : array
+    public function prepare(Model $article) : array
     {
         $articleObject = json_decode($this->serialize($article));
         // Fix author name.

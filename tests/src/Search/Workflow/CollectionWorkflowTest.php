@@ -12,6 +12,11 @@ use Symfony\Component\Serializer\Serializer;
 
 final class CollectionWorkflowTest extends WorkflowTestCase
 {
+    /**
+     * @var CollectionWorkflow
+     */
+    protected $workflow;
+
     protected function setWorkflow(
         Serializer $serializer,
         LoggerInterface $logger,
@@ -61,7 +66,7 @@ final class CollectionWorkflowTest extends WorkflowTestCase
      */
     public function testIndexOfCollection(Collection $collection)
     {
-        $return = $this->workflow->index($collection);
+        $return = $this->workflow->prepare($collection);
         $article = $return['json'];
         $id = $return['id'];
         $this->assertJson($article, 'Collection is not valid JSON');

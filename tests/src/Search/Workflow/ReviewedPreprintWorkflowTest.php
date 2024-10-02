@@ -12,6 +12,11 @@ use Symfony\Component\Serializer\Serializer;
 
 final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
 {
+    /**
+     * @var ReviewedPreprintWorkflow
+     */
+    protected $workflow;
+
     protected function setWorkflow(
         Serializer $serializer,
         LoggerInterface $logger,
@@ -73,7 +78,7 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
         $this->elastic->shouldReceive('getDocumentById')
             ->with('research-advance-'.$reviewedPreprint->getId(), null, true)
             ->andReturn(null);
-        $return = $this->workflow->index($reviewedPreprint);
+        $return = $this->workflow->prepare($reviewedPreprint);
         $article = $return['json'];
         $id = $return['id'];
         $this->assertJson($article, 'Article is not valid JSON');
@@ -96,7 +101,7 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
             'json' => '',
             'id' => $reviewedPreprint->getId(),
             'skipInsert' => true,
-        ], $this->workflow->index($reviewedPreprint));
+        ], $this->workflow->prepare($reviewedPreprint));
     }
 
     /**
@@ -116,7 +121,7 @@ final class ReviewedPreprintWorkflowTest extends WorkflowTestCase
             'json' => '',
             'id' => $reviewedPreprint->getId(),
             'skipInsert' => true,
-        ], $this->workflow->index($reviewedPreprint));
+        ], $this->workflow->prepare($reviewedPreprint));
     }
 
     /**

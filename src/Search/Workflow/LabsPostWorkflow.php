@@ -19,7 +19,7 @@ final class LabsPostWorkflow extends AbstractWorkflow
      * @param LabsPost $labsPost
      * @return array
      */
-    public function index(Model $labsPost) : array
+    public function prepare(Model $labsPost) : array
     {
         // Normalized fields.
         $labsPostObject = json_decode($this->serialize($labsPost));

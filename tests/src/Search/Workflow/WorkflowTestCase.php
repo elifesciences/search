@@ -5,7 +5,6 @@ namespace tests\eLife\Search\Workflow;
 use ComposerLocator;
 use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Queue\Workflow;
 use eLife\Search\Workflow\AbstractWorkflow;
 use Mockery;
 use PHPUnit_Framework_TestCase;
@@ -26,7 +25,7 @@ abstract class WorkflowTestCase extends PHPUnit_Framework_TestCase
     use GetValidator;
 
     /**
-     * @var Workflow
+     * @var AbstractWorkflow
      */
     protected $workflow;
     protected $elastic;

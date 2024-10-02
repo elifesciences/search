@@ -19,7 +19,7 @@ final class CollectionWorkflow extends AbstractWorkflow
      * @param Collection $collection
      * @return array
      */
-    public function index(Model $collection) : array
+    public function prepare(Model $collection) : array
     {
         // Normalized fields.
         $collectionObject = json_decode($this->serialize($collection));

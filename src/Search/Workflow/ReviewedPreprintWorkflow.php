@@ -32,7 +32,7 @@ final class ReviewedPreprintWorkflow extends AbstractWorkflow
     /**
      * @param ReviewedPreprint $reviewedPreprint
      */
-    public function index(Model $reviewedPreprint) : array
+    public function prepare(Model $reviewedPreprint) : array
     {
         // Don't index if article with same id present in index.
         foreach ([

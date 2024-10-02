@@ -16,6 +16,11 @@ use Traversable;
 
 final class ResearchArticleWorkflowTest extends WorkflowTestCase
 {
+    /**
+     * @var ResearchArticleWorkflow
+     */
+    protected $workflow;
+
     protected function setWorkflow(
         Serializer $serializer,
         LoggerInterface $logger,
@@ -51,7 +56,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
     public function testIndexOfResearchArticle(ArticleVersion $researchArticle)
     {
         $this->elastic->shouldReceive('deleteDocument');
-        $return = $this->workflow->index($researchArticle);
+        $return = $this->workflow->prepare($researchArticle);
         $article = $return['json'];
         $id = $return['id'];
         $this->assertJson($article, 'Article is not valid JSON');
@@ -66,7 +71,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
 
         $article = $this->getArticle();
 
-        $return = json_decode($this->workflow->index($article)['json'], true);
+        $return = json_decode($this->workflow->prepare($article)['json'], true);
 
         $this->assertSame('2010-02-03T04:05:06Z', $return['sortDate']);
     }
@@ -78,7 +83,7 @@ final class ResearchArticleWorkflowTest extends WorkflowTestCase
 
         $article = $this->getArticle(2);
 
-        $return = json_decode($this->workflow->index($article)['json'], true);
+        $return = json_decode($this->workflow->prepare($article)['json'], true);
 
         $this->assertSame('2020-09-08T07:06:05Z', $return['sortDate']);
     }
