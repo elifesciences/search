@@ -41,6 +41,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
         with: 
+          fetch-depth: 0
           ref: 'approved'
       - name: reset approved branch
         run: git reset --hard ${{ github.sha }}
