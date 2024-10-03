@@ -99,6 +99,7 @@ final class ElasticQueryBuilder implements QueryBuilder
     private function setBoostings(array $query = [])
     {
         /* Boost results based on 'type' */
+        $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => ['query' => 'expression-concern', 'fields' => ['type']]]]];
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => ['query' => 'correction', 'fields' => ['type']]]]];
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => ['query' => 'podcast-episode', 'fields' => ['type']]]]];
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => ['query' => 'retraction', 'fields' => ['type']]]]];
