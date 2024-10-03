@@ -16,7 +16,7 @@ final class ResearchArticleIndexer extends AbstractModelIndexer
 
     public function __construct(Serializer $serializer, array $rdsArticles = [])
     {
-        $this->serializer = $serializer;
+        parent::__construct($serializer);
         $this->rdsArticles = $rdsArticles;
     }
 
