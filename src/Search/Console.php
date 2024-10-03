@@ -360,6 +360,7 @@ final class Console
             'labs-post',
             'podcast-episode',
             'reviewed-preprint',
+            'expression-concern',
         ];
 
         $type = trim($input->getArgument('type'));
