@@ -21,19 +21,11 @@ final class BlogArticleIndexerTest extends PHPUnit_Framework_TestCase
         $this->indexer = new BlogArticleIndexer($this->getSerializer());
     }
 
-    protected function getModel() : string
+    protected function getModelDefinitions()
     {
-        return 'blog-article';
-    }
-
-    protected function getModelClass() : string
-    {
-        return BlogArticle::class;
-    }
-
-    protected function getVersion() : int
-    {
-        return 2;
+        return [
+            ['model' => 'blog-article', 'modelClass' => BlogArticle::class, 'version' => 2]
+        ];
     }
 
     /**

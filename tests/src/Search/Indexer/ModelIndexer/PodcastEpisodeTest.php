@@ -22,19 +22,11 @@ final class PodcastEpisodeIndexerTest extends PHPUnit_Framework_TestCase
         $this->indexer = new PodcastEpisodeIndexer($this->getSerializer());
     }
 
-    protected function getModel() : string
+    protected function getModelDefinitions()
     {
-        return 'podcast-episode';
-    }
-
-    protected function getModelClass() : string
-    {
-        return PodcastEpisode::class;
-    }
-
-    protected function getVersion() : int
-    {
-        return 1;
+        return [
+            ['model' => 'podcast-episode', 'modelClass' => PodcastEpisode::class, 'version' => 1]
+        ];
     }
 
     /**

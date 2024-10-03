@@ -22,19 +22,11 @@ final class InterviewIndexerTest extends PHPUnit_Framework_TestCase
         $this->indexer = new InterviewIndexer($this->getSerializer());
     }
 
-    protected function getModel() : string
+    protected function getModelDefinitions()
     {
-        return 'interview';
-    }
-
-    protected function getModelClass() : string
-    {
-        return Interview::class;
-    }
-
-    protected function getVersion() : int
-    {
-        return 1;
+        return [
+            ['model' => 'interview', 'modelClass' => Interview::class, 'version' => 1]
+        ];
     }
 
     /**

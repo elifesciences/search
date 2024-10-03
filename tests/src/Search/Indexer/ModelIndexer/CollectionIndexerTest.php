@@ -22,19 +22,11 @@ final class CollectionIndexerTest extends PHPUnit_Framework_TestCase
         $this->indexer = new CollectionIndexer($this->getSerializer());
     }
 
-    protected function getModel() : string
+    protected function getModelDefinitions()
     {
-        return 'collection';
-    }
-
-    protected function getModelClass() : string
-    {
-        return Collection::class;
-    }
-
-    protected function getVersion() : int
-    {
-        return 2;
+        return [
+            ['model' => 'collection', 'modelClass' => Collection::class, 'version' => 2]
+        ];
     }
 
     /**

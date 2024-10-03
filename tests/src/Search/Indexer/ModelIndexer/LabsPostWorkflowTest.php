@@ -22,19 +22,11 @@ final class LabsPostIndexerTest extends PHPUnit_Framework_TestCase
         $this->indexer = new LabsPostIndexer($this->getSerializer());
     }
 
-    protected function getModel() : string
+    protected function getModelDefinitions()
     {
-        return 'labs-post';
-    }
-
-    protected function getModelClass() : string
-    {
-        return LabsPost::class;
-    }
-
-    protected function getVersion() : int
-    {
-        return 1;
+        return [
+            ['model' => 'labs-post', 'modelClass' => LabsPost::class, 'version' => 1]
+        ];
     }
 
     /**
