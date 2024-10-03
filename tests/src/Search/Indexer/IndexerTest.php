@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\eLife\Search\Workflow;
+namespace tests\eLife\Search\Indexer;
 
 use eLife\ApiSdk\Model\HasIdentifier;
 use eLife\ApiSdk\Model\Identifier;

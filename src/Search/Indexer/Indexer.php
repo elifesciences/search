@@ -11,6 +11,14 @@ use Psr\Log\LoggerInterface;
 use InvalidArgumentException;
 use Throwable;
 use Assert\Assertion;
+use eLife\Search\Indexer\ModelIndexer\ResearchArticleIndexer;
+use eLife\Search\Indexer\ModelIndexer\BlogArticleIndexer;
+use eLife\Search\Indexer\ModelIndexer\InterviewIndexer;
+use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
+use eLife\Search\Indexer\ModelIndexer\LabsPostIndexer;
+use eLife\Search\Indexer\ModelIndexer\PodcastEpisodeIndexer;
+use eLife\Search\Indexer\ModelIndexer\CollectionIndexer;
+use Symfony\Component\Serializer\Serializer;
 
 class Indexer
 {
@@ -31,7 +39,21 @@ class Indexer
         $this->modelIndexer = $modelIndexer;
     }
 
-    public function getTransformer($type): ModelIndexer
+    public static function getDefaultModelIndexers(Serializer $serializer, MappedElasticsearchClient $client, $rdsArticles) : array
+    {
+        return [
+            'article' => new ResearchArticleIndexer($serializer, $rdsArticles),
+            'blog-article' => new BlogArticleIndexer($serializer),
+            'interview' => new InterviewIndexer($serializer),
+            'reviewed-preprint' => new ReviewedPreprintIndexer($serializer, $client),
+            'labs-post' => new LabsPostIndexer($serializer),
+            'podcast-episode' => new PodcastEpisodeIndexer($serializer),
+            'collection' => new CollectionIndexer($serializer),
+
+        ];
+    }
+
+    public function getModelIndexer($type): ModelIndexer
     {
         if (!isset($this->modelIndexer[$type])) {
             throw new InvalidArgumentException("The {$type} is not valid.");
@@ -45,12 +67,12 @@ class Indexer
         if (!$entity instanceof Model || !$entity instanceof HasIdentifier) {
             throw new InvalidArgumentException('The given Entity is not an '.Model::class.' or '.HasIdentifier::class);
         }
-        $workflow = $this->getTransformer($entity->getIdentifier()->getType());
+        $modelIndexer = $this->getModelIndexer($entity->getIdentifier()->getType());
 
         $debugId = '<'.$entity->getIdentifier().'>';
 
         $this->logger->debug($debugId.' preparing for indexing.');
-        $changeSet = $workflow->prepareChangeSet($entity);
+        $changeSet = $modelIndexer->prepareChangeSet($entity);
 
         $inserts = $changeSet->getInserts();
         if (count($inserts) === 0) {

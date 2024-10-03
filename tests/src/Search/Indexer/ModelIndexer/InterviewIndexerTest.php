@@ -6,7 +6,6 @@ use PHPUnit_Framework_TestCase;
 use eLife\ApiSdk\Model\Interview;
 use eLife\Search\Indexer\ModelIndexer\InterviewIndexer;
 
-
 final class InterviewIndexerTest extends PHPUnit_Framework_TestCase
 {
     use GetSerializer;

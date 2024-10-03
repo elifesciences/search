@@ -6,7 +6,6 @@ use PHPUnit_Framework_TestCase;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\Search\Indexer\ModelIndexer\PodcastEpisodeIndexer;
 
-
 final class PodcastEpisodeIndexerTest extends PHPUnit_Framework_TestCase
 {
     use GetSerializer;

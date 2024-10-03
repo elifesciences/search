@@ -6,7 +6,6 @@ use PHPUnit_Framework_TestCase;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\Search\Indexer\ModelIndexer\LabsPostIndexer;
 
-
 final class LabsPostIndexerTest extends PHPUnit_Framework_TestCase
 {
     use GetSerializer;

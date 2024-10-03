@@ -6,7 +6,6 @@ use PHPUnit_Framework_TestCase;
 use eLife\ApiSdk\Model\Collection;
 use eLife\Search\Indexer\ModelIndexer\CollectionIndexer;
 
-
 final class CollectionIndexerTest extends PHPUnit_Framework_TestCase
 {
     use GetSerializer;
