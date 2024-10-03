@@ -5,30 +5,13 @@ namespace eLife\Search\Indexer\ModelIndexer;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\ApiSdk\Model\Model;
 use eLife\Search\Indexer\ChangeSet;
-use eLife\Search\Indexer\ModelIndexer;
-use Symfony\Component\Serializer\Serializer;
 
-final class BlogArticleIndexer implements ModelIndexer
+final class BlogArticleIndexer extends AbstractModelIndexer
 {
-    use Helper\Blocks;
-    use Helper\JsonSerializerHelper;
-    use Helper\SortDate;
 
-    private $serializer;
-
-    public function __construct(Serializer $serializer)
-    {
-        $this->serializer = $serializer;
-    }
-
-    protected function getSdkClass() : string
+    protected function getSdkClass(): string
     {
         return BlogArticle::class;
-    }
-
-    protected function getSerializer(): Serializer
-    {
-        return $this->serializer;
     }
 
     /**
@@ -55,5 +38,4 @@ final class BlogArticleIndexer implements ModelIndexer
 
         return $changeSet;
     }
-
 }

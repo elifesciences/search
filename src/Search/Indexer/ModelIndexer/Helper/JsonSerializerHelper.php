@@ -11,7 +11,7 @@ trait JsonSerializerHelper
     abstract protected function getSdkClass() : string;
     abstract protected function getSerializer() : Serializer;
 
-    public function deserialize(string $json)
+    protected function deserialize(string $json)
     {
         return $this->getSerializer()->deserialize($json, $this->getSdkClass(), 'json');
 
@@ -24,7 +24,7 @@ trait JsonSerializerHelper
         return self::$cache[$key];
     }
 
-    public function serialize($item) : string
+    protected function serialize($item) : string
     {
         return $this->getSerializer()->serialize($item, 'json');
 
@@ -37,7 +37,7 @@ trait JsonSerializerHelper
         return self::$cache[$key];
     }
 
-    public function snippet($item) : array
+    protected function snippet($item) : array
     {
         return $this->getSerializer()->normalize(
             $item,

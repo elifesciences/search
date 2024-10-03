@@ -6,12 +6,12 @@ use stdClass;
 
 trait Blocks
 {
-    final private function flattenBlocks(array $blocks) : string
+    protected function flattenBlocks(array $blocks) : string
     {
         return implode(' ', array_filter(array_map([$this, 'flattenBlock'], $blocks)));
     }
 
-    final private function flattenBlock(stdClass $block) : string
+    protected function flattenBlock(stdClass $block) : string
     {
         return implode(' ', array_filter([
             $block->id ?? null,
@@ -27,7 +27,7 @@ trait Blocks
         ]));
     }
 
-    final private function flattenItems(array $items) : string
+    protected function flattenItems(array $items) : string
     {
         return implode(' ', array_map(function ($item) {
             if (is_string($item)) {
