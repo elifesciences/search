@@ -38,14 +38,6 @@ services:
             timeout: 2s
             retries: 10
 
-    gearman:
-        image: artefactual/gearmand:latest
-        healthcheck:
-            test: ["CMD-SHELL", "gearadmin --status"]
-            interval: 2s
-            timeout: 2s
-            retries: 3
-
     localstack:
         image: localstack/localstack:2.3.2
         environment:
@@ -76,8 +68,6 @@ services:
         depends_on:
             opensearch:
                 condition: service_healthy
-            gearman:
-                condition: service_healthy
             localstack:
                 condition: service_healthy
 
@@ -104,21 +94,6 @@ services:
         tty: true
         extra_hosts:
             host.docker.internal: host-gateway
-
-    gearman-worker:
-        build:
-            context: .
-            dockerfile: Dockerfile
-            target: dev
-        command: bin/console gearman:worker
-        environment:
-            - GEARMAN_HOST=gearman
-        volumes:
-            - ./:/app
-            - ./config.php:/app/config.php
-        depends_on:
-            setup:
-                condition: service_completed_successfully
 
     queue-watcher:
         build:

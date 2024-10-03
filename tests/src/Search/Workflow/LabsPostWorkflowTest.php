@@ -3,10 +3,13 @@
 namespace tests\eLife\Search\Workflow;
 
 use eLife\ApiSdk\Model\LabsPost;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
+use eLife\Search\Workflow\AbstractWorkflow;
 use eLife\Search\Workflow\LabsPostWorkflow;
-use eLife\Search\Workflow\Workflow;
+use Exception;
+use Mockery;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 
@@ -16,8 +19,8 @@ final class LabsPostWorkflowTest extends WorkflowTestCase
         Serializer $serializer,
         LoggerInterface $logger,
         MappedElasticsearchClient $client,
-        ApiValidator $validator
-    ) : Workflow
+        HasSearchResultValidator $validator
+    ) : AbstractWorkflow
     {
         return new LabsPostWorkflow($serializer, $logger, $client, $validator);
     }
@@ -80,5 +83,49 @@ final class LabsPostWorkflowTest extends WorkflowTestCase
         $this->assertArrayHasKey('id', $ret);
         $id = $ret['id'];
         $this->assertEquals($labsPost->getId(), $id);
+    }
+
+    /**
+     * @dataProvider workflowProvider
+     * @test
+     */
+    public function testPostValidateOfLabsPost(LabsPost $labsPost)
+    {
+        $document = Mockery::mock(IsDocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with($labsPost->getId())
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andReturn(true);
+        $ret = $this->workflow->postValidate($labsPost->getId());
+        $this->assertEquals(1, $ret);
+    }
+
+    /**
+     * @test
+     */
+    public function testPostValidateOfLabsPostFailure()
+    {
+        $document = Mockery::mock(IsDocumentResponse::class);
+        $this->elastic->shouldReceive('getDocumentById')
+            ->once()
+            ->with('id')
+            ->andReturn($document);
+        $document->shouldReceive('unwrap')
+            ->once()
+            ->andReturn([]);
+        $this->validator->shouldReceive('validateSearchResult')
+            ->once()
+            ->andThrow(Exception::class);
+        $this->elastic->shouldReceive('deleteDocument')
+            ->once()
+            ->with('id');
+        $ret = $this->workflow->postValidate('id');
+        $this->assertEquals(-1, $ret);
     }
 }

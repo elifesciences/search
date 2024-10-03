@@ -5,8 +5,7 @@ FROM php:7.4-apache AS base
 
 USER root
 
-RUN apt-get update && apt-get install libgearman-dev zip unzip gearman-tools bc procps jq -y && rm -rf /var/lib/apt/lists/*
-RUN pecl install gearman && docker-php-ext-enable gearman
+RUN apt-get update && apt-get install zip unzip bc procps jq -y && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-configure pcntl --enable-pcntl &&  docker-php-ext-install pcntl
 
 COPY .docker/php.ini /usr/local/etc/php/php.ini
