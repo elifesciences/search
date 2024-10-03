@@ -39,6 +39,7 @@ use eLife\Search\Api\SearchController;
 use eLife\Search\Queue\Command\ImportCommand;
 use eLife\Search\Queue\Command\QueueWatchCommand;
 use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
+use eLife\Search\Indexer\Indexer;
 use eLife\Search\Queue\Workflow;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
@@ -395,6 +396,15 @@ final class Kernel implements MinimalKernel
                 $app['logger'],
                 $app['monitoring'],
                 $app['limit.interactive']
+            );
+        };
+
+        $app['indexer'] = function (Application $app) {
+            return new Indexer(
+                $app['logger'],
+                $app['elastic.client.write'],
+                $app['validator'],
+                $app['config']['rds_articles']
             );
         };
 
