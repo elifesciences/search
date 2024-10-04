@@ -3,16 +3,16 @@
 namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
+use eLife\ApiSdk\Model\Model;
 use eLife\ApiSdk\Model\PodcastEpisode;
-use eLife\Search\Annotation\GearmanTask;
-use eLife\Search\Api\ApiValidator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class PodcastEpisodeWorkflow implements Workflow
+final class PodcastEpisodeWorkflow extends AbstractWorkflow
 {
     use JsonSerializeTransport;
     use SortDate;
@@ -24,26 +24,27 @@ final class PodcastEpisodeWorkflow implements Workflow
      * @var Serializer
      */
     private $serializer;
-    private $logger;
     private $client;
     private $validator;
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
+    public function __construct(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        HasSearchResultValidator $validator
+    )
     {
         $this->serializer = $serializer;
-        $this->client = $client;
         $this->logger = $logger;
+        $this->client = $client;
         $this->validator = $validator;
     }
 
     /**
-     * @GearmanTask(
-     *     name="podcast_episode_index",
-     *     next="podcast_episode_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param PodcastEpisode $podcastEpisode
+     * @return array
      */
-    public function index(PodcastEpisode $podcastEpisode) : array
+    public function index(Model $podcastEpisode) : array
     {
         $this->logger->debug('indexing '.$podcastEpisode->getTitle());
 
@@ -60,14 +61,7 @@ final class PodcastEpisodeWorkflow implements Workflow
         ];
     }
 
-    /**
-     * @GearmanTask(
-     *     name="podcast_episode_insert",
-     *     parameters={"json", "id"},
-     *     next="podcast_episode_post_validate"
-     * )
-     */
-    public function insert(string $json, string $id)
+    public function insert(string $json, string $id, bool $skipInsert = false)
     {
         // Insert the document.
         $this->logger->debug('PodcastEpisode<'.$id.'> importing into Elasticsearch.');
@@ -78,18 +72,12 @@ final class PodcastEpisodeWorkflow implements Workflow
         ];
     }
 
-    /**
-     * @GearmanTask(
-     *     name="podcast_episode_post_validate",
-     *     parameters={"id"}
-     * )
-     */
-    public function postValidate($id)
+    public function postValidate($id, bool $skipValidate = false) : int
     {
         try {
             // Post-validation, we got a document.
             $document = $this->client->getDocumentById($id);
-            Assertion::isInstanceOf($document, DocumentResponse::class);
+            Assertion::isInstanceOf($document, IsDocumentResponse::class);
             $result = $document->unwrap();
             // That podcast episode is valid JSON.
             $this->validator->validateSearchResult($result, true);

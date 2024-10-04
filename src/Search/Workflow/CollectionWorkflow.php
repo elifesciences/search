@@ -4,15 +4,15 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use eLife\ApiSdk\Model\Collection;
-use eLife\Search\Annotation\GearmanTask;
-use eLife\Search\Api\ApiValidator;
+use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class CollectionWorkflow implements Workflow
+final class CollectionWorkflow extends AbstractWorkflow
 {
     use Blocks;
     use JsonSerializeTransport;
@@ -25,11 +25,15 @@ final class CollectionWorkflow implements Workflow
      * @var Serializer
      */
     private $serializer;
-    private $logger;
     private $client;
     private $validator;
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
+    public function __construct(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        HasSearchResultValidator $validator
+    )
     {
         $this->serializer = $serializer;
         $this->logger = $logger;
@@ -38,13 +42,10 @@ final class CollectionWorkflow implements Workflow
     }
 
     /**
-     * @GearmanTask(
-     *     name="collection_index",
-     *     next="collection_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param Collection $collection
+     * @return array
      */
-    public function index(Collection $collection) : array
+    public function index(Model $collection) : array
     {
         $this->logger->debug('Collection<'.$collection->getId().'> Indexing '.$collection->getTitle());
         // Normalized fields.
@@ -61,10 +62,7 @@ final class CollectionWorkflow implements Workflow
         ];
     }
 
-    /**
-     * @GearmanTask(name="collection_insert", next="collection_post_validate", parameters={"json", "id"})
-     */
-    public function insert(string $json, string $id) : array
+    public function insert(string $json, string $id, bool $skipInsert = false) : array
     {
         // Insert the document.
         $this->logger->debug('Collection<'.$id.'> importing into Elasticsearch.');
@@ -75,15 +73,12 @@ final class CollectionWorkflow implements Workflow
         ];
     }
 
-    /**
-     * @GearmanTask(name="collection_post_validate", parameters={"id"})
-     */
-    public function postValidate(string $id) : int
+    public function postValidate(string $id, bool $skipValidate = false) : int
     {
         try {
             // Post-validation, we got a document.
             $document = $this->client->getDocumentById($id);
-            Assertion::isInstanceOf($document, DocumentResponse::class);
+            Assertion::isInstanceOf($document, IsDocumentResponse::class);
             $result = $document->unwrap();
             // That collection is valid JSON.
             $this->validator->validateSearchResult($result, true);

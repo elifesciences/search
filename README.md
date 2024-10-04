@@ -18,7 +18,7 @@ To bring up all services, run:
 docker compose up
 ```
 
-Alternatively, you can run without the SQS queue watcher and gearman worker by just bring up the app service:
+Alternatively, you can run without the SQS queue watcher by just bring up the app service:
 ```shell
 docker compose up app
 ```
@@ -31,11 +31,12 @@ The `bin/console queue:import` command imports items from API (in dev this is th
 docker compose exec app bin/console queue:import all
 ```
 
-> **Note**: `all` here means all types of search content. Other possible values can be found in src/Search/Gearman/Command/ImportCommand.php
+> **Note**: `all` here means all types of search content. Other possible values can be found in src/Search/Queue/Command/ImportCommand.php
 
-If you are running the workers and queue watcher, you should now see the results by accessing the search API on http://localhost:8888/search
+If you are running the queue watcher, you should now see the results by accessing the search API on http://localhost:8888/search
 
-If you are not running the worker, inspect the queue count via
+If you are not running the watcher, inspect the queue count via
+
 ```shell
 docker compose exec app bin/console queue:count
 ```
@@ -49,11 +50,10 @@ docker compose exec app vendor/bin/phpunit
 
 To run all the project tests (inc above tests and integration tests)
 ```shell
-docker compose down gearman-worker
 docker compose down queue-watcher
 docker compose exec app bash project_tests.sh
 ```
-NOTE: these integration tests require the queue watcher and gearman worker to not be running so the tests can control when items are consumed. This is why we make sure to stop worker/watcher services.
+NOTE: these integration tests require the queue watcher  to not be running so the tests can control when items are consumed. This is why we make sure to stop watcher services.
 
 To run the smoke tests:
 ```shell

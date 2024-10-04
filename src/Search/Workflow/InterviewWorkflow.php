@@ -4,15 +4,15 @@ namespace eLife\Search\Workflow;
 
 use Assert\Assertion;
 use eLife\ApiSdk\Model\Interview;
-use eLife\Search\Annotation\GearmanTask;
-use eLife\Search\Api\ApiValidator;
+use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
+use eLife\Search\Api\HasSearchResultValidator;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 
-final class InterviewWorkflow implements Workflow
+final class InterviewWorkflow extends AbstractWorkflow
 {
     use Blocks;
     use JsonSerializeTransport;
@@ -25,11 +25,15 @@ final class InterviewWorkflow implements Workflow
      * @var Serializer
      */
     private $serializer;
-    private $logger;
     private $client;
     private $validator;
 
-    public function __construct(Serializer $serializer, LoggerInterface $logger, MappedElasticsearchClient $client, ApiValidator $validator)
+    public function __construct(
+        Serializer $serializer,
+        LoggerInterface $logger,
+        MappedElasticsearchClient $client,
+        HasSearchResultValidator $validator
+    )
     {
         $this->serializer = $serializer;
         $this->logger = $logger;
@@ -38,13 +42,10 @@ final class InterviewWorkflow implements Workflow
     }
 
     /**
-     * @GearmanTask(
-     *     name="interview_index",
-     *     next="interview_insert",
-     *     deserialize="deserialize"
-     * )
+     * @param Interview $interview
+     * @return array
      */
-    public function index(Interview $interview) : array
+    public function index(Model $interview) : array
     {
         $this->logger->debug('Interview<'.$interview->getId().'> Indexing '.$interview->getTitle());
 
@@ -63,10 +64,7 @@ final class InterviewWorkflow implements Workflow
         ];
     }
 
-    /**
-     * @GearmanTask(name="interview_insert", next="interview_post_validate", parameters={"json", "id"})
-     */
-    public function insert(string $json, string $id)
+    public function insert(string $json, string $id, bool $skipInsert = false)
     {
         // Insert the document.
         $this->logger->debug('Interview<'.$id.'> importing into Elasticsearch.');
@@ -77,15 +75,12 @@ final class InterviewWorkflow implements Workflow
         ];
     }
 
-    /**
-     * @GearmanTask(name="interview_post_validate", parameters={"id"})
-     */
-    public function postValidate(string $id)
+    public function postValidate(string $id, bool $skipValidate = false) : int
     {
         try {
             // Post-validation, we got a document.
             $document = $this->client->getDocumentById($id);
-            Assertion::isInstanceOf($document, DocumentResponse::class);
+            Assertion::isInstanceOf($document, IsDocumentResponse::class);
             $result = $document->unwrap();
             // That interview is valid JSON.
             $this->validator->validateSearchResult($result, true);

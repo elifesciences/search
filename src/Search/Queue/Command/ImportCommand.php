@@ -1,16 +1,14 @@
 <?php
 
-namespace eLife\Search\Gearman\Command;
+namespace eLife\Search\Queue\Command;
 
 use DateTimeImmutable;
 use eLife\ApiSdk\ApiSdk;
-use eLife\ApiSdk\Model\ArticleVersion;
-use eLife\ApiSdk\Model\HasPublishedDate;
-use eLife\ApiSdk\Model\ReviewedPreprint;
+use eLife\ApiSdk\Collection\Sequence;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
-use Iterator;
+use Generator;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
@@ -23,10 +21,18 @@ use Throwable;
 
 final class ImportCommand extends Command
 {
-    private static $supports = ['all', 'BlogArticles', 'Interviews', 'LabsPosts', 'PodcastEpisodes', 'Collections', 'ResearchArticles', 'ReviewedPreprints'];
+    private static $supports = [
+        'all',
+        'BlogArticles',
+        'Interviews',
+        'LabsPosts',
+        'PodcastEpisodes',
+        'Collections',
+        'ResearchArticles',
+        'ReviewedPreprints',
+    ];
 
     private $sdk;
-    private $serializer;
     private $output;
     private $logger;
     private $monitoring;
@@ -34,6 +40,7 @@ final class ImportCommand extends Command
     private $limit;
     private $dateFrom = null;
     private $useDate = null;
+    private $applyLimit = null;
 
     public function __construct(
         ApiSdk $sdk,
@@ -58,9 +65,14 @@ final class ImportCommand extends Command
             ->setName('queue:import')
             ->setDescription('Import items from API.')
             ->setHelp('Lists entities from API and enqueues them')
-            ->addArgument('entity', InputArgument::REQUIRED, 'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>')
+            ->addArgument(
+                'entity',
+                InputArgument::REQUIRED,
+                'Must be one of the following <comment>['.implode(', ', self::$supports).']</comment>'
+            )
             ->addOption('dateFrom', '-d', InputOption::VALUE_OPTIONAL, 'Start date filter')
-            ->addOption('useDate', '-u', InputOption::VALUE_OPTIONAL, 'Use date filter');
+            ->addOption('useDate', '-u', InputOption::VALUE_OPTIONAL, 'Use date filter')
+            ->addOption('limit', '-l', InputOption::VALUE_OPTIONAL, 'Limit items to import per entity');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -82,6 +94,10 @@ final class ImportCommand extends Command
             $this->useDate = $input->getOption('useDate');
         }
 
+        if ($input->getOption('limit') !== null) {
+            $this->applyLimit = (int) $input->getOption('limit');
+        }
+
         try {
             $this->monitoring->startTransaction();
             $this->monitoring->nameTransaction('queue:import');
@@ -89,7 +105,7 @@ final class ImportCommand extends Command
                 foreach (self::$supports as $e) {
                     if ('all' !== $e) {
                         // Run the item.
-
+                        $output->writeln('<comment>'.$e.'</comment>');
                         $this->{'import'.$e}();
                     }
                 }
@@ -165,34 +181,58 @@ final class ImportCommand extends Command
         $this->iterateSerializeTask($articles, 'blog-article', 'getId', $articles->count());
     }
 
-    private function iterateSerializeTask(Iterator $items, string $type, $method = 'getId', int $count = 0, $skipInvalid = false)
+    private function iterateSerializeTask(
+        Sequence $items,
+        string $type,
+        $method = 'getId',
+        int $count = 0,
+        $skipInvalid = false
+    )
     {
-        $this->logger->info("Importing $count items of type $type");
-        $progress = new ProgressBar($this->output, $count);
+        $total = $this->applyLimit ?? $count;
+        $this->logger->info(sprintf('Importing %d items of type %s', $total, $type));
+        $progress = new ProgressBar($this->output, $total);
         $limit = $this->limit;
 
-        $items->rewind();
-        while ($items->valid()) {
+        // lazy iterate here instead of relying on the SDK methods
+        foreach ($this->lazySlices($items) as $item) {
             if ($limit->hasBeenReached()) {
                 throw new RuntimeException('Command cannot complete because: '.implode(', ', $limit->getReasons()));
             }
             $progress->advance();
             try {
-                $item = $items->current();
-                if (null === $item) {
-                    $items->next();
-                    continue;
-                }
                 $this->enqueue($type, $item->$method());
             } catch (Throwable $e) {
                 $item = $item ?? null;
                 $this->logger->error('Skipping import on a '.get_class($item), ['exception' => $e]);
                 $this->monitoring->recordException($e, 'Skipping import on a '.get_class($item));
             }
-            $items->next();
         }
         $progress->finish();
         $progress->clear();
+    }
+
+    private function lazySlices(Sequence $items): Generator
+    {
+        // create 100-item slices
+        $total = $this->applyLimit ?? $items->count();
+        $sliceStart = 0;
+        $sliceSize = 100;
+        $count = 0;
+        while ($total >= $sliceStart) {
+            foreach ($items->slice($sliceStart, $sliceSize)->toArray() as $item) {
+                if ($this->applyLimit !== null) {
+                    if ($count >= $this->applyLimit) {
+                        break 2;
+                    }
+                    $count += 1;
+                }
+
+                // create a Generator to iterate over items in a slice
+                yield $item;
+            }
+            $sliceStart += $sliceSize;
+        }
     }
 
     private function enqueue($type, $identifier)
