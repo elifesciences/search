@@ -9,12 +9,15 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ResearchArticleIndexer;
+use tests\eLife\Search\HttpMocks;
 use Traversable;
 
 final class ResearchArticleIndexerTest extends PHPUnit_Framework_TestCase
 {
     use GetSerializer;
+    use CallSerializer;
     use ModelProvider;
+    use HttpMocks;
 
     /**
      * @var MockInterface
@@ -38,6 +41,24 @@ final class ResearchArticleIndexerTest extends PHPUnit_Framework_TestCase
             ['model' => 'article-vor', 'modelClass' => ArticleVoR::class, 'version' => 8],
             ['model' => 'article-poa', 'modelClass' => ArticlePoA::class, 'version' => 4],
         ];
+    }
+
+    /**
+     * @dataProvider modelProvider
+     * @test
+     */
+    public function testSerializationSmokeTest(ArticleVersion $researchArticle)
+    {
+        // Mock the HTTP call that's made for subjects.
+        $this->mockSubjects();
+        // Check A to B
+        $serialized = $this->callSerialize($this->indexer, $researchArticle);
+        /** @var ArticlePoA $deserialized */
+        $deserialized = $this->callDeserialize($this->indexer, $serialized);
+        $this->assertInstanceOf(ArticleVersion::class, $deserialized);
+        // Check B to A
+        $final_serialized = $this->callSerialize($this->indexer, $deserialized);
+        $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
     /**

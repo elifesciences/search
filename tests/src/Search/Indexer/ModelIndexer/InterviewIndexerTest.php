@@ -5,11 +5,14 @@ namespace tests\eLife\Search\Indexer\ModelIndexer;
 use PHPUnit_Framework_TestCase;
 use eLife\ApiSdk\Model\Interview;
 use eLife\Search\Indexer\ModelIndexer\InterviewIndexer;
+use tests\eLife\Search\HttpMocks;
 
 final class InterviewIndexerTest extends PHPUnit_Framework_TestCase
 {
     use GetSerializer;
+    use CallSerializer;
     use ModelProvider;
+    use HttpMocks;
 
     /**
      * @var InterviewIndexer
@@ -26,6 +29,24 @@ final class InterviewIndexerTest extends PHPUnit_Framework_TestCase
         return [
             ['model' => 'interview', 'modelClass' => Interview::class, 'version' => 1]
         ];
+    }
+
+    /**
+     * @dataProvider modelProvider
+     * @test
+     */
+    public function testSerializationSmokeTest(Interview $interview)
+    {
+        // Mock the HTTP call that's made for subjects.
+        $this->mockSubjects();
+        // Check A to B
+        $serialized = $this->callSerialize($this->indexer, $interview);
+        /** @var Interview $deserialized */
+        $deserialized = $this->callDeserialize($this->indexer, $serialized);
+        $this->assertInstanceOf(Interview::class, $deserialized);
+        // Check B to A
+        $final_serialized = $this->callSerialize($this->indexer, $deserialized);
+        $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
     /**

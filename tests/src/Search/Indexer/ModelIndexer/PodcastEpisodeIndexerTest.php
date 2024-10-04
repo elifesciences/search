@@ -5,11 +5,14 @@ namespace tests\eLife\Search\Indexer\ModelIndexer;
 use PHPUnit_Framework_TestCase;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\Search\Indexer\ModelIndexer\PodcastEpisodeIndexer;
+use tests\eLife\Search\HttpMocks;
 
 final class PodcastEpisodeIndexerTest extends PHPUnit_Framework_TestCase
 {
     use GetSerializer;
+    use CallSerializer;
     use ModelProvider;
+    use HttpMocks;
 
     /**
      * @var PodcastEpisodeIndexer
@@ -26,6 +29,24 @@ final class PodcastEpisodeIndexerTest extends PHPUnit_Framework_TestCase
         return [
             ['model' => 'podcast-episode', 'modelClass' => PodcastEpisode::class, 'version' => 1]
         ];
+    }
+
+    /**
+     * @dataProvider modelProvider
+     * @test
+     */
+    public function testSerializationSmokeTest(PodcastEpisode $podcastEpisode)
+    {
+        // Mock the HTTP call that's made for subjects.
+        $this->mockSubjects();
+        // Check A to B
+        $serialized = $this->callSerialize($this->indexer, $podcastEpisode);
+        /** @var PodcastEpisode $deserialized */
+        $deserialized = $this->callDeserialize($this->indexer, $serialized);
+        $this->assertInstanceOf(PodcastEpisode::class, $deserialized);
+        // Check B to A
+        $final_serialized = $this->callSerialize($this->indexer, $deserialized);
+        $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
     /**

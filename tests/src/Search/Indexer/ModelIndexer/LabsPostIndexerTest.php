@@ -5,11 +5,14 @@ namespace tests\eLife\Search\Indexer\ModelIndexer;
 use PHPUnit_Framework_TestCase;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\Search\Indexer\ModelIndexer\LabsPostIndexer;
+use tests\eLife\Search\HttpMocks;
 
 final class LabsPostIndexerTest extends PHPUnit_Framework_TestCase
 {
     use GetSerializer;
+    use CallSerializer;
     use ModelProvider;
+    use HttpMocks;
 
     /**
      * @var LabsPostIndexer
@@ -26,6 +29,24 @@ final class LabsPostIndexerTest extends PHPUnit_Framework_TestCase
         return [
             ['model' => 'labs-post', 'modelClass' => LabsPost::class, 'version' => 1]
         ];
+    }
+
+    /**
+     * @dataProvider modelProvider
+     * @test
+     */
+    public function testSerializationSmokeTest(LabsPost $labsPost)
+    {
+        // Mock the HTTP call that's made for subjects.
+        $this->mockSubjects();
+        // Check A to B
+        $serialized = $this->callSerialize($this->indexer, $labsPost);
+        /** @var LabsPost $deserialized */
+        $deserialized = $this->callDeserialize($this->indexer, $serialized);
+        $this->assertInstanceOf(LabsPost::class, $deserialized);
+        // Check B to A
+        $final_serialized = $this->callSerialize($this->indexer, $deserialized);
+        $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
     /**
