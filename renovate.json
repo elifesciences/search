@@ -11,8 +11,13 @@
       "currentValueTemplate": "master",
       "depNameTemplate": "elifesciences/api-dummy",
       "packageNameTemplate": "https://github.com/elifesciences/api-dummy",
-      "datasourceTemplate": "git-refs",
-      "pinDigests": true
+      "datasourceTemplate": "git-refs"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["elifesciences/api-dummy"],
+      "pinDigest": true
     }
   ]
 }
