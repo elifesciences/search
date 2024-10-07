@@ -12,7 +12,6 @@ jobs:
       name: Check for api-dummy updates
       continue-on-error: true
       run: ./bin/update-api-dummy
-    - run: git status; git diff;
     - id: image
       if: steps.update.outcome == 'success'
       name: get latest image
