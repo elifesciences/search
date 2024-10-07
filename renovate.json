@@ -2,5 +2,16 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^docker-compose.yaml$"],
+      "matchStrings": ["elifesciences/api-dummy:(?<currentDigest>.*?)\\n"],
+      "currentValueTemplate": "master",
+      "depNameTemplate": "elifesciences/api-dummy",
+      "packageNameTemplate": "https://github.com/elifesciences/api-dummy",
+      "datasourceTemplate": "git-refs"
+    }
   ]
 }
