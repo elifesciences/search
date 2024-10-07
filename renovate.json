@@ -7,17 +7,12 @@
     {
       "customType": "regex",
       "fileMatch": ["^docker-compose.yaml$"],
-      "matchStrings": ["elifesciences/api-dummy:(?<currentDigest>.*?)\\n"],
+      "matchStrings": ["elifesciences/api-dummy:(?<currentValue>.*?)\\n"],
       "currentValueTemplate": "master",
       "depNameTemplate": "elifesciences/api-dummy",
       "packageNameTemplate": "https://github.com/elifesciences/api-dummy",
-      "datasourceTemplate": "git-refs"
-    }
-  ],
-  "packageRules": [
-    {
-      "matchPackageNames": ["elifesciences/api-dummy"],
-      "versioning": "git"
+      "datasourceTemplate": "git-refs",
+      "versioningTemplate": "git"
     }
   ]
 }
