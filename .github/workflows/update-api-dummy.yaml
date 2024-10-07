@@ -1,3 +1,4 @@
+name: Create PR to update api-dummy image to latest
 on:
   workflow_dispatch:
   # schedule:
