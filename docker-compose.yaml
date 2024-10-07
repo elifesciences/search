@@ -27,7 +27,7 @@ services:
       timeout: 2s
       retries: 10
   api-dummy:
-    image: elifesciences/api-dummy:c6d26fab0e3ed33035307359b9d59bf4463b8ce1
+    image: elifesciences/api-dummy:140568fd486e4cda4517fb4daa4e1ca2342139b2
     ports:
       - '5002:8080'
     healthcheck:
