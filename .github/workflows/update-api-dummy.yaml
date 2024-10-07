@@ -22,8 +22,8 @@ jobs:
       uses: peter-evans/create-pull-request@v7
       with:
         add-paths: docker-compose.yaml
-        commit-message: Update api-dummy docker image to ${{ steps.iamge.outputs.tag }}
+        commit-message: Update api-dummy docker image to ${{ steps.image.outputs.tag }}
         branch: update-api-dummy
-        title: Update api-dummy docker image to ${{ steps.iamge.outputs.tag }}
+        title: Update api-dummy docker image to ${{ steps.image.outputs.tag }}
         body: |
-          Update the api-dummy docker image used in docker-compose to the latest image ${{ steps.iamge.outputs.tag }}
+          Update the api-dummy docker image used in docker-compose to the latest image ${{ steps.image.outputs.tag }}
