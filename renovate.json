@@ -11,7 +11,8 @@
       "currentValueTemplate": "master",
       "depNameTemplate": "elifesciences/api-dummy",
       "packageNameTemplate": "https://github.com/elifesciences/api-dummy",
-      "datasourceTemplate": "git-refs"
+      "datasourceTemplate": "git-refs",
+      "pinDigests": true
     }
   ]
 }
