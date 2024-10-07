@@ -1992,27 +1992,27 @@
         },
         {
             "name": "mindplay/composer-locator",
-            "version": "2.1.4",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mindplay-dk/composer-locator.git",
-                "reference": "d206ce7a5a88f5336332f489be0c8988eddb7a38"
+                "reference": "e83ef57467d58500afbc077669c87c071f70a314"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mindplay-dk/composer-locator/zipball/d206ce7a5a88f5336332f489be0c8988eddb7a38",
-                "reference": "d206ce7a5a88f5336332f489be0c8988eddb7a38",
+                "url": "https://api.github.com/repos/mindplay-dk/composer-locator/zipball/e83ef57467d58500afbc077669c87c071f70a314",
+                "reference": "e83ef57467d58500afbc077669c87c071f70a314",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.0 || ^2.0",
-                "php": ">= 5.4"
+                "php": ">= 7.4"
             },
             "require-dev": {
                 "composer/composer": "^1.0 || ^2.0",
-                "mindplay/testies": "^0.3.0",
-                "symfony/filesystem": "^2.7 || ^3.0",
-                "symfony/process": "^2.7 || ^3.0"
+                "mindplay/testies": "^1.0",
+                "symfony/filesystem": "^5 || ^6 || ^7",
+                "symfony/process": "^5 || ^6 || ^7"
             },
             "type": "composer-plugin",
             "extra": {
@@ -2031,9 +2031,10 @@
             "description": "Locates Composer package root folders by package name",
             "support": {
                 "issues": "https://github.com/mindplay-dk/composer-locator/issues",
-                "source": "https://github.com/mindplay-dk/composer-locator/tree/2.1.4"
+                "source": "https://github.com/mindplay-dk/composer-locator/tree/2.1.5"
             },
-            "time": "2020-12-23T10:58:04+00:00"
+            "abandoned": "composer-runtime-api",
+            "time": "2024-05-08T09:26:47+00:00"
         },
         {
             "name": "monolog/monolog",
