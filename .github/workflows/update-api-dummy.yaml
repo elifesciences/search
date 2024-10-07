@@ -1,0 +1,28 @@
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '* * * * *'
+
+jobs:
+  update-api-dummy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - id: update
+      name: Check for api-dummy updates
+      continue-on-error: true
+      run: ./bin/update-api-dummy
+    - id: image
+      if: steps.update.outcome == 'success'
+      name: get latest image
+      run: echo "tag=$(cat docker-compose.yaml | yq '.services["api-dummy"].image|split(":")[1]')" >> $GITHUB_OUTPUT
+    - name: Create Pull Request
+      if: steps.update.outcome == 'success'
+      uses: peter-evans/create-pull-request@v7
+      with:
+        add-paths: docker-compose.yaml
+        commit-message: Update api-dummy docker image to ${{ steps.iamge.outputs.tag }}
+        branch: update-api-dummy
+        title: Update api-dummy docker image to ${{ steps.iamge.outputs.tag }}
+        body: |
+          Update the api-dummy docker image used in docker-compose to the latest image ${{ steps.iamge.outputs.tag }}
