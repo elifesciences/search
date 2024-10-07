@@ -7,7 +7,7 @@
     {
       "customType": "regex",
       "fileMatch": ["^docker-compose.yaml$"],
-      "matchStrings": ["elifesciences/api-dummy:(?<currentValue>.*?)\\n"],
+      "matchStrings": ["elifesciences/api-dummy:(?<currentValue>)(?<currentDigest>.*?)\\n"],
       "currentValueTemplate": "master",
       "depNameTemplate": "elifesciences/api-dummy",
       "packageNameTemplate": "https://github.com/elifesciences/api-dummy",
