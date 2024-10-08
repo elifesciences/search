@@ -7,7 +7,7 @@ use eLife\Search\Api\Response\SearchResponse;
 use eLife\Search\Api\Response\TypesResponse;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -16,12 +16,14 @@ final class ApiValidator implements HasSearchResultValidator
     private $serializer;
     private $context;
     private $last_error;
+    private $bridge;
+    private $validator;
 
     public function __construct(
         Serializer $serializer,
         SerializationContext $context,
         JsonMessageValidator $validator,
-        DiactorosFactory $bridge
+        PsrHttpFactory $bridge
     ) {
         $this->validator = $validator;
         $this->bridge = $bridge;

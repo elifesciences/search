@@ -52,7 +52,8 @@ use Psr\Log\LogLevel;
 use Silex\Application;
 use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -171,8 +172,17 @@ final class Kernel implements MinimalKernel
         };
 
         // PSR-7 Bridge
-        $app['psr7.bridge'] = function () {
-            return new DiactorosFactory();
+        $app['psr17factory'] = function () {
+            return new Psr17Factory();
+        };
+        $app['psr7.bridge'] = function (Application $app) {
+            $psr17Factory = $app['psr17factory'];
+            return new PsrHttpFactory(
+                $psr17Factory,
+                $psr17Factory,
+                $psr17Factory,
+                $psr17Factory
+            );
         };
         // Validator.
         $app['message-validator'] = function (Application $app) {
