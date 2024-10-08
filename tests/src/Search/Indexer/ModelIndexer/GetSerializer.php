@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\eLife\Search\Workflow;
+namespace tests\eLife\Search\Indexer\ModelIndexer;
 
 use eLife\ApiSdk\ApiSdk;
 use Symfony\Component\Serializer\Serializer;

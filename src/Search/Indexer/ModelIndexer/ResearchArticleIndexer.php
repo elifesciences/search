@@ -1,58 +1,37 @@
 <?php
 
-namespace eLife\Search\Workflow;
+namespace eLife\Search\Indexer\ModelIndexer;
 
-use Assert\Assertion;
 use DateTimeImmutable;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\Model;
-use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
-use eLife\Search\Api\HasSearchResultValidator;
-use Psr\Log\LoggerInterface;
+use eLife\Search\Indexer\ChangeSet;
 use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
-use Throwable;
 
-final class ResearchArticleWorkflow extends AbstractWorkflow
+final class ResearchArticleIndexer extends AbstractModelIndexer
 {
-    use Blocks;
-    use JsonSerializeTransport;
-    use SortDate;
-
-    const WORKFLOW_SUCCESS = 1;
-    const WORKFLOW_FAILURE = -1;
-
-    /**
-     * @var Serializer
-     */
-    private $serializer;
-    private $client;
-    private $validator;
     private $rdsArticles;
 
-    public function __construct(
-        Serializer $serializer,
-        LoggerInterface $logger,
-        MappedElasticsearchClient $client,
-        HasSearchResultValidator $validator,
-        array $rdsArticles = []
-    ) {
-        $this->serializer = $serializer;
-        $this->logger = $logger;
-        $this->client = $client;
-        $this->validator = $validator;
+    public function __construct(Serializer $serializer, array $rdsArticles = [])
+    {
+        parent::__construct($serializer);
         $this->rdsArticles = $rdsArticles;
     }
 
-    /**
-     * @param ArticleVersion $article
-     * @return array
-     */
-    public function index(Model $article) : array
+    protected function getSdkClass(): string
     {
-        $this->logger->debug('ResearchArticle<'.$article->getId().'> Indexing '.$article->getTitle());
+        return ArticleVersion::class;
+    }
+
+    /**
+     * @param ResearchArticle $article
+     * @return ChangeSet
+     */
+    public function prepareChangeSet(Model $article) : ChangeSet
+    {
+        $changeSet = new ChangeSet();
 
         $articleObject = json_decode($this->serialize($article));
         // Fix author name.
@@ -111,8 +90,7 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
         $snippet = $this->snippet($article);
 
         if ($article instanceof ArticleVoR) {
-            $this->logger->debug('Article<'.$article->getId().'> delete corresponding reviewed preprint from index, if exists');
-            $this->client->deleteDocument('reviewed-preprint-'.$article->getId());
+            $changeSet->addDelete('reviewed-preprint-'.$article->getId());
         }
 
         $articleObject->snippet = ['format' => 'json', 'value' => json_encode($snippet)];
@@ -127,51 +105,10 @@ final class ResearchArticleWorkflow extends AbstractWorkflow
         }
         $this->addSortDate($articleObject, $sortDate);
 
-        $this->logger->debug('Article<'.$article->getId().'> Detected type '.($article->getType() ?? 'research-article'));
-
-        return [
-            'json' => json_encode($articleObject),
-            'id' => ($article->getType() ?? 'research-article').'-'.$article->getId(),
-        ];
-    }
-
-    public function insert(string $json, string $id, bool $skipInsert = false)
-    {
-        // Insert the document.
-        $this->logger->debug('ResearchArticle<'.$id.'> importing into Elasticsearch.');
-        $this->client->indexJsonDocument($id, $json);
-
-        return [
-            'id' => $id,
-        ];
-    }
-
-    public function postValidate(string $id, bool $skipValidate = false) : int
-    {
-        $this->logger->debug('ResearchArticle<'.$id.'> post validation.');
-        try {
-            // Post-validation, we got a document.
-            $document = $this->client->getDocumentById($id);
-            Assertion::isInstanceOf($document, IsDocumentResponse::class);
-            $result = $document->unwrap();
-            // That research article is valid JSON.
-            $this->validator->validateSearchResult($result, true);
-        } catch (Throwable $e) {
-            $this->logger->error('ResearchArticle<'.$id.'> rolling back', [
-                'exception' => $e,
-            ]);
-            $this->client->deleteDocument($id);
-
-            // We failed.
-            return self::WORKFLOW_FAILURE;
-        }
-        $this->logger->info('ResearchArticle<'.$id.'> successfully imported.');
-
-        return self::WORKFLOW_SUCCESS;
-    }
-
-    public function getSdkClass() : string
-    {
-        return ArticleVersion::class;
+        $changeSet->addInsert(
+            $articleObject->type.'-'.$article->getId(),
+            json_encode($articleObject),
+        );
+        return $changeSet;
     }
 }

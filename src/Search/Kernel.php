@@ -39,7 +39,7 @@ use eLife\Search\Api\SearchController;
 use eLife\Search\Queue\Command\ImportCommand;
 use eLife\Search\Queue\Command\QueueWatchCommand;
 use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
-use eLife\Search\Queue\Workflow;
+use eLife\Search\Indexer\Indexer;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -408,13 +408,16 @@ final class Kernel implements MinimalKernel
             );
         };
 
-        $app['workflow'] = function (Application $app) {
-            return new Workflow(
-                $app['api.sdk']->getSerializer(),
+        $app['indexer'] = function (Application $app) {
+            return new Indexer(
                 $app['logger'],
                 $app['elastic.client.write'],
                 $app['validator'],
-                $app['config']['rds_articles']
+                Indexer::getDefaultModelIndexers(
+                    $app['api.sdk']->getSerializer(),
+                    $app['elastic.client.write'],
+                    $app['config']['rds_articles']
+                )
             );
         };
 
@@ -424,7 +427,7 @@ final class Kernel implements MinimalKernel
                 return new QueueWatchCommand(
                     $app['mocks.queue'],
                     $app['mocks.queue_transformer'],
-                    $app['workflow'],
+                    $app['indexer'],
                     true,
                     $app['logger'],
                     $app['monitoring'],
@@ -435,7 +438,7 @@ final class Kernel implements MinimalKernel
             return new QueueWatchCommand(
                 $app['aws.queue'],
                 $app['aws.queue_transformer'],
-                $app['workflow'],
+                $app['indexer'],
                 false,
                 $app['logger'],
                 $app['monitoring'],

@@ -7,20 +7,19 @@ use eLife\Bus\Queue\QueueItem;
 use eLife\Bus\Queue\QueueItemTransformer;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
-use eLife\Search\Queue\Workflow;
+use eLife\Search\Indexer\Indexer;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 
 class QueueWatchCommand extends QueueCommand
 {
     private $isMock;
-    private $workflow;
+    private $indexer;
 
     public function __construct(
         WatchableQueue $queue,
         QueueItemTransformer $transformer,
-        Workflow $workflow,
+        Indexer $indexer,
         bool $isMock,
         LoggerInterface $logger,
         Monitoring $monitoring,
@@ -28,7 +27,7 @@ class QueueWatchCommand extends QueueCommand
     ) {
         parent::__construct($logger, $queue, $transformer, $monitoring, $limit, false);
         $this->isMock = $isMock;
-        $this->workflow = $workflow;
+        $this->indexer = $indexer;
     }
 
     protected function configure()
@@ -41,9 +40,6 @@ class QueueWatchCommand extends QueueCommand
 
     protected function process(InputInterface $input, QueueItem $item, $entity = null)
     {
-        $entity = $this->transform($item);
-        if ($entity) {
-            $this->workflow->getWorkflow($item)->run($entity);
-        }
+        $this->indexer->index($entity);
     }
 }
