@@ -11,7 +11,8 @@ use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerBuilder;
 use JsonSchema\Validator;
-use Symfony\Bridge\PsrHttpMessage\Factory\DiactorosFactory;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 
 trait GetValidator
 {
@@ -23,6 +24,9 @@ trait GetValidator
             })
             ->build();
 
+        // PSR-7 Bridge
+        $psr17Factory = new Psr17Factory();
+
         return new ApiValidator(
             $serializer,
             SerializationContext::create(),
@@ -30,7 +34,12 @@ trait GetValidator
                 new PathBasedSchemaFinder(ComposerLocator::getPath('elife/api').'/dist/model'),
                 new Validator()
             ),
-            new DiactorosFactory()
+            new PsrHttpFactory(
+                $psr17Factory,
+                $psr17Factory,
+                $psr17Factory,
+                $psr17Factory
+            )
         );
     }
 }
