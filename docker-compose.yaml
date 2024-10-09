@@ -36,7 +36,7 @@ services:
       timeout: 2s
       retries: 10
   localstack:
-    image: localstack/localstack:2.3.2
+    image: localstack/localstack:3.8.1
     environment:
       - SERVICES=sqs
       - AWS_DEFAULT_REGION=eu-central-1
