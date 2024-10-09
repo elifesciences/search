@@ -12,7 +12,7 @@ currentCommitID=$(cat docker-compose.yaml | yq '.services["api-dummy"].image|spl
 
 checkoutDir=$(mktemp -d)
 git clone --filter=blob:none --no-checkout --single-branch --branch $apiDummyBranch $apiDummyRepo $checkoutDir 2>/dev/null
-latestCommitID=$(git -C $checkoutDir log -1 --pretty="%H" 140568fd486e4cda4517fb4daa4e1ca2342139b2..$apiDummyBranch)
+latestCommitID=$(git -C $checkoutDir log -1 --pretty="%H" $currentCommitID..$apiDummyBranch)
 rm -Rf $checkoutDir
 
 echo Image name: $imageName
