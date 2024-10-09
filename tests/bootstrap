@@ -4,14 +4,3 @@
  *
  * This contains SHIMs for certain classes.
  */
-
-// @todo fix autoloading
-namespace {
-    if (!class_exists('GearmanClient')) {
-        class GearmanClient
-        {
-        }
-
-        define('GEARMAN_SUCCESS', 'GEARMAN_SUCCESS');
-    }
-}

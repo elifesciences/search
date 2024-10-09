@@ -72,7 +72,6 @@ services:
       dockerfile: Dockerfile
       target: dev
     environment:
-      - GEARMAN_HOST=gearman
       - GATEWAY_HOST=api-dummy:8080
     volumes:
       - ./:/app
