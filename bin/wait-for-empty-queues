@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-# with just a single worker the polling may fail often as there is a gap between accepting and completing a job.
-# with more workers this becomes less unlikely.
-# more workers also means more CPU usage which means less CPU available for serving traffic.
-
-# same again, but for the sqs watcher
+# with just a single sqs watcher the polling may fail often as there is a gap between accepting and completing a job.
+# with more sqs watchers this becomes less unlikely.
+# more sqs watchers also means more CPU usage which means less CPU available for serving traffic.
 num_watches_threshold=100 # 100 attempts with a .10s interval is 10 seconds
 num_watches_attempt=0
 
