@@ -31,7 +31,7 @@
         "jms/serializer": "^1.5@dev",
         "justinrainbow/json-schema": "^5.1",
         "mindplay/composer-locator": "^2.1",
-        "monolog/monolog": "^1.22",
+        "monolog/monolog": "^3.0",
         "silex/silex": "^2.0",
         "symfony/console": "4.2.12",
         "symfony/event-dispatcher": "^3.2",
