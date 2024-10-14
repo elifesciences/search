@@ -5,14 +5,12 @@ namespace tests\eLife\Search\Indexer\ModelIndexer;
 use PHPUnit_Framework_TestCase;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Indexer\ModelIndexer\BlogArticleIndexer;
-use tests\eLife\Search\HttpMocks;
 
 final class BlogArticleIndexerTest extends PHPUnit_Framework_TestCase
 {
     use GetSerializer;
     use CallSerializer;
     use ModelProvider;
-    use HttpMocks;
 
     /**
      * @var BlogArticleIndexer
@@ -38,9 +36,6 @@ final class BlogArticleIndexerTest extends PHPUnit_Framework_TestCase
      */
     public function testSerializationSmokeTest(BlogArticle $blogArticle)
     {
-        // Mock the HTTP call that's made for subjects.
-        $this->mockSubjects();
-
         // Check A to B
         $serialized = $this->callSerialize($this->indexer, $blogArticle);
         /** @var BlogArticle $deserialized */
