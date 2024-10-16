@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16e1752776f51ee5005da71ead901ebe",
+    "content-hash": "966126fcfad45821b1fa1344c049d667",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -991,19 +991,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "70e89dd533e0b221b490dee037fc4acf4a4239bb"
+                "reference": "770f03601eeee114058ed98d0bbf105b493b31a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/70e89dd533e0b221b490dee037fc4acf4a4239bb",
-                "reference": "70e89dd533e0b221b490dee037fc4acf4a4239bb",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/770f03601eeee114058ed98d0bbf105b493b31a0",
+                "reference": "770f03601eeee114058ed98d0bbf105b493b31a0",
                 "shasum": ""
             },
             "require": {
                 "composer/package-versions-deprecated": "1.11.99.2",
                 "elife/api-client": "^1.0@dev",
                 "guzzlehttp/promises": "^1.0",
-                "php": "^7.0",
+                "php": "^7.1",
                 "symfony/serializer": "^2.8.2 || ^3.0.2"
             },
             "conflict": {
@@ -1042,7 +1042,7 @@
                 "issues": "https://github.com/elifesciences/api-sdk-php/issues",
                 "source": "https://github.com/elifesciences/api-sdk-php/tree/master"
             },
-            "time": "2024-10-01T16:16:36+00:00"
+            "time": "2024-10-16T05:20:36+00:00"
         },
         {
             "name": "elife/api-validator",
@@ -6657,6 +6657,6 @@
     "platform": {
         "php": "^7.4"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
 }
