@@ -10,8 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - id: update api-sdk
-      name: Check for api-sdk updates
+    - name: Check for api-sdk updates
       run: |
         composer update 'elife/api', 'elife/api-client' 'elife/api-sdk' --with-dependencies --no-suggest --no-interaction
 
