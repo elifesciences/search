@@ -1,0 +1,31 @@
+name: Create PR to update api-sdk dependency to latest
+on:
+  workflow_dispatch:
+  # schedule:
+  # - cron: '* * * * *'
+
+jobs:
+  update-api-dummy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - id: update api-sdk
+      name: Check for api-sdk updates
+      run: |
+        composer update 'elife/api', 'elife/api-client' 'elife/api-sdk' --with-dependencies --no-suggest --no-interaction
+
+    - id: get-api-sdk-version
+      run: echo api-sdk-version=$(jq -r '.packages[]|select(.name == "elife/api-sdk").source.reference' < composer.lock) >> $GITHUB_OUTPUT
+
+
+    - name: Create Pull Request
+      if: steps.update.outcome == 'success'
+      uses: peter-evans/create-pull-request@v7
+      with:
+        add-paths: composer.lock
+        commit-message: Update api-sdk to ${{ steps.get-api-sdk-version.outputs.api-sdk-version }}
+        branch: update-api-sdk
+        title: Update api-sdk to ${{ steps.get-api-sdk-version.outputs.api-sdk-version }}
+        body: |
+          Update the api-sdk dependency to the ${{ steps.get-api-sdk-version.outputs.api-sdk-version }}
