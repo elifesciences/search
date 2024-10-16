@@ -20,7 +20,6 @@ jobs:
 
 
     - name: Create Pull Request
-      if: steps.update.outcome == 'success'
       uses: peter-evans/create-pull-request@v7
       with:
         add-paths: composer.lock
