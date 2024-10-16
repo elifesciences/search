@@ -1,8 +1,8 @@
 name: Create PR to update api-sdk dependency to latest
 on:
   workflow_dispatch:
-  # schedule:
-  # - cron: '* * * * *'
+  schedule:
+  - cron: '0 4 * * 1'
 
 jobs:
   update-api-dummy:
