@@ -12,7 +12,7 @@ jobs:
 
     - name: Check for api-sdk updates
       run: |
-        composer update 'elife/api', 'elife/api-client' 'elife/api-sdk' --with-dependencies --no-suggest --no-interaction
+        docker compose run setup composer update 'elife/api', 'elife/api-client' 'elife/api-sdk' --with-dependencies --no-suggest --no-interaction
 
     - id: get-api-sdk-version
       run: echo api-sdk-version=$(jq -r '.packages[]|select(.name == "elife/api-sdk").source.reference' < composer.lock) >> $GITHUB_OUTPUT
