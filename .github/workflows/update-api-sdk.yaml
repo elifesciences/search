@@ -12,6 +12,7 @@ jobs:
 
     - name: Check for api-sdk updates
       run: |
+        docker compose run setup composer install
         docker compose run setup composer update 'elife/api', 'elife/api-client' 'elife/api-sdk' --with-dependencies --no-suggest --no-interaction
 
     - id: get-api-sdk-version
