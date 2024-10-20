@@ -69,7 +69,7 @@ class DateRangeTest extends ElasticTestCase
         $this->assertIds(['19662'], $response);
     }
 
-    private function assertIds(array $expected, stdClass $response, $message = null)
+    private function assertIds(array $expected, stdClass $response, $message = '')
     {
         $ids = [];
         foreach ($response->items as $item) {
