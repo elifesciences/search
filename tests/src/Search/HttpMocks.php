@@ -10,7 +10,7 @@ use LogicException;
 
 trait HttpMocks
 {
-    final private function createSubjectJson()
+    private function createSubjectJson()
     {
         return [
             'id' => 'subject1',

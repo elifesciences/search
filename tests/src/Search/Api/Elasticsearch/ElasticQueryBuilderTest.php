@@ -3,13 +3,14 @@
 namespace test\eLife\Search\Api\Elasticsearch;
 
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
+use PHPUnit\Framework\TestCase;
 
-class ElasticQueryBuilderTest extends \PHPUnit_Framework_TestCase
+class ElasticQueryBuilderTest extends TestCase
 {
     /** @var ElasticQueryBuilder */
     private $queryBuilder;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->queryBuilder = new ElasticQueryBuilder('foo');
     }

@@ -38,13 +38,14 @@
         "symfony/finder": "5.4.17",
         "symfony/monolog-bridge": "^3.2",
         "symfony/psr-http-message-bridge": "^1.0",
+        "symfony/yaml": "^4.4",
         "willdurand/negotiation": "^2.3",
         "nyholm/psr7": "^1.1"
     },
     "require-dev": {
         "csa/guzzle-cache-middleware": "^1.0",
         "mockery/mockery": "^0.9.5",
-        "phpunit/phpunit": "^5.5",
+        "phpunit/phpunit": "^6.5",
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/browser-kit": "^3.1",
         "symfony/var-dumper": "^3.1"
