@@ -2,12 +2,12 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\Search\Indexer\ModelIndexer\LabsPostIndexer;
 use tests\eLife\Search\HttpMocks;
 
-final class LabsPostIndexerTest extends PHPUnit_Framework_TestCase
+final class LabsPostIndexerTest extends TestCase
 {
     use GetSerializer;
     use CallSerializer;
@@ -19,12 +19,12 @@ final class LabsPostIndexerTest extends PHPUnit_Framework_TestCase
      */
     private $indexer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->indexer = new LabsPostIndexer($this->getSerializer());
     }
 
-    protected function getModelDefinitions()
+    protected function getModelDefinitions(): array
     {
         return [
             ['model' => 'labs-post', 'modelClass' => LabsPost::class, 'version' => 1]

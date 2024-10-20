@@ -2,21 +2,8 @@
 
 namespace tests\eLife\Search\Web;
 
-use Silex\WebTestCase;
-
-class PingTest extends ElasticTestCase
+class PingTest extends WebTestCase
 {
-    // avoid dependency on ElasticSearch for this test
-    public function setUp()
-    {
-        WebTestCase::setUp();
-    }
-
-    public function tearDown()
-    {
-        WebTestCase::setUp();
-    }
-
     public function testItIsNotCached()
     {
         $this->newClient();

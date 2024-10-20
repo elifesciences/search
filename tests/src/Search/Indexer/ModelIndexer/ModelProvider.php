@@ -16,9 +16,8 @@ trait ModelProvider
 
     public function modelProvider() : Traversable
     {
-        $paths = [];
-
         foreach ($this->getModelDefinitions() as $modelDefinition) {
+            $paths = [];
             $model = $modelDefinition['model'];
             $version = $modelDefinition['version'];
             $modelClass = $modelDefinition['modelClass'];

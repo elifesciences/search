@@ -3,10 +3,11 @@
 namespace test\eLife\Search;
 
 use eLife\Search\IndexMetadata;
+use PHPUnit\Framework\TestCase;
 
-class IndexMetadataTest extends \PHPUnit_Framework_TestCase
+class IndexMetadataTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->sample = IndexMetadata::fromContents('search_2', 'search_1');
     }
