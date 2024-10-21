@@ -894,12 +894,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "85abe99660dabf11e55a5812533833d6570c7718"
+                "reference": "0129edae7dcf6018d629fa7ec2d4519009cec975"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/85abe99660dabf11e55a5812533833d6570c7718",
-                "reference": "85abe99660dabf11e55a5812533833d6570c7718",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/0129edae7dcf6018d629fa7ec2d4519009cec975",
+                "reference": "0129edae7dcf6018d629fa7ec2d4519009cec975",
                 "shasum": ""
             },
             "require": {
@@ -947,7 +947,7 @@
                 "issues": "https://github.com/elifesciences/api-client-php/issues",
                 "source": "https://github.com/elifesciences/api-client-php/tree/master"
             },
-            "time": "2024-10-16T04:01:43+00:00"
+            "time": "2024-10-18T07:00:08+00:00"
         },
         {
             "name": "elife/api-problem",
@@ -1011,12 +1011,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-sdk-php.git",
-                "reference": "770f03601eeee114058ed98d0bbf105b493b31a0"
+                "reference": "04301024471139499313520a6907369937bae67d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/770f03601eeee114058ed98d0bbf105b493b31a0",
-                "reference": "770f03601eeee114058ed98d0bbf105b493b31a0",
+                "url": "https://api.github.com/repos/elifesciences/api-sdk-php/zipball/04301024471139499313520a6907369937bae67d",
+                "reference": "04301024471139499313520a6907369937bae67d",
                 "shasum": ""
             },
             "require": {
@@ -1062,7 +1062,7 @@
                 "issues": "https://github.com/elifesciences/api-sdk-php/issues",
                 "source": "https://github.com/elifesciences/api-sdk-php/tree/master"
             },
-            "time": "2024-10-16T05:20:36+00:00"
+            "time": "2024-10-18T07:38:31+00:00"
         },
         {
             "name": "elife/api-validator",
