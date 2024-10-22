@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6a6fc42e45f1d4ebce401e3783529343",
+    "content-hash": "ff34fbe974acf48fda8227312cdcf60c",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2882,21 +2882,21 @@
             "time": "2024-06-04T14:27:45+00:00"
         },
         {
-            "name": "silex/silex",
-            "version": "v2.3.0",
+            "name": "silexandfriends/silex",
+            "version": "v2.4.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/silexphp/Silex.git",
-                "reference": "6bc31c1b8c4ef614a7115320fd2d3b958032f131"
+                "url": "https://github.com/SilexAndFriends/Silex.git",
+                "reference": "16c802ff0ca269383081f0829d18a4cab00f9f59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Silex/zipball/6bc31c1b8c4ef614a7115320fd2d3b958032f131",
-                "reference": "6bc31c1b8c4ef614a7115320fd2d3b958032f131",
+                "url": "https://api.github.com/repos/SilexAndFriends/Silex/zipball/16c802ff0ca269383081f0829d18a4cab00f9f59",
+                "reference": "16c802ff0ca269383081f0829d18a4cab00f9f59",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1.3",
+                "php": ">=7.4|^8.0",
                 "pimple/pimple": "^3.0",
                 "symfony/event-dispatcher": "^4.0",
                 "symfony/http-foundation": "^4.0",
@@ -2905,14 +2905,17 @@
             },
             "replace": {
                 "silex/api": "self.version",
-                "silex/providers": "self.version"
+                "silex/providers": "self.version",
+                "silex/silex": "self.version"
             },
             "require-dev": {
                 "doctrine/dbal": "^2.2",
+                "fig/link-util": "^1.1",
                 "monolog/monolog": "^1.4.1",
+                "rector/rector-prefixed": "^0.9.31",
                 "swiftmailer/swiftmailer": "^5",
                 "symfony/asset": "^4.0",
-                "symfony/browser-kit": "^4.0",
+                "symfony/browser-kit": "^4.4",
                 "symfony/config": "^4.0",
                 "symfony/css-selector": "^4.0",
                 "symfony/debug": "^4.0",
@@ -2924,7 +2927,7 @@
                 "symfony/intl": "^4.0",
                 "symfony/monolog-bridge": "^4.0",
                 "symfony/options-resolver": "^4.0",
-                "symfony/phpunit-bridge": "^3.2",
+                "symfony/phpunit-bridge": "^5.0",
                 "symfony/process": "^4.0",
                 "symfony/security": "^4.0",
                 "symfony/serializer": "^4.0",
@@ -2933,12 +2936,12 @@
                 "symfony/validator": "^4.0",
                 "symfony/var-dumper": "^4.0",
                 "symfony/web-link": "^4.0",
-                "twig/twig": "^2.0"
+                "twig/twig": "^3"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.3.x-dev"
+                    "dev-master": "2.4.x-dev"
                 }
             },
             "autoload": {
@@ -2958,19 +2961,21 @@
                 {
                     "name": "Igor Wiedler",
                     "email": "igor@wiedler.ch"
+                },
+                {
+                    "name": "Roberto Nygaard",
+                    "email": "roberto@nygaard.es"
                 }
             ],
             "description": "The PHP micro-framework based on the Symfony Components",
-            "homepage": "http://silex.sensiolabs.org",
+            "homepage": "https://silex.symfony.com",
             "keywords": [
                 "microframework"
             ],
             "support": {
-                "issues": "https://github.com/silexphp/Silex/issues",
-                "source": "https://github.com/silexphp/Silex/tree/v2.3.0"
+                "source": "https://github.com/SilexAndFriends/Silex/tree/v2.4.5"
             },
-            "abandoned": "symfony/flex",
-            "time": "2018-04-20T05:17:01+00:00"
+            "time": "2021-03-19T22:58:35+00:00"
         },
         {
             "name": "symfony/console",

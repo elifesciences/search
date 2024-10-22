@@ -34,7 +34,7 @@
         "mindplay/composer-locator": "^2.1",
         "monolog/monolog": "^1.22",
         "nyholm/psr7": "^1.1",
-        "silex/silex": "^2.3",
+        "silexandfriends/silex": "^2.4",
         "symfony/console": "4.4.49",
         "symfony/finder": "5.4.43",
         "symfony/monolog-bridge": "^4.4",
