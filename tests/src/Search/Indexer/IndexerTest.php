@@ -13,17 +13,17 @@ use eLife\Search\Indexer\ChangeSet;
 use eLife\Search\Indexer\ModelIndexer;
 use Exception;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use tests\eLife\Search\ExceptionNullLogger;
 
-final class IndexerTest extends PHPUnit_Framework_TestCase
+final class IndexerTest extends TestCase
 {
     protected $elastic;
     protected $validator;
     protected $mockArticleIndexer;
     protected $indexer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
         $this->validator = Mockery::mock(HasSearchResultValidator::class);
@@ -34,7 +34,7 @@ final class IndexerTest extends PHPUnit_Framework_TestCase
         $this->indexer = new Indexer($logger, $this->elastic, $this->validator, ['article' => $this->mockArticleIndexer]);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
         parent::tearDown();
@@ -71,6 +71,9 @@ final class IndexerTest extends PHPUnit_Framework_TestCase
         $this->elastic->shouldNotReceive('indexJsonDocument');
         $this->elastic->shouldNotReceive('deleteDocument');
         $this->indexer->index($entity);
+
+        // added to remove risky flag from this test, as all the assertions are done at `tearDown()`
+        $this->assertTrue(true);
     }
 
     /**
@@ -98,6 +101,9 @@ final class IndexerTest extends PHPUnit_Framework_TestCase
             ->once()
             ->andReturn(true);
         $this->indexer->index($entity);
+
+        // added to remove risky flag from this test, as all the assertions are done at `tearDown()`
+        $this->assertTrue(true);
     }
 
 
@@ -130,6 +136,9 @@ final class IndexerTest extends PHPUnit_Framework_TestCase
             ->with($entity->getIdentifier()->__toString());
         $this->expectException(\Exception::class);
         $this->indexer->index($entity);
+
+        // added to remove risky flag from this test, as all the assertions are done at `tearDown()`
+        $this->assertTrue(true);
     }
 
     /**
@@ -161,5 +170,8 @@ final class IndexerTest extends PHPUnit_Framework_TestCase
             ->once()
             ->with('reviewed-preprint/1');
         $this->indexer->index($entity);
+
+        // added to remove risky flag from this test, as all the assertions are done at `tearDown()`
+        $this->assertTrue(true);
     }
 }

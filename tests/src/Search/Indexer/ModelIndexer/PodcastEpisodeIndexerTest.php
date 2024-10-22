@@ -2,11 +2,11 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use eLife\ApiSdk\Model\PodcastEpisode;
 use eLife\Search\Indexer\ModelIndexer\PodcastEpisodeIndexer;
 
-final class PodcastEpisodeIndexerTest extends PHPUnit_Framework_TestCase
+final class PodcastEpisodeIndexerTest extends TestCase
 {
     use GetSerializer;
     use CallSerializer;
@@ -17,12 +17,12 @@ final class PodcastEpisodeIndexerTest extends PHPUnit_Framework_TestCase
      */
     private $indexer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->indexer = new PodcastEpisodeIndexer($this->getSerializer());
     }
 
-    protected function getModelDefinitions()
+    protected function getModelDefinitions(): array
     {
         return [
             ['model' => 'podcast-episode', 'modelClass' => PodcastEpisode::class, 'version' => 1]

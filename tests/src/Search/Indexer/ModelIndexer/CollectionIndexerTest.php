@@ -2,11 +2,11 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use eLife\ApiSdk\Model\Collection;
 use eLife\Search\Indexer\ModelIndexer\CollectionIndexer;
 
-final class CollectionIndexerTest extends PHPUnit_Framework_TestCase
+final class CollectionIndexerTest extends TestCase
 {
     use GetSerializer;
     use CallSerializer;
@@ -17,12 +17,12 @@ final class CollectionIndexerTest extends PHPUnit_Framework_TestCase
      */
     private $indexer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->indexer = new CollectionIndexer($this->getSerializer());
     }
 
-    protected function getModelDefinitions()
+    protected function getModelDefinitions(): array
     {
         return [
             ['model' => 'collection', 'modelClass' => Collection::class, 'version' => 2]

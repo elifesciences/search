@@ -6,3 +6,4 @@
 /var/
 /vendor/
 !.gitkeep
+/.phpunit.result.cache

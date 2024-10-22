@@ -125,7 +125,7 @@ trait AsyncAssert
         }
     }
 
-    final public function tearDown()
+    final public function tearDown(): void
     {
         if (method_exists($this, 'fail')) {
             foreach ($this->messages as $message) {

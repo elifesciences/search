@@ -3,12 +3,12 @@
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
 use eLife\ApiSdk\Model\ReviewedPreprint;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
 use Mockery;
 
-final class ReviewedPreprintIndexerTest extends PHPUnit_Framework_TestCase
+final class ReviewedPreprintIndexerTest extends TestCase
 {
     use GetSerializer;
     use CallSerializer;
@@ -24,13 +24,13 @@ final class ReviewedPreprintIndexerTest extends PHPUnit_Framework_TestCase
      */
     private $indexer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
         $this->indexer = new ReviewedPreprintIndexer($this->getSerializer(), $this->elastic);
     }
 
-    protected function getModelDefinitions()
+    protected function getModelDefinitions(): array
     {
         return [
             ['model' => 'reviewed-preprint', 'modelClass' => ReviewedPreprint::class, 'version' => 1]

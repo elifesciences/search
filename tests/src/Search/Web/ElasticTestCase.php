@@ -10,7 +10,6 @@ use eLife\Search\Kernel;
 use eLife\Search\KeyValueStore\ElasticSearchKeyValueStore;
 use Psr\Log\NullLogger;
 use RuntimeException;
-use Silex\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
@@ -21,12 +20,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 abstract class ElasticTestCase extends WebTestCase
 {
     protected $console;
-    /** @var Kernel */
-    protected $kernel;
     /** @var MappedElasticsearchClient */
     protected $client;
-    /** @var Client */
-    protected $api;
 
     public function getCollectionFixture(int $num)
     {
@@ -301,15 +296,6 @@ abstract class ElasticTestCase extends WebTestCase
         return $json;
     }
 
-    public function newClient()
-    {
-        return $this->api = static::createClient();
-    }
-
-    public function getResponse()
-    {
-        return $this->api->getResponse();
-    }
 
     public function addDocumentToElasticSearch($doc)
     {
@@ -326,22 +312,6 @@ abstract class ElasticTestCase extends WebTestCase
         foreach ($docs as $doc) {
             $this->addDocumentToElasticSearch($doc);
         }
-    }
-
-    public function createConfiguration()
-    {
-        if (file_exists($configFile = __DIR__.'/../../../../config.php')) {
-            $config = include __DIR__.'/../../../../config.php';
-        } else {
-            throw new RuntimeException('No config.php has been found.');
-        }
-
-        return $this->modifyConfiguration($config);
-    }
-
-    public function modifyConfiguration($config)
-    {
-        return $config;
     }
 
     protected function mapHeaders($headers)
@@ -382,7 +352,7 @@ abstract class ElasticTestCase extends WebTestCase
         return $this->kernel->getApp();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->kernel = new Kernel($this->createConfiguration());
@@ -408,7 +378,7 @@ abstract class ElasticTestCase extends WebTestCase
         $this->assertStringStartsWith('Created new empty index', $lines[0], 'Failed to run set up of the test (index creation)');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->plainClient->deleteIndex('elife_test');
         parent::tearDown();

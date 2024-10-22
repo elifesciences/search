@@ -2,7 +2,7 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Mockery;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\ArticlePoA;
@@ -10,7 +10,7 @@ use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ResearchArticleIndexer;
 
-final class ResearchArticleIndexerTest extends PHPUnit_Framework_TestCase
+final class ResearchArticleIndexerTest extends TestCase
 {
     use GetSerializer;
     use CallSerializer;
@@ -26,13 +26,13 @@ final class ResearchArticleIndexerTest extends PHPUnit_Framework_TestCase
      */
     private $indexer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
         $this->indexer = new ResearchArticleIndexer($this->getSerializer(), []);
     }
 
-    protected function getModelDefinitions()
+    protected function getModelDefinitions(): array
     {
         return [
             ['model' => 'article-vor', 'modelClass' => ArticleVoR::class, 'version' => 8],

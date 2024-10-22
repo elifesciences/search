@@ -2,11 +2,11 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use eLife\ApiSdk\Model\Interview;
 use eLife\Search\Indexer\ModelIndexer\InterviewIndexer;
 
-final class InterviewIndexerTest extends PHPUnit_Framework_TestCase
+final class InterviewIndexerTest extends TestCase
 {
     use GetSerializer;
     use CallSerializer;
@@ -17,12 +17,12 @@ final class InterviewIndexerTest extends PHPUnit_Framework_TestCase
      */
     private $indexer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->indexer = new InterviewIndexer($this->getSerializer());
     }
 
-    protected function getModelDefinitions()
+    protected function getModelDefinitions(): array
     {
         return [
             ['model' => 'interview', 'modelClass' => Interview::class, 'version' => 1]
