@@ -1,8 +1,6 @@
 services:
   opensearch:
-    build:
-      context: .
-      dockerfile: Dockerfile.opensearch
+    image: opensearchproject/opensearch:2
     environment:
       - cluster.name=opensearch-cluster
       - node.name=opensearch
