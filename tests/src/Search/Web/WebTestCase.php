@@ -5,7 +5,6 @@ namespace tests\eLife\Search\Web;
 use eLife\Search\Kernel;
 use RuntimeException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Silex\WebTestCase as SilexWebTestCase;
 
 abstract class WebTestCase extends SilexWebTestCase
 {

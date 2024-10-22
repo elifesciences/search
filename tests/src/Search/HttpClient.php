@@ -20,7 +20,6 @@ trait HttpClient
         if (null === $this->httpClient) {
             $this->httpClient = new Guzzle6HttpClient(new Client([
                 'base_uri' => 'http://api.elifesciences.org',
-                'handler' => $stack,
             ]));
         }
 
