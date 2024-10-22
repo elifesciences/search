@@ -29,7 +29,7 @@
         "elife/ping": "^1.0.1",
         "guzzlehttp/guzzle": "^6.3",
         "jms/serializer": "^1.5@dev",
-        "justinrainbow/json-schema": "^5.1",
+        "justinrainbow/json-schema": "^6.0",
         "mindplay/composer-locator": "^2.1",
         "monolog/monolog": "^1.22",
         "silex/silex": "^2.3",
