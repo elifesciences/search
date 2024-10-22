@@ -7,14 +7,12 @@ use PHPUnit\Framework\TestCase;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
 use Mockery;
-use tests\eLife\Search\HttpMocks;
 
 final class ReviewedPreprintIndexerTest extends TestCase
 {
     use GetSerializer;
     use CallSerializer;
     use ModelProvider;
-    use HttpMocks;
 
     /**
      * @var MockInterface
@@ -45,8 +43,6 @@ final class ReviewedPreprintIndexerTest extends TestCase
      */
     public function testSerializationSmokeTest(ReviewedPreprint $reviewedPreprint)
     {
-        // Mock the HTTP call that's made for subjects.
-        $this->mockSubjects();
         // Check A to B
         $serialized = $this->callSerialize($this->indexer, $reviewedPreprint);
         /** @var ReviewedPreprint $deserialized */

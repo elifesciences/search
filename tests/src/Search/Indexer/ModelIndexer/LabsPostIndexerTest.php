@@ -5,14 +5,12 @@ namespace tests\eLife\Search\Indexer\ModelIndexer;
 use PHPUnit\Framework\TestCase;
 use eLife\ApiSdk\Model\LabsPost;
 use eLife\Search\Indexer\ModelIndexer\LabsPostIndexer;
-use tests\eLife\Search\HttpMocks;
 
 final class LabsPostIndexerTest extends TestCase
 {
     use GetSerializer;
     use CallSerializer;
     use ModelProvider;
-    use HttpMocks;
 
     /**
      * @var LabsPostIndexer
@@ -37,8 +35,6 @@ final class LabsPostIndexerTest extends TestCase
      */
     public function testSerializationSmokeTest(LabsPost $labsPost)
     {
-        // Mock the HTTP call that's made for subjects.
-        $this->mockSubjects();
         // Check A to B
         $serialized = $this->callSerialize($this->indexer, $labsPost);
         /** @var LabsPost $deserialized */
