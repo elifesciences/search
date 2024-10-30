@@ -6,7 +6,7 @@
   "packageRules": [
     {
       "matchPackageNames": ["ghcr.io/elifesciences/api-dummy"],
-      "versioning": "loose"
+      "versioning": "regex:^(?<major>[\\d]+)\\.(?<minor>[\\d]+)\\.(?<patch>[\\d]+).*$"
     }
   ]
 }
