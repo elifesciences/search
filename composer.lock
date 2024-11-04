@@ -899,12 +899,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "0129edae7dcf6018d629fa7ec2d4519009cec975"
+                "reference": "dc89569b8235e0b2ac95e153479e2a4dc1708b07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/0129edae7dcf6018d629fa7ec2d4519009cec975",
-                "reference": "0129edae7dcf6018d629fa7ec2d4519009cec975",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/dc89569b8235e0b2ac95e153479e2a4dc1708b07",
+                "reference": "dc89569b8235e0b2ac95e153479e2a4dc1708b07",
                 "shasum": ""
             },
             "require": {
@@ -952,7 +952,7 @@
                 "issues": "https://github.com/elifesciences/api-client-php/issues",
                 "source": "https://github.com/elifesciences/api-client-php/tree/master"
             },
-            "time": "2024-10-18T07:00:08+00:00"
+            "time": "2024-10-31T12:30:55+00:00"
         },
         {
             "name": "elife/api-problem",
