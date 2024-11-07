@@ -36,10 +36,6 @@ abstract class ElasticsearchTestCase extends TestCase
 
     public function setUp(): void
     {
-        // Annotations.
-        AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation', ComposerLocator::getPath('jms/serializer').'/src'
-        );
         // Serializer.
         $this->serializer = SerializerBuilder::create()
             ->configureListeners(function (EventDispatcher $dispatcher) {
