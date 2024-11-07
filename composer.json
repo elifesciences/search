@@ -38,7 +38,7 @@
         "symfony/console": "4.4.49",
         "symfony/finder": "5.4.43",
         "symfony/monolog-bridge": "^4.4",
-        "symfony/psr-http-message-bridge": "^1.0",
+        "symfony/psr-http-message-bridge": "^2.0",
         "symfony/yaml": "^4.4",
         "willdurand/negotiation": "^3.1"
     },
