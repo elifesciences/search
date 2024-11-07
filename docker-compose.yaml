@@ -26,6 +26,7 @@ services:
       retries: 10
   api-dummy:
     image: ghcr.io/elifesciences/api-dummy:20241030170439.0.0-g1344937-11598117326-1
+    platform: linux/amd64
     ports:
       - '5002:8080'
     healthcheck:
