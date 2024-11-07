@@ -21,7 +21,7 @@
         "elife/api": "^2.30",
         "elife/api-client": "^1.0",
         "elife/api-problem": "^1.1",
-        "elife/api-sdk": "dev-support-php-8.x",
+        "elife/api-sdk": "dev-master",
         "elife/api-validator": "^1.0",
         "elife/bus-sdk": "^1.0",
         "elife/content-negotiator": "^1.0.3",
