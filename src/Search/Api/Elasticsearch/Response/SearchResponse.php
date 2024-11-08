@@ -24,31 +24,31 @@ final class SearchResponse implements ElasticResponse, QueryResponse
         }, $this->getHits()->getHitItem());
     }
 
-    public function current()
+    public function current(): mixed
     {
         $results = $this->getResults();
 
         return $results[$this->cursor];
     }
 
-    public function next()
+    public function next(): void
     {
         ++$this->cursor;
     }
 
-    public function key()
+    public function key(): mixed
     {
         return $this->cursor;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         $results = $this->getResults();
 
         return isset($results[$this->cursor]);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->cursor = 0;
     }
