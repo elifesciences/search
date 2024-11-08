@@ -53,6 +53,16 @@ final class SearchResponse implements ElasticResponse, QueryResponse
         $this->cursor = 0;
     }
 
+    public function serialize()
+    {
+        // TODO: Implement serialize() method.
+    }
+
+    public function unserialize($serialized)
+    {
+        // TODO: Implement unserialize() method.
+    }
+
     public function getTypeTotals() : array
     {
         if (isset($this->aggregations['type_agg']['buckets'])) {
