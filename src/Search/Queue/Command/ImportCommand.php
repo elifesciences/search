@@ -49,7 +49,6 @@ final class ImportCommand extends Command
         Monitoring $monitoring,
         callable $limit
     ) {
-        $this->serializer = $sdk->getSerializer();
         $this->sdk = $sdk;
         $this->queue = $queue;
         $this->logger = $logger;
