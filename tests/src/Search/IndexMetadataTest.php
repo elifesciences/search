@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 class IndexMetadataTest extends TestCase
 {
+    private IndexMetadata $sample;
+
     public function setUp(): void
     {
         $this->sample = IndexMetadata::fromContents('search_2', 'search_1');

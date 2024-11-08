@@ -6,7 +6,9 @@ use Elasticsearch\Client;
 
 class PlainElasticsearchClient
 {
-    private $libraryClient;
+    private Client $libraryClient;
+
+    private string $index;
 
     public function __construct(Client $libraryClient, string $index)
     {

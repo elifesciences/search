@@ -9,8 +9,6 @@ use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
 use eLife\Search\KeyValueStore\ElasticSearchKeyValueStore;
 use Psr\Log\NullLogger;
-use RuntimeException;
-use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\StreamOutput;
@@ -20,8 +18,10 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 abstract class ElasticTestCase extends WebTestCase
 {
     protected $console;
-    /** @var MappedElasticsearchClient */
-    protected $client;
+
+    protected MappedElasticsearchClient $mappedClient;
+
+    protected PlainElasticsearchClient $plainClient;
 
     public function getCollectionFixture(int $num)
     {
