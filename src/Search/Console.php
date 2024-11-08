@@ -32,6 +32,12 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class Console
 {
+    private $console;
+    private $kernel;
+    private $config;
+    private $logger;
+    private $root;
+
     /**
      * These commands map to [name]Command so when the command "hello" is configured
      * it will call helloCommand() on this class with InputInterface and OutputInterface
@@ -290,12 +296,12 @@ final class Console
         }
     }
 
-    public function __construct(Application $console, Kernel $kernel)
+    public function __construct(Application $console, Kernel $kernel, LoggerInterface $logger, array $config)
     {
         $this->console = $console;
         $this->kernel = $kernel;
-        $this->config = $this->kernel->get('config');
-        $this->logger = $this->kernel->get('logger');
+        $this->config = $config;
+        $this->logger = $logger;
         $this->root = __DIR__.'/../..';
 
         // TODO: remove when it is *never* passed in by the formula or anything else

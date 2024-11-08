@@ -15,6 +15,6 @@ $app = new Kernel($config);
 $input = new ArgvInput();
 $output = new ConsoleOutput();
 $app->get('logger')->pushHandler(new ConsoleHandler($output));
-$console = new Console(new Application('eLife Sciences Search API'), $app);
+$console = new Console(new Application('eLife Sciences Search API'), $app, $app->get('logger'), $app->get('config'));
 $app->get('monitoring')->markAsBackground();
 $console->run($input, $output);
