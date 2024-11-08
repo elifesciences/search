@@ -113,9 +113,7 @@ final class Kernel implements MinimalKernel
         $app->register(new LoggerProvider());
         $app->register(new PingControllerProvider());
         // Annotations.
-        AnnotationRegistry::registerAutoloadNamespace(
-            'JMS\Serializer\Annotation', ComposerLocator::getPath('jms/serializer').'/src'
-        );
+        AnnotationRegistry::registerLoader('class_exists');
         if ($app['config']['debug']) {
             $app->register(new VarDumperServiceProvider());
             $app->register(new Provider\HttpFragmentServiceProvider());
