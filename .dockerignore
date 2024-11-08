@@ -6,3 +6,6 @@
 /vendor/
 !.gitkeep
 /.phpunit.result.cache
+/Dockerfile
+/.dockerignore
+/.gitignore
