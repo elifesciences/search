@@ -66,10 +66,16 @@ final class SearchController
     {
         $dateTime = DateTimeImmutable::createFromFormat($format, $time, new DateTimeZone('UTC'));
         $errors = DateTimeImmutable::getLastErrors();
-        if (
-            ($strict && 0 !== $errors['warning_count']) ||
-            0 !== $errors['error_count']
-        ) {
+
+        if ($errors === false) {
+            return $dateTime;
+        }
+
+        if (0 !== $errors['error_count']) {
+            throw new BadRequestHttpException("Invalid date format provided ($format)");
+        }
+
+        if ($strict && 0 !== $errors['warning_count']) {
             throw new BadRequestHttpException("Invalid date format provided ($format)");
         }
 
