@@ -13,7 +13,7 @@
         }
     },
     "require": {
-        "php": "8.0.*",
+        "php": "8.3.*",
         "aws/aws-sdk-php": "3.288.1",
         "clue/block-react": "^1.1",
         "doctrine/annotations": "^1.4",
