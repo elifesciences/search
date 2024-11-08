@@ -408,8 +408,7 @@ abstract class ElasticTestCase extends WebTestCase
             };
         });
         $app->setAutoExit(false);
-        $application = new Console($app, $this->kernel);
-        $application->logger = $logger;
+        $application = new Console($app, $this->kernel, $logger, $this->kernel->get('config'));
 
         $fp = tmpfile();
         $input = new StringInput($command);
