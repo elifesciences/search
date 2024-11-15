@@ -3,9 +3,8 @@
 namespace eLife\Search\Api\Query;
 
 use Iterator;
-use Serializable;
 
-interface QueryResponse extends Iterator, Serializable
+interface QueryResponse extends Iterator
 {
     public function getTotalResults() : int;
 
