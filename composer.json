@@ -32,7 +32,7 @@
         "jms/serializer": "^3.0",
         "justinrainbow/json-schema": "^5.1",
         "mindplay/composer-locator": "^2.1",
-        "monolog/monolog": "^1.22",
+        "monolog/monolog": "^3.0",
         "nyholm/psr7": "^1.1",
         "silexandfriends/silex": "^2.4",
         "symfony/console": "4.4.49",
