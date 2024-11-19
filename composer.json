@@ -35,6 +35,7 @@
         "psr/log": "^1.1",
         "silexandfriends/silex": "^2.4",
         "symfony/console": "4.4.49",
+        "symfony/http-kernel": "^4.4",
         "symfony/psr-http-message-bridge": "^2.0",
         "symfony/serializer": "^3.4",
         "symfony/yaml": "^4.4",
