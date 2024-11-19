@@ -36,7 +36,6 @@
         "nyholm/psr7": "^1.1",
         "silexandfriends/silex": "^2.4",
         "symfony/console": "4.4.49",
-        "symfony/finder": "5.4.43",
         "symfony/monolog-bridge": "^4.4",
         "symfony/psr-http-message-bridge": "^2.0",
         "symfony/yaml": "^4.4",
@@ -47,6 +46,7 @@
         "phpunit/phpunit": "^9.6",
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/browser-kit": "^4.4",
+        "symfony/finder": "5.4.43",
         "symfony/var-dumper": "^4.4"
     },
     "config": {
