@@ -31,11 +31,9 @@
         "jms/serializer": "^3.0",
         "justinrainbow/json-schema": "^5.1",
         "mindplay/composer-locator": "^2.1",
-        "monolog/monolog": "^1.22",
         "nyholm/psr7": "^1.1",
         "silexandfriends/silex": "^2.4",
         "symfony/console": "4.4.49",
-        "symfony/monolog-bridge": "^4.4",
         "symfony/psr-http-message-bridge": "^2.0",
         "symfony/yaml": "^4.4",
         "willdurand/negotiation": "^3.1"
