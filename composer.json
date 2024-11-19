@@ -32,6 +32,7 @@
         "justinrainbow/json-schema": "^5.1",
         "mindplay/composer-locator": "^2.1",
         "nyholm/psr7": "^1.1",
+        "psr/log": "^1.1",
         "silexandfriends/silex": "^2.4",
         "symfony/console": "4.4.49",
         "symfony/psr-http-message-bridge": "^2.0",
