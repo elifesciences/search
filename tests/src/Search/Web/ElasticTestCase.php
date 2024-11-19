@@ -7,7 +7,7 @@ use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 use eLife\Search\Console;
 use eLife\Search\IndexMetadata;
 use eLife\Search\Kernel;
-use eLife\Search\KeyValueStore\ElasticSearchKeyValueStore;
+use eLife\Search\KeyValueStore\ElasticsearchKeyValueStore;
 use Psr\Log\NullLogger;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\StringInput;
@@ -363,7 +363,7 @@ abstract class ElasticTestCase extends WebTestCase
 
         $this->plainClient = new PlainElasticsearchClient(
             $this->kernel->get('elastic.elasticsearch.plain'),
-            $indexName ?? ElasticSearchKeyValueStore::INDEX_NAME
+            $indexName ?? ElasticsearchKeyValueStore::INDEX_NAME
         );
         $this->mappedClient = $this->kernel->get('elastic.client.read');
 
