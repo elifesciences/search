@@ -42,6 +42,7 @@
         "willdurand/negotiation": "^3.1"
     },
     "require-dev": {
+        "guzzlehttp/promises": "^1.5",
         "mockery/mockery": "^1.0",
         "phpunit/phpunit": "^9.6",
         "shipmonk/composer-dependency-analyser": "^1.8",
