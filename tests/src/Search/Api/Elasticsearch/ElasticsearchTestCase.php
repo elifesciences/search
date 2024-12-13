@@ -17,7 +17,7 @@ abstract class ElasticsearchTestCase extends TestCase
     /** @var Serializer */
     private $serializer;
 
-    abstract public function jsonProvider() : array;
+    abstract public static function jsonProvider() : array;
 
     /**
      * @dataProvider jsonProvider

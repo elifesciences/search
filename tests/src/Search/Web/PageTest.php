@@ -19,7 +19,7 @@ final class PageTest extends ElasticTestCase
         $this->assertSame(400, $response->getStatusCode());
     }
 
-    public function invalidPageProvider() : Traversable
+    public static function invalidPageProvider() : Traversable
     {
         foreach (['-1', '0', 'foo'] as $page) {
             yield 'page '.$page => [$page];
@@ -63,7 +63,7 @@ final class PageTest extends ElasticTestCase
         $this->assertSame(400, $response->getStatusCode());
     }
 
-    public function invalidPerPageProvider() : Traversable
+    public static function invalidPerPageProvider() : Traversable
     {
         foreach (['-1', '0', '101', 'foo'] as $page) {
             yield 'page '.$page => [$page];

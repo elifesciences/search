@@ -7,25 +7,24 @@ use LogicException;
 
 trait RamlRequirement
 {
-    public function getFixtureWithType(string $name, string $type) : string
+    abstract public static function markTestSkipped(string $message = '');
+
+    public static function getFixtureWithType(string $name, string $type) : string
     {
-        $fixture = $this->getFixture($name);
+        $fixture = self::getFixture($name);
         $fixture = json_decode($fixture);
         $fixture->type = $type;
 
         return json_encode($fixture, JSON_PRETTY_PRINT);
     }
 
-    public function getFixture(string $name) : string
+    public static function getFixture(string $name) : string
     {
         $file = ComposerLocator::getPath('elife/api').'/dist/samples/'.$name;
         if (file_exists($file)) {
             return file_get_contents($file);
         } else {
-            if (!method_exists($this, 'markTestSkipped')) {
-                throw new LogicException('This trait should only be used in test cases.');
-            }
-            $this->markTestSkipped('RAML json not installed, skipping test.');
+            throw new LogicException("Fixture {$name} does not exist");
         }
 
         return null;

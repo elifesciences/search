@@ -10,15 +10,15 @@ trait GetSerializer
 {
     use HttpClient;
 
-    private $serializer;
+    private static $serializer;
 
-    public function getSerializer() : Serializer
+    public static function getSerializer() : Serializer
     {
-        if (null === $this->serializer) {
-            $sdk = new ApiSdk($this->getHttpClient());
-            $this->serializer = $sdk->getSerializer();
+        if (null === static::$serializer) {
+            $sdk = new ApiSdk(static::getHttpClient());
+            static::$serializer = $sdk->getSerializer();
         }
 
-        return $this->serializer;
+        return static::$serializer;
     }
 }

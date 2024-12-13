@@ -22,7 +22,7 @@ final class PodcastEpisodeIndexerTest extends TestCase
         $this->indexer = new PodcastEpisodeIndexer($this->getSerializer());
     }
 
-    protected function getModelDefinitions(): array
+    protected static function getModelDefinitions(): array
     {
         return [
             ['model' => 'podcast-episode', 'modelClass' => PodcastEpisode::class, 'version' => 1]

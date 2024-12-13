@@ -8,11 +8,11 @@ final class InterviewElasticsearchTest extends ElasticsearchTestCase
 {
     use RamlRequirement;
 
-    public function jsonProvider() : array
+    public static function jsonProvider() : array
     {
         return [
-            [$this->getFixtureWithType('interview/v1/minimum.json', 'interview')],
-            [$this->getFixtureWithType('interview/v1/complete.json', 'interview')],
+            [static::getFixtureWithType('interview/v1/minimum.json', 'interview')],
+            [static::getFixtureWithType('interview/v1/complete.json', 'interview')],
         ];
     }
 }

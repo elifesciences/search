@@ -22,7 +22,7 @@ final class BlogArticleIndexerTest extends TestCase
         $this->indexer = new BlogArticleIndexer($this->getSerializer());
     }
 
-    protected function getModelDefinitions(): array
+    protected static function getModelDefinitions(): array
     {
         return [
             ['model' => 'blog-article', 'modelClass' => BlogArticle::class, 'version' => 2]

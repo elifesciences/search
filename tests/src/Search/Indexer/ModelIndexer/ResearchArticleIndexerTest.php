@@ -32,7 +32,7 @@ final class ResearchArticleIndexerTest extends TestCase
         $this->indexer = new ResearchArticleIndexer($this->getSerializer(), []);
     }
 
-    protected function getModelDefinitions(): array
+    protected static function getModelDefinitions(): array
     {
         return [
             ['model' => 'article-vor', 'modelClass' => ArticleVoR::class, 'version' => 8],

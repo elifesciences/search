@@ -22,7 +22,7 @@ final class CollectionIndexerTest extends TestCase
         $this->indexer = new CollectionIndexer($this->getSerializer());
     }
 
-    protected function getModelDefinitions(): array
+    protected static function getModelDefinitions(): array
     {
         return [
             ['model' => 'collection', 'modelClass' => Collection::class, 'version' => 2]

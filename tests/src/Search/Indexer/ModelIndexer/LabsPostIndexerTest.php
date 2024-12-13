@@ -22,7 +22,7 @@ final class LabsPostIndexerTest extends TestCase
         $this->indexer = new LabsPostIndexer($this->getSerializer());
     }
 
-    protected function getModelDefinitions(): array
+    protected static function getModelDefinitions(): array
     {
         return [
             ['model' => 'labs-post', 'modelClass' => LabsPost::class, 'version' => 1]

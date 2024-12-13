@@ -57,7 +57,7 @@ class ElasticQueryBuilderTest extends TestCase
         $this->assertEquals($expectedQuery.'~', $query['body']['query']['bool']['must'][0]['query_string']['query']);
     }
 
-    public function reservedCharsProvider() : array
+    public static function reservedCharsProvider() : array
     {
         return [
             [

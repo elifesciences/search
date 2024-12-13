@@ -22,7 +22,7 @@ final class InterviewIndexerTest extends TestCase
         $this->indexer = new InterviewIndexer($this->getSerializer());
     }
 
-    protected function getModelDefinitions(): array
+    protected static function getModelDefinitions(): array
     {
         return [
             ['model' => 'interview', 'modelClass' => Interview::class, 'version' => 1]

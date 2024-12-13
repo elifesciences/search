@@ -30,7 +30,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
         $this->indexer = new ReviewedPreprintIndexer($this->getSerializer(), $this->elastic);
     }
 
-    protected function getModelDefinitions(): array
+    protected static function getModelDefinitions(): array
     {
         return [
             ['model' => 'reviewed-preprint', 'modelClass' => ReviewedPreprint::class, 'version' => 1]
