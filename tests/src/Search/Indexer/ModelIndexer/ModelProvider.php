@@ -14,7 +14,7 @@ trait ModelProvider
     /**
      * @return array{'model': string, 'version': int, 'modelClass': string}[]
      */
-    abstract static protected function getModelDefinitions(): array;
+    abstract protected static function getModelDefinitions(): array;
 
     public static function modelProvider() : Traversable
     {
