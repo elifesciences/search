@@ -3,6 +3,7 @@
 namespace test\eLife\Search;
 
 use eLife\Search\IndexMetadata;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class IndexMetadataTest extends TestCase
@@ -14,9 +15,7 @@ class IndexMetadataTest extends TestCase
         $this->sample = IndexMetadata::fromContents('search_2', 'search_1');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function dumpsToADocumentAndBack()
     {
         $this->assertEquals(
@@ -25,9 +24,7 @@ class IndexMetadataTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function dumpsToAFileAndBack()
     {
         $file = sys_get_temp_dir().'/'.uniqid().'.json';

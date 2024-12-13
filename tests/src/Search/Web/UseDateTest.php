@@ -2,9 +2,9 @@
 
 namespace tests\eLife\Search\Web;
 
-/**
- * @group web
- */
+use PHPUnit\Framework\Attributes\Group;
+
+#[Group('web')]
 class UseDateTest extends ElasticTestCase
 {
     public function testUseDate()

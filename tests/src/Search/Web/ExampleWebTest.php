@@ -2,23 +2,17 @@
 
 namespace tests\eLife\Search\Web;
 
-/**
- * @group web
- */
+#[Group('web')]
 class ExampleWebTest extends ElasticTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function testCanRunCommand()
     {
         $logs = $this->runCommand('help');
         $this->assertEquals(0, count($logs));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testElasticSearchIndex()
     {
         $this->addDocumentToElasticSearch([

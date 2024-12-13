@@ -3,6 +3,8 @@
 namespace test\eLife\Search\Api\Elasticsearch;
 
 use eLife\Search\Api\Elasticsearch\ElasticQueryBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class ElasticQueryBuilderTest extends TestCase
@@ -15,10 +17,7 @@ class ElasticQueryBuilderTest extends TestCase
         $this->queryBuilder = new ElasticQueryBuilder('foo');
     }
 
-    /**
-     * @test
-     *
-     */
+    #[Test]
     public function appliesWordLimit()
     {
         $this->assertEquals(
@@ -44,10 +43,8 @@ class ElasticQueryBuilderTest extends TestCase
         $this->assertEquals(5, $wordsOverLimit);
     }
 
-    /**
-     * @test
-     * @dataProvider reservedCharsProvider
-     */
+    #[DataProvider('reservedCharsProvider')]
+    #[Test]
     public function escapesReservedChars(string $search, string $expectedQuery)
     {
         $this->queryBuilder->searchFor($search);

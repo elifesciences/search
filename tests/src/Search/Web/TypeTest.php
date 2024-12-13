@@ -2,15 +2,14 @@
 
 namespace tests\eLife\Search\Web;
 
-use Symfony\Component\HttpFoundation\Response;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Traversable;
 
 final class TypeTest extends ElasticTestCase
 {
-    /**
-     * @test
-     * @dataProvider typeProvider
-     */
+    #[Test]
+    #[DataProvider('typeProvider')]
     public function itNegotiatesType(string $type, int $statusCode)
     {
         $response = $this->performRequest($type);
@@ -33,10 +32,8 @@ final class TypeTest extends ElasticTestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider contentTypeProvider
-     */
+    #[Test]
+    #[DataProvider('contentTypeProvider')]
     public function testContentType(string $type, string $contentType)
     {
         $response = $this->performRequest($type);

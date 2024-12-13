@@ -20,9 +20,7 @@ class MappedElasticsearchClientTest extends TestCase
         $this->elasticsearchClient = new MappedElasticsearchClient($this->client, 'index');
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testGetDocumentById()
     {
         $this->client->shouldReceive('get')

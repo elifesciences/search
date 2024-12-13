@@ -2,9 +2,9 @@
 
 namespace tests\eLife\Search\Web;
 
-/**
- * @group web
- */
+use PHPUnit\Framework\Attributes\Group;
+
+#[Group('web')]
 class TypeSubjectFilterTest extends ElasticTestCase
 {
     public function testSubjectFilteringWorks()

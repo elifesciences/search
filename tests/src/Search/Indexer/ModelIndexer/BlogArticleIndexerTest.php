@@ -2,6 +2,8 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use eLife\ApiSdk\Model\BlogArticle;
 use eLife\Search\Indexer\ModelIndexer\BlogArticleIndexer;
@@ -30,10 +32,8 @@ final class BlogArticleIndexerTest extends TestCase
     }
 
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testSerializationSmokeTest(BlogArticle $blogArticle)
     {
         // Check A to B
@@ -46,10 +46,8 @@ final class BlogArticleIndexerTest extends TestCase
         $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testIndexOfBlogArticle(BlogArticle $blogArticle)
     {
         $changeSet = $this->indexer->prepareChangeSet($blogArticle);

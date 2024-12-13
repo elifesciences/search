@@ -2,6 +2,8 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use eLife\ApiSdk\Model\Interview;
 use eLife\Search\Indexer\ModelIndexer\InterviewIndexer;
@@ -29,10 +31,8 @@ final class InterviewIndexerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testSerializationSmokeTest(Interview $interview)
     {
         // Check A to B
@@ -45,10 +45,8 @@ final class InterviewIndexerTest extends TestCase
         $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testIndexOfInterview(Interview $interview)
     {
         $changeSet = $this->indexer->prepareChangeSet($interview);

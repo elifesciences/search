@@ -3,6 +3,8 @@
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
 use eLife\ApiSdk\Model\ReviewedPreprint;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
@@ -37,10 +39,8 @@ final class ReviewedPreprintIndexerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testSerializationSmokeTest(ReviewedPreprint $reviewedPreprint)
     {
         // Check A to B
@@ -53,10 +53,8 @@ final class ReviewedPreprintIndexerTest extends TestCase
         $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testIndexOfPodcastEpisode(ReviewedPreprint $reviewedPreprint)
     {
         $this->elastic->shouldReceive('getDocumentById')
@@ -85,10 +83,8 @@ final class ReviewedPreprintIndexerTest extends TestCase
     }
 
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testIndexOfReviewedPreprintSkipped(ReviewedPreprint $reviewedPreprint)
     {
         $this->elastic->shouldReceive('getDocumentById')
@@ -101,10 +97,8 @@ final class ReviewedPreprintIndexerTest extends TestCase
         $this->assertCount(0, $changeSet->getInserts());
     }
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testIndexOfReviewedPreprintSkippedToolsResources(ReviewedPreprint $reviewedPreprint)
     {
         $this->elastic->shouldReceive('getDocumentById')

@@ -2,14 +2,10 @@
 
 namespace tests\eLife\Search\Web;
 
-/**
- * @group web
- */
+#[Group('web')]
 class BoostTest extends ElasticTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function testBoostByType()
     {
         $this->addDocumentsToElasticSearch([
