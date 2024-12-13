@@ -2,14 +2,10 @@
 
 namespace tests\eLife\Search\Web;
 
-/**
- * @group web
- */
+#[Group('web')]
 class FacetCountTest extends ElasticTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function testFacetCountIsAccurateAfterFilteringSubject()
     {
         $this->addDocumentsToElasticSearch([

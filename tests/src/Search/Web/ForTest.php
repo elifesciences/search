@@ -2,9 +2,7 @@
 
 namespace tests\eLife\Search\Web;
 
-/**
- * @group web
- */
+#[Group('web')]
 final class ForTest extends ElasticTestCase
 {
     public function testAllForWordsMatch()

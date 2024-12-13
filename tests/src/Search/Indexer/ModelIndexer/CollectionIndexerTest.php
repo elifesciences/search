@@ -2,6 +2,8 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use eLife\ApiSdk\Model\Collection;
 use eLife\Search\Indexer\ModelIndexer\CollectionIndexer;
@@ -22,17 +24,15 @@ final class CollectionIndexerTest extends TestCase
         $this->indexer = new CollectionIndexer($this->getSerializer());
     }
 
-    protected function getModelDefinitions(): array
+    protected static function getModelDefinitions(): array
     {
         return [
             ['model' => 'collection', 'modelClass' => Collection::class, 'version' => 2]
         ];
     }
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testSerializationSmokeTest(Collection $collection)
     {
         // Check A to B
@@ -45,10 +45,8 @@ final class CollectionIndexerTest extends TestCase
         $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testIndexOfCollection(Collection $collection)
     {
         $changeSet = $this->indexer->prepareChangeSet($collection);

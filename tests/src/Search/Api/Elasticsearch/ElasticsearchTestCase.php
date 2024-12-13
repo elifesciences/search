@@ -10,6 +10,8 @@ use eLife\Search\Api\Elasticsearch\Response\SearchResponse;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 abstract class ElasticsearchTestCase extends TestCase
@@ -17,12 +19,10 @@ abstract class ElasticsearchTestCase extends TestCase
     /** @var Serializer */
     private $serializer;
 
-    abstract public function jsonProvider() : array;
+    abstract public static function jsonProvider() : array;
 
-    /**
-     * @dataProvider jsonProvider
-     * @test
-     */
+    #[DataProvider('jsonProvider')]
+    #[Test]
     final public function testDeserialization($json)
     {
         $this->assertValidSearchResults(

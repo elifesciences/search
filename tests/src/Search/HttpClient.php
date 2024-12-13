@@ -13,16 +13,16 @@ use JsonSchema\Validator;
 
 trait HttpClient
 {
-    public $httpClient;
+    public static $httpClient;
 
-    final protected function getHttpClient() : \eLife\ApiClient\HttpClient
+    final protected static function getHttpClient() : \eLife\ApiClient\HttpClient
     {
-        if (null === $this->httpClient) {
-            $this->httpClient = new Guzzle6HttpClient(new Client([
+        if (null === static::$httpClient) {
+            static::$httpClient = new Guzzle6HttpClient(new Client([
                 'base_uri' => 'http://api.elifesciences.org',
             ]));
         }
 
-        return $this->httpClient;
+        return static::$httpClient;
     }
 }

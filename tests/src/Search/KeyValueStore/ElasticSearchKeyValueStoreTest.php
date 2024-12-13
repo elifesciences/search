@@ -2,13 +2,12 @@
 
 namespace test\eLife\Search\KeyValueStore;
 
+use PHPUnit\Framework\Attributes\Test;
 use tests\eLife\Search\Web\ElasticTestCase;
 
 class ElasticSearchKeyValueStoreTest extends ElasticTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function storesAndLoadAJsonDocument()
     {
         $store = $this->kernel->getApp()['keyvaluestore'];
@@ -20,9 +19,7 @@ class ElasticSearchKeyValueStoreTest extends ElasticTestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function allowsDefaultsToBeLoaded()
     {
         $store = $this->kernel->getApp()['keyvaluestore'];

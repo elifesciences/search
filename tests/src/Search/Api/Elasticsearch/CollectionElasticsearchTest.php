@@ -8,11 +8,13 @@ final class CollectionElasticsearchTest extends ElasticsearchTestCase
 {
     use RamlRequirement;
 
-    public function jsonProvider() : array
+    public static function jsonProvider() : array
     {
         return [
-            [$this->getFixtureWithType('collection/v1/minimum.json', 'collection')],
-            [$this->getFixtureWithType('collection/v1/complete.json', 'collection')],
+            [static::getFixtureWithType('collection/v2/minimum.json', 'collection')],
+            [static::getFixtureWithType('collection/v2/complete.json', 'collection')],
+            [static::getFixtureWithType('collection/v3/minimum.json', 'collection')],
+            [static::getFixtureWithType('collection/v3/complete.json', 'collection')],
         ];
     }
 }

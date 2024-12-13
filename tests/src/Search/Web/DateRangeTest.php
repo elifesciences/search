@@ -4,9 +4,7 @@ namespace tests\eLife\Search\Web;
 
 use stdClass;
 
-/**
- * @group web
- */
+#[Group('web')]
 class DateRangeTest extends ElasticTestCase
 {
     public function testDateRangeStartOnly()

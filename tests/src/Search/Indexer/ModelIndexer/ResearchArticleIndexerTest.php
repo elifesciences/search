@@ -2,6 +2,8 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use eLife\ApiSdk\Model\ArticleVoR;
@@ -32,7 +34,7 @@ final class ResearchArticleIndexerTest extends TestCase
         $this->indexer = new ResearchArticleIndexer($this->getSerializer(), []);
     }
 
-    protected function getModelDefinitions(): array
+    protected static function getModelDefinitions(): array
     {
         return [
             ['model' => 'article-vor', 'modelClass' => ArticleVoR::class, 'version' => 8],
@@ -40,10 +42,8 @@ final class ResearchArticleIndexerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testSerializationSmokeTest(ArticleVersion $researchArticle)
     {
         // Check A to B
@@ -56,10 +56,8 @@ final class ResearchArticleIndexerTest extends TestCase
         $this->assertJsonStringEqualsJsonString($serialized, $final_serialized);
     }
 
-    /**
-     * @dataProvider modelProvider
-     * @test
-     */
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testIndexOfResearchArticle(ArticleVersion $researchArticle)
     {
         $changeSet = $this->indexer->prepareChangeSet($researchArticle);

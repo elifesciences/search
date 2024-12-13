@@ -58,9 +58,7 @@ final class IndexerTest extends TestCase
         };
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testSkipInsert()
     {
         $entity = $this->getMockEntity();
@@ -76,9 +74,7 @@ final class IndexerTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testIndexSuccess()
     {
         $entity = $this->getMockEntity();
@@ -107,9 +103,7 @@ final class IndexerTest extends TestCase
     }
 
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testPostValidateFailure()
     {
         $entity = $this->getMockEntity();
@@ -141,9 +135,7 @@ final class IndexerTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testIndexAndDeleteSuccess()
     {
         $entity = $this->getMockEntity();

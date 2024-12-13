@@ -387,16 +387,16 @@ abstract class ElasticTestCase extends WebTestCase
     public function runCommand(string $command)
     {
         $logs = [];
-        $log = $this->returnCallback(function ($message) use (&$logs) {
+        $logCallback = function ($message) use (&$logs) {
             $logs[] = $message;
-        });
+        };
         $logger = $this->createMock(NullLogger::class);
 
         foreach (['debug', 'info', 'warning', 'critical', 'emergency', 'alert', 'log', 'notice', 'error'] as $level) {
             $logger
                 ->expects($this->any())
                 ->method($level)
-                ->will($log);
+                ->willReturnCallback($logCallback);
         }
 
         $app = new Application();

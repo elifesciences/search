@@ -8,13 +8,13 @@ final class ArticleElasticsearchTest extends ElasticsearchTestCase
 {
     use RamlRequirement;
 
-    public function jsonProvider() : array
+    public static function jsonProvider() : array
     {
         return [
-            [$this->getFixtureWithType('article-vor/v8/minimum.json', 'research-article')],
-            [$this->getFixtureWithType('article-vor/v8/complete.json', 'research-article')],
-            [$this->getFixtureWithType('article-poa/v3/minimum.json', 'research-article')],
-            [$this->getFixtureWithType('article-poa/v3/complete.json', 'research-article')],
+            [static::getFixtureWithType('article-vor/v8/minimum.json', 'research-article')],
+            [static::getFixtureWithType('article-vor/v8/complete.json', 'research-article')],
+            [static::getFixtureWithType('article-poa/v3/minimum.json', 'research-article')],
+            [static::getFixtureWithType('article-poa/v3/complete.json', 'research-article')],
         ];
     }
 }

@@ -2,14 +2,13 @@
 
 namespace tests\eLife\Search\Web;
 
-/**
- * @group web
- */
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
+
+#[Group('web')]
 class SortOrderTest extends ElasticTestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function testDateOrder()
     {
         $this->addDocumentsToElasticSearch([

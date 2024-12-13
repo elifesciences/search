@@ -9,14 +9,16 @@ use function GuzzleHttp\json_decode;
 
 trait ModelProvider
 {
+    use GetSerializer;
+
     /**
      * @return array{'model': string, 'version': int, 'modelClass': string}[]
      */
-    abstract protected function getModelDefinitions(): array;
+    abstract protected static function getModelDefinitions(): array;
 
-    public function modelProvider() : Traversable
+    public static function modelProvider() : Traversable
     {
-        foreach ($this->getModelDefinitions() as $modelDefinition) {
+        foreach (static::getModelDefinitions() as $modelDefinition) {
             $paths = [];
             $model = $modelDefinition['model'];
             $version = $modelDefinition['version'];
@@ -37,7 +39,7 @@ trait ModelProvider
             foreach ($finder as $file) {
                 $name = "{$model}/v{$version}/{$file->getBasename()}";
                 $contents = json_decode($file->getContents(), true);
-                $object = $this->getSerializer()->denormalize($contents, $modelClass);
+                $object = self::getSerializer()->denormalize($contents, $modelClass);
                 yield $name => [$object];
             }
         }
