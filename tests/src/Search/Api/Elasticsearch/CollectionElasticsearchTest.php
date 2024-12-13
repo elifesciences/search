@@ -13,6 +13,8 @@ final class CollectionElasticsearchTest extends ElasticsearchTestCase
         return [
             [static::getFixtureWithType('collection/v2/minimum.json', 'collection')],
             [static::getFixtureWithType('collection/v2/complete.json', 'collection')],
+            [static::getFixtureWithType('collection/v3/minimum.json', 'collection')],
+            [static::getFixtureWithType('collection/v3/complete.json', 'collection')],
         ];
     }
 }
