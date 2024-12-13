@@ -1228,23 +1228,24 @@
         },
         {
             "name": "elife/ping",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/ping-php.git",
-                "reference": "7ecab7e8a604b9d6da85d2af3bf0810a7da5642e"
+                "reference": "c102f4e8cb3c171ea1cc33106156c956aeb85479"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/ping-php/zipball/7ecab7e8a604b9d6da85d2af3bf0810a7da5642e",
-                "reference": "7ecab7e8a604b9d6da85d2af3bf0810a7da5642e",
+                "url": "https://api.github.com/repos/elifesciences/ping-php/zipball/c102f4e8cb3c171ea1cc33106156c956aeb85479",
+                "reference": "c102f4e8cb3c171ea1cc33106156c956aeb85479",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.1 || ^8.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0",
-                "symfony/http-foundation": "^3.4 || ^4.4"
+                "psr/http-server-handler": "^1.0",
+                "symfony/http-foundation": "^3.4 || ^4.4 || ^5.0"
             },
             "require-dev": {
                 "nyholm/psr7": "^1.6",
@@ -1280,9 +1281,9 @@
             "description": "eLife Sciences ping controller",
             "support": {
                 "issues": "https://github.com/elifesciences/ping-php/issues",
-                "source": "https://github.com/elifesciences/ping-php/tree/v1.2.0"
+                "source": "https://github.com/elifesciences/ping-php/tree/v1.3.0"
             },
-            "time": "2024-10-25T05:19:45+00:00"
+            "time": "2024-12-13T14:21:47+00:00"
         },
         {
             "name": "ezimuel/guzzlestreams",
@@ -2562,6 +2563,62 @@
                 "source": "https://github.com/php-fig/http-message/tree/1.1"
             },
             "time": "2023-04-04T09:50:52+00:00"
+        },
+        {
+            "name": "psr/http-server-handler",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-server-handler.git",
+                "reference": "84c4fb66179be4caaf8e97bd239203245302e7d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-server-handler/zipball/84c4fb66179be4caaf8e97bd239203245302e7d4",
+                "reference": "84c4fb66179be4caaf8e97bd239203245302e7d4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "psr/http-message": "^1.0 || ^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Server\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "https://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP server-side request handler",
+            "keywords": [
+                "handler",
+                "http",
+                "http-interop",
+                "psr",
+                "psr-15",
+                "psr-7",
+                "request",
+                "response",
+                "server"
+            ],
+            "support": {
+                "source": "https://github.com/php-fig/http-server-handler/tree/1.0.2"
+            },
+            "time": "2023-04-10T20:06:20+00:00"
         },
         {
             "name": "psr/log",
