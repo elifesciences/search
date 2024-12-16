@@ -6,7 +6,6 @@ use Aws\Sqs\SqsClient;
 use Closure;
 use ComposerLocator;
 use Doctrine\Common\Annotations\AnnotationRegistry;
-use Doctrine\Common\Cache\FilesystemCache;
 use Elasticsearch\ClientBuilder;
 use eLife\ApiClient\HttpClient\BatchingHttpClient;
 use eLife\ApiClient\HttpClient\Guzzle6HttpClient;
@@ -161,10 +160,6 @@ final class Kernel implements MinimalKernel
         };
         $app['serializer.context'] = function () {
             return SerializationContext::create();
-        };
-        // General cache.
-        $app['cache'] = function () {
-            return new FilesystemCache(self::CACHE_DIR);
         };
 
         // PSR-7 Bridge
