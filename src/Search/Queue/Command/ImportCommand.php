@@ -82,7 +82,7 @@ final class ImportCommand extends Command
         if (!in_array($entity, self::$supports)) {
             $this->logger->error('Entity with name '.$entity.' not supported.');
 
-            return;
+            return 1;
         }
 
         if ($input->getOption('dateFrom') !== null) {
