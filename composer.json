@@ -32,7 +32,6 @@
         "jms/serializer": "^3.0",
         "justinrainbow/json-schema": "^6.0",
         "mindplay/composer-locator": "^2.1",
-        "monolog/monolog": "^2.0",
         "nyholm/psr7": "^1.1",
         "psr/log": "^2.0",
         "silexandfriends/silex": "^2.4",
