@@ -1059,7 +1059,7 @@
         },
         {
             "name": "elife/bus-sdk",
-            "version": "1.4.0",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
@@ -1109,7 +1109,7 @@
             "description": "eLife Sciences Bus SDK",
             "support": {
                 "issues": "https://github.com/elifesciences/bus-sdk-php/issues",
-                "source": "https://github.com/elifesciences/bus-sdk-php/tree/1.4.0"
+                "source": "https://github.com/elifesciences/bus-sdk-php/tree/v1.4.0"
             },
             "time": "2024-12-16T17:40:16+00:00"
         },
