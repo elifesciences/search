@@ -74,7 +74,7 @@ final class ImportCommand extends Command
             ->addOption('limit', '-l', InputOption::VALUE_OPTIONAL, 'Limit items to import per entity');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
         $entity = $input->getArgument('entity');
@@ -82,7 +82,7 @@ final class ImportCommand extends Command
         if (!in_array($entity, self::$supports)) {
             $this->logger->error('Entity with name '.$entity.' not supported.');
 
-            return;
+            return 1;
         }
 
         if ($input->getOption('dateFrom') !== null) {
@@ -120,6 +120,8 @@ final class ImportCommand extends Command
             $this->monitoring->recordException($e, 'Error in import');
             throw $e;
         }
+
+        return 0;
     }
 
     public function importPodcastEpisodes()

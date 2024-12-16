@@ -34,7 +34,7 @@ class BuildIndexCommand extends Command
             ->setHelp('Ensures Elasticsearch has been setup');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!empty($input->getOption('index'))) {
             $this->client->defaultIndex($input->getOption('index'));
@@ -73,5 +73,7 @@ class BuildIndexCommand extends Command
             $this->logger->error("Cannot (re)create ElasticSearch index {$this->client->index()}", ['exception' => $e]);
             throw $e;
         }
+
+        return 0;
     }
 }
