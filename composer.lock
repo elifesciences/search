@@ -892,22 +892,22 @@
         },
         {
             "name": "elife/api-problem",
-            "version": "v1.3.1",
+            "version": "v1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-problem-php.git",
-                "reference": "167d17407b1fddc5af9639f4708461bbd937da30"
+                "reference": "33c43e5609732e3d8722e5e863519ebb35b35b5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-problem-php/zipball/167d17407b1fddc5af9639f4708461bbd937da30",
-                "reference": "167d17407b1fddc5af9639f4708461bbd937da30",
+                "url": "https://api.github.com/repos/elifesciences/api-problem-php/zipball/33c43e5609732e3d8722e5e863519ebb35b35b5f",
+                "reference": "33c43e5609732e3d8722e5e863519ebb35b35b5f",
                 "shasum": ""
             },
             "require": {
                 "crell/api-problem": "^3.6",
                 "php": "^7.1 || ^8.0",
-                "symfony/http-foundation": ">=2.8.52 || ^4.4"
+                "symfony/http-foundation": ">=2.8.52 || ^4.4 || ^5.0"
             },
             "conflict": {
                 "sebastian/comparator": "<1.2.3"
@@ -916,10 +916,10 @@
                 "guzzlehttp/psr7": "^1.0",
                 "phpunit/phpunit": "^7.5 || ^9.6",
                 "pimple/pimple": "^3.0",
-                "silex/silex": "^2.3",
+                "silexandfriends/silex": "^2.3 || ^3.0",
                 "squizlabs/php_codesniffer": "^3.10",
-                "symfony/browser-kit": "^3.0 || ^4.4",
-                "symfony/http-kernel": "^3.0 || ^4.4"
+                "symfony/browser-kit": "^3.0 || ^4.4 || ^5.0",
+                "symfony/http-kernel": "^3.0 || ^4.4 || ^5.0"
             },
             "suggest": {
                 "silex/silex": "^2.0, to use ApiProblemProvider"
@@ -942,9 +942,9 @@
             "description": "eLife Sciences RFC 7807 handler",
             "support": {
                 "issues": "https://github.com/elifesciences/api-problem-php/issues",
-                "source": "https://github.com/elifesciences/api-problem-php/tree/v1.3.1"
+                "source": "https://github.com/elifesciences/api-problem-php/tree/v1.4.0"
             },
-            "time": "2024-10-25T13:29:00+00:00"
+            "time": "2024-12-16T15:36:24+00:00"
         },
         {
             "name": "elife/api-sdk",
