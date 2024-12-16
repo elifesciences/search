@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f85441dee9f17863e0d9e1c8c928a110",
+    "content-hash": "1f39703df5c0f1e7ae20d1ca46a217bd",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1059,16 +1059,16 @@
         },
         {
             "name": "elife/bus-sdk",
-            "version": "v1.2.0",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "de3dc490409a943afff0727fad6ba7ab9dc068b1"
+                "reference": "04e8eab90bd464ead2e5e489725e372715dff5b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/de3dc490409a943afff0727fad6ba7ab9dc068b1",
-                "reference": "de3dc490409a943afff0727fad6ba7ab9dc068b1",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/04e8eab90bd464ead2e5e489725e372715dff5b7",
+                "reference": "04e8eab90bd464ead2e5e489725e372715dff5b7",
                 "shasum": ""
             },
             "require": {
@@ -1086,7 +1086,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^6.5 | ^9.5",
                 "squizlabs/php_codesniffer": "^3.5",
-                "symfony/console": "^2.7 || ^3.2"
+                "symfony/console": "^2.7 || ^3.2 || ^4.4 || ^5.0"
             },
             "suggest": {
                 "symfony/console": "^2.7 || ^3.2, to use Command classes"
@@ -1109,9 +1109,9 @@
             "description": "eLife Sciences Bus SDK",
             "support": {
                 "issues": "https://github.com/elifesciences/bus-sdk-php/issues",
-                "source": "https://github.com/elifesciences/bus-sdk-php/tree/v1.2.0"
+                "source": "https://github.com/elifesciences/bus-sdk-php/tree/v1.3.0"
             },
-            "time": "2024-12-16T08:10:56+00:00"
+            "time": "2024-12-16T16:17:49+00:00"
         },
         {
             "name": "elife/content-negotiator",

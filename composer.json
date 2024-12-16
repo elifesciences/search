@@ -24,7 +24,7 @@
         "elife/api-problem": "^1.1",
         "elife/api-sdk": "dev-master",
         "elife/api-validator": "^1.1",
-        "elife/bus-sdk": "^1.2",
+        "elife/bus-sdk": "^1.3",
         "elife/content-negotiator": "^1.1",
         "elife/logging-sdk": "^1.2",
         "elife/ping": "^1.2",
