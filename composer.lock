@@ -1059,21 +1059,20 @@
         },
         {
             "name": "elife/bus-sdk",
-            "version": "v1.3.0",
+            "version": "1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "04e8eab90bd464ead2e5e489725e372715dff5b7"
+                "reference": "0f59099c97f631b3a36d79f6fd43b6df798ffb3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/04e8eab90bd464ead2e5e489725e372715dff5b7",
-                "reference": "04e8eab90bd464ead2e5e489725e372715dff5b7",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/0f59099c97f631b3a36d79f6fd43b6df798ffb3e",
+                "reference": "0f59099c97f631b3a36d79f6fd43b6df798ffb3e",
                 "shasum": ""
             },
             "require": {
                 "aws/aws-sdk-php": "^3.238",
-                "doctrine/cache": "^1.6",
                 "elife/api-sdk": "dev-master",
                 "elife/logging-sdk": "^1.1",
                 "jms/serializer": "^1.4 || ^3.0",
@@ -1089,6 +1088,7 @@
                 "symfony/console": "^2.7 || ^3.2 || ^4.4 || ^5.0"
             },
             "suggest": {
+                "doctrine/cache": "^1.6 to use CachedTransformer",
                 "symfony/console": "^2.7 || ^3.2, to use Command classes"
             },
             "type": "library",
@@ -1109,9 +1109,9 @@
             "description": "eLife Sciences Bus SDK",
             "support": {
                 "issues": "https://github.com/elifesciences/bus-sdk-php/issues",
-                "source": "https://github.com/elifesciences/bus-sdk-php/tree/v1.3.0"
+                "source": "https://github.com/elifesciences/bus-sdk-php/tree/1.4.0"
             },
-            "time": "2024-12-16T16:17:49+00:00"
+            "time": "2024-12-16T17:40:16+00:00"
         },
         {
             "name": "elife/content-negotiator",
