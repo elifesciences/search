@@ -51,7 +51,7 @@
         "shipmonk/composer-dependency-analyser": "^1.8",
         "squizlabs/php_codesniffer": "^3.5",
         "symfony/browser-kit": "^5.4",
-        "symfony/finder": "5.4.43",
+        "symfony/finder": "5.4.45",
         "symfony/var-dumper": "^4.4"
     },
     "config": {
