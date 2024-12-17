@@ -738,23 +738,23 @@
         },
         {
             "name": "elife/api-client",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/api-client-php.git",
-                "reference": "576268640729faa66d2ab1a0b2d942e3403243ba"
+                "reference": "f1c06b4480724af351719dee17cd7a0e79d181bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/576268640729faa66d2ab1a0b2d942e3403243ba",
-                "reference": "576268640729faa66d2ab1a0b2d942e3403243ba",
+                "url": "https://api.github.com/repos/elifesciences/api-client-php/zipball/f1c06b4480724af351719dee17cd7a0e79d181bc",
+                "reference": "f1c06b4480724af351719dee17cd7a0e79d181bc",
                 "shasum": ""
             },
             "require": {
                 "beberlei/assert": ">=2.2",
                 "composer/package-versions-deprecated": "1.11.99.2",
                 "crell/api-problem": "^3.6",
-                "guzzlehttp/promises": "^1.0",
+                "guzzlehttp/promises": "^1.0 || ^2.0",
                 "guzzlehttp/psr7": "^1.0 || ^2.7",
                 "php": "^7.1 || ^8.0",
                 "psr/http-message": "^1.0"
@@ -787,9 +787,9 @@
             "description": "eLife Sciences API client",
             "support": {
                 "issues": "https://github.com/elifesciences/api-client-php/issues",
-                "source": "https://github.com/elifesciences/api-client-php/tree/v1.1.0"
+                "source": "https://github.com/elifesciences/api-client-php/tree/v1.2.0"
             },
-            "time": "2024-11-07T14:19:35+00:00"
+            "time": "2024-12-17T07:59:24+00:00"
         },
         {
             "name": "elife/api-problem",
