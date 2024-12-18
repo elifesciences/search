@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 require_once __DIR__.'/../src/bootstrap.php';
 set_time_limit(0);
 
-$app = new Kernel($config);
+$app = new Kernel();
 $input = new ArgvInput();
 $output = new ConsoleOutput();
 $app->get('logger')->pushHandler(new ConsoleHandler($output));
