@@ -15,6 +15,7 @@ trap cleanup EXIT
 
 rm -f build/*.xml
 vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
+vendor/bin/composer-dependency-analyser
 vendor/bin/phpunit --log-junit build/phpunit.xml
 
 echo "Creating, deleting an index"
@@ -35,4 +36,3 @@ bin/ci-reindex-rds
 
 echo "Reindexing reviewed-preprint articles"
 bin/ci-reindex-reviewed-preprints
-
