@@ -52,6 +52,9 @@ use Silex\Provider;
 use Silex\Provider\VarDumperServiceProvider;
 use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Nyholm\Psr7\Factory\Psr17Factory;
+use Pimple\Container;
+use Pimple\Psr11\Container as PimplePsr11Container;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,6 +67,8 @@ final class Kernel implements MinimalKernel
     const INDEX_METADATA_KEY = 'index-metadata';
 
     private $app;
+
+    private ContainerInterface $container;
 
     public function __construct($config = [])
     {
@@ -100,26 +105,33 @@ final class Kernel implements MinimalKernel
             ], $config['aws'] ?? []),
             'rds_articles' => [],
         ], $config);
+
+        // Create a container
         $app = new Application([
             'logger.channel' => 'search',
             'logger.path' => $config['logger.path'],
             'logger.level' => $config['logger.level'],
         ]);
-        $app['config'] = $config;
-        $app->register(new ApiProblemProvider());
-        $app->register(new ContentNegotiationProvider());
-        $app->register(new LoggerProvider());
-        $app->register(new PingControllerProvider());
+        /** @var Container $container */
+        $container = $app;
+        $container['config'] = $config;
+
+        // Register dependencies
+        $container->register(new ApiProblemProvider());
+        $container->register(new ContentNegotiationProvider());
+        $container->register(new LoggerProvider());
+        $container->register(new PingControllerProvider());
         // Annotations.
         AnnotationRegistry::registerLoader('class_exists');
-        if ($app['config']['debug']) {
-            $app->register(new VarDumperServiceProvider());
-            $app->register(new Provider\HttpFragmentServiceProvider());
-            $app->register(new Provider\ServiceControllerServiceProvider());
-            $app->register(new Provider\TwigServiceProvider());
+        if ($container['config']['debug']) {
+            $container->register(new VarDumperServiceProvider());
+            $container->register(new Provider\HttpFragmentServiceProvider());
+            $container->register(new Provider\ServiceControllerServiceProvider());
+            $container->register(new Provider\TwigServiceProvider());
         }
-        // DI.
-        $this->dependencies($app);
+        $this->dependencies($container);
+        $this->container = new PimplePsr11Container($app);
+
         $this->app = $app;
         $this->applicationFlow($app);
     }
@@ -144,14 +156,14 @@ final class Kernel implements MinimalKernel
         $updated->toFile('index.json');
     }
 
-    public function dependencies(Application $app)
+    public function dependencies(Container $container)
     {
         //#####################################################
         // -------------------- Basics -----------------------
         //#####################################################
 
         // Serializer.
-        $app['serializer'] = function () {
+        $container['serializer'] = function () {
             return SerializerBuilder::create()
                 ->configureListeners(function (EventDispatcher $dispatcher) {
                     $dispatcher->addSubscriber(new ElasticsearchDiscriminator());
@@ -159,20 +171,20 @@ final class Kernel implements MinimalKernel
                 ->setCacheDir(self::CACHE_DIR)
                 ->build();
         };
-        $app['serializer.context'] = function () {
+        $container['serializer.context'] = function () {
             return SerializationContext::create();
         };
         // General cache.
-        $app['cache'] = function () {
+        $container['cache'] = function () {
             return new FilesystemCache(self::CACHE_DIR);
         };
 
         // PSR-7 Bridge
-        $app['psr17factory'] = function () {
+        $container['psr17factory'] = function () {
             return new Psr17Factory();
         };
-        $app['psr7.bridge'] = function (Application $app) {
-            $psr17Factory = $app['psr17factory'];
+        $container['psr7.bridge'] = function (Container $container) {
+            $psr17Factory = $container['psr17factory'];
             return new PsrHttpFactory(
                 $psr17Factory,
                 $psr17Factory,
@@ -181,48 +193,48 @@ final class Kernel implements MinimalKernel
             );
         };
         // Validator.
-        $app['message-validator'] = function (Application $app) {
+        $container['message-validator'] = function (Container $container) {
             return new JsonMessageValidator(
                 new PathBasedSchemaFinder(ComposerLocator::getPath('elife/api').'/dist/model'),
                 new Validator()
             );
         };
 
-        $app['validator'] = function (Application $app) {
-            return new ApiValidator($app['serializer'], $app['serializer.context'], $app['message-validator'], $app['psr7.bridge']);
+        $container['validator'] = function (Container $container) {
+            return new ApiValidator($container['serializer'], $container['serializer.context'], $container['message-validator'], $container['psr7.bridge']);
         };
 
-        $app['monitoring'] = function (Application $app) {
+        $container['monitoring'] = function (Container $container) {
             return new Monitoring();
         };
 
         /*
          * @internal
          */
-        $app['limit._memory'] = function (Application $app) {
-            return MemoryLimit::mb($app['config']['process_memory_limit']);
+        $container['limit._memory'] = function (Container $container) {
+            return MemoryLimit::mb($container['config']['process_memory_limit']);
         };
         /*
          * @internal
          */
-        $app['limit._signals'] = function (Application $app) {
+        $container['limit._signals'] = function (Container $container) {
             return SignalsLimit::stopOn(['SIGINT', 'SIGTERM', 'SIGHUP']);
         };
 
-        $app['limit.long_running'] = function (Application $app) {
+        $container['limit.long_running'] = function (Container $container) {
             return new LoggingLimit(
                 new CompositeLimit(
-                    $app['limit._memory'],
-                    $app['limit._signals']
+                    $container['limit._memory'],
+                    $container['limit._signals']
                 ),
-                $app['logger']
+                $container['logger']
             );
         };
 
-        $app['limit.interactive'] = function (Application $app) {
+        $container['limit.interactive'] = function (Container $container) {
             return new LoggingLimit(
-                $app['limit._signals'],
-                $app['logger']
+                $container['limit._signals'],
+                $container['logger']
             );
         };
 
@@ -230,11 +242,11 @@ final class Kernel implements MinimalKernel
         // ------------------ Networking ---------------------
         //#####################################################
 
-        $app['guzzle'] = function (Application $app) {
+        $container['guzzle'] = function (Container $container) {
             // Create default HandlerStack
             $stack = HandlerStack::create();
-            $logger = $app['logger'];
-            if ($app['config']['debug']) {
+            $logger = $container['logger'];
+            if ($container['config']['debug']) {
                 $stack->push(
                     Middleware::mapRequest(function ($request) use ($logger) {
                         $logger->debug("Request performed in Guzzle Middleware: {$request->getUri()}");
@@ -245,22 +257,22 @@ final class Kernel implements MinimalKernel
             }
 
             return new Client([
-                'base_uri' => $app['config']['api_url'],
+                'base_uri' => $container['config']['api_url'],
                 'handler' => $stack,
             ]);
         };
 
-        $app['api.sdk'] = function (Application $app) {
+        $container['api.sdk'] = function (Container $container) {
             $notifyingHttpClient = new NotifyingHttpClient(
                 new BatchingHttpClient(
                     new Guzzle6HttpClient(
-                        $app['guzzle']
+                        $container['guzzle']
                     ),
-                    $app['config']['api_requests_batch']
+                    $container['config']['api_requests_batch']
                 )
             );
-            if ($app['config']['debug']) {
-                $logger = $app['logger'];
+            if ($container['config']['debug']) {
+                $logger = $container['logger'];
                 $notifyingHttpClient->addRequestListener(function ($request) use ($logger) {
                     $logger->debug("Request performed in NotifyingHttpClient: {$request->getUri()}");
                 });
@@ -269,13 +281,13 @@ final class Kernel implements MinimalKernel
             return new ApiSdk($notifyingHttpClient);
         };
 
-        $app['default_controller'] = function (Application $app) {
+        $container['default_controller'] = function (Container $container) {
             return new SearchController(
-                $app['serializer'],
-                $app['logger'],
-                $app['serializer.context'],
-                $app['elastic.client.read'],
-                $app['config']['api_url'],
+                $container['serializer'],
+                $container['logger'],
+                $container['serializer.context'],
+                $container['elastic.client.read'],
+                $container['config']['api_url'],
                 $this->indexMetadata()->read()
             );
         };
@@ -284,73 +296,73 @@ final class Kernel implements MinimalKernel
         // --------------------- Elastic ---------------------
         //#####################################################
 
-        $app['elastic.serializer'] = function (Application $app) {
-            return new SearchResponseSerializer($app['serializer']);
+        $container['elastic.serializer'] = function (Container $container) {
+            return new SearchResponseSerializer($container['serializer']);
         };
 
-        $app['elastic.elasticsearch'] = function (Application $app) {
+        $container['elastic.elasticsearch'] = function (Container $container) {
             $client = ClientBuilder::create();
             // Set hosts.
-            $client->setHosts($app['config']['elastic_servers']);
+            $client->setHosts($container['config']['elastic_servers']);
             // Logging for ElasticSearch.
-            if ($app['config']['elastic_logging']) {
-                $client->setLogger($app['logger']);
+            if ($container['config']['elastic_logging']) {
+                $client->setLogger($container['logger']);
             }
-            if ($app['config']['elastic_username'] && $app['config']['elastic_password']) {
-                $client->setBasicAuthentication($app['config']['elastic_username'], $app['config']['elastic_password']);
+            if ($container['config']['elastic_username'] && $container['config']['elastic_password']) {
+                $client->setBasicAuthentication($container['config']['elastic_username'], $container['config']['elastic_password']);
             }
-            $client->setSSLVerification($app['config']['elastic_ssl_verification']);
-            $client->setSerializer($app['elastic.serializer']);
+            $client->setSSLVerification($container['config']['elastic_ssl_verification']);
+            $client->setSerializer($container['elastic.serializer']);
 
             return $client->build();
         };
 
-        $app['elastic.elasticsearch.plain'] = function (Application $app) {
+        $container['elastic.elasticsearch.plain'] = function (Container $container) {
             $client = ClientBuilder::create();
             // Set hosts.
-            $client->setHosts($app['config']['elastic_servers']);
+            $client->setHosts($container['config']['elastic_servers']);
             // Logging for ElasticSearch.
-            if ($app['config']['elastic_logging']) {
-                $client->setLogger($app['logger']);
+            if ($container['config']['elastic_logging']) {
+                $client->setLogger($container['logger']);
             }
-            if ($app['config']['elastic_username'] && $app['config']['elastic_password']) {
-                $client->setBasicAuthentication($app['config']['elastic_username'], $app['config']['elastic_password']);
+            if ($container['config']['elastic_username'] && $container['config']['elastic_password']) {
+                $client->setBasicAuthentication($container['config']['elastic_username'], $container['config']['elastic_password']);
             }
-            $client->setSSLVerification($app['config']['elastic_ssl_verification']);
+            $client->setSSLVerification($container['config']['elastic_ssl_verification']);
 
             return $client->build();
         };
 
-        $app['keyvaluestore'] = function (Application $app) {
+        $container['keyvaluestore'] = function (Container $container) {
             return new ElasticsearchKeyValueStore(
                 new PlainElasticsearchClient(
-                    $app['elastic.elasticsearch.plain'],
+                    $container['elastic.elasticsearch.plain'],
                     ElasticSearchKeyValueStore::INDEX_NAME
                 )
             );
         };
 
-        $app['elastic.client.write'] = function (Application $app) {
+        $container['elastic.client.write'] = function (Container $container) {
             return new MappedElasticsearchClient(
-                $app['elastic.elasticsearch'],
+                $container['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::WRITE),
-                $app['config']['elastic_force_sync'],
-                $app['config']['elastic_read_client_options']
+                $container['config']['elastic_force_sync'],
+                $container['config']['elastic_read_client_options']
             );
         };
 
-        $app['elastic.client.read'] = function (Application $app) {
+        $container['elastic.client.read'] = function (Container $container) {
             return new MappedElasticsearchClient(
-                $app['elastic.elasticsearch'],
+                $container['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::READ),
-                $app['config']['elastic_force_sync'],
-                $app['config']['elastic_read_client_options']
+                $container['config']['elastic_force_sync'],
+                $container['config']['elastic_read_client_options']
             );
         };
 
-        $app['elastic.client.plain'] = function (Application $app) {
+        $container['elastic.client.plain'] = function (Container $container) {
             return new PlainElasticsearchClient(
-                $app['elastic.elasticsearch.plain'],
+                $container['elastic.elasticsearch.plain'],
                 $this->indexMetadata()->write()
             );
         };
@@ -359,93 +371,93 @@ final class Kernel implements MinimalKernel
         // ------------------ Console DI ----------------------
         //#####################################################
 
-        $app['aws.sqs'] = function (Application $app) {
+        $container['aws.sqs'] = function (Container $container) {
             $config = [
                 'version' => '2012-11-05',
-                'region' => $app['config']['aws']['region'],
+                'region' => $container['config']['aws']['region'],
             ];
-            if (isset($app['config']['aws']['endpoint'])) {
-                $config['endpoint'] = $app['config']['aws']['endpoint'];
+            if (isset($container['config']['aws']['endpoint'])) {
+                $config['endpoint'] = $container['config']['aws']['endpoint'];
             }
-            if (!isset($app['config']['aws']['credential_file']) || false === $app['config']['aws']['credential_file']) {
+            if (!isset($container['config']['aws']['credential_file']) || false === $container['config']['aws']['credential_file']) {
                 $config['credentials'] = [
-                    'key' => $app['config']['aws']['key'],
-                    'secret' => $app['config']['aws']['secret'],
+                    'key' => $container['config']['aws']['key'],
+                    'secret' => $container['config']['aws']['secret'],
                 ];
             }
 
             return new SqsClient($config);
         };
 
-        $app['aws.queue'] = function (Application $app) {
-            return new SqsWatchableQueue($app['aws.sqs'], $app['config']['aws']['queue_name']);
+        $container['aws.queue'] = function (Container $container) {
+            return new SqsWatchableQueue($container['aws.sqs'], $container['config']['aws']['queue_name']);
         };
 
-        $app['aws.queue_transformer'] = function (Application $app) {
-            return new SqsMessageTransformer($app['api.sdk']);
+        $container['aws.queue_transformer'] = function (Container $container) {
+            return new SqsMessageTransformer($container['api.sdk']);
         };
 
-        $app['mocks.queue'] = function () {
+        $container['mocks.queue'] = function () {
             return new WatchableQueueMock();
         };
 
-        $app['mocks.queue_transformer'] = function (Application $app) {
-            return new QueueItemTransformerMock($app['api.sdk']);
+        $container['mocks.queue_transformer'] = function (Container $container) {
+            return new QueueItemTransformerMock($container['api.sdk']);
         };
 
         // TODO: rename key
-        $app['console.queue.import'] = function (Application $app) {
+        $container['console.queue.import'] = function (Container $container) {
             return new ImportCommand(
-                $app['api.sdk'],
-                $app['aws.queue'],
-                $app['logger'],
-                $app['monitoring'],
-                $app['limit.interactive']
+                $container['api.sdk'],
+                $container['aws.queue'],
+                $container['logger'],
+                $container['monitoring'],
+                $container['limit.interactive']
             );
         };
 
-        $app['indexer'] = function (Application $app) {
+        $container['indexer'] = function (Container $container) {
             return new Indexer(
-                $app['logger'],
-                $app['elastic.client.write'],
-                $app['validator'],
+                $container['logger'],
+                $container['elastic.client.write'],
+                $container['validator'],
                 Indexer::getDefaultModelIndexers(
-                    $app['api.sdk']->getSerializer(),
-                    $app['elastic.client.write'],
-                    $app['config']['rds_articles']
+                    $container['api.sdk']->getSerializer(),
+                    $container['elastic.client.write'],
+                    $container['config']['rds_articles']
                 )
             );
         };
 
-        $app['console.queue.watch'] = function (Application $app) {
-            $mock_queue = $app['config']['aws']['mock_queue'] ?? false;
+        $container['console.queue.watch'] = function (Container $container) {
+            $mock_queue = $container['config']['aws']['mock_queue'] ?? false;
             if ($mock_queue) {
                 return new QueueWatchCommand(
-                    $app['mocks.queue'],
-                    $app['mocks.queue_transformer'],
-                    $app['indexer'],
+                    $container['mocks.queue'],
+                    $container['mocks.queue_transformer'],
+                    $container['indexer'],
                     true,
-                    $app['logger'],
-                    $app['monitoring'],
-                    $app['limit.long_running']
+                    $container['logger'],
+                    $container['monitoring'],
+                    $container['limit.long_running']
                 );
             }
 
             return new QueueWatchCommand(
-                $app['aws.queue'],
-                $app['aws.queue_transformer'],
-                $app['indexer'],
+                $container['aws.queue'],
+                $container['aws.queue_transformer'],
+                $container['indexer'],
                 false,
-                $app['logger'],
-                $app['monitoring'],
-                $app['limit.long_running']
+                $container['logger'],
+                $container['monitoring'],
+                $container['limit.long_running']
             );
         };
 
-        $app['console.build_index'] = function (Application $app) {
+        $container['console.build_index'] = function (Container $container) {
             return new BuildIndexCommand(
-                $app['elastic.client.plain'],
-                $app['logger']
+                $container['elastic.client.plain'],
+                $container['logger']
             );
         };
     }
