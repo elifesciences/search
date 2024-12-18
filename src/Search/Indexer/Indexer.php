@@ -91,7 +91,7 @@ class Indexer
             } catch (Throwable $e) {
                 $this->logger->error($debugId.' rolling back.', [
                     'exception' => $e,
-                    'document' => $result ?? null,
+                    'document' => ($e instanceof DocumentPostValidationFailure) ? $e->getDocument() : null,
                 ]);
                 $this->client->deleteDocument($docId);
 
@@ -126,6 +126,10 @@ class Indexer
         Assertion::isInstanceOf($document, IsDocumentResponse::class);
         $result = $document->unwrap();
         // That the document is valid JSON.
-        $this->validator->validateSearchResult($result, true);
+        try {
+            $this->validator->validateSearchResult($result, false);
+        } catch (Throwable $e) {
+            throw new DocumentPostValidationFailure($result, 'Validation failed: '.$e->getMessage(), $e->getCode(), $e);
+        }
     }
 }
