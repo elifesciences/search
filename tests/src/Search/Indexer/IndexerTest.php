@@ -13,6 +13,7 @@ use eLife\Search\Indexer\ChangeSet;
 use eLife\Search\Indexer\ModelIndexer;
 use Exception;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use tests\eLife\Search\ExceptionNullLogger;
 

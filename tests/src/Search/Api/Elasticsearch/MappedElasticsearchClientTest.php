@@ -6,6 +6,7 @@ use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class MappedElasticsearchClientTest extends TestCase
