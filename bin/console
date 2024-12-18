@@ -11,6 +11,8 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 require_once __DIR__.'/../src/bootstrap.php';
 set_time_limit(0);
 
+// bootstrap.php above sets $config
+// @phpstan-ignore variable.undefined
 $app = new Kernel($config);
 $input = new ArgvInput();
 $output = new ConsoleOutput();

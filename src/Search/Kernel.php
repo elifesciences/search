@@ -487,7 +487,7 @@ final class Kernel implements MinimalKernel
             ));
 
         if ($app['debug']) {
-            $app->get('/error', function () use ($app) {
+            $app->get('/error', function () {
                 $this->container->get('logger')->debug('Simulating error');
                 throw new LogicException('Simulated error');
             });
