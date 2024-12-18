@@ -86,11 +86,12 @@ class Indexer
             $this->insert($doc, $docId);
 
             $this->logger->debug($debugId.' post validating.');
-            // Post-validation, we got a document.
-            $document = $this->client->getDocumentById($docId);
-            Assertion::isInstanceOf($document, IsDocumentResponse::class);
-            $result = $document->unwrap();
             try {
+                // Post-validation, we got a document.
+                $document = $this->client->getDocumentById($docId);
+                Assertion::isInstanceOf($document, IsDocumentResponse::class);
+                $result = $document->unwrap();
+
                 //Assert that the document is valid JSON.
                 $this->validator->validateSearchResult($result, false);
             } catch (Throwable $e) {
