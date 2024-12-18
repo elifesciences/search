@@ -2,10 +2,10 @@
 
 namespace eLife\Search\Api\Response;
 
+use Assert\Assertion;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\Since;
 use JMS\Serializer\Annotation\Type;
-use Webmozart\Assert\Assert;
 
 final class TypesResponse
 {
@@ -224,7 +224,7 @@ final class TypesResponse
 
     public static function fromList(array $list)
     {
-        Assert::allIsInstanceOf($list, SearchResult::class);
+        Assertion::allIsInstanceOf($list, SearchResult::class);
 
         $type_totals = array_count_values(
             array_map('strtolower',
