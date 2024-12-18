@@ -467,15 +467,15 @@ final class Kernel implements MinimalKernel
         // Routes
         $this->routes($app);
         // Validate.
-        if ($app['config']['validate']) {
+        if ($this->container->get('config')['validate']) {
             $app->after([$this, 'validate'], 2);
         }
         // Cache.
-        if ($app['config']['ttl'] > 0) {
+        if ($this->container->get('config')['ttl'] > 0) {
             $app->after([$this, 'cache'], 3);
         }
 
-        if ($app['config']['rate_limit_minimum_page']) {
+        if ($this->container->get('config')['rate_limit_minimum_page']) {
             $app->after([$this, 'rateLimit'], 4);
         }
 
@@ -485,15 +485,15 @@ final class Kernel implements MinimalKernel
 
     public function routes(Application $app)
     {
-        $app->get('/search', [$app['default_controller'], 'indexAction'])
-            ->before($app['negotiate.accept'](
+        $app->get('/search', [$this->container->get('default_controller'), 'indexAction'])
+            ->before($this->container->get('negotiate.accept')(
                 'application/vnd.elife.search+json; version=2',
                 'application/vnd.elife.search+json; version=1'
             ));
 
         if ($app['debug']) {
             $app->get('/error', function () use ($app) {
-                $app['logger']->debug('Simulating error');
+                $this->container->get('logger')->debug('Simulating error');
                 throw new LogicException('Simulated error');
             });
         }
@@ -529,12 +529,12 @@ final class Kernel implements MinimalKernel
                 strpos($response->headers->get('Content-Type'), 'json') &&
                 !$response instanceof JsonResponse
             ) {
-                $this->app['message-validator']->validate(
-                    $this->app['psr7.bridge']->createResponse($response)
+                $this->container->get('message-validator')->validate(
+                    $this->container->get('psr7.bridge')->createResponse($response)
                 );
             }
         } catch (Throwable $e) {
-            if ($this->app['config']['debug']) {
+            if ($this->container->get('config')['debug']) {
                 throw $e;
             }
         }
@@ -542,8 +542,8 @@ final class Kernel implements MinimalKernel
 
     public function cache(Request $request, Response $response) : Response
     {
-        $response->setMaxAge($this->app['config']['ttl']);
-        $response->headers->addCacheControlDirective('stale-while-revalidate', $this->app['config']['ttl']);
+        $response->setMaxAge($this->container->get('config')['ttl']);
+        $response->headers->addCacheControlDirective('stale-while-revalidate', $this->container->get('config')['ttl']);
         $response->headers->addCacheControlDirective('stale-if-error', 86400);
         $response->setVary('Accept');
         $response->setEtag(md5($response->getContent()));
@@ -555,7 +555,7 @@ final class Kernel implements MinimalKernel
 
     public function rateLimit(Request $request, Response $response) : Response
     {
-        if ($request->query->get('page', null) >= $this->app['config']['rate_limit_minimum_page']) {
+        if ($request->query->get('page', null) >= $this->container->get('config')['rate_limit_minimum_page']) {
             $response->headers->set('X-Kong-Limit', 'highpages=1');
         }
 
