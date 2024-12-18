@@ -7,3 +7,4 @@
 /vendor/
 !.gitkeep
 /.phpunit.result.cache
+/.phpunit.cache/
