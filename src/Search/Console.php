@@ -373,7 +373,7 @@ final class Console
         if (!$type || !in_array($type, $types)) {
             throw new Exception("Type $type not found. Allowed types: ". implode(', ', $types));
         }
-        $this->logger->info(sprintf('Purge command for: %', $type));
+        $this->logger->info(sprintf('Purge command for: %s', $type));
         $ids = [];
         $query = new ElasticQueryBuilder($this->kernel->indexMetadata()->read());
         $query = $query->whereType([$type]);

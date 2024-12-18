@@ -2,6 +2,8 @@
 
 namespace tests\eLife\Search\Web;
 
+use PHPUnit\Framework\Attributes\Group;
+
 #[Group('web')]
 final class ForTest extends ElasticTestCase
 {

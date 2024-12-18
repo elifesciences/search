@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Web;
 
+use PHPUnit\Framework\Attributes\Group;
 use stdClass;
 
 #[Group('web')]
