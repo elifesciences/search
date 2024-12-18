@@ -87,7 +87,13 @@ class Indexer
 
             $this->logger->debug($debugId.' post validating.');
             try {
-                $this->postValidate($docId);
+                // Post-validation, we got a document.
+                $document = $this->client->getDocumentById($docId);
+                Assertion::isInstanceOf($document, IsDocumentResponse::class);
+                $result = $document->unwrap();
+
+                //Assert that the document is valid JSON.
+                $this->validator->validateSearchResult($result, false);
             } catch (Throwable $e) {
                 $this->logger->error($debugId.' rolling back.', [
                     'exception' => $e,
@@ -117,15 +123,5 @@ class Indexer
         return [
             'id' => $id,
         ];
-    }
-
-    public function postValidate($id)
-    {
-        // Post-validation, we got a document.
-        $document = $this->client->getDocumentById($id);
-        Assertion::isInstanceOf($document, IsDocumentResponse::class);
-        $result = $document->unwrap();
-        // That the document is valid JSON.
-        $this->validator->validateSearchResult($result, true);
     }
 }
