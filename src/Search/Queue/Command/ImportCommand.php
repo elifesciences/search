@@ -22,7 +22,8 @@ use Throwable;
 
 final class ImportCommand extends Command
 {
-    private static $supports = [
+    /** @var array<string> $supports */
+    private static array $supports = [
         'all',
         'BlogArticles',
         'Interviews',
