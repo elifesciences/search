@@ -27,7 +27,6 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 final class SearchController
 {
     private $serializer;
-    private $apiUrl;
     private $client;
     private $context;
     private $elasticIndex;
@@ -38,14 +37,12 @@ final class SearchController
         LoggerInterface $logger,
         SerializationContext $context,
         MappedElasticsearchClient $client,
-        string $apiUrl,
         string $elasticIndex
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->context = $context;
         $this->client = $client;
-        $this->apiUrl = $apiUrl;
         $this->elasticIndex = $elasticIndex;
     }
 
