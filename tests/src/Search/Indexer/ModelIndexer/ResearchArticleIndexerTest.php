@@ -19,13 +19,10 @@ final class ResearchArticleIndexerTest extends TestCase
     use CallSerializer;
     use ModelProvider;
 
-    private MockInterface|MappedElasticsearchClient $elastic;
-
     private ResearchArticleIndexer $indexer;
 
     protected function setUp(): void
     {
-        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
         $this->indexer = new ResearchArticleIndexer($this->getSerializer(), []);
     }
 
