@@ -11,6 +11,7 @@ use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ResearchArticleIndexer;
+use Mockery\MockInterface;
 
 final class ResearchArticleIndexerTest extends TestCase
 {
@@ -18,15 +19,9 @@ final class ResearchArticleIndexerTest extends TestCase
     use CallSerializer;
     use ModelProvider;
 
-    /**
-     * @var MockInterface
-     */
-    private $elastic;
+    private MockInterface & MappedElasticsearchClient $elastic;
 
-    /**
-     * @var ResearchArticleIndexer
-     */
-    private $indexer;
+    private ResearchArticleIndexer $indexer;
 
     protected function setUp(): void
     {

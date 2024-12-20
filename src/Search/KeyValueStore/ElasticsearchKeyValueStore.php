@@ -31,9 +31,6 @@ final class ElasticsearchKeyValueStore implements KeyValueStore
         }
     }
 
-    /**
-     * @param mixed $value
-     */
     public function store(string $key, array $value)
     {
         $this->client->indexJsonDocument(

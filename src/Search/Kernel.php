@@ -67,6 +67,8 @@ final class Kernel implements MinimalKernel
 
     private $app;
 
+    private Container $pimple;
+
     private ContainerInterface $container;
 
     public function __construct($config = [])
@@ -111,24 +113,24 @@ final class Kernel implements MinimalKernel
             'logger.path' => $config['logger.path'],
             'logger.level' => $config['logger.level'],
         ]);
-        /** @var Container $container */
-        $container = $app;
-        $container['config'] = $config;
+
+        $this->pimple = $app;
+        $this->pimple['config'] = $config;
 
         // Register dependencies
-        $container->register(new ApiProblemProvider());
-        $container->register(new ContentNegotiationProvider());
-        $container->register(new LoggerProvider());
-        $container->register(new PingControllerProvider());
+        $this->pimple->register(new ApiProblemProvider());
+        $this->pimple->register(new ContentNegotiationProvider());
+        $this->pimple->register(new LoggerProvider());
+        $this->pimple->register(new PingControllerProvider());
         // Annotations.
         AnnotationRegistry::registerLoader('class_exists');
-        if ($container['config']['debug']) {
-            $container->register(new VarDumperServiceProvider());
-            $container->register(new Provider\HttpFragmentServiceProvider());
-            $container->register(new Provider\ServiceControllerServiceProvider());
-            $container->register(new Provider\TwigServiceProvider());
+        if ($this->pimple['config']['debug']) {
+            $this->pimple->register(new VarDumperServiceProvider());
+            $this->pimple->register(new Provider\HttpFragmentServiceProvider());
+            $this->pimple->register(new Provider\ServiceControllerServiceProvider());
+            $this->pimple->register(new Provider\TwigServiceProvider());
         }
-        $this->dependencies($container);
+        $this->dependencies($this->pimple);
         $this->container = new PimplePsr11Container($app);
 
         $this->app = $app;
