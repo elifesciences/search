@@ -13,141 +13,141 @@ final class TypesResponse
      * @Type("integer")
      * @Since(version="1")
      */
-    public $correction;
+    public int $correction;
 
     /**
      * @Type("integer")
      * @Since(version="1")
      */
-    public $editorial;
+    public int $editorial;
 
     /**
      * @SerializedName("expression-concern")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $expressionConcern;
+    public int $expressionConcern;
 
     /**
      * @Type("integer")
      * @Since(version="1")
      */
-    public $feature;
+    public int $feature;
 
     /**
      * @Type("integer")
      * @Since(version="1")
      */
-    public $insight;
+    public int $insight;
 
     /**
      * @SerializedName("research-advance")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $researchAdvance;
+    public int $researchAdvance;
 
     /**
      * @SerializedName("research-article")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $researchArticle;
+    public int $researchArticle;
 
     /**
      * @SerializedName("research-communication")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $researchCommunication;
+    public int $researchCommunication;
 
     /**
      * @Type("integer")
      * @Since(version="1")
      */
-    public $retraction;
+    public int $retraction;
 
     /**
      * @SerializedName("registered-report")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $registeredReport;
+    public int $registeredReport;
 
     /**
      * @SerializedName("replication-study")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $replicationStudy;
+    public int $replicationStudy;
 
     /**
      * @SerializedName("review-article")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $reviewArticle;
+    public int $reviewArticle;
 
     /**
      * @SerializedName("scientific-correspondence")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $scientificCorrespondence;
+    public int $scientificCorrespondence;
 
     /**
      * @SerializedName("short-report")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $shortReport;
+    public int $shortReport;
 
     /**
      * @SerializedName("tools-resources")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $toolsResources;
+    public int $toolsResources;
 
     /**
      * @SerializedName("blog-article")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $blogArticle;
+    public int $blogArticle;
 
     /**
      * @Type("integer")
      * @Since(version="1")
      */
-    public $collection;
+    public int $collection;
 
     /**
      * @Type("integer")
      * @Since(version="1")
      */
-    public $interview;
+    public int $interview;
 
     /**
      * @SerializedName("labs-post")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $labsPost;
+    public int $labsPost;
 
     /**
      * @SerializedName("podcast-episode")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $podcastEpisode;
+    public int $podcastEpisode;
 
     /**
      * @SerializedName("reviewed-preprint")
      * @Type("integer")
      * @Since(version="1")
      */
-    public $reviewedPreprint;
+    public int $reviewedPreprint;
 
     private function __construct(
         $correction = 0,

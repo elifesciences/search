@@ -13,26 +13,28 @@ final class SearchResponse implements HasHeaders
      * @Type("integer")
      * @Since(version="1")
      */
-    public $total;
+    public int $total;
 
     /**
      * @Type("array")
      * @Since(version="1")
      * @Accessor(setter="setItems")
+     * @var array<array{}>
      */
-    public $items = [];
+    public array $items = [];
 
     /**
      * @Type(TypesResponse::class)
      * @Since(version="1")
      */
-    public $types;
+    public TypesResponse $types;
 
     /**
      * @Type("array")
      * @Since(version="1")
+     * @var array<array{id: string, name: string, results: int}>
      */
-    public $subjects = [
+    public array $subjects = [
         [
             'id' => 'biophysics-structural-biology',
             'name' => 'Biophysics and Structural Biology',
