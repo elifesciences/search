@@ -17,13 +17,15 @@ final class ReviewedPreprintIndexerTest extends TestCase
     use CallSerializer;
     use ModelProvider;
 
-    private MockInterface|MappedElasticsearchClient $elastic;
+    private MockInterface&MappedElasticsearchClient $elastic;
 
     private ReviewedPreprintIndexer $indexer;
 
     protected function setUp(): void
     {
-        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
+        /** @var MockInterface&MappedElasticsearchClient $mockElastic */
+        $mockElastic = Mockery::mock(MappedElasticsearchClient::class);
+        $this->elastic = $mockElastic;
         $this->indexer = new ReviewedPreprintIndexer($this->getSerializer(), $this->elastic);
     }
 
