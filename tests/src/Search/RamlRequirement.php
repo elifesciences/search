@@ -23,10 +23,7 @@ trait RamlRequirement
         $file = ComposerLocator::getPath('elife/api').'/dist/samples/'.$name;
         if (file_exists($file)) {
             return file_get_contents($file);
-        } else {
-            throw new LogicException("Fixture {$name} does not exist");
         }
-
-        return null;
+        throw new LogicException("Fixture {$name} does not exist");
     }
 }

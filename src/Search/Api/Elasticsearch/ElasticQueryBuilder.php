@@ -90,12 +90,6 @@ final class ElasticQueryBuilder implements QueryBuilder
         $this->query['body']['post_filter']['bool']['filter'][] = $filter;
     }
 
-    private function query($key, array $body)
-    {
-        $this->query['body']['query'] = $this->query['body']['query'] ?? [];
-        $this->query['body']['query'][$key] = $body;
-    }
-
     private function setBoostings(array $query = [])
     {
         /* Boost results based on 'type' */

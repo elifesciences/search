@@ -27,7 +27,6 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 final class SearchController
 {
     private $serializer;
-    private $apiUrl;
     private $client;
     private $context;
     private $elasticIndex;
@@ -38,26 +37,25 @@ final class SearchController
         LoggerInterface $logger,
         SerializationContext $context,
         MappedElasticsearchClient $client,
-        string $apiUrl,
         string $elasticIndex
     ) {
         $this->serializer = $serializer;
         $this->logger = $logger;
         $this->context = $context;
         $this->client = $client;
-        $this->apiUrl = $apiUrl;
         $this->elasticIndex = $elasticIndex;
     }
 
-    private function validateDateRange(DateTimeImmutable $startDateTime = null, DateTimeImmutable $endDateTime = null)
+    private function validateDateRange(DateTimeImmutable|false $startDateTime = null, DateTimeImmutable|false $endDateTime = null)
     {
-        if (false === $endDateTime || false === $startDateTime) {
+        if ($endDateTime === null && $startDateTime === null) {
+            return;
+        }
+
+        if ($endDateTime === false || $startDateTime === false) {
             throw new BadRequestHttpException('Invalid date provided');
         }
-        if (
-            ($endDateTime && $startDateTime) &&
-            (1 === $startDateTime->diff($endDateTime)->invert)
-        ) {
+        if (($endDateTime && $startDateTime) && 1 === $startDateTime->diff($endDateTime)->invert) {
             throw new BadRequestHttpException('start-date must be the same or before end-date');
         }
     }

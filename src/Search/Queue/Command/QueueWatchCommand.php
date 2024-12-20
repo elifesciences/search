@@ -13,20 +13,17 @@ use Symfony\Component\Console\Input\InputInterface;
 
 class QueueWatchCommand extends QueueCommand
 {
-    private $isMock;
     private $indexer;
 
     public function __construct(
         WatchableQueue $queue,
         QueueItemTransformer $transformer,
         Indexer $indexer,
-        bool $isMock,
         LoggerInterface $logger,
         Monitoring $monitoring,
         callable $limit
     ) {
         parent::__construct($logger, $queue, $transformer, $monitoring, $limit, false);
-        $this->isMock = $isMock;
         $this->indexer = $indexer;
     }
 

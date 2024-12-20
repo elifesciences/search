@@ -134,7 +134,6 @@ abstract class ElasticTestCase extends WebTestCase
                     'id' => '15275',
                     'stage' => 'published',
                 ];
-                break;
             case 1:
                 return [
                     'status' => 'vor',
@@ -168,7 +167,6 @@ abstract class ElasticTestCase extends WebTestCase
                     'id' => '19662',
                     'stage' => 'published',
                 ];
-                break;
             case 2:
                 return [
                     'status' => 'poa',
@@ -201,7 +199,6 @@ abstract class ElasticTestCase extends WebTestCase
                     'id' => '15276',
                     'stage' => 'published',
                 ];
-                break;
             case 3:
                 return [
                     'status' => 'poa',
@@ -238,7 +235,6 @@ abstract class ElasticTestCase extends WebTestCase
                     'id' => '15278',
                     'stage' => 'published',
                 ];
-                break;
             case 4:
                 return [
                     'status' => 'poa',
@@ -276,7 +272,6 @@ abstract class ElasticTestCase extends WebTestCase
                     'id' => '15279',
                     'stage' => 'published',
                 ];
-                break;
         }
     }
 
