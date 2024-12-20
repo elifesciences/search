@@ -48,13 +48,10 @@ final class SearchController
 
     private function validateDateRange(DateTimeImmutable $startDateTime = null, DateTimeImmutable $endDateTime = null)
     {
-        if (false === $endDateTime || false === $startDateTime) {
+        if ($endDateTime === null || $startDateTime === null) {
             throw new BadRequestHttpException('Invalid date provided');
         }
-        if (
-            ($endDateTime && $startDateTime) &&
-            (1 === $startDateTime->diff($endDateTime)->invert)
-        ) {
+        if (1 === $startDateTime->diff($endDateTime)->invert) {
             throw new BadRequestHttpException('start-date must be the same or before end-date');
         }
     }
