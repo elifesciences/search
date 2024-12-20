@@ -23,7 +23,7 @@ final class IndexerTest extends TestCase
     protected MockInterface&MappedElasticsearchClient $elastic;
     protected MockInterface&HasSearchResultValidator $validator;
     protected MockInterface&ModelIndexer $mockArticleIndexer;
-    protected $indexer;
+    protected Indexer $indexer;
 
     protected function setUp(): void
     {
