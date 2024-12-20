@@ -9,15 +9,15 @@ final class SuccessResponse implements NonContentResponse
     /**
      * @Type("boolean")
      */
-    public $acknowledged;
+    public bool $acknowledged;
 
     /**
      * @Type("boolean")
      */
-    public $found;
+    public bool $found;
 
     /**
      * @Type("boolean")
      */
-    public $inserted;
+    public bool $inserted;
 }
