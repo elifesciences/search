@@ -13,7 +13,7 @@ final class HitItem
      * @SerializedName("_source")
      * @Accessor(setter="setSource")
      */
-    public $_source;
+    public string $_source;
 
     public function setSource(array $_source)
     {

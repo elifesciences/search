@@ -9,11 +9,8 @@ use JMS\Serializer\Serializer;
 
 final class SearchResponseSerializer implements SerializerInterface
 {
-    private $serializer;
-
-    public function __construct(Serializer $serializer)
+    public function __construct(private Serializer $serializer)
     {
-        $this->serializer = $serializer;
     }
 
     /**

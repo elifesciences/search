@@ -10,8 +10,10 @@ final class SearchResponse implements ElasticResponse, QueryResponse
 {
     use ResponseHits;
 
-    private $_results;
-    private $cursor = 0;
+    /** @var null|array<mixed, mixed> $_results */
+    private null|array $_results = null;
+
+    private int $cursor = 0;
 
     public function getResults() : array
     {

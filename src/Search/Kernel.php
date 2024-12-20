@@ -65,12 +65,14 @@ final class Kernel implements MinimalKernel
     const CACHE_DIR = __DIR__.'/../../var/cache';
     const INDEX_METADATA_KEY = 'index-metadata';
 
-    private $app;
+    private Application $app;
 
     private Container $pimple;
 
     private ContainerInterface $container;
-
+    /**
+     * @param array<string, mixed> $config
+     */
     public function __construct($config = [])
     {
         // Load config
@@ -492,7 +494,9 @@ final class Kernel implements MinimalKernel
     {
         return $this->app->run();
     }
-
+    /**
+     * @param mixed $d
+     */
     public function get($d)
     {
         return $this->app[$d];

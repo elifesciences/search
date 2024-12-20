@@ -6,8 +6,8 @@ use Assert\Assertion;
 
 final class IndexMetadata
 {
-    private $write;
-    private $read;
+    private string $write;
+    private string $read;
     const WRITE = 'write';
     const READ = 'read';
 

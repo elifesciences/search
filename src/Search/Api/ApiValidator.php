@@ -13,22 +13,14 @@ use Throwable;
 
 final class ApiValidator implements HasSearchResultValidator
 {
-    private $serializer;
-    private $context;
-    private $last_error;
-    private $bridge;
-    private $validator;
+    private Throwable|null $last_error;
 
     public function __construct(
-        Serializer $serializer,
-        SerializationContext $context,
-        JsonMessageValidator $validator,
-        PsrHttpFactory $bridge
+        private Serializer $serializer,
+        private SerializationContext $context,
+        private JsonMessageValidator $validator,
+        private PsrHttpFactory $bridge
     ) {
-        $this->validator = $validator;
-        $this->bridge = $bridge;
-        $this->serializer = $serializer;
-        $this->context = $context;
     }
 
     public function deserialize($item, $classname)

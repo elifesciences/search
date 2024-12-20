@@ -8,8 +8,9 @@ final class ErrorResponse implements NonContentResponse
 {
     /**
      * @Type("array")
+     * @var array<string, mixed> $error
      */
-    public $error;
+    public array $error;
 
     public function getType() : string
     {

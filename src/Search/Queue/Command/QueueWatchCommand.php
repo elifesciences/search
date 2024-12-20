@@ -3,6 +3,7 @@
 namespace eLife\Search\Queue\Command;
 
 use eLife\Bus\Command\QueueCommand;
+use eLife\Bus\Limit\Limit;
 use eLife\Bus\Queue\QueueItem;
 use eLife\Bus\Queue\QueueItemTransformer;
 use eLife\Bus\Queue\WatchableQueue;
@@ -13,15 +14,13 @@ use Symfony\Component\Console\Input\InputInterface;
 
 class QueueWatchCommand extends QueueCommand
 {
-    private $indexer;
-
     public function __construct(
         WatchableQueue $queue,
         QueueItemTransformer $transformer,
-        Indexer $indexer,
+        private Indexer $indexer,
         LoggerInterface $logger,
         Monitoring $monitoring,
-        callable $limit
+        Limit $limit
     ) {
         parent::__construct($logger, $queue, $transformer, $monitoring, $limit, false);
         $this->indexer = $indexer;

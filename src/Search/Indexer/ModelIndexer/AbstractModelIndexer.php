@@ -11,7 +11,7 @@ abstract class AbstractModelIndexer implements ModelIndexer
     use Helper\JsonSerializerHelper;
     use Helper\SortDate;
 
-    protected $serializer;
+    protected Serializer $serializer;
 
     public function __construct(Serializer $serializer)
     {
