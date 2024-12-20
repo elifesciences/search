@@ -22,6 +22,9 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     private string $dateType;
 
+    /** @var array<string, mixed> $query */
+    private array $query = [];
+
     public function __construct(string $index)
     {
         $this->query['index'] = $index;
@@ -53,8 +56,6 @@ final class ElasticQueryBuilder implements QueryBuilder
             ],
         ];
     }
-
-    private $query = [];
 
     private function sort($sort = [])
     {
