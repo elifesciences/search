@@ -48,16 +48,13 @@ final class IndexerTest extends TestCase
         parent::tearDown();
     }
 
-    private function getMockEntity($type = 'article', $id = '1')
+    private function getMockEntity(string $type = 'article', string $id = '1')
     {
         return new class($type, $id) implements Model, HasIdentifier {
-            private $type;
-            private $id;
-
-            public function __construct($type, $id)
-            {
-                $this->type = $type;
-                $this->id = $id;
+            public function __construct(
+                private string $type,
+                private string $id,
+            ) {
             }
             public function getIdentifier(): Identifier
             {
