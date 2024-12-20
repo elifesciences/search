@@ -91,7 +91,9 @@ final class IndexerTest extends TestCase
             ->once()
             ->with($entity->getIdentifier()->__toString())
             ->andReturn($document);
-        $document->shouldReceive('unwrap')
+        /** @var \Mockery\Expectation $unwrapExpectation */
+        $unwrapExpectation = $document->shouldReceive('unwrap');
+        $unwrapExpectation
             ->once()
             ->andReturn([]);
         $this->validator->shouldReceive('validateSearchResult')
@@ -120,7 +122,9 @@ final class IndexerTest extends TestCase
             ->once()
             ->with($entity->getIdentifier()->__toString())
             ->andReturn($document);
-        $document->shouldReceive('unwrap')
+        /** @var \Mockery\Expectation $unwrapExpectation */
+        $unwrapExpectation = $document->shouldReceive('unwrap');
+        $unwrapExpectation
             ->once()
             ->andReturn([]);
         $this->validator->shouldReceive('validateSearchResult')
@@ -142,7 +146,7 @@ final class IndexerTest extends TestCase
         $entity = $this->getMockEntity();
         $changeSet = new ChangeSet();
         $changeSet->addInsert('article/1', '{}');
-        $changeSet->addDelete('reviewed-preprint/1', '{}');
+        $changeSet->addDelete('reviewed-preprint/1');
         $this->mockArticleIndexer->shouldReceive('prepareChangeSet')
             ->once()
             ->with($entity)
@@ -153,7 +157,9 @@ final class IndexerTest extends TestCase
             ->once()
             ->with($entity->getIdentifier()->__toString())
             ->andReturn($document);
-        $document->shouldReceive('unwrap')
+        /** @var \Mockery\Expectation $unwrapExpectation */
+        $unwrapExpectation = $document->shouldReceive('unwrap');
+        $unwrapExpectation
             ->once()
             ->andReturn([]);
         $this->validator->shouldReceive('validateSearchResult')

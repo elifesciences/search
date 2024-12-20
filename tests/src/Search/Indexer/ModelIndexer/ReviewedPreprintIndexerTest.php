@@ -52,16 +52,24 @@ final class ReviewedPreprintIndexerTest extends TestCase
     #[Test]
     public function testIndexOfPodcastEpisode(ReviewedPreprint $reviewedPreprint)
     {
-        $this->elastic->shouldReceive('getDocumentById')
+        /** @var \Mockery\Expectation $getDocumentByResearchArticleIdExpectation */
+        $getDocumentByResearchArticleIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByResearchArticleIdExpectation
             ->with('research-article-'.$reviewedPreprint->getId(), null, true)
             ->andReturn(null);
-        $this->elastic->shouldReceive('getDocumentById')
+        /** @var \Mockery\Expectation $getDocumentByToolsAndResourcesIdExpectation */
+        $getDocumentByToolsAndResourcesIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByToolsAndResourcesIdExpectation
             ->with('tools-resources-'.$reviewedPreprint->getId(), null, true)
             ->andReturn(null);
-        $this->elastic->shouldReceive('getDocumentById')
+        /** @var \Mockery\Expectation $getDocumentByShortReportIdExpectation */
+        $getDocumentByShortReportIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByShortReportIdExpectation
             ->with('short-report-'.$reviewedPreprint->getId(), null, true)
             ->andReturn(null);
-        $this->elastic->shouldReceive('getDocumentById')
+        /** @var \Mockery\Expectation $getDocumentByResearchAdvanceIdExpectation */
+        $getDocumentByResearchAdvanceIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByResearchAdvanceIdExpectation
             ->with('research-advance-'.$reviewedPreprint->getId(), null, true)
             ->andReturn(null);
         $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
@@ -82,7 +90,9 @@ final class ReviewedPreprintIndexerTest extends TestCase
     #[Test]
     public function testIndexOfReviewedPreprintSkipped(ReviewedPreprint $reviewedPreprint)
     {
-        $this->elastic->shouldReceive('getDocumentById')
+        /** @var \Mockery\Expectation $getDocumentByIdExpectation */
+        $getDocumentByIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByIdExpectation
             ->with('research-article-'.$reviewedPreprint->getId(), null, true)
             ->andReturn('found');
 
@@ -96,10 +106,14 @@ final class ReviewedPreprintIndexerTest extends TestCase
     #[Test]
     public function testIndexOfReviewedPreprintSkippedToolsResources(ReviewedPreprint $reviewedPreprint)
     {
-        $this->elastic->shouldReceive('getDocumentById')
+        /** @var \Mockery\Expectation $getDocumentByResearchArticleIdExpectation */
+        $getDocumentByResearchArticleIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByResearchArticleIdExpectation
             ->with('research-article-'.$reviewedPreprint->getId(), null, true)
             ->andReturn(null);
-        $this->elastic->shouldReceive('getDocumentById')
+        /** @var \Mockery\Expectation $getDocumentByToolsAndResourcesIdExpectation */
+        $getDocumentByToolsAndResourcesIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByToolsAndResourcesIdExpectation
             ->with('tools-resources-'.$reviewedPreprint->getId(), null, true)
             ->andReturn('found');
 
