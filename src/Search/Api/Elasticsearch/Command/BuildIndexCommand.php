@@ -13,8 +13,8 @@ use Throwable;
 
 class BuildIndexCommand extends Command
 {
-    private $client;
-    private $logger;
+    private PlainElasticsearchClient $client;
+    private LoggerInterface $logger;
 
     public function __construct(PlainElasticsearchClient $client, LoggerInterface $logger)
     {
