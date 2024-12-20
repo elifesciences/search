@@ -7,11 +7,11 @@ use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
 
 final class ElasticsearchKeyValueStore implements KeyValueStore
 {
-    private $client;
     const INDEX_NAME = 'key_value_store'; // analogue to elife_search
 
-    public function __construct(PlainElasticsearchClient $client)
-    {
+    public function __construct(
+        private PlainElasticsearchClient $client,
+    ) {
         $this->client = $client;
     }
 
