@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
 use Mockery;
+use Mockery\MockInterface;
 
 final class ReviewedPreprintIndexerTest extends TestCase
 {
@@ -16,15 +17,9 @@ final class ReviewedPreprintIndexerTest extends TestCase
     use CallSerializer;
     use ModelProvider;
 
-    /**
-     * @var MockInterface
-     */
-    private $elastic;
+    private MockInterface & MappedElasticsearchClient $elastic;
 
-    /**
-     * @var ReviewedPreprintIndexer
-     */
-    private $indexer;
+    private ReviewedPreprintIndexer $indexer;
 
     protected function setUp(): void
     {
