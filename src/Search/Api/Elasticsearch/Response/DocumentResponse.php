@@ -12,8 +12,9 @@ final class DocumentResponse implements IsDocumentResponse, ElasticResponse
      * @Type("array")
      * @SerializedName("_source")
      * @Accessor(setter="setSource")
+     * @var array<string, mixed>
      */
-    public $_source;
+    public array $_source;
 
     public function setSource(array $_source)
     {
