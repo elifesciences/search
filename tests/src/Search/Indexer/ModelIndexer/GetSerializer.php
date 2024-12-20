@@ -10,7 +10,7 @@ trait GetSerializer
 {
     use HttpClient;
 
-    private static $serializer;
+    private static Serializer|null $serializer = null;
 
     public static function getSerializer() : Serializer
     {
