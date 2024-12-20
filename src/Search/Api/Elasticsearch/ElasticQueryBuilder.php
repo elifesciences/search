@@ -7,7 +7,7 @@ use eLife\Search\Api\Query\QueryBuilder;
 
 final class ElasticQueryBuilder implements QueryBuilder
 {
-    private $order;
+    private string $order;
 
     const PHP_DATETIME_FORMAT = 'yyyy/MM/dd HH:mm:ss';
     const ELASTIC_DATETIME_FORMAT = 'Y/m/d H:i:s';
@@ -20,7 +20,7 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     const WORD_LIMIT = 32;
 
-    private $dateType;
+    private string $dateType;
 
     public function __construct(string $index)
     {
