@@ -59,10 +59,10 @@ abstract class ElasticsearchTestCase extends TestCase
         $this->assertNotEmpty($model->getResults());
     }
 
-    protected function deserialize($json) : ElasticResponse
+    protected function deserialize($json) : SearchResponse
     {
-        $model = $this->serializer->deserialize($json, ElasticResponse::class, 'json');
-        $this->assertInstanceOf(ElasticResponse::class, $model);
+        $model = $this->serializer->deserialize($json, SearchResponse::class, 'json');
+        $this->assertInstanceOf(SearchResponse::class, $model);
 
         return $model;
     }

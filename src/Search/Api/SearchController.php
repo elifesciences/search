@@ -88,7 +88,9 @@ final class SearchController
         $perPage = $request->query->getInt('per-page', 10);
         $useDate = $request->query->get('use-date', 'default');
         $sort = $request->query->get('sort', 'relevance');
+        /** @var string[]|null $subjects */
         $subjects = $request->query->get('subject');
+        /** @var string[]|null $types */
         $types = $request->query->get('type');
         $startDate = $request->query->get('start-date');
         $endDate = $request->query->get('end-date');
@@ -130,10 +132,10 @@ final class SearchController
 
         $query->setDateType($useDate);
 
-        if ($subjects) {
+        if (is_array($subjects)) {
             $query->whereSubjects($subjects);
         }
-        if ($types) {
+        if (is_array($types)) {
             $query->whereType($types);
         }
 

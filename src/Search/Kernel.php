@@ -525,7 +525,7 @@ final class Kernel implements MinimalKernel
     {
         $response->setMaxAge($this->container->get('config')['ttl']);
         $response->headers->addCacheControlDirective('stale-while-revalidate', $this->container->get('config')['ttl']);
-        $response->headers->addCacheControlDirective('stale-if-error', 86400);
+        $response->headers->addCacheControlDirective('stale-if-error', '86400');
         $response->setVary('Accept');
         $response->setEtag(md5($response->getContent()));
         $response->setPublic();

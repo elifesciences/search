@@ -6,25 +6,29 @@ use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use Mockery;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class MappedElasticsearchClientTest extends TestCase
 {
-    /** @var MappedElasticsearchClient */
-    private $elasticsearchClient;
-    private $client;
+    private MappedElasticsearchClient $elasticsearchClient;
+    private Client&MockInterface $client;
 
     public function setUp(): void
     {
-        $this->client = Mockery::mock(Client::class);
+        /** @var Client&MockInterface $client */
+        $client = Mockery::mock(Client::class);
+        $this->client = $client;
         $this->elasticsearchClient = new MappedElasticsearchClient($this->client, 'index');
     }
 
     #[Test]
     public function testGetDocumentById()
     {
-        $this->client->shouldReceive('get')
+        /** @var \Mockery\Expectation $getExpectation */
+        $getExpectation = $this->client->shouldReceive('get');
+        $getExpectation
             ->with([
                 'index' => 'index',
                 'id' => 'id',
@@ -34,7 +38,9 @@ class MappedElasticsearchClientTest extends TestCase
 
         $this->assertSame('found', $this->elasticsearchClient->getDocumentById('id'));
 
-        $this->client->shouldReceive('get')
+        /** @var \Mockery\Expectation $getExpectation */
+        $getExpectation = $this->client->shouldReceive('get');
+        $getExpectation
             ->with([
                 'index' => 'override-index',
                 'id' => 'id',
@@ -44,7 +50,9 @@ class MappedElasticsearchClientTest extends TestCase
 
         $this->assertSame('found', $this->elasticsearchClient->getDocumentById('id', 'override-index'));
 
-        $this->client->shouldReceive('get')
+        /** @var \Mockery\Expectation $getExpectation */
+        $getExpectation = $this->client->shouldReceive('get');
+        $getExpectation
             ->with([
                 'index' => 'index',
                 'id' => 'unknown-id',
