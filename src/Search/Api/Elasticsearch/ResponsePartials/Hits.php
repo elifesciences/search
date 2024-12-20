@@ -10,18 +10,19 @@ final class Hits
     /**
      * @Type("integer")
      */
-    public $total;
+    public int $total;
 
     /**
      * @Type("float")
      * @SerializedName("max_score")
      */
-    public $maxScore;
+    public float $maxScore;
 
     /**
      * @Type("array<eLife\Search\Api\Elasticsearch\ResponsePartials\HitItem>")
+     * @var array<\eLife\Search\Api\Elasticsearch\ResponsePartials\HitItem> $hits
      */
-    public $hits;
+    public array $hits;
 
     public function getHitItem() : array
     {
