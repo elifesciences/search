@@ -14,7 +14,7 @@
     },
     "require": {
         "php": "8.3.*",
-        "aws/aws-sdk-php": "3.335.0",
+        "aws/aws-sdk-php": "3.336.1",
         "beberlei/assert": "^3.3",
         "doctrine/annotations": "^1.4",
         "elasticsearch/elasticsearch": "^7.11",
