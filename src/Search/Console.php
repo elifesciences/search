@@ -197,7 +197,7 @@ final class Console
     {
         // Create queue item.
         $item = new InternalSqsMessage($type, $id);
-        /** @var $queue WatchableQueue */
+        /** @var WatchableQueue $queue */
         $queue = $this->kernel->get('aws.queue');
         // Queue item.
         $queue->enqueue($item);
