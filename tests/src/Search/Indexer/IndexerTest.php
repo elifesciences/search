@@ -13,22 +13,29 @@ use eLife\Search\Indexer\ChangeSet;
 use eLife\Search\Indexer\ModelIndexer;
 use Exception;
 use Mockery;
+use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use tests\eLife\Search\ExceptionNullLogger;
 
 final class IndexerTest extends TestCase
 {
-    protected $elastic;
-    protected $validator;
-    protected $mockArticleIndexer;
+    protected MockInterface&MappedElasticsearchClient $elastic;
+    protected MockInterface&HasSearchResultValidator $validator;
+    protected MockInterface&ModelIndexer $mockArticleIndexer;
     protected $indexer;
 
     protected function setUp(): void
     {
-        $this->elastic = Mockery::mock(MappedElasticsearchClient::class);
-        $this->validator = Mockery::mock(HasSearchResultValidator::class);
-        $this->mockArticleIndexer = Mockery::mock(ModelIndexer::class);
+        /** @var MockInterface&MappedElasticsearchClient $elastic */
+        $elastic = Mockery::mock(MappedElasticsearchClient::class);
+        $this->elastic = $elastic;
+        /** @var MockInterface&HasSearchResultValidator $validator */
+        $validator = Mockery::mock(HasSearchResultValidator::class);
+        $this->validator = $validator;
+        /** @var MockInterface&ModelIndexer $mockArticleIndexer */
+        $mockArticleIndexer = Mockery::mock(ModelIndexer::class);
+        $this->mockArticleIndexer = $mockArticleIndexer;
 
         $logger = new ExceptionNullLogger();
 
@@ -63,7 +70,9 @@ final class IndexerTest extends TestCase
     public function testSkipInsert()
     {
         $entity = $this->getMockEntity();
-        $this->mockArticleIndexer->shouldReceive('prepareChangeSet')
+        /** @var \Mockery\Expectation $prepareChangeSetExpectation */
+        $prepareChangeSetExpectation = $this->mockArticleIndexer->shouldReceive('prepareChangeSet');
+        $prepareChangeSetExpectation
             ->once()
             ->with($entity)
             ->andReturn(new ChangeSet());
@@ -81,22 +90,32 @@ final class IndexerTest extends TestCase
         $entity = $this->getMockEntity();
         $changeSet = new ChangeSet();
         $changeSet->addInsert('article/1', '{}');
-        $this->mockArticleIndexer->shouldReceive('prepareChangeSet')
+
+        /** @var \Mockery\Expectation $prepareChangeSetExpectation */
+        $prepareChangeSetExpectation = $this->mockArticleIndexer->shouldReceive('prepareChangeSet');
+        $prepareChangeSetExpectation
             ->once()
             ->with($entity)
             ->andReturn($changeSet);
         $this->elastic->shouldReceive('indexJsonDocument');
         $document = Mockery::mock(IsDocumentResponse::class);
-        $this->elastic->shouldReceive('getDocumentById')
+
+        /** @var \Mockery\Expectation $getDocumentByIdExpectation */
+        $getDocumentByIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByIdExpectation
             ->once()
             ->with($entity->getIdentifier()->__toString())
             ->andReturn($document);
+
         /** @var \Mockery\Expectation $unwrapExpectation */
         $unwrapExpectation = $document->shouldReceive('unwrap');
         $unwrapExpectation
             ->once()
             ->andReturn([]);
-        $this->validator->shouldReceive('validateSearchResult')
+
+        /** @var \Mockery\Expectation $validateSearchResultExpectation */
+        $validateSearchResultExpectation = $this->validator->shouldReceive('validateSearchResult');
+        $validateSearchResultExpectation
             ->once()
             ->andReturn(true);
         $this->indexer->index($entity);
@@ -112,13 +131,19 @@ final class IndexerTest extends TestCase
         $entity = $this->getMockEntity();
         $changeSet = new ChangeSet();
         $changeSet->addInsert('article/1', '{}');
-        $this->mockArticleIndexer->shouldReceive('prepareChangeSet')
+
+        /** @var \Mockery\Expectation $prepareChangeSetExpectation */
+        $prepareChangeSetExpectation = $this->mockArticleIndexer->shouldReceive('prepareChangeSet');
+        $prepareChangeSetExpectation
             ->once()
             ->with($entity)
             ->andReturn($changeSet);
         $this->elastic->shouldReceive('indexJsonDocument');
         $document = Mockery::mock(IsDocumentResponse::class);
-        $this->elastic->shouldReceive('getDocumentById')
+
+        /** @var \Mockery\Expectation $getDocumentByIdExpectation */
+        $getDocumentByIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByIdExpectation
             ->once()
             ->with($entity->getIdentifier()->__toString())
             ->andReturn($document);
@@ -127,10 +152,15 @@ final class IndexerTest extends TestCase
         $unwrapExpectation
             ->once()
             ->andReturn([]);
-        $this->validator->shouldReceive('validateSearchResult')
+        /** @var \Mockery\Expectation $validateSearchResultExpectation */
+        $validateSearchResultExpectation = $this->validator->shouldReceive('validateSearchResult');
+        $validateSearchResultExpectation
             ->once()
             ->andThrow(Exception::class);
-        $this->elastic->shouldReceive('deleteDocument')
+
+        /** @var \Mockery\Expectation $deleteDocumentExpectation */
+        $deleteDocumentExpectation = $this->elastic->shouldReceive('deleteDocument');
+        $deleteDocumentExpectation
             ->once()
             ->with($entity->getIdentifier()->__toString());
         $this->expectException(\Exception::class);
@@ -147,25 +177,38 @@ final class IndexerTest extends TestCase
         $changeSet = new ChangeSet();
         $changeSet->addInsert('article/1', '{}');
         $changeSet->addDelete('reviewed-preprint/1');
-        $this->mockArticleIndexer->shouldReceive('prepareChangeSet')
+        /** @var \Mockery\Expectation $prepareChangeSetExpectation */
+        $prepareChangeSetExpectation = $this->mockArticleIndexer->shouldReceive('prepareChangeSet');
+        $prepareChangeSetExpectation
             ->once()
             ->with($entity)
             ->andReturn($changeSet);
         $this->elastic->shouldReceive('indexJsonDocument');
         $document = Mockery::mock(IsDocumentResponse::class);
-        $this->elastic->shouldReceive('getDocumentById')
+
+        /** @var \Mockery\Expectation $getDocumentByIdExpectation */
+        $getDocumentByIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByIdExpectation
             ->once()
             ->with($entity->getIdentifier()->__toString())
             ->andReturn($document);
+
         /** @var \Mockery\Expectation $unwrapExpectation */
         $unwrapExpectation = $document->shouldReceive('unwrap');
         $unwrapExpectation
             ->once()
             ->andReturn([]);
-        $this->validator->shouldReceive('validateSearchResult')
+
+
+        /** @var \Mockery\Expectation $validateSearchResultExpectation */
+        $validateSearchResultExpectation = $this->validator->shouldReceive('validateSearchResult');
+        $validateSearchResultExpectation
             ->once()
             ->andReturn(true);
-        $this->elastic->shouldReceive('deleteDocument')
+
+        /** @var \Mockery\Expectation $deleteDocumentExpectation */
+        $deleteDocumentExpectation = $this->elastic->shouldReceive('deleteDocument');
+        $deleteDocumentExpectation
             ->once()
             ->with('reviewed-preprint/1');
         $this->indexer->index($entity);
