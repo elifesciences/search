@@ -8,7 +8,7 @@ use eLife\ApiClient\HttpClient as ApiHttpClient;
 
 trait HttpClient
 {
-    public static ApiHttpClient $httpClient;
+    public static ApiHttpClient|null $httpClient = null;
 
     final protected static function getHttpClient() : ApiHttpClient
     {
