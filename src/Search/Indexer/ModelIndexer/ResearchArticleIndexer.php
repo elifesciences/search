@@ -26,7 +26,7 @@ final class ResearchArticleIndexer extends AbstractModelIndexer
     }
 
     /**
-     * @param ResearchArticle $article
+     * @param ArticleVersion $article
      * @return ChangeSet
      */
     public function prepareChangeSet(Model $article) : ChangeSet
