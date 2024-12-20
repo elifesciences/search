@@ -72,7 +72,7 @@ final class IndexerTest extends TestCase
         $this->indexer->index($entity);
 
         // added to remove risky flag from this test, as all the assertions are done at `tearDown()`
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     #[Test]
@@ -102,7 +102,7 @@ final class IndexerTest extends TestCase
         $this->indexer->index($entity);
 
         // added to remove risky flag from this test, as all the assertions are done at `tearDown()`
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
 
@@ -137,7 +137,7 @@ final class IndexerTest extends TestCase
         $this->indexer->index($entity);
 
         // added to remove risky flag from this test, as all the assertions are done at `tearDown()`
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 
     #[Test]
@@ -171,6 +171,6 @@ final class IndexerTest extends TestCase
         $this->indexer->index($entity);
 
         // added to remove risky flag from this test, as all the assertions are done at `tearDown()`
-        $this->assertTrue(true);
+        $this->expectNotToPerformAssertions();
     }
 }
