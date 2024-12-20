@@ -12,9 +12,8 @@ final class HitItem
      * @Type("array")
      * @SerializedName("_source")
      * @Accessor(setter="setSource")
-     * @var array<string, mixed> $_source
      */
-    public array $_source;
+    public string $_source;
 
     public function setSource(array $_source)
     {

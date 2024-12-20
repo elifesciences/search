@@ -16,7 +16,7 @@ final class Hits
      * @Type("float")
      * @SerializedName("max_score")
      */
-    public float $maxScore;
+    public float|null $maxScore;
 
     /**
      * @Type("array<eLife\Search\Api\Elasticsearch\ResponsePartials\HitItem>")
