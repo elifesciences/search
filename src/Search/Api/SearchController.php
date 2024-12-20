@@ -46,12 +46,16 @@ final class SearchController
         $this->elasticIndex = $elasticIndex;
     }
 
-    private function validateDateRange(DateTimeImmutable $startDateTime = null, DateTimeImmutable $endDateTime = null)
+    private function validateDateRange(DateTimeImmutable|false $startDateTime = null, DateTimeImmutable|false $endDateTime = null)
     {
-        if ($endDateTime === null || $startDateTime === null) {
+        if ($endDateTime === null && $startDateTime === null) {
+            return;
+        }
+
+        if ($endDateTime === false || $startDateTime === false) {
             throw new BadRequestHttpException('Invalid date provided');
         }
-        if (1 === $startDateTime->diff($endDateTime)->invert) {
+        if (($endDateTime && $startDateTime) && 1 === $startDateTime->diff($endDateTime)->invert) {
             throw new BadRequestHttpException('start-date must be the same or before end-date');
         }
     }
