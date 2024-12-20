@@ -25,11 +25,6 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @property LoggerInterface temp_logger
- * @property float|int       previousProgress
- * @property ProgressBar     progress
- */
 final class Console
 {
     private $console;
