@@ -19,7 +19,7 @@ final class ResearchArticleIndexerTest extends TestCase
     use CallSerializer;
     use ModelProvider;
 
-    private MockInterface & MappedElasticsearchClient $elastic;
+    private MockInterface|MappedElasticsearchClient $elastic;
 
     private ResearchArticleIndexer $indexer;
 

@@ -17,7 +17,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
     use CallSerializer;
     use ModelProvider;
 
-    private MockInterface & MappedElasticsearchClient $elastic;
+    private MockInterface|MappedElasticsearchClient $elastic;
 
     private ReviewedPreprintIndexer $indexer;
 
