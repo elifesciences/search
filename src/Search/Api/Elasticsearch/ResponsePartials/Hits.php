@@ -20,7 +20,7 @@ final class Hits
 
     /**
      * @Type("array<eLife\Search\Api\Elasticsearch\ResponsePartials\HitItem>")
-     * @var array<\eLife\Search\Api\Elasticsearch\ResponsePartials\HitItem> $hits
+     * @var array<HitItem> $hits
      */
     public array $hits;
 
