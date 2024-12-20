@@ -20,16 +20,16 @@ final class ElasticsearchDiscriminator implements EventSubscriberInterface
      * The class may be omitted if the class wants to subscribe to events of all classes.
      * Same goes for the format key.
      *
-     * @return array
+     * @return array<array<string, string>>
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ['event' => Events::PRE_DESERIALIZE, 'method' => 'onPreDeserialize'],
         ];
     }
 
-    public function onPreDeserialize(PreDeserializeEvent $event)
+    public function onPreDeserialize(PreDeserializeEvent $event): void
     {
         $data = $event->getData();
 
