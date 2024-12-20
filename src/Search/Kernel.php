@@ -98,7 +98,6 @@ final class Kernel implements MinimalKernel
             'process_memory_limit' => 256,
             'aws' => array_merge([
                 'credential_file' => false,
-                'mock_queue' => true,
                 'queue_name' => 'search--dev',
                 'key' => '-----------------------',
                 'secret' => '-------------------------------',
@@ -427,24 +426,10 @@ final class Kernel implements MinimalKernel
         };
 
         $container['console.queue.watch'] = function (Container $container) {
-            $mock_queue = $container['config']['aws']['mock_queue'] ?? false;
-            if ($mock_queue) {
-                return new QueueWatchCommand(
-                    $container['mocks.queue'],
-                    $container['mocks.queue_transformer'],
-                    $container['indexer'],
-                    true,
-                    $container['logger'],
-                    $container['monitoring'],
-                    $container['limit.long_running']
-                );
-            }
-
             return new QueueWatchCommand(
                 $container['aws.queue'],
                 $container['aws.queue_transformer'],
                 $container['indexer'],
-                false,
                 $container['logger'],
                 $container['monitoring'],
                 $container['limit.long_running']
