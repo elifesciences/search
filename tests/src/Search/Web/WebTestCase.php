@@ -6,15 +6,13 @@ use eLife\Search\Kernel;
 use RuntimeException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Silex\WebTestCase as SilexWebTestCase;
+use Symfony\Component\HttpKernel\HttpKernelBrowser;
 
 abstract class WebTestCase extends SilexWebTestCase
 {
-    /** @var Kernel */
-    protected $kernel;
+    protected Kernel $kernel;
 
-    /** @var Client */
-    protected $api;
-
+    protected HttpKernelBrowser $api;
 
     /**
      * Creates the application.
