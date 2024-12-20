@@ -5,6 +5,7 @@ namespace eLife\Search\Queue\Command;
 use DateTimeImmutable;
 use eLife\ApiSdk\ApiSdk;
 use eLife\ApiSdk\Collection\Sequence;
+use eLife\Bus\Limit\Limit;
 use eLife\Bus\Queue\InternalSqsMessage;
 use eLife\Bus\Queue\WatchableQueue;
 use eLife\Logging\Monitoring;
@@ -32,29 +33,18 @@ final class ImportCommand extends Command
         'ReviewedPreprints',
     ];
 
-    private $sdk;
-    private $output;
-    private $logger;
-    private $monitoring;
-    private $queue;
-    private $limit;
-    private $dateFrom = null;
-    private $useDate = null;
-    private $applyLimit = null;
+    private OutputInterface $output;
+    private DateTimeImmutable|null $dateFrom = null;
+    private string|null $useDate = null;
+    private int|null $applyLimit = null;
 
     public function __construct(
-        ApiSdk $sdk,
-        WatchableQueue $queue,
-        LoggerInterface $logger,
-        Monitoring $monitoring,
-        callable $limit
+        private ApiSdk $sdk,
+        private WatchableQueue $queue,
+        private LoggerInterface $logger,
+        private Monitoring $monitoring,
+        private Limit $limit,
     ) {
-        $this->sdk = $sdk;
-        $this->queue = $queue;
-        $this->logger = $logger;
-        $this->monitoring = $monitoring;
-        $this->limit = $limit;
-
         parent::__construct(null);
     }
 
