@@ -22,23 +22,20 @@ use Symfony\Component\Serializer\Serializer;
 
 class Indexer
 {
-    private $logger;
-    private $client;
-    private $validator;
-    private $modelIndexer;
-
+    /**
+     * @param array<string,ModelIndexer> $modelIndexer
+     */
     public function __construct(
-        LoggerInterface $logger,
-        MappedElasticsearchClient $client,
-        HasSearchResultValidator $validator,
-        array $modelIndexer = []
+        private LoggerInterface $logger,
+        private MappedElasticsearchClient $client,
+        private HasSearchResultValidator $validator,
+        private array $modelIndexer = []
     ) {
-        $this->logger = $logger;
-        $this->client = $client;
-        $this->validator = $validator;
-        $this->modelIndexer = $modelIndexer;
     }
-
+    /**
+     * @param mixed $rdsArticles
+     * @return array<string,ModelIndexer>
+     */
     public static function getDefaultModelIndexers(Serializer $serializer, MappedElasticsearchClient $client, $rdsArticles) : array
     {
         return [
@@ -52,7 +49,9 @@ class Indexer
 
         ];
     }
-
+    /**
+     * @param mixed $type
+     */
     public function getModelIndexer($type): ModelIndexer
     {
         if (!isset($this->modelIndexer[$type])) {
@@ -61,7 +60,9 @@ class Indexer
 
         return $this->modelIndexer[$type];
     }
-
+    /**
+     * @param mixed $entity
+     */
     public function index($entity): ChangeSet
     {
         if (!$entity instanceof Model || !$entity instanceof HasIdentifier) {
@@ -115,7 +116,9 @@ class Indexer
 
         return $changeSet;
     }
-
+    /**
+     * @return array<string,string>
+     */
     public function insert(string $json, string $id)
     {
         // Insert the document.
