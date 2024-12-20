@@ -21,7 +21,7 @@ class BuildIndexCommand extends Command
         parent::__construct(null);
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('search:setup')
