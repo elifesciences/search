@@ -27,12 +27,34 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class Console
 {
-    private $console;
-    private $kernel;
-    private $config;
-    private $logger;
-    private $root;
+    private string $root;
 
+    public function __construct(
+        private Application $console,
+        private Kernel $kernel,
+        private LoggerInterface $logger,
+        private array $config
+    ) {
+        $this->console = $console;
+        $this->kernel = $kernel;
+        $this->config = $config;
+        $this->logger = $logger;
+        $this->root = __DIR__.'/../..';
+
+        // TODO: remove when it is *never* passed in by the formula or anything else
+        $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_OPTIONAL, 'The Environment name. Deprecated and not used', 'dev'));
+
+        // Add commands from the DI container. (for more complex commands.)
+        try {
+                $this->console->addCommands([
+                    $this->kernel->get('console.queue.import'),
+                    $this->kernel->get('console.queue.watch'),
+                    $this->kernel->get('console.build_index'),
+                ]);
+        } catch (SqsException $e) {
+            $this->logger->debug('Cannot connect to SQS so some commands are not available', ['exception' => $e]);
+        }
+    }
     /**
      * These commands map to [name]Command so when the command "hello" is configured
      * it will call helloCommand() on this class with InputInterface and OutputInterface
@@ -288,29 +310,6 @@ final class Console
             }
             $this->logger->info("Deleting index {$indexName}");
             $client->deleteIndex($indexName);
-        }
-    }
-
-    public function __construct(Application $console, Kernel $kernel, LoggerInterface $logger, array $config)
-    {
-        $this->console = $console;
-        $this->kernel = $kernel;
-        $this->config = $config;
-        $this->logger = $logger;
-        $this->root = __DIR__.'/../..';
-
-        // TODO: remove when it is *never* passed in by the formula or anything else
-        $this->console->getDefinition()->addOption(new InputOption('--env', '-e', InputOption::VALUE_OPTIONAL, 'The Environment name. Deprecated and not used', 'dev'));
-
-        // Add commands from the DI container. (for more complex commands.)
-        try {
-                $this->console->addCommands([
-                    $this->kernel->get('console.queue.import'),
-                    $this->kernel->get('console.queue.watch'),
-                    $this->kernel->get('console.build_index'),
-                ]);
-        } catch (SqsException $e) {
-            $this->logger->debug('Cannot connect to SQS so some commands are not available', ['exception' => $e]);
         }
     }
 
