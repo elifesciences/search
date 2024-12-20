@@ -34,7 +34,7 @@ final class SearchResponseSerializer implements SerializerInterface
     /**
      * Deserialize json encoded string into an associative array.
      *
-     * @param string $data    JSON encoded string
+     * @param string $json    JSON encoded string
      * @param array  $headers Response Headers
      *
      * @return array
