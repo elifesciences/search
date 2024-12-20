@@ -17,8 +17,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 abstract class ElasticTestCase extends WebTestCase
 {
-    protected $console;
-
     protected MappedElasticsearchClient $mappedClient;
 
     protected PlainElasticsearchClient $plainClient;
