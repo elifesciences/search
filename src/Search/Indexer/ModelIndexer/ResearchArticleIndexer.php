@@ -12,12 +12,11 @@ use Symfony\Component\Serializer\Serializer;
 
 final class ResearchArticleIndexer extends AbstractModelIndexer
 {
-    private $rdsArticles;
-
-    public function __construct(Serializer $serializer, array $rdsArticles = [])
-    {
+    public function __construct(
+        Serializer $serializer,
+        private array $rdsArticles = []
+    ) {
         parent::__construct($serializer);
-        $this->rdsArticles = $rdsArticles;
     }
 
     protected function getSdkClass(): string
