@@ -14,9 +14,9 @@ interface QueryBuilder
 
     public function setDateType(string $field) : QueryBuilder;
 
-    public function sortByRelevance($reverse = false) : QueryBuilder;
+    public function sortByRelevance(bool $reverse = false) : QueryBuilder;
 
-    public function sortByDate($reverse = false) : QueryBuilder;
+    public function sortByDate(bool $reverse = false) : QueryBuilder;
 
     public function whereSubjects(array $subjects = []) : QueryBuilder;
 

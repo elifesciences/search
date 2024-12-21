@@ -10,23 +10,23 @@ trait ResponseHits
     /**
      * @Type("integer")
      */
-    public $took;
+    public int $took;
 
     /**
      * @Type("array")
      */
-    public $aggregations;
+    public array $aggregations;
 
     /**
      * @Type("boolean")
      */
-    public $timed_out;
+    public bool $timed_out;
 
     /**
      * @Type("array")
      * @SerializedName("_shards")
      */
-    public $_shards;
+    public array $_shards;
 
     /**
      * @Type("eLife\Search\Api\Elasticsearch\ResponsePartials\Hits")

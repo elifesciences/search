@@ -11,39 +11,32 @@ use Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
+/** @package eLife\Search\Api */
 final class ApiValidator implements HasSearchResultValidator
 {
-    private $serializer;
-    private $context;
-    private $last_error;
-    private $bridge;
-    private $validator;
+    private Throwable|null $last_error;
 
     public function __construct(
-        Serializer $serializer,
-        SerializationContext $context,
-        JsonMessageValidator $validator,
-        PsrHttpFactory $bridge
+        private Serializer $serializer,
+        private SerializationContext $context,
+        private JsonMessageValidator $validator,
+        private PsrHttpFactory $bridge
     ) {
-        $this->validator = $validator;
-        $this->bridge = $bridge;
-        $this->serializer = $serializer;
-        $this->context = $context;
     }
 
-    public function deserialize($item, $classname)
+    public function deserialize(string $item, string $classname): mixed
     {
         return $this->serializer->deserialize($item, $classname, 'json');
     }
 
-    public function serialize($data)
+    public function serialize(mixed $data): string
     {
         $context = clone $this->context;
 
         return $this->serializer->serialize($data, 'json', $context);
     }
 
-    public function validateSearchResult($result, $strict = false) : bool
+    public function validateSearchResult(mixed $result, bool $strict = false) : bool
     {
         $searchResponse = new SearchResponse([$result], 1, [
             [
@@ -61,20 +54,12 @@ final class ApiValidator implements HasSearchResultValidator
         return $isValid;
     }
 
-    public function validateSearchResponse($data, int $version = null, $group = null) : bool
+    private function validateSearchResponse(SearchResponse $data) : bool
     {
         $context = clone $this->context;
-        if ($version) {
-            $context->setVersion($version);
-        }
-        if ($group) {
-            $context->setGroups([$group]);
-        }
         $headers = [];
         $json = $this->serializer->serialize($data, 'json', $context);
-        if ($data instanceof HasHeaders) {
-            $headers = $data->getHeaders();
-        }
+        $headers = $data->getHeaders();
 
         return $this->validate(new Response($json, 200, $headers));
     }
@@ -95,7 +80,7 @@ final class ApiValidator implements HasSearchResultValidator
         return $pass;
     }
 
-    public function getLastError()
+    public function getLastError(): Throwable|null
     {
         return $this->last_error;
     }

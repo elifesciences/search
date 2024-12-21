@@ -26,24 +26,13 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 final class SearchController
 {
-    private $serializer;
-    private $client;
-    private $context;
-    private $elasticIndex;
-    private $logger;
-
     public function __construct(
-        Serializer $serializer,
-        LoggerInterface $logger,
-        SerializationContext $context,
-        MappedElasticsearchClient $client,
-        string $elasticIndex
+        private Serializer $serializer,
+        private LoggerInterface $logger,
+        private SerializationContext $context,
+        private MappedElasticsearchClient $client,
+        private string $elasticIndex
     ) {
-        $this->serializer = $serializer;
-        $this->logger = $logger;
-        $this->context = $context;
-        $this->client = $client;
-        $this->elasticIndex = $elasticIndex;
     }
 
     private function validateDateRange(DateTimeImmutable|false $startDateTime = null, DateTimeImmutable|false $endDateTime = null)

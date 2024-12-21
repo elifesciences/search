@@ -5,6 +5,7 @@ namespace test\eLife\Search\Api\Elasticsearch;
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -26,6 +27,7 @@ class MappedElasticsearchClientTest extends TestCase
     #[Test]
     public function testGetDocumentById()
     {
+        $mockDocumentResponse = Mockery::mock(ElasticResponse::class);
         /** @var \Mockery\Expectation $getExpectation */
         $getExpectation = $this->client->shouldReceive('get');
         $getExpectation
@@ -34,9 +36,9 @@ class MappedElasticsearchClientTest extends TestCase
                 'id' => 'id',
                 'client' => [],
             ])
-            ->andReturn(['payload' => 'found']);
+            ->andReturn(['payload' => $mockDocumentResponse]);
 
-        $this->assertSame('found', $this->elasticsearchClient->getDocumentById('id'));
+        $this->assertSame($mockDocumentResponse, $this->elasticsearchClient->getDocumentById('id'));
 
         /** @var \Mockery\Expectation $getExpectation */
         $getExpectation = $this->client->shouldReceive('get');
@@ -46,9 +48,9 @@ class MappedElasticsearchClientTest extends TestCase
                 'id' => 'id',
                 'client' => [],
             ])
-            ->andReturn(['payload' => 'found']);
+            ->andReturn(['payload' => $mockDocumentResponse]);
 
-        $this->assertSame('found', $this->elasticsearchClient->getDocumentById('id', 'override-index'));
+        $this->assertSame($mockDocumentResponse, $this->elasticsearchClient->getDocumentById('id', 'override-index'));
 
         /** @var \Mockery\Expectation $getExpectation */
         $getExpectation = $this->client->shouldReceive('get');

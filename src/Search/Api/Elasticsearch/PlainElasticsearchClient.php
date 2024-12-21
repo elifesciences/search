@@ -16,7 +16,7 @@ class PlainElasticsearchClient
         $this->index = $index;
     }
 
-    public function defaultIndex(string $indexName)
+    public function defaultIndex(string $indexName): void
     {
         $this->index = $indexName;
     }
@@ -26,6 +26,7 @@ class PlainElasticsearchClient
         return $this->index;
     }
 
+    /** @return array<string> */
     public function allIndexes() : array
     {
         $indexes = $this->libraryClient->cat()->indices(['h' => 'index']);
@@ -34,7 +35,7 @@ class PlainElasticsearchClient
         }, $indexes);
     }
 
-    public function createIndex(string $indexName = null, $additionalParams = [])
+    public function createIndex(string $indexName = null, mixed $additionalParams = []): void
     {
         $params = array_merge(
             [
@@ -49,7 +50,7 @@ class PlainElasticsearchClient
         ]);
     }
 
-    public function deleteIndex(string $indexName = null)
+    public function deleteIndex(string $indexName = null): void
     {
         $indexName = $indexName ?? $this->index;
 
@@ -61,21 +62,21 @@ class PlainElasticsearchClient
         $this->libraryClient->indices()->delete($params);
     }
 
-    public function indexCount(string $indexName = null)
+    public function indexCount(string $indexName = null): int
     {
         return $this->libraryClient->count([
             'index' => $indexName ?? $this->index,
         ])['count'];
     }
 
-    public function indexExists(string $indexName = null)
+    public function indexExists(string $indexName = null): bool
     {
         return $this->libraryClient->indices()->exists([
             'index' => $indexName ?? $this->index,
         ]);
     }
 
-    public function indexJsonDocument($id, $body)
+    public function indexJsonDocument(string $id, mixed $body): mixed
     {
         $index = $this->index;
         $params = [
@@ -90,7 +91,7 @@ class PlainElasticsearchClient
         return $con;
     }
 
-    public function getDocumentById($id, $index = null)
+    public function getDocumentById(string $id, string|null $index = null): mixed
     {
         $params = [
             'index' => $index ?? $this->index,

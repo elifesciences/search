@@ -4,24 +4,24 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
 use eLife\Search\Api\Query\QueryResponse;
 
 class MappedElasticsearchClient
 {
-    private $libraryClient;
-    private $index;
-    private $forceSync;
-    private $readClientOptions;
-
-    public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $readClientOptions = [])
-    {
-        $this->libraryClient = $libraryClient;
-        $this->index = $index;
-        $this->forceSync = $forceSync;
-        $this->readClientOptions = $readClientOptions;
+    /**
+     * @param array<string, mixed> $readClientOptions
+     */
+    public function __construct(
+        private Client $libraryClient,
+        private string $index,
+        private bool $forceSync = false,
+        private array $readClientOptions = []
+    ) {
     }
 
-    public function defaultIndex(string $indexName)
+    public function defaultIndex(string $indexName): void
     {
         $this->index = $indexName;
     }
@@ -31,7 +31,7 @@ class MappedElasticsearchClient
         return $this->index;
     }
 
-    public function indexJsonDocument($id, $body, $flush = false, string $index = null)
+    public function indexJsonDocument(string $id, string $body, bool $flush = false, string $index = null): ElasticResponse
     {
         $index = $index ?? $this->index;
         $params = [
@@ -48,7 +48,10 @@ class MappedElasticsearchClient
         return $con;
     }
 
-    public function deleteDocument($id)
+    /**
+     * @return array<string, mixed>
+     */
+    public function deleteDocument(string $id): array
     {
         $params = [
             'index' => $this->index,
@@ -59,6 +62,9 @@ class MappedElasticsearchClient
         return $this->libraryClient->delete($params)['payload'] ?? null;
     }
 
+    /**
+     * @param array<string,mixed> $query
+     */
     public function searchDocuments(array $query): QueryResponse
     {
         $query['client'] = $this->readClientOptions;
@@ -66,7 +72,7 @@ class MappedElasticsearchClient
         return $this->libraryClient->search($query)['payload'] ?? null;
     }
 
-    public function getDocumentById($id, $index = null, $ignore404 = false)
+    public function getDocumentById(string $id, string|null $index = null, bool $ignore404 = false): ElasticResponse|null
     {
         $params = [
             'index' => $index ?? $this->index,
@@ -85,7 +91,10 @@ class MappedElasticsearchClient
         }
     }
 
-    public function articleExists($id, array $types): bool
+    /**
+     * @param array<int,mixed> $types
+     */
+    public function articleExists(string $id, array $types): bool
     {
         $params = [
             'index' => $this->index,

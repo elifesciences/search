@@ -13,18 +13,15 @@ use Throwable;
 
 class BuildIndexCommand extends Command
 {
-    private $client;
-    private $logger;
-
-    public function __construct(PlainElasticsearchClient $client, LoggerInterface $logger)
+    public function __construct(
+        private PlainElasticsearchClient $client,
+        private LoggerInterface $logger,
+    )
     {
-        $this->client = $client;
-        $this->logger = $logger;
-
         parent::__construct(null);
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('search:setup')

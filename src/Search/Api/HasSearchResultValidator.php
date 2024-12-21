@@ -4,5 +4,5 @@ namespace eLife\Search\Api;
 
 interface HasSearchResultValidator
 {
-    public function validateSearchResult($result, $strict) : bool;
+    public function validateSearchResult(mixed $result, bool $strict) : bool;
 }

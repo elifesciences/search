@@ -7,7 +7,7 @@ use eLife\Search\Api\Query\QueryBuilder;
 
 final class ElasticQueryBuilder implements QueryBuilder
 {
-    private $order;
+    private string $order;
 
     const PHP_DATETIME_FORMAT = 'yyyy/MM/dd HH:mm:ss';
     const ELASTIC_DATETIME_FORMAT = 'Y/m/d H:i:s';
@@ -20,7 +20,10 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     const WORD_LIMIT = 32;
 
-    private $dateType;
+    private string $dateType;
+
+    /** @var array<string, mixed> $query */
+    private array $query = [];
 
     public function __construct(string $index)
     {
@@ -53,16 +56,18 @@ final class ElasticQueryBuilder implements QueryBuilder
             ],
         ];
     }
-
-    private $query = [];
-
-    private function sort($sort = [])
+    /**
+     * @param array<string,mixed> $sort
+     */
+    private function sort(array $sort = []): void
     {
         $this->query['body']['sort'] = $this->query['body']['sort'] ?? [];
         $this->query['body']['sort'][] = $sort;
     }
-
-    private function getSort($reverse = false)
+    /**
+     * @param mixed $reverse
+     */
+    private function getSort($reverse = false): string
     {
         if ($reverse) {
             return 'desc' === $this->order ? 'asc' : 'desc';
@@ -85,12 +90,14 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
-    private function postFilter($filter)
+    private function postFilter(mixed $filter): void
     {
         $this->query['body']['post_filter']['bool']['filter'][] = $filter;
     }
-
-    private function setBoostings(array $query = [])
+    /**
+     * @param array<string,mixed> $query
+     */
+    private function setBoostings(array $query = []): void
     {
         /* Boost results based on 'type' */
         $this->query['body']['query']['bool']['should'][] = ['constant_score' => ['boost' => 2, 'filter' => ['query_string' => ['query' => 'expression-concern', 'fields' => ['type']]]]];
@@ -190,7 +197,9 @@ final class ElasticQueryBuilder implements QueryBuilder
             $string
         );
     }
-
+    /**
+     * @param mixed $overLimit
+     */
     public function applyWordLimit(string $string, &$overLimit = 0) : string
     {
         $words = preg_split('/\s+/', $string);
@@ -216,7 +225,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
-    public function sortByRelevance($reverse = false) : QueryBuilder
+    public function sortByRelevance(bool $reverse = false) : QueryBuilder
     {
         $this->sort([
             '_score' => [
@@ -227,7 +236,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
-    public function sortByDate($reverse = false) : QueryBuilder
+    public function sortByDate(bool $reverse = false) : QueryBuilder
     {
         $this->sort($this->dateQuery([
             'order' => $this->getSort($reverse),
@@ -237,6 +246,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
+    /** @param array<string> $subjects */
     public function whereSubjects(array $subjects = []) : QueryBuilder
     {
         $this->postFilter([
@@ -257,6 +267,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
+    /** @param array<string> $types */
     public function whereType(array $types = []) : QueryBuilder
     {
         $this->postFilter([
@@ -268,12 +279,14 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
+    /** @return array<string, mixed> */
     public function getRawQuery() : array
     {
         return $this->query;
     }
 
-    private function dateQuery($query)
+    /** @return array<string, mixed> */
+    private function dateQuery(mixed $query): array
     {
         $arr = [];
         $arr[$this->dateType] = $query;

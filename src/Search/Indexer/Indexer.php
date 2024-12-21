@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
 use Psr\Log\LoggerInterface;
 use InvalidArgumentException;
 use Throwable;
@@ -22,23 +23,20 @@ use Symfony\Component\Serializer\Serializer;
 
 class Indexer
 {
-    private $logger;
-    private $client;
-    private $validator;
-    private $modelIndexer;
-
+    /**
+     * @param array<string,ModelIndexer> $modelIndexer
+     */
     public function __construct(
-        LoggerInterface $logger,
-        MappedElasticsearchClient $client,
-        HasSearchResultValidator $validator,
-        array $modelIndexer = []
+        private LoggerInterface $logger,
+        private MappedElasticsearchClient $client,
+        private HasSearchResultValidator $validator,
+        private array $modelIndexer = []
     ) {
-        $this->logger = $logger;
-        $this->client = $client;
-        $this->validator = $validator;
-        $this->modelIndexer = $modelIndexer;
     }
-
+    /**
+     * @param mixed $rdsArticles
+     * @return array<string,ModelIndexer>
+     */
     public static function getDefaultModelIndexers(Serializer $serializer, MappedElasticsearchClient $client, $rdsArticles) : array
     {
         return [
@@ -52,7 +50,9 @@ class Indexer
 
         ];
     }
-
+    /**
+     * @param mixed $type
+     */
     public function getModelIndexer($type): ModelIndexer
     {
         if (!isset($this->modelIndexer[$type])) {
@@ -61,7 +61,9 @@ class Indexer
 
         return $this->modelIndexer[$type];
     }
-
+    /**
+     * @param mixed $entity
+     */
     public function index($entity): ChangeSet
     {
         if (!$entity instanceof Model || !$entity instanceof HasIdentifier) {
@@ -90,6 +92,7 @@ class Indexer
                 // Post-validation, we got a document.
                 $document = $this->client->getDocumentById($docId);
                 Assertion::isInstanceOf($document, IsDocumentResponse::class);
+                /** @var ElasticResponse&IsDocumentResponse $document */
                 $result = $document->unwrap();
 
                 //Assert that the document is valid JSON.
@@ -115,7 +118,9 @@ class Indexer
 
         return $changeSet;
     }
-
+    /**
+     * @return array<string,string>
+     */
     public function insert(string $json, string $id)
     {
         // Insert the document.
