@@ -15,6 +15,9 @@ final class SearchResponse implements ElasticResponse, QueryResponse
 
     private int $cursor = 0;
 
+    /**
+     * @return array<mixed>
+     */
     public function getResults() : array
     {
         if (null !== $this->_results) {
@@ -55,6 +58,9 @@ final class SearchResponse implements ElasticResponse, QueryResponse
         $this->cursor = 0;
     }
 
+    /**
+     * @return array<string,int>
+     */
     public function getTypeTotals() : array
     {
         if (isset($this->aggregations['type_agg']['buckets'])) {
@@ -69,6 +75,9 @@ final class SearchResponse implements ElasticResponse, QueryResponse
         return [];
     }
 
+    /**
+     * @return array<array{id: string, results: int}>
+     */
     public function getSubjects() : array
     {
         if (isset($this->aggregations['subject_agg']['name']['buckets'])) {
@@ -87,11 +96,13 @@ final class SearchResponse implements ElasticResponse, QueryResponse
         return [];
     }
 
+    /** @return array<mixed> */
     public function toArray() : array
     {
         return $this->getResults();
     }
 
+    /** @return array<mixed> */
     public function map(callable $fn) : array
     {
         return array_map($fn, $this->getResults());
