@@ -7,6 +7,7 @@ use eLife\ApiSdk\Model\Model;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\HasSearchResultValidator;
 use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
+use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
 use Psr\Log\LoggerInterface;
 use InvalidArgumentException;
 use Throwable;
@@ -91,6 +92,7 @@ class Indexer
                 // Post-validation, we got a document.
                 $document = $this->client->getDocumentById($docId);
                 Assertion::isInstanceOf($document, IsDocumentResponse::class);
+                /** @var ElasticResponse&IsDocumentResponse $document */
                 $result = $document->unwrap();
 
                 //Assert that the document is valid JSON.

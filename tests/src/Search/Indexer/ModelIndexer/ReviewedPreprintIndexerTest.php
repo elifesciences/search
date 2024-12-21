@@ -7,6 +7,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
 use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
 use Mockery;
 use Mockery\MockInterface;
@@ -96,7 +97,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
         $getDocumentByIdExpectation = $this->elastic->shouldReceive('getDocumentById');
         $getDocumentByIdExpectation
             ->with('research-article-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn('found');
+            ->andReturn(Mockery::mock(ElasticResponse::class));
 
         $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
 
@@ -117,7 +118,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
         $getDocumentByToolsAndResourcesIdExpectation = $this->elastic->shouldReceive('getDocumentById');
         $getDocumentByToolsAndResourcesIdExpectation
             ->with('tools-resources-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn('found');
+            ->andReturn(Mockery::mock(ElasticResponse::class));
 
         $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
 

@@ -9,6 +9,8 @@ use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\Response\IsDocumentResponse;
 use eLife\Search\Api\HasSearchResultValidator;
 use eLife\ApiSdk\Model\Model;
+use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
+use eLife\Search\Api\Elasticsearch\Response\SuccessResponse;
 use eLife\Search\Indexer\ChangeSet;
 use eLife\Search\Indexer\ModelIndexer;
 use Exception;
@@ -94,9 +96,14 @@ final class IndexerTest extends TestCase
             ->once()
             ->with($entity)
             ->andReturn($changeSet);
-        $this->elastic->shouldReceive('indexJsonDocument');
-        $document = Mockery::mock(IsDocumentResponse::class);
 
+        /** @var \Mockery\Expectation $indexJsonDocumentExpectation */
+        $indexJsonDocumentExpectation = $this->elastic->shouldReceive('indexJsonDocument');
+        $indexJsonDocumentExpectation
+            ->once()
+            ->andReturn(new SuccessResponse);
+
+        $document = Mockery::mock(IsDocumentResponse::class.','.ElasticResponse::class);
         /** @var \Mockery\Expectation $getDocumentByIdExpectation */
         $getDocumentByIdExpectation = $this->elastic->shouldReceive('getDocumentById');
         $getDocumentByIdExpectation
@@ -135,9 +142,14 @@ final class IndexerTest extends TestCase
             ->once()
             ->with($entity)
             ->andReturn($changeSet);
-        $this->elastic->shouldReceive('indexJsonDocument');
-        $document = Mockery::mock(IsDocumentResponse::class);
 
+        /** @var \Mockery\Expectation $indexJsonDocumentExpectation */
+        $indexJsonDocumentExpectation = $this->elastic->shouldReceive('indexJsonDocument');
+        $indexJsonDocumentExpectation
+            ->once()
+            ->andReturn(new SuccessResponse);
+
+        $document = Mockery::mock(IsDocumentResponse::class.','.ElasticResponse::class);
         /** @var \Mockery\Expectation $getDocumentByIdExpectation */
         $getDocumentByIdExpectation = $this->elastic->shouldReceive('getDocumentById');
         $getDocumentByIdExpectation
@@ -180,9 +192,14 @@ final class IndexerTest extends TestCase
             ->once()
             ->with($entity)
             ->andReturn($changeSet);
-        $this->elastic->shouldReceive('indexJsonDocument');
-        $document = Mockery::mock(IsDocumentResponse::class);
 
+        /** @var \Mockery\Expectation $indexJsonDocumentExpectation */
+        $indexJsonDocumentExpectation = $this->elastic->shouldReceive('indexJsonDocument');
+        $indexJsonDocumentExpectation
+            ->once()
+            ->andReturn(new SuccessResponse);
+
+        $document = Mockery::mock(IsDocumentResponse::class.','.ElasticResponse::class);
         /** @var \Mockery\Expectation $getDocumentByIdExpectation */
         $getDocumentByIdExpectation = $this->elastic->shouldReceive('getDocumentById');
         $getDocumentByIdExpectation
