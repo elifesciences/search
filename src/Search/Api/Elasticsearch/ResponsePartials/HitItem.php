@@ -15,11 +15,13 @@ final class HitItem
      */
     public string $_source;
 
-    public function setSource(array $_source)
+    /** @param array<mixed> $_source */
+    public function setSource(array $_source): void
     {
         $this->_source = $_source['snippet']['value'];
     }
 
+    /** @return array<mixed> */
     public function unwrap() : array
     {
         return json_decode($this->_source, true);
