@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a38dac1aecd45958ca08039a2b947dc6",
+    "content-hash": "129b5caa051b552169d09ac822f1c866",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.336.1",
+            "version": "3.336.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "bef061855d6db932aac8f354f774b9b3ad84ad14"
+                "reference": "933da0d1b9b1ac9b37d5e32e127d4581b1aabaf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/bef061855d6db932aac8f354f774b9b3ad84ad14",
-                "reference": "bef061855d6db932aac8f354f774b9b3ad84ad14",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/933da0d1b9b1ac9b37d5e32e127d4581b1aabaf6",
+                "reference": "933da0d1b9b1ac9b37d5e32e127d4581b1aabaf6",
                 "shasum": ""
             },
             "require": {
@@ -154,9 +154,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.336.1"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.336.8"
             },
-            "time": "2024-12-19T19:03:08+00:00"
+            "time": "2025-01-03T19:06:11+00:00"
         },
         {
             "name": "beberlei/assert",
