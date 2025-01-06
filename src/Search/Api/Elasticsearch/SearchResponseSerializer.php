@@ -32,12 +32,13 @@ final class SearchResponseSerializer implements SerializerInterface
      * Deserialize json encoded string into an associative array.
      *
      * @param string $json    JSON encoded string
-     * @param array  $headers Response Headers
+     * @param array<string, mixed>  $headers Response Headers
      *
-     * @return array
+     * @return array{error?: array<string, mixed>, payload: ElasticResponse}
      */
-    public function deserialize($json, $headers)
+    public function deserialize(?string $json, array $headers): array
     {
+        /** @var ElasticResponse $response */
         $response = $this->serializer->deserialize($json, ElasticResponse::class, 'json');
         // This had to be added because of ES's "array-only" error handling.
         $return = [
