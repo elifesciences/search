@@ -18,11 +18,14 @@ interface QueryBuilder
 
     public function sortByDate(bool $reverse = false) : QueryBuilder;
 
+    /** @param array<string> $subjects **/
     public function whereSubjects(array $subjects = []) : QueryBuilder;
 
+    /** @param array<string> $types **/
     public function whereType(array $types = []) : QueryBuilder;
 
     public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null) : QueryBuilder;
 
+    /** @return array<string, mixed> */
     public function getRawQuery() : array;
 }
