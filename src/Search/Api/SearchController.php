@@ -35,7 +35,7 @@ final class SearchController
     ) {
     }
 
-    private function validateDateRange(DateTimeImmutable|false $startDateTime = null, DateTimeImmutable|false $endDateTime = null)
+    private function validateDateRange(DateTimeImmutable|false $startDateTime = null, DateTimeImmutable|false $endDateTime = null): void
     {
         if ($endDateTime === null && $startDateTime === null) {
             return;
@@ -49,7 +49,7 @@ final class SearchController
         }
     }
 
-    private function createValidDateTime(string $format, string $time, $strict = true)
+    private function createValidDateTime(string $format, string $time, bool $strict = true): DateTimeImmutable
     {
         $dateTime = DateTimeImmutable::createFromFormat($format, $time, new DateTimeZone('UTC'));
         $errors = DateTimeImmutable::getLastErrors();
@@ -69,7 +69,7 @@ final class SearchController
         return $dateTime;
     }
 
-    public function indexAction(Request $request, Accept $type)
+    public function indexAction(Request $request, Accept $type): Response
     {
         $for = $request->query->get('for', '');
         $order = $request->query->get('order', 'desc');
