@@ -64,6 +64,7 @@ class MappedElasticsearchClient
 
     /**
      * @param array<string,mixed> $query
+     * @return QueryResponse<int, mixed>
      */
     public function searchDocuments(array $query): QueryResponse
     {
