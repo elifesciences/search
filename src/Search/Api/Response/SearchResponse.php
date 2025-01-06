@@ -19,7 +19,7 @@ final class SearchResponse implements HasHeaders
      * @Type("array")
      * @Since(version="1")
      * @Accessor(setter="setItems")
-     * @var array<array{}>
+     * @var array<mixed>
      */
     public array $items = [];
 
@@ -43,7 +43,7 @@ final class SearchResponse implements HasHeaders
     ];
 
     /**
-     * @param array<string, mixed> $items
+     * @param array<int, mixed> $items
      * @param array<array{id: string, name: string, results: int}> $subjects
      */
     public function __construct(array $items, int $total, array $subjects, TypesResponse $types)
