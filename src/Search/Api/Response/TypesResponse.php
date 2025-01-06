@@ -150,27 +150,27 @@ final class TypesResponse
     public int $reviewedPreprint;
 
     private function __construct(
-        $correction = 0,
-        $editorial = 0,
-        $feature = 0,
-        $insight = 0,
-        $researchAdvance = 0,
-        $researchArticle = 0,
-        $researchCommunication = 0,
-        $retraction = 0,
-        $registeredReport = 0,
-        $replicationStudy = 0,
-        $reviewArticle = 0,
-        $scientificCorrespondence = 0,
-        $shortReport = 0,
-        $toolsResources = 0,
-        $blogArticle = 0,
-        $collection = 0,
-        $interview = 0,
-        $labsPost = 0,
-        $podcastEpisode = 0,
-        $reviewedPreprint = 0,
-        $expressionConcern = 0
+        int $correction = 0,
+        int $editorial = 0,
+        int $feature = 0,
+        int $insight = 0,
+        int $researchAdvance = 0,
+        int $researchArticle = 0,
+        int $researchCommunication = 0,
+        int $retraction = 0,
+        int $registeredReport = 0,
+        int $replicationStudy = 0,
+        int $reviewArticle = 0,
+        int $scientificCorrespondence = 0,
+        int $shortReport = 0,
+        int $toolsResources = 0,
+        int $blogArticle = 0,
+        int $collection = 0,
+        int $interview = 0,
+        int $labsPost = 0,
+        int $podcastEpisode = 0,
+        int $reviewedPreprint = 0,
+        int $expressionConcern = 0
     ) {
         $this->correction = $correction;
         $this->editorial = $editorial;
@@ -195,7 +195,8 @@ final class TypesResponse
         $this->expressionConcern = $expressionConcern;
     }
 
-    public static function fromArray(array $type_totals)
+    /** @param array<string, int> $type_totals */
+    public static function fromArray(array $type_totals): self
     {
         return new static (
             $type_totals['correction'] ?? 0,
@@ -222,7 +223,8 @@ final class TypesResponse
         );
     }
 
-    public static function fromList(array $list)
+    /** @param array<SearchResult> $list */
+    public static function fromList(array $list): self
     {
         Assertion::allIsInstanceOf($list, SearchResult::class);
 
