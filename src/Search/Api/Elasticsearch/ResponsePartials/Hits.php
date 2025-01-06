@@ -24,6 +24,7 @@ final class Hits
      */
     public array $hits;
 
+    /** @return array<HitItem> */
     public function getHitItem() : array
     {
         return $this->hits;

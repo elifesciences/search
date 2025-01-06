@@ -14,6 +14,7 @@ trait ResponseHits
 
     /**
      * @Type("array")
+     * @var array<string, mixed>
      */
     public array $aggregations;
 
@@ -25,12 +26,12 @@ trait ResponseHits
     /**
      * @Type("array")
      * @SerializedName("_shards")
+     * @var array<string, mixed>
      */
     public array $_shards;
 
     /**
      * @Type("eLife\Search\Api\Elasticsearch\ResponsePartials\Hits")
-     *
      * @var Hits
      */
     public $hits;
