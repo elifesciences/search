@@ -42,7 +42,11 @@ final class SearchResponse implements HasHeaders
         ],
     ];
 
-    public function __construct(array $items, $total, $subjects, TypesResponse $types)
+    /**
+     * @param array<string, mixed> $items
+     * @param array<array{id: string, name: string, results: int}> $subjects
+     */
+    public function __construct(array $items, int $total, array $subjects, TypesResponse $types)
     {
         $this->items = $items;
         $this->total = $total;
@@ -50,7 +54,10 @@ final class SearchResponse implements HasHeaders
         $this->subjects = $subjects;
     }
 
-    public function setItems($items)
+    /**
+     * @param array<string, mixed> $items
+     */
+    public function setItems(array $items): void
     {
         $this->total = count($items);
         $this->items = $items;
