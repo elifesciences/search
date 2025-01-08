@@ -27,11 +27,11 @@ jobs:
         add-paths: composer.lock
         commit-message: |
           Update elife API packages:
-          - `elife/api` to `${{ steps.get-api-version.outputs.api-sdk-version }}`
+          - `elife/api` to `${{ steps.get-api-version.outputs.api-version }}`
           - `elife/api-sdk` to `${{ steps.get-api-sdk-version.outputs.api-sdk-version }}`
         branch: update-api-sdk
-        title: Update elife API packages(`elife/api`:`${{ steps.get-api-version.outputs.api-sdk-version }}` - `elife/api-sdk`:`${{ steps.get-api-sdk-version.outputs.api-sdk-version }}`)
+        title: Update elife API packages(`elife/api`:`${{ steps.get-api-version.outputs.api-version }}` - `elife/api-sdk`:`${{ steps.get-api-sdk-version.outputs.api-sdk-version }}`)
         body: |
           Update elife API packages:
-          - `elife/api` to `${{ steps.get-api-version.outputs.api-sdk-version }}`
+          - `elife/api` to `${{ steps.get-api-version.outputs.api-version }}`
           - `elife/api-sdk` to `${{ steps.get-api-sdk-version.outputs.api-sdk-version }}`
