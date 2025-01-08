@@ -4,9 +4,9 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
-use eLife\Search\Api\Elasticsearch\Response\DocumentResponse;
 use eLife\Search\Api\Elasticsearch\Response\ElasticResponse;
-use eLife\Search\Api\Query\QueryResponse;
+use eLife\Search\Api\Elasticsearch\Response\ErrorResponse;
+use eLife\Search\Api\Elasticsearch\Response\SearchResponse;
 
 class MappedElasticsearchClient
 {
@@ -64,9 +64,8 @@ class MappedElasticsearchClient
 
     /**
      * @param array<string,mixed> $query
-     * @return QueryResponse<int, mixed>
      */
-    public function searchDocuments(array $query): QueryResponse
+    public function searchDocuments(array $query): SearchResponse|ErrorResponse|null
     {
         $query['client'] = $this->readClientOptions;
 
