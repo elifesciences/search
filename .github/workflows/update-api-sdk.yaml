@@ -1,4 +1,4 @@
-name: Create PR to update api-sdk dependency to latest
+name: Create PR to update elife api dependencies to latest
 on:
   workflow_dispatch:
   schedule:
