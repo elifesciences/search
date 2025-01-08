@@ -10,22 +10,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - id: api-sdk-old-version
-      run: echo api-sdk-old-version=$(jq -r '.packages[]|select(.name == "elife/api-sdk").source.reference' < composer.lock) >> $GITHUB_OUTPUT
-
-    - id: api-old-version
-      run: echo api-old-version=$(jq -r '.packages[]|select(.name == "elife/api").version' < composer.lock) >> $GITHUB_OUTPUT
+    - id: old-versions
+      run: |
+        echo api-sdk-version=$(jq -r '.packages[]|select(.name == "elife/api-sdk").source.reference' < composer.lock) >> $GITHUB_OUTPUT
+        echo api-version=$(jq -r '.packages[]|select(.name == "elife/api").version' < composer.lock) >> $GITHUB_OUTPUT
 
     - name: Check for api-sdk updates
       run: |
         docker compose run --no-deps setup composer install
         docker compose run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --no-suggest --no-interaction
 
-    - id: api-sdk-new-version
-      run: echo api-sdk-new-version=$(jq -r '.packages[]|select(.name == "elife/api-sdk").source.reference' < composer.lock) >> $GITHUB_OUTPUT
-
-    - id: api-new-version
-      run: echo api-new-version=$(jq -r '.packages[]|select(.name == "elife/api").version' < composer.lock) >> $GITHUB_OUTPUT
+    - id: new-versions
+      run: |
+        echo api-sdk-version=$(jq -r '.packages[]|select(.name == "elife/api-sdk").source.reference' < composer.lock) >> $GITHUB_OUTPUT
+        echo api-version=$(jq -r '.packages[]|select(.name == "elife/api").version' < composer.lock) >> $GITHUB_OUTPUT
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v7
@@ -33,11 +31,11 @@ jobs:
         add-paths: composer.lock
         commit-message: |
           Update elife API packages:
-          - `elife/api` from `${{ steps.api-old-version.outputs.api-version }}` to `${{ steps.api-new-version.outputs.api-version }}`
-          - `elife/api-sdk` from `${{ steps.api-sdk-old-version.outputs.api-sdk-version }}` to `${{ steps.api-sdk-new-version.outputs.api-sdk-version }}`
+          - `elife/api` from `${{ steps.old-versions.outputs.api-version }}` to `${{ steps.new-versions.outputs.api-version }}`
+          - `elife/api-sdk` from `${{ steps.old-versions.outputs.api-sdk-version }}` to `${{ steps.new-versions.outputs.api-sdk-version }}`
         branch: update-api-sdk
-        title: Update elife API packages(`elife/api`:`${{ steps.get-api-version.outputs.api-version }}` - `elife/api-sdk`:`${{ steps.get-api-sdk-version.outputs.api-sdk-version }}`)
+        title: Update elife API packages(`elife/api`:`${{ steps.new-versions.outputs.api-version }}` - `elife/api-sdk`:`${{ steps.new-versions.outputs.api-sdk-version }}`)
         body: |
           Update elife API packages:
-          - `elife/api` from `${{ steps.api-old-version.outputs.api-version }}` to `${{ steps.api-new-version.outputs.api-version }}`
-          - `elife/api-sdk` from `${{ steps.api-sdk-old-version.outputs.api-sdk-version }}` to `${{ steps.api-sdk-new-version.outputs.api-sdk-version }}`
+          - `elife/api` from `${{ steps.old-versions.outputs.api-old-version }}` to `${{ steps.new-versions.outputs.api-version }}`
+          - `elife/api-sdk` from `${{ steps.old-versions.outputs.api-sdk-old-version }}` to `${{ steps.new-versions.outputs.api-sdk-version }}`
