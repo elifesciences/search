@@ -8,6 +8,10 @@
     {
       "matchPackageNames": ["ghcr.io/elifesciences/api-dummy"],
       "versioning": "loose"
+    },
+    {
+      "matchPackageNames": ["elife/api-sdk"],
+      "pinDigests": true
     }
   ]
 }
