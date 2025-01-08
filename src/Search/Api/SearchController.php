@@ -228,7 +228,7 @@ final class SearchController
     {
         $context = clone $this->context;
         if ($version) {
-            $context->setVersion($version);
+            $context->setVersion((string)$version);
         }
         if ($group) {
             $context->setGroups([$group]);
