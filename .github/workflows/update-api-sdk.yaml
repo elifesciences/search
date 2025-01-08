@@ -13,18 +13,25 @@ jobs:
     - name: Check for api-sdk updates
       run: |
         docker compose run --no-deps setup composer install
-        docker compose run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --with-dependencies --no-suggest --no-interaction
+        docker compose run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --no-suggest --no-interaction
 
     - id: get-api-sdk-version
       run: echo api-sdk-version=$(jq -r '.packages[]|select(.name == "elife/api-sdk").source.reference' < composer.lock) >> $GITHUB_OUTPUT
 
+    - id: get-api-version
+      run: echo api-version=$(jq -r '.packages[]|select(.name == "elife/api").version' < composer.lock) >> $GITHUB_OUTPUT
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v7
       with:
         add-paths: composer.lock
-        commit-message: Update api-sdk to ${{ steps.get-api-sdk-version.outputs.api-sdk-version }}
+        commit-message: |
+          Update elife API packages:
+          - `elife/api` to `${{ steps.get-api-version.outputs.api-sdk-version }}`
+          - `elife/api-sdk` to `${{ steps.get-api-sdk-version.outputs.api-sdk-version }}`
         branch: update-api-sdk
-        title: Update api-sdk to ${{ steps.get-api-sdk-version.outputs.api-sdk-version }}
+        title: Update elife API packages(`elife/api`:`${{ steps.get-api-version.outputs.api-sdk-version }}` - `elife/api-sdk`:`${{ steps.get-api-sdk-version.outputs.api-sdk-version }}`)
         body: |
-          Update the api-sdk dependency to the ${{ steps.get-api-sdk-version.outputs.api-sdk-version }}
+          Update elife API packages:
+          - `elife/api` to `${{ steps.get-api-version.outputs.api-sdk-version }}`
+          - `elife/api-sdk` to `${{ steps.get-api-sdk-version.outputs.api-sdk-version }}`
