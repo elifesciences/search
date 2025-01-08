@@ -11,8 +11,8 @@
       "versioning": "loose"
     },
     {
-      "matchPackageNames": ["elife/api-sdk"],
-      "pinDigests": true
+      "matchPackageNames": ["elife/api-sdk", "elife/api"],
+      "enabled": false
     }
   ]
 }
