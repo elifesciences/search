@@ -34,7 +34,7 @@ jobs:
           - `elife/api` from `${{ steps.old-versions.outputs.api-version }}` to `${{ steps.new-versions.outputs.api-version }}`
           - `elife/api-sdk` from `${{ steps.old-versions.outputs.api-sdk-version }}` to `${{ steps.new-versions.outputs.api-sdk-version }}`
         branch: update-api-sdk
-        title: Update elife API packages(`elife/api`:`${{ steps.new-versions.outputs.api-version }}` - `elife/api-sdk`:`${{ steps.new-versions.outputs.api-sdk-version }}`)
+        title: Update elife API packages (`elife/api`:`${{ steps.new-versions.outputs.api-version }}` - `elife/api-sdk`:`${{ steps.new-versions.outputs.api-sdk-version }}`)
         body: |
           Update elife API packages:
           - `elife/api` from `${{ steps.old-versions.outputs.api-old-version }}` to `${{ steps.new-versions.outputs.api-version }}`
