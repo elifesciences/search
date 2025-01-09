@@ -45,7 +45,7 @@ docker compose exec app bin/console queue:count
 
 To run the tests:
 ```shell
-docker compose exec app vendor/bin/phpunit
+make test
 ```
 
 To run all the project tests (inc above tests and integration tests)
