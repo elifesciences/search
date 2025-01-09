@@ -19,6 +19,12 @@ static-analysis:
 test: bring-up-all-services
 	docker compose exec app vendor/bin/phpunit
 
+.PHONY: all-tests
+all-tests: config.php
+	docker compose up app --wait
+	docker compose down queue-watcher
+	docker compose exec app bash project_tests.sh
+
 .PHONY: stop
 stop:
 	docker compose down
