@@ -48,6 +48,11 @@ To run the tests:
 make test
 ```
 
+To run additional fast checks (e.g. linting) as well as the tests:
+```shell
+make check
+```
+
 To run all the project tests (inc above tests and integration tests)
 ```shell
 docker compose down queue-watcher
