@@ -1,10 +1,15 @@
 .PHONY: dev
-dev: bring-up-app-and-queue
+dev: bring-up-app-and-queue-watcher
 	docker compose logs --follow
 
-.PHONY: bring-up-app-and-queue
-bring-up-app-and-queue: config.php
+.PHONY: bring-up-app-and-queue-watcher
+bring-up-app-and-queue-watcher: config.php
 	docker compose up --wait
+
+.PHONY: bring-up-app-without-queue-watcher
+bring-up-app-without-queue-watcher: config.php
+	docker compose up app --wait
+	docker compose down queue-watcher
 
 .PHONY: check
 check: static-analysis test
@@ -16,13 +21,11 @@ static-analysis:
 	docker compose run --rm --no-deps app vendor/bin/phpstan analyse
 
 .PHONY: test
-test: bring-up-app-and-queue
+test: bring-up-app-and-queue-watcher
 	docker compose exec app vendor/bin/phpunit
 
 .PHONY: all-tests
-all-tests: config.php
-	docker compose up app --wait
-	docker compose down queue-watcher
+all-tests: bring-up-app-without-queue-watcher
 	docker compose exec app bash project_tests.sh
 
 .PHONY: stop
