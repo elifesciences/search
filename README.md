@@ -9,13 +9,13 @@ To reliably recreate any issue experienced in CI or Prod you should continue to 
 Important: Keep in mind that docker is just used to improve the developer experience.
 
 1. Clone the project `git clone https://github.com/elifesciences/search.git`
-2. Rename `config.php.dist` on local to `config.php`
+2. Copy`config.php.dist` on local to `config.php`
 
 ### Starting the app
 
 To bring up all services, run:
 ```shell
-docker compose up
+make dev
 ```
 
 Alternatively, you can run without the SQS queue watcher by just bring up the app service:
