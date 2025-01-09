@@ -7,7 +7,10 @@ bring-up-all-services: config.php
 	docker compose up --wait
 
 .PHONY: check
-check: test
+check: static-analysis test
+
+.PHONY: static-analysis
+static-analysis:
 	docker compose run --rm --no-deps app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
 	docker compose run --rm --no-deps app vendor/bin/composer-dependency-analyser
 	docker compose run --rm --no-deps app vendor/bin/phpstan analyse
