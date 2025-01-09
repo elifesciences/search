@@ -23,7 +23,7 @@ services:
       test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
       interval: 2s
       timeout: 2s
-      retries: 10
+      retries: 50
   api-dummy:
     image: ghcr.io/elifesciences/api-dummy:20241212134226.0.0-gb4677c6-12297643528-1
     platform: linux/amd64
