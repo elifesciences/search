@@ -1,9 +1,9 @@
 .PHONY: dev
-dev: bring-up-all-services
+dev: bring-up-app-and-queue
 	docker compose logs --follow
 
-.PHONY: bring-up-all-services
-bring-up-all-services: config.php
+.PHONY: bring-up-app-and-queue
+bring-up-app-and-queue: config.php
 	docker compose up --wait
 
 .PHONY: check
@@ -16,7 +16,7 @@ static-analysis:
 	docker compose run --rm --no-deps app vendor/bin/phpstan analyse
 
 .PHONY: test
-test: bring-up-all-services
+test: bring-up-app-and-queue
 	docker compose exec app vendor/bin/phpunit
 
 .PHONY: all-tests
