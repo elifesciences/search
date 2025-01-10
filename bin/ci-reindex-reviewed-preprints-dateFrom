@@ -8,7 +8,7 @@ echo "importing reviewed preprints from 2022-07-03"
 ./bin/console queue:import ReviewedPreprints --dateFrom="2022-07-03T00:00:00Z"
 
 expected_total=$(bin/console queue:count)
-actual_total=$(curl "${GATEWAY_HOST:-"localhost:8080"}/reviewed-preprints?start-date=2022-07-03" | jq ".items | length")
+actual_total=$(curl --no-progress-meter "${GATEWAY_HOST:-"localhost:8080"}/reviewed-preprints?start-date=2022-07-03" | jq ".items | length")
 
 echo "Check if queue contains exactly $expected_total items"
 if [ ! "$expected_total" -eq "$actual_total" ]; then

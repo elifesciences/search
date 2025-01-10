@@ -5,7 +5,7 @@ port=9201
 
 while true;
 do
-    nodes=$(curl "localhost:$port/_nodes/_local" | jq ".nodes | length")
+    nodes=$(curl --no-progress-meter "localhost:$port/_nodes/_local" | jq ".nodes | length")
     if [ "$nodes" -eq 1 ]; then
         echo "OpenSearch is ready, seeing $nodes node through _nodes API"
     else
@@ -14,7 +14,7 @@ do
         continue
     fi
 
-    color=$(curl "localhost:$port/_cluster/health" | jq -r ".status")
+    color=$(curl --no-progress-meter "localhost:$port/_cluster/health" | jq -r ".status")
     if [ "$color" == "yellow" ]; then
         echo "OpenSearch is ready, seeing color $color"
     else

@@ -3,14 +3,14 @@
 # we start from an empty index
 set -e
 
-actual_total=$(curl localhost/search | jq ".total")
+actual_total=$(curl --no-progress-meter localhost/search | jq ".total")
 if [ ! "$actual_total" ]; then
     actual_total=-1
 fi
 echo "Total results in the index: $actual_total"
 gateway_total=$(bin/console gateway:total)
-gateway_search_rp=$(curl "${GATEWAY_HOST:-"localhost:8080"}/search?per-page=1&type[]=reviewed-preprint" | jq ".total")
-gateway_rp=$(curl "${GATEWAY_HOST:-"localhost:8080"}/reviewed-preprints" | jq ".total")
+gateway_search_rp=$(curl --no-progress-meter "${GATEWAY_HOST:-"localhost:8080"}/search?per-page=1&type[]=reviewed-preprint" | jq ".total")
+gateway_rp=$(curl --no-progress-meter "${GATEWAY_HOST:-"localhost:8080"}/reviewed-preprints" | jq ".total")
 # Expected total must offset reviewed-preprints which are also in article store
 expected_total=$((gateway_total + gateway_search_rp - gateway_rp))
 if [ ! "$actual_total" -eq "$expected_total" ]; then
@@ -26,8 +26,8 @@ if [ ! "$actual_total" -eq "$expected_total" ]; then
         else
             id_field=".id"
         fi
-        expected_t=$(curl "${GATEWAY_HOST:-"localhost:8080"}/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
-        actual_t=$(curl "localhost/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
+        expected_t=$(curl --no-progress-meter "${GATEWAY_HOST:-"localhost:8080"}/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
+        actual_t=$(curl --no-progress-meter "localhost/search?per-page=100&type[]=${t}" | jq ".items[] | ${id_field}" | sed 's/\"//g' | sort | awk 'ORS=","' | head -c -1)
         if [ "$actual_t" != "$expected_t" ]; then
             echo "${t} expected: \"${expected_t}\", actual: \"${actual_t}\""
         fi
@@ -39,7 +39,7 @@ if [ ! "$actual_total" -eq "$expected_total" ]; then
 fi
 
 echo "CHECK: Search for article id"
-actual_first_id=$(curl "localhost/search?for=04395&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].id")
+actual_first_id=$(curl --no-progress-meter "localhost/search?for=04395&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].id")
 expected_first_id='"04395"'
 if [ "$actual_first_id" != "$expected_first_id" ]; then
     echo "When searching for an article id, it should appear as the first result"
@@ -48,7 +48,7 @@ if [ "$actual_first_id" != "$expected_first_id" ]; then
 fi
 
 echo "CHECK: Search for article title"
-actual_first_title=$(curl "localhost/search?for=Updates%20to%20the%20zoonotic%20niche%20map%20of%20Ebola%20virus%20disease%20in%20Africa&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].title")
+actual_first_title=$(curl --no-progress-meter "localhost/search?for=Updates%20to%20the%20zoonotic%20niche%20map%20of%20Ebola%20virus%20disease%20in%20Africa&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].title")
 expected_first_title='"Updates to the zoonotic niche map of Ebola virus disease in Africa"'
 if [ "$actual_first_title" != "$expected_first_title" ]; then
     echo "When searching for an article title, it should appear as the first result"
@@ -57,7 +57,7 @@ if [ "$actual_first_title" != "$expected_first_title" ]; then
 fi
 
 echo "CHECK: Search for lead author"
-actual_author_line=$(curl "localhost/search?for=David%20Rasmussen&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].authorLine")
+actual_author_line=$(curl --no-progress-meter "localhost/search?for=David%20Rasmussen&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].authorLine")
 expected_author_line='"David A Rasmussen, Tanja Stadler"'
 if [ "$actual_author_line" != "$expected_author_line" ]; then
     echo "When searching for a lead author, their paper should appear as the first result"
@@ -66,7 +66,7 @@ if [ "$actual_author_line" != "$expected_author_line" ]; then
 fi
 
 echo "CHECK: Search for author not in authorLine"
-actual_author_non_authorline_title=$(curl "localhost/search?for=Passarelli&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].title")
+actual_author_non_authorline_title=$(curl --no-progress-meter "localhost/search?for=Passarelli&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".items[0].title")
 expected_author_non_authorline_title='"The genome sequence of the colonial chordate, <i>Botryllus schlosseri</i>"'
 if [ "$actual_author_non_authorline_title" != "$expected_author_non_authorline_title" ]; then
     echo "When searching for an author that doesn't appear in the authorLine, their paper should appear as the first result"
@@ -74,7 +74,7 @@ if [ "$actual_author_non_authorline_title" != "$expected_author_non_authorline_t
     exit 2
 fi
 
-total_with_reserved_chars=$(curl "localhost/search?for=rheumatoid%20arthritis%20(RA)&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".total")
+total_with_reserved_chars=$(curl --no-progress-meter "localhost/search?for=rheumatoid%20arthritis%20(RA)&page=1&per-page=10&sort=relevance&order=desc&use-date=default" | jq ".total")
 if [ -z "$total_with_reserved_chars" ]; then
     total_with_reserved_chars=-1
 fi
@@ -85,7 +85,7 @@ if [ "$total_with_reserved_chars" -lt 0 ]; then
 fi
 
 echo "CHECK: List of reviewed preprints by date desc default"
-actual_reviewed_preprint_title=$(curl "localhost/search?type[]=reviewed-preprint&order=desc&sort=date&per-page=100" | jq ".items[0].title")
+actual_reviewed_preprint_title=$(curl --no-progress-meter "localhost/search?type[]=reviewed-preprint&order=desc&sort=date&per-page=100" | jq ".items[0].title")
 expected_reviewed_preprint_title='"The locus coeruleus broadcasts prediction errors across the cortex to promote sensorimotor plasticity"'
 if [ "$actual_reviewed_preprint_title" != "$expected_reviewed_preprint_title" ]; then
     echo "When listing all reviewed-preprints by default date desc the most recently updated preprint should be the first result"
@@ -94,7 +94,7 @@ if [ "$actual_reviewed_preprint_title" != "$expected_reviewed_preprint_title" ];
 fi
 
 echo "CHECK: List of reviewed preprints by date desc published"
-actual_reviewed_preprint_title=$(curl "localhost/search?type[]=reviewed-preprint&order=desc&sort=date&use-date=published&per-page=100" | jq ".items[0].title")
+actual_reviewed_preprint_title=$(curl --no-progress-meter "localhost/search?type[]=reviewed-preprint&order=desc&sort=date&use-date=published&per-page=100" | jq ".items[0].title")
 expected_reviewed_preprint_title='"An example of a Reviewed preprint"'
 if [ "$actual_reviewed_preprint_title" != "$expected_reviewed_preprint_title" ]; then
     echo "When listing all reviewed-preprints by published date desc the most recently published preprint should be the first result"
@@ -104,7 +104,7 @@ fi
 
 
 echo "CHECK: Search query ignores hyphen(-)"
-actual_search_result_title=$(curl "localhost/search?for=Dehaene-Lambertz" | jq ".items[0].title")
+actual_search_result_title=$(curl --no-progress-meter "localhost/search?for=Dehaene-Lambertz" | jq ".items[0].title")
 expected_search_result_title='"Humans parsimoniously represent auditory sequences by pruning and completing the underlying network structure"'
 if [ "$actual_search_result_title" != "$expected_search_result_title" ]; then
     echo "When search query has -, it should ignore it"
