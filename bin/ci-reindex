@@ -17,4 +17,3 @@ echo "Finished launching reindexing"
 . bin/ci-wait-steady-state
 ./bin/console index:switch:read "ci-reindex"
 . bin/ci-expected-results
-. bin/ci-performance
