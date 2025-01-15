@@ -24,9 +24,12 @@ static-analysis:
 test: bring-up-app-and-queue-watcher
 	docker compose exec app vendor/bin/phpunit $(TEST)
 
+.PHONY: slow-tests
+slow-tests: bring-up-app-without-queue-watcher
+	docker compose exec app bash slow-tests.sh
+
 .PHONY: all-checks
-all-checks: bring-up-app-without-queue-watcher static-analysis test
-	docker compose exec app bash project_tests.sh
+all-checks: static-analysis test slow-tests
 
 .PHONY: stop
 stop:
