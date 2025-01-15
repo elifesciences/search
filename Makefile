@@ -22,7 +22,7 @@ static-analysis:
 
 .PHONY: test
 test: bring-up-app-and-queue-watcher
-	docker compose exec app vendor/bin/phpunit $(TEST)
+	docker compose exec app vendor/bin/phpunit --log-junit build/phpunit.xml $(TEST)
 
 .PHONY: all-tests
 all-tests: bring-up-app-without-queue-watcher
