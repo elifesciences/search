@@ -16,18 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Copy example config
-        run: cp config.php.dist config.php
-      - name: Bring up test stack
-        run: docker compose up app --wait
+      - name: Run all tests
+        run: make all-tests
       - name: Debug bring up test stack
         if: failure()
         run: docker compose logs
-      - name: Project Tests
-        run: docker compose exec app bash /app/project_tests.sh
       - name: Take down test stack
         if: always()
-        run: docker compose down
+        run: make stop
   build-and-push:
     needs: [tests]
     runs-on: ubuntu-latest
