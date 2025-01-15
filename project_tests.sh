@@ -13,11 +13,6 @@ function cleanup {
 }
 trap cleanup EXIT
 
-vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
-vendor/bin/composer-dependency-analyser
-vendor/bin/phpstan analyse
-vendor/bin/phpunit
-
 echo "Creating, deleting an index"
 bin/ci-lifecycle
 

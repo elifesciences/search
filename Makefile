@@ -25,7 +25,7 @@ test: bring-up-app-and-queue-watcher
 	docker compose exec app vendor/bin/phpunit $(TEST)
 
 .PHONY: all-checks
-all-checks: bring-up-app-without-queue-watcher
+all-checks: bring-up-app-without-queue-watcher static-analysis test
 	docker compose exec app bash project_tests.sh
 
 .PHONY: stop
