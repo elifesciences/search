@@ -32,5 +32,9 @@ all-checks: bring-up-app-without-queue-watcher
 stop:
 	docker compose down
 
+.PHONY: import-all
+import-all:
+	docker compose exec app bin/console queue:import all
+
 config.php:
 	cp config.php.dist config.php
