@@ -32,6 +32,10 @@ all-checks: bring-up-app-without-queue-watcher
 stop:
 	docker compose down
 
+.PHONY: clean
+clean:
+	docker compose down --volumes
+
 .PHONY: import-all
 import-all:
 	docker compose exec app bin/console queue:import all
