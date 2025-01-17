@@ -12,6 +12,7 @@ for i in $(seq 60); do
 
   if [ "$i" -eq "60" ]; then
     echo "FAILED"
+    cat /tmp/queue-watch.log
     exit 1
   fi
 
