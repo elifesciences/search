@@ -34,6 +34,7 @@ services:
       interval: 2s
       timeout: 2s
       retries: 10
+    stop_grace_period: 1s
   localstack:
     image: localstack/localstack:4.0.3
     environment:
@@ -87,6 +88,7 @@ services:
     tty: true
     extra_hosts:
       host.docker.internal: host-gateway
+    stop_grace_period: 1s
   queue-watcher:
     build:
       context: .
@@ -99,5 +101,6 @@ services:
     depends_on:
       setup:
         condition: service_completed_successfully
+    stop_grace_period: 1s
 volumes:
   opensearch-data1:
