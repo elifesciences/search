@@ -84,6 +84,10 @@ final class SearchController
     {
         $for = $request->query->get('for', '');
         $order = $request->query->get('order', 'desc');
+        $minSignificance = $request->query->getInt('min-significance');
+        $maxSignificance = $request->query->getInt('max-significance');
+        $minStrength = $request->query->getInt('min-strength');
+        $maxStrength = $request->query->getInt('max-strength');
         $page = $request->query->getInt('page', 1);
         $perPage = $request->query->getInt('per-page', 10);
         $useDate = $request->query->get('use-date', 'default');
@@ -137,6 +141,14 @@ final class SearchController
         }
         if (is_array($types)) {
             $query->whereType($types);
+        }
+        if ($minSignificance > 0 && $minStrength > 0) {
+            $query->whereTerms(
+                $minSignificance,
+                $minStrength,
+                $maxSignificance > $minSignificance ? $maxSignificance : null,
+                $maxStrength > $minStrength ? $maxStrength : null
+            );
         }
 
         if ($startDateTime || $endDateTime) {

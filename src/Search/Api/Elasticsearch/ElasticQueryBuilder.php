@@ -267,6 +267,36 @@ final class ElasticQueryBuilder implements QueryBuilder
 
         return $this;
     }
+    
+    public function whereTerms(int $minSignificance, int $minStrength, int $maxSignificance = null, int $maxStrength = null) : QueryBuilder
+    {
+        $significanceRange = [
+            'gte' => $minSignificance,
+        ];
+        if ($maxSignificance) {
+            $significanceRange['lte'] = $maxSignificance;
+        } 
+        $strengthRange = [
+            'gte' => $minStrength,
+        ];
+        if ($maxStrength) {
+            $strengthRange['lte'] = $maxStrength;
+        } 
+        $this->query['body']['query']['bool']['must'] = [
+            [
+                'range' => [
+                    'terms.significance' => $significanceRange,
+                ],
+            ],
+            [
+                'range' => [
+                    'terms.strength' => $strengthRange,
+                ],
+            ],
+        ];
+
+        return $this;
+    }
 
     public function getRawQuery() : array
     {

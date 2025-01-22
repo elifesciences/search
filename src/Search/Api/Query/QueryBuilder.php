@@ -22,7 +22,9 @@ interface QueryBuilder
 
     public function whereType(array $types = []) : QueryBuilder;
 
-    public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null) : QueryBuilder;
+    public function whereTerms(int $minSignificance, int $maxSignificance, int $minStrength = null, int $maxStrength = null) : QueryBuilder;
+
+    public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null) : QueryBuilder;    
 
     public function getRawQuery() : array;
 }
