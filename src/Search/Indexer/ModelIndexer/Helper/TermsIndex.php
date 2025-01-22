@@ -7,7 +7,7 @@ use eLife\ApiSdk\Model\HasElifeAssessment;
 
 trait TermsIndex
 {
-    public const TERMS_MAX_VALUE = 999;
+    protected const TERMS_MAX_VALUE = 999;
     protected $significanceTerms = [
         'landmark' => 5,
         'fundamental' => 4,
