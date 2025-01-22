@@ -41,7 +41,7 @@ import-all:
 	docker compose exec app bin/console queue:import all
 
 .PHONY: update-api-sdk
-update-api-sdk:
+update-api-sdk: config.php
 	docker compose run --no-deps setup composer install
 	docker compose run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --no-suggest --no-interaction
 
