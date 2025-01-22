@@ -22,7 +22,7 @@ trait TermsIndex
         'solid' => 3,
         'incomplete' => 2,
         'inadequate' => 1,
-        ];
+    ];
     protected $articleTypes = [
         'research-article',
         'tools-resources',
