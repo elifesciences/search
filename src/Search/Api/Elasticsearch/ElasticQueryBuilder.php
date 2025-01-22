@@ -282,16 +282,14 @@ final class ElasticQueryBuilder implements QueryBuilder
         if ($maxStrength) {
             $strengthRange['lte'] = $maxStrength;
         } 
-        $this->query['body']['query']['bool']['must'] = [
-            [
-                'range' => [
-                    'terms.significance' => $significanceRange,
-                ],
+        $this->query['body']['query']['bool']['must'][] = [
+            'range' => [
+                'terms.significance' => $significanceRange,
             ],
-            [
-                'range' => [
-                    'terms.strength' => $strengthRange,
-                ],
+        ];
+        $this->query['body']['query']['bool']['must'][] = [
+            'range' => [
+                'terms.strength' => $strengthRange,
             ],
         ];
 
