@@ -36,9 +36,10 @@ stop:
 clean:
 	docker compose down --volumes
 
+ENTITY = all
 .PHONY: import-all
 import-all:
-	docker compose exec app bin/console queue:import all
+	docker compose exec app bin/console queue:import $(ENTITY)
 
 .PHONY: update-api-sdk
 update-api-sdk: config.php
