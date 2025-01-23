@@ -23,6 +23,7 @@ trait TermsIndex
         'incomplete' => 2,
         'inadequate' => 1,
     ];
+    // @note: might be better to just add significance and strength term ratings to all research articles and then allow client to specify which types 
     protected $articleTypes = [
         'research-article',
         'tools-resources',
