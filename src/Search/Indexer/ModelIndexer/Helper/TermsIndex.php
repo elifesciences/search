@@ -26,18 +26,18 @@ trait TermsIndex
     public function termsIndexValues(HasElifeAssessment $object) {
         $strength = 0;
         $significance = 0;
+        
+        $maxLevel = function ($terms, callable $getValue) {
+            return array_reduce($terms ?? [], fn($carry, $term) => max($carry, $getValue($term)), 0);
+        };
         if ($object->getElifeAssessment()) {
-            $strength = array_reduce($object->getElifeAssessment()->getStrength() ?? [], function($carry, $term) {
-                return max($carry, $this->getStrengthValue($term));
-            }, 0);
-            $significance = array_reduce($object->getElifeAssessment()->getSignificance() ?? [], function($carry, $term) {
-                return max($carry, $this->getSignificanceValue($term));
-            }, 0);
+            $strength = $maxLevel($object->getElifeAssessment()->getStrength(), [$this, 'getStrengthValue']);
+            $significance = $maxLevel($object->getElifeAssessment()->getSignificance(), [$this, 'getSignificanceValue']);
         }
 
         return [
-            'strength' => $strength > 0 ? $strength : $this->getTermsMaxValue(),
-            'significance' => $significance > 0 ? $significance : $this->getTermsMaxValue(),
+            'strength' => $strength ?: $this->getTermsMaxValue(),
+            'significance' => $significance ?: $this->getTermsMaxValue(),
         ];
     }
 
