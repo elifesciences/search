@@ -86,7 +86,7 @@ final class SearchController
         $order = $request->query->get('order', 'desc');
         $strength = $request->query->get('strength');
         $significance = $request->query->get('significance');
-        $oldModel = $request->query->getBoolean('old');
+        $prcOnly = $request->query->get('prc');
         $page = $request->query->getInt('page', 1);
         $perPage = $request->query->getInt('per-page', 10);
         $useDate = $request->query->get('use-date', 'default');
@@ -144,7 +144,7 @@ final class SearchController
         $query->whereTerms(
             $strength,
             $significance,
-            $oldModel, 
+            isset($prcOnly),
         );
 
         if ($startDateTime || $endDateTime) {

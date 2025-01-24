@@ -3,6 +3,7 @@
 namespace eLife\Search\Indexer\ModelIndexer\Helper;
 
 use eLife\ApiSdk\Model\HasElifeAssessment;
+use eLife\ApiSdk\Model\ReviewedPreprint;
 
 trait TermsIndex
 {
@@ -24,11 +25,12 @@ trait TermsIndex
     ];
 
     public function termsIndexValues(HasElifeAssessment $object) {
-        $strength = 0;
-        $significance = 0;
+        $maxValue = $this->getTermsMaxValue();
+        $strength = $maxValue;
+        $significance = $maxValue;
         
-        $maxLevel = function ($terms, callable $getValue) {
-            return array_reduce($terms ?? [], fn($carry, $term) => max($carry, $getValue($term)), 0);
+        $maxLevel = function ($terms, callable $getValue) use ($maxValue) {
+            return array_reduce($terms ?? [], fn($carry, $term) => max($carry, $getValue($term)), 0) ?: $maxValue - 1;
         };
         if ($object->getElifeAssessment()) {
             $strength = $maxLevel($object->getElifeAssessment()->getStrength(), [$this, 'getStrengthValue']);
@@ -36,8 +38,8 @@ trait TermsIndex
         }
 
         return [
-            'strength' => $strength ?: $this->getTermsMaxValue(),
-            'significance' => $significance ?: $this->getTermsMaxValue(),
+            'strength' => $strength,
+            'significance' => $significance,
         ];
     }
 

@@ -270,13 +270,13 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
     
-    public function whereTerms(string $strength = null, string $significance = null, bool $includeOldModel = false) : QueryBuilder
+    public function whereTerms(string $strength = null, string $significance = null, bool $prcOnly = true) : QueryBuilder
     {
         $strengthRange = [];
         $significanceRange = [];
         if ($strength) {
             $strengthRange['gte'] = $this->getStrengthValue($strength);
-            if (!$includeOldModel) {
+            if ($prcOnly) {
                 $strengthRange['lt'] = $this->getTermsMaxValue();
             }
             $this->query['body']['query']['bool']['must'][] = [
@@ -287,7 +287,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         }
         if ($significance) {
             $significanceRange['gte'] = $this->getSignificanceValue($significance);
-            if (!$includeOldModel) {
+            if ($prcOnly) {
                 $significanceRange['lt'] = $this->getTermsMaxValue();
             }
             $this->query['body']['query']['bool']['must'][] = [
