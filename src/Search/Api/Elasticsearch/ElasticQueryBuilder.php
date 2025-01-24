@@ -4,9 +4,11 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use DateTimeImmutable;
 use eLife\Search\Api\Query\QueryBuilder;
+use eLife\Search\Indexer\ModelIndexer\Helper\TermsIndex;
 
 final class ElasticQueryBuilder implements QueryBuilder
 {
+    use TermsIndex;
     private $order;
 
     const PHP_DATETIME_FORMAT = 'yyyy/MM/dd HH:mm:ss';
@@ -268,30 +270,32 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
     
-    public function whereTerms(int $minSignificance, int $minStrength, int $maxSignificance = null, int $maxStrength = null) : QueryBuilder
+    public function whereTerms(string $strength = null, string $significance = null, bool $includeOldModel = false) : QueryBuilder
     {
-        $significanceRange = [
-            'gte' => $minSignificance,
-        ];
-        if ($maxSignificance) {
-            $significanceRange['lte'] = $maxSignificance;
-        } 
-        $strengthRange = [
-            'gte' => $minStrength,
-        ];
-        if ($maxStrength) {
-            $strengthRange['lte'] = $maxStrength;
-        } 
-        $this->query['body']['query']['bool']['must'][] = [
-            'range' => [
-                'terms.significance' => $significanceRange,
-            ],
-        ];
-        $this->query['body']['query']['bool']['must'][] = [
-            'range' => [
-                'terms.strength' => $strengthRange,
-            ],
-        ];
+        $strengthRange = [];
+        $significanceRange = [];
+        if ($strength) {
+            $strengthRange['gte'] = $this->getStrengthValue($strength);
+            if (!$includeOldModel) {
+                $strengthRange['lt'] = $this->getTermsMaxValue();
+            }
+            $this->query['body']['query']['bool']['must'][] = [
+                'range' => [
+                    'terms.strength' => $strengthRange,
+                ],
+            ];
+        }
+        if ($significance) {
+            $significanceRange['gte'] = $this->getSignificanceValue($significance);
+            if (!$includeOldModel) {
+                $significanceRange['lt'] = $this->getTermsMaxValue();
+            }
+            $this->query['body']['query']['bool']['must'][] = [
+                'range' => [
+                    'terms.significance' => $significanceRange,
+                ],
+            ];
+        }
 
         return $this;
     }
