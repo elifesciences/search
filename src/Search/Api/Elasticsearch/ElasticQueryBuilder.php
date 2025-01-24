@@ -272,6 +272,8 @@ final class ElasticQueryBuilder implements QueryBuilder
     
     public function whereTerms(string $strength = null, string $significance = null, bool $prcOnly = true) : QueryBuilder
     {
+        $strength = (!$strength && $prcOnly) ? 1 : $strength;
+        $significance = (!$significance && $prcOnly) ? 1 : $significance;
         $strengthRange = [];
         $significanceRange = [];
         if ($strength) {

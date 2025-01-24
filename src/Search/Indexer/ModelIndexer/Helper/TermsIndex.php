@@ -3,7 +3,6 @@
 namespace eLife\Search\Indexer\ModelIndexer\Helper;
 
 use eLife\ApiSdk\Model\HasElifeAssessment;
-use eLife\ApiSdk\Model\ReviewedPreprint;
 
 trait TermsIndex
 {
