@@ -24,7 +24,7 @@ interface QueryBuilder
 
     public function whereTerms(string $strength = null, string $significance = null, bool $prcOnly = true) : QueryBuilder;
 
-    public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null) : QueryBuilder;    
+    public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null) : QueryBuilder;
 
     public function getRawQuery() : array;
 }
