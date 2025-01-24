@@ -35,6 +35,7 @@ stop:
 .PHONY: clean
 clean:
 	docker compose down --volumes
+	rm -rf var/logs/*.json
 
 ENTITY = all
 .PHONY: import-all
