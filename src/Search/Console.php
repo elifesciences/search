@@ -310,7 +310,7 @@ final class Console
                     $this->kernel->get('console.build_index'),
                 ]);
         } catch (SqsException $e) {
-            $this->logger->debug('Cannot connect to SQS so some commands are not available', ['exception' => $e]);
+            $this->logger->info('Cannot connect to SQS so some commands are not available', ['exception' => $e]);
         }
     }
 
