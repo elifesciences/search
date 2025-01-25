@@ -94,10 +94,7 @@ final class ResearchArticleIndexer extends AbstractModelIndexer
             $changeSet->addDelete('reviewed-preprint-'.$article->getId());
         }
 
-        $terms = $this->termsIndexValues($article);
-        if ($terms) {
-            $articleObject->terms = $terms;
-        }
+        $articleObject->terms = $this->termsIndexValues($article);
 
         $articleObject->snippet = ['format' => 'json', 'value' => json_encode($snippet)];
 
