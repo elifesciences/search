@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Api\Elasticsearch;
 
+use eLife\ApiSdk\Client\PodcastEpisodes;
 use tests\eLife\Search\RamlRequirement;
 
 final class PodcastEpisodeElasticsearchTest extends ElasticsearchTestCase
@@ -11,8 +12,8 @@ final class PodcastEpisodeElasticsearchTest extends ElasticsearchTestCase
     public static function jsonProvider() : array
     {
         return [
-            [static::getFixtureWithType('podcast-episode/v1/minimum.json', 'podcast-episode')],
-            [static::getFixtureWithType('podcast-episode/v1/complete.json', 'podcast-episode')],
+            [static::getFixtureWithType('podcast-episode/v'.PodcastEpisodes::VERSION_PODCAST_EPISODE.'/minimum.json', 'podcast-episode')],
+            [static::getFixtureWithType('podcast-episode/v'.PodcastEpisodes::VERSION_PODCAST_EPISODE.'/complete.json', 'podcast-episode')],
         ];
     }
 }
