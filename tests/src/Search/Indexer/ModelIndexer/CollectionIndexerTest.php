@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use eLife\ApiSdk\Client\Collections;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +28,7 @@ final class CollectionIndexerTest extends TestCase
     protected static function getModelDefinitions(): array
     {
         return [
-            ['model' => 'collection', 'modelClass' => Collection::class, 'version' => 2]
+            ['model' => 'collection', 'modelClass' => Collection::class, 'version' => Collections::VERSION_COLLECTION]
         ];
     }
 

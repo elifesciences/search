@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use eLife\ApiSdk\Client\Interviews;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +28,7 @@ final class InterviewIndexerTest extends TestCase
     protected static function getModelDefinitions(): array
     {
         return [
-            ['model' => 'interview', 'modelClass' => Interview::class, 'version' => 1]
+            ['model' => 'interview', 'modelClass' => Interview::class, 'version' => Interviews::VERSION_INTERVIEW]
         ];
     }
 

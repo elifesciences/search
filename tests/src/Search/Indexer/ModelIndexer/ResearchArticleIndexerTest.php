@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use eLife\ApiSdk\Client\Articles;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -29,8 +30,8 @@ final class ResearchArticleIndexerTest extends TestCase
     protected static function getModelDefinitions(): array
     {
         return [
-            ['model' => 'article-vor', 'modelClass' => ArticleVoR::class, 'version' => 8],
-            ['model' => 'article-poa', 'modelClass' => ArticlePoA::class, 'version' => 4],
+            ['model' => 'article-vor', 'modelClass' => ArticleVoR::class, 'version' => Articles::VERSION_ARTICLE_VOR],
+            ['model' => 'article-poa', 'modelClass' => ArticlePoA::class, 'version' => Articles::VERSION_ARTICLE_POA],
         ];
     }
 

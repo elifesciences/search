@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use eLife\ApiSdk\Client\BlogArticles;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +28,7 @@ final class BlogArticleIndexerTest extends TestCase
     protected static function getModelDefinitions(): array
     {
         return [
-            ['model' => 'blog-article', 'modelClass' => BlogArticle::class, 'version' => 2]
+            ['model' => 'blog-article', 'modelClass' => BlogArticle::class, 'version' => BlogArticles::VERSION_BLOG_ARTICLE]
         ];
     }
 
