@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use eLife\ApiSdk\Client\PodcastEpisodes;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +28,7 @@ final class PodcastEpisodeIndexerTest extends TestCase
     protected static function getModelDefinitions(): array
     {
         return [
-            ['model' => 'podcast-episode', 'modelClass' => PodcastEpisode::class, 'version' => 1]
+            ['model' => 'podcast-episode', 'modelClass' => PodcastEpisode::class, 'version' => PodcastEpisodes::VERSION_PODCAST_EPISODE]
         ];
     }
 

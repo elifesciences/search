@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use eLife\ApiSdk\Client\ReviewedPreprints;
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -32,7 +33,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
     protected static function getModelDefinitions(): array
     {
         return [
-            ['model' => 'reviewed-preprint', 'modelClass' => ReviewedPreprint::class, 'version' => 1]
+            ['model' => 'reviewed-preprint', 'modelClass' => ReviewedPreprint::class, 'version' => ReviewedPreprints::VERSION_REVIEWED_PREPRINT]
         ];
     }
 
@@ -52,7 +53,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
 
     #[DataProvider('modelProvider')]
     #[Test]
-    public function testIndexOfPodcastEpisode(ReviewedPreprint $reviewedPreprint)
+    public function testIndexOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
         /** @var \Mockery\Expectation $getDocumentByResearchArticleIdExpectation */
         $getDocumentByResearchArticleIdExpectation = $this->elastic->shouldReceive('getDocumentById');

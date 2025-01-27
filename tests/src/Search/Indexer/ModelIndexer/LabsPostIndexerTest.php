@@ -2,6 +2,7 @@
 
 namespace tests\eLife\Search\Indexer\ModelIndexer;
 
+use eLife\ApiSdk\Client\LabsPosts;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +28,7 @@ final class LabsPostIndexerTest extends TestCase
     protected static function getModelDefinitions(): array
     {
         return [
-            ['model' => 'labs-post', 'modelClass' => LabsPost::class, 'version' => 1]
+            ['model' => 'labs-post', 'modelClass' => LabsPost::class, 'version' => LabsPosts::VERSION_POST]
         ];
     }
 
