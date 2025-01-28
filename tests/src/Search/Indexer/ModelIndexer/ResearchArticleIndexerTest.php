@@ -19,6 +19,7 @@ final class ResearchArticleIndexerTest extends TestCase
     use GetSerializer;
     use CallSerializer;
     use ModelProvider;
+    use ElifeAssessmentTermsProvider;
 
     private ResearchArticleIndexer $indexer;
 
@@ -73,6 +74,7 @@ final class ResearchArticleIndexerTest extends TestCase
         }
     }
 
+    #[Test]
     public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
     {
         $indexer = new ResearchArticleIndexer(
@@ -88,6 +90,7 @@ final class ResearchArticleIndexerTest extends TestCase
         $this->assertSame('2010-02-03T04:05:06Z', $return['sortDate']);
     }
 
+    #[Test]
     public function testRdsDateIsUsedAsTheSortDateWhenThereIsAnRdsArticle()
     {
         $indexer = new ResearchArticleIndexer(
@@ -103,7 +106,19 @@ final class ResearchArticleIndexerTest extends TestCase
         $this->assertSame('2020-09-08T07:06:05Z', $return['sortDate']);
     }
 
-    private function getArticle($id = 1, $status = 'poa')
+    #[DataProvider('elifeAssessmentTermsProvider')]
+    #[Test]
+    public function testIndexWithElifeAssessmentTerms(array $elifeAssessment, array $expected)
+    {
+        $article = $this->getArticle(2, 'vor', $elifeAssessment);
+        $changeSet = $this->indexer->prepareChangeSet($article);
+        
+        $return = json_decode($changeSet->getInserts()[0]['json'], true);
+
+        $this->assertEquals($expected, $return['terms']);
+    }
+
+    private function getArticle($id = 1, $status = 'poa', $other = [])
     {
         $sanitisedStatus = ($status === 'vor') ? 'vor' : 'poa';
 
@@ -137,6 +152,7 @@ final class ResearchArticleIndexerTest extends TestCase
                 ]
             ] : null,
             'status' => $sanitisedStatus,
+            ...$other,
         ]), ($sanitisedStatus === 'vor') ? ArticleVoR::class : ArticlePoA::class);
     }
 }
