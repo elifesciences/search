@@ -50,8 +50,9 @@ CMD ["php", "-S", "0.0.0.0:80", "-t", "./web", "./web/app_dev.php"]
 #
 FROM app AS prod
 
-ENV APACHE_DOCUMENT_ROOT /app/web
+ENV APACHE_DOCUMENT_ROOT=/app/web
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 RUN sed -ri -e 's!</VirtualHost>!\tFallbackResource app_prod.php\n</VirtualHost>!g' /etc/apache2/sites-available//000-default.conf
+RUN mkdir /app/var
 RUN chown -R www-data:www-data /app/var
