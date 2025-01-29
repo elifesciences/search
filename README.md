@@ -59,25 +59,3 @@ docker compose down queue-watcher
 docker compose exec app bash project_tests.sh
 ```
 NOTE: these integration tests require the queue watcher  to not be running so the tests can control when items are consumed. This is why we make sure to stop watcher services.
-
-### Local web app, external opensearch
-
-Port-forward the `journal--test` instance of opensearch:
-
-```shell
-kubectl port-forward service/opensearch --address 0.0.0.0 -n journal--test 9200:9200
-```
-
-Modify `$config['elastic_servers']` to point to `journal--test` opensearch in `/config.php`
-
-```shell
-'elastic_servers' => ['https://admin:admin@host.docker.internal:9200'],
-```
-
-Run the app only:
-
-```shell
-docker compose -f docker-compose.app.yaml up --wait
-```
-
-Visit: http://localhost:8888/search
