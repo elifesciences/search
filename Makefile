@@ -53,3 +53,7 @@ update-api-sdk: config.php
 
 config.php:
 	cp config.php.dist config.php
+
+.PHONY: get-name-of-one-queue-watcher-pod-in-search-test
+get-name-of-one-queue-watcher-pod-in-search-test:
+	kubectl get pods -n journal--test -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1
