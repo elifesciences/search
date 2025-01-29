@@ -44,7 +44,7 @@ import-entity: config.php bring-up-app-and-queue-watcher
 
 .PHONY: import-all-entities-in-journal-test-environment
 import-all-entities-in-journal-test-environment:
-	kubectl -n journal--test create job --from=cronjob/search-queue-import-all import-all-2025-01-29-09-58
+	kubectl -n journal--test create job --from=cronjob/search-queue-import-all import-all-$(shell date "+%Y%m%d-%H%M")
 
 .PHONY: update-api-sdk
 update-api-sdk: config.php
