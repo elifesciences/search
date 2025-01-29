@@ -1,0 +1,7 @@
+services:
+  app:
+    build:
+      target: dev
+    environment:
+      - GATEWAY_HOST=api-dummy:8080
+

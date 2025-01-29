@@ -21,9 +21,6 @@ jobs:
       - name: Debug bring up test stack
         if: failure()
         run: docker compose logs
-      - name: Take down test stack
-        if: always()
-        run: make stop
   build-and-push:
     needs: [tests]
     runs-on: ubuntu-latest
