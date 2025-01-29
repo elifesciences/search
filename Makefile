@@ -15,6 +15,10 @@ bring-up-app-without-queue-watcher: config.php
 	docker compose up app --wait
 	docker compose down queue-watcher
 
+.PHONY: build
+build:
+	docker compose build
+
 .PHONY: check
 check: static-analysis test
 
