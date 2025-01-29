@@ -24,18 +24,18 @@ static-analysis:
 test: bring-up-app-and-queue-watcher
 	docker compose exec app vendor/bin/phpunit $(TEST)
 
+.PHONY: clean
+clean:
+	docker compose down --volumes
+	rm -rf var/logs/*.json
+
 .PHONY: all-checks
-all-checks: bring-up-app-without-queue-watcher
+all-checks: clean bring-up-app-without-queue-watcher
 	docker compose exec app bash project_tests.sh
 
 .PHONY: stop
 stop:
 	docker compose down
-
-.PHONY: clean
-clean:
-	docker compose down --volumes
-	rm -rf var/logs/*.json
 
 ENTITY = all
 .PHONY: import-all
