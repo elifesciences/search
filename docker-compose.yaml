@@ -70,7 +70,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: dev
     environment:
       - GATEWAY_HOST=api-dummy:8080
     volumes:

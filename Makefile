@@ -1,54 +1,54 @@
 .PHONY: dev
 dev: bring-up-app-and-queue-watcher
-	docker compose logs --follow
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml logs --follow
 
 .PHONY: prod
 prod: bring-up-app-and-queue-watcher
-	docker compose logs --follow
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml logs --follow
 
 .PHONY: bring-up-app-and-queue-watcher
 bring-up-app-and-queue-watcher: config.php build
-	docker compose up --wait
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml up --wait
 
 .PHONY: bring-up-app-without-queue-watcher
 bring-up-app-without-queue-watcher: config.php build
-	docker compose up app --wait
-	docker compose down queue-watcher
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml up app --wait
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml down queue-watcher
 
 .PHONY: build
 build:
-	docker compose build
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml build
 
 .PHONY: check
 check: static-analysis test
 
 .PHONY: static-analysis
 static-analysis: config.php build
-	docker compose run --rm --no-deps app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
-	docker compose run --rm --no-deps app vendor/bin/composer-dependency-analyser
-	docker compose run --rm --no-deps app vendor/bin/phpstan analyse
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml run --rm --no-deps app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml run --rm --no-deps app vendor/bin/composer-dependency-analyser
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml run --rm --no-deps app vendor/bin/phpstan analyse
 
 .PHONY: test
 test: config.php bring-up-app-and-queue-watcher
-	docker compose exec app vendor/bin/phpunit $(TEST)
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml exec app vendor/bin/phpunit $(TEST)
 
 .PHONY: clean
 clean:
-	docker compose down --volumes
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml down --volumes
 	rm -rf var/logs/*.json
 
 .PHONY: all-checks
 all-checks: config.php clean bring-up-app-without-queue-watcher
-	docker compose exec app bash project_tests.sh
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml exec app bash project_tests.sh
 
 .PHONY: stop
 stop:
-	docker compose down
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml down
 
 ENTITY = all
 .PHONY: import-entity
 import-entity: config.php bring-up-app-and-queue-watcher
-	docker compose exec app bin/console queue:import $(ENTITY)
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml exec app bin/console queue:import $(ENTITY)
 
 .PHONY: import-all-entities-in-journal-test-environment
 import-all-entities-in-journal-test-environment:
@@ -56,8 +56,8 @@ import-all-entities-in-journal-test-environment:
 
 .PHONY: update-api-sdk
 update-api-sdk: config.php build
-	docker compose run --no-deps setup composer install
-	docker compose run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --no-suggest --no-interaction
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml run --no-deps setup composer install
+	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --no-suggest --no-interaction
 
 .PHONY: clean-index-for-search-test
 clean-index-for-search-test:
