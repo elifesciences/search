@@ -7,11 +7,11 @@ prod: bring-up-app-and-queue-watcher
 	docker compose logs --follow
 
 .PHONY: bring-up-app-and-queue-watcher
-bring-up-app-and-queue-watcher: config.php
+bring-up-app-and-queue-watcher: config.php build
 	docker compose up --wait
 
 .PHONY: bring-up-app-without-queue-watcher
-bring-up-app-without-queue-watcher: config.php
+bring-up-app-without-queue-watcher: config.php build
 	docker compose up app --wait
 	docker compose down queue-watcher
 
@@ -23,7 +23,7 @@ build:
 check: static-analysis test
 
 .PHONY: static-analysis
-static-analysis: config.php
+static-analysis: config.php build
 	docker compose run --rm --no-deps app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
 	docker compose run --rm --no-deps app vendor/bin/composer-dependency-analyser
 	docker compose run --rm --no-deps app vendor/bin/phpstan analyse
@@ -55,7 +55,7 @@ import-all-entities-in-journal-test-environment:
 	kubectl -n journal--test create job --from=cronjob/search-queue-import-all import-all-$(shell date "+%Y%m%d-%H%M")
 
 .PHONY: update-api-sdk
-update-api-sdk: config.php
+update-api-sdk: config.php build
 	docker compose run --no-deps setup composer install
 	docker compose run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --no-suggest --no-interaction
 
