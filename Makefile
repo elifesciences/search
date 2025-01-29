@@ -51,9 +51,9 @@ update-api-sdk: config.php
 	docker compose run --no-deps setup composer install
 	docker compose run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --no-suggest --no-interaction
 
+.PHONY: clean-index-for-search-test
+clean-index-for-search-test:
+	kubectl -n journal--test exec -it $$(kubectl get pods -n journal--test -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- ./bin/console search:setup -d
+
 config.php:
 	cp config.php.dist config.php
-
-.PHONY: connect-to-one-queue-watcher-pod-in-search-test
-connect-to-one-queue-watcher-pod-in-search-test:
-	kubectl -n journal--test exec -it $$(kubectl get pods -n journal--test -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- /bin/bash
