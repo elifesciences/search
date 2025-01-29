@@ -38,8 +38,8 @@ stop:
 	docker compose down
 
 ENTITY = all
-.PHONY: import-all
-import-all:
+.PHONY: import-entity
+import-entity: bring-up-app-and-queue-watcher
 	docker compose exec app bin/console queue:import $(ENTITY)
 
 .PHONY: update-api-sdk
