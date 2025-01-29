@@ -2,6 +2,10 @@
 dev: bring-up-app-and-queue-watcher
 	docker compose logs --follow
 
+.PHONY: prod
+prod: bring-up-app-and-queue-watcher
+	docker compose logs --follow
+
 .PHONY: bring-up-app-and-queue-watcher
 bring-up-app-and-queue-watcher: config.php
 	docker compose up --wait
