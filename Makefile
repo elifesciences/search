@@ -42,6 +42,10 @@ ENTITY = all
 import-entity: bring-up-app-and-queue-watcher
 	docker compose exec app bin/console queue:import $(ENTITY)
 
+.PHONY: import-all-entities-in-journal-test-environment
+import-all-entities-in-journal-test-environment:
+	kubectl -n journal--test create job --from=cronjob/search-queue-import-all import-all-2025-01-29-09-58
+
 .PHONY: update-api-sdk
 update-api-sdk: config.php
 	docker compose run --no-deps setup composer install
