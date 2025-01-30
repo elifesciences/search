@@ -3,8 +3,10 @@ dev: bring-up-app-and-queue-watcher
 	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml logs --follow
 
 .PHONY: prod
-prod: bring-up-app-and-queue-watcher
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml logs --follow
+prod: config.php
+	docker compose --file docker-compose.yaml --file docker-compose.prod.yaml build
+	docker compose --file docker-compose.yaml --file docker-compose.prod.yaml up --wait
+	docker compose --file docker-compose.yaml --file docker-compose.prod.yaml logs --follow
 
 .PHONY: bring-up-app-and-queue-watcher
 bring-up-app-and-queue-watcher: config.php build

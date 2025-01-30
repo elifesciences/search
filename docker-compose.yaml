@@ -49,7 +49,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: dev
     command:
       - /bin/bash
       - "-c"
@@ -59,7 +58,6 @@ services:
         php bin/console search:setup;
         php bin/console keyvalue:setup
     volumes:
-      - ./:/app
       - ./config.php:/app/config.php
     depends_on:
       opensearch:
@@ -88,10 +86,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: dev
     command: bin/console queue:watch
     volumes:
-      - ./:/app
       - ./config.php:/app/config.php
     depends_on:
       setup:
