@@ -71,7 +71,6 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/app
       - ./config.php:/app/config.php
     ports:
       - '8888:80'
