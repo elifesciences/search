@@ -92,8 +92,6 @@ properties:
     type: text
   authorResponse:
     type: text
-  elifeAssessment:
-    type: text
   publicReviews:
     type: text
   recommendationsForAuthors:
