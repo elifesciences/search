@@ -37,10 +37,10 @@ final class ArticleIndexerTest extends TestCase
 
     #[DataProvider('modelProvider')]
     #[Test]
-    public function testSerializationSmokeTest(ArticleVersion $researchArticle)
+    public function testSerializationSmokeTest(ArticleVersion $articleVersion)
     {
         // Check A to B
-        $serialized = $this->callSerialize($this->indexer, $researchArticle);
+        $serialized = $this->callSerialize($this->indexer, $articleVersion);
         /** @var ArticlePoA $deserialized */
         $deserialized = $this->callDeserialize($this->indexer, $serialized);
         $this->assertInstanceOf(ArticleVersion::class, $deserialized);
@@ -51,20 +51,20 @@ final class ArticleIndexerTest extends TestCase
 
     #[DataProvider('modelProvider')]
     #[Test]
-    public function testIndexOfResearchArticle(ArticleVersion $researchArticle)
+    public function testIndexOfArticle(ArticleVersion $articleVersion)
     {
-        $changeSet = $this->indexer->prepareChangeSet($researchArticle);
+        $changeSet = $this->indexer->prepareChangeSet($articleVersion);
 
         $this->assertCount(1, $changeSet->getInserts());
 
         $insert = $changeSet->getInserts()[0];
-        $article = $insert['json'];
+        $articleJson = $insert['json'];
         $id = $insert['id'];
-        $this->assertJson($article, 'Article is not valid JSON');
+        $this->assertJson($articleJson, 'Article is not valid JSON');
         $this->assertNotNull($id, 'An ID is required.');
         $this->assertStringStartsWith('research-article-', $id, 'ID should be assigned an appropriate prefix.');
 
-        if ($researchArticle instanceof ArticleVoR) {
+        if ($articleVersion instanceof ArticleVoR) {
             $this->assertCount(1, $changeSet->getDeletes());
             $delete = $changeSet->getDeletes()[0];
             $this->assertStringStartsWith('reviewed-preprint-', $delete, 'The ID of the delete should be assigned an appropriate prefix.');
