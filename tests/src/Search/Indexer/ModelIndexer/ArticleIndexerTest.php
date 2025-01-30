@@ -11,20 +11,20 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Indexer\ModelIndexer\ResearchArticleIndexer;
+use eLife\Search\Indexer\ModelIndexer\ArticleIndexer;
 use Mockery\MockInterface;
 
-final class ResearchArticleIndexerTest extends TestCase
+final class ArticleIndexerTest extends TestCase
 {
     use GetSerializer;
     use CallSerializer;
     use ModelProvider;
 
-    private ResearchArticleIndexer $indexer;
+    private ArticleIndexer $indexer;
 
     protected function setUp(): void
     {
-        $this->indexer = new ResearchArticleIndexer($this->getSerializer(), []);
+        $this->indexer = new ArticleIndexer($this->getSerializer(), []);
     }
 
     protected static function getModelDefinitions(): array
@@ -75,7 +75,7 @@ final class ResearchArticleIndexerTest extends TestCase
 
     public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
     {
-        $indexer = new ResearchArticleIndexer(
+        $indexer = new ArticleIndexer(
             $this->getSerializer(),
             ['article-2' => ['date' => '2020-09-08T07:06:05Z']]
         );
@@ -90,7 +90,7 @@ final class ResearchArticleIndexerTest extends TestCase
 
     public function testRdsDateIsUsedAsTheSortDateWhenThereIsAnRdsArticle()
     {
-        $indexer = new ResearchArticleIndexer(
+        $indexer = new ArticleIndexer(
             $this->getSerializer(),
             ['article-2' => ['date' => '2020-09-08T07:06:05Z']]
         );
