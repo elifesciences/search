@@ -1,4 +1,9 @@
 services:
+  setup:
+    build:
+      target: dev
+    volumes:
+      - ./:/app
   app:
     build:
       target: dev
@@ -10,3 +15,5 @@ services:
   queue-watcher:
     build:
       target: dev
+    volumes:
+      - ./:/app
