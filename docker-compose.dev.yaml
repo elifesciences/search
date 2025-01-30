@@ -4,4 +4,5 @@ services:
       target: dev
     environment:
       - GATEWAY_HOST=api-dummy:8080
-
+    volumes:
+      - ./.docker/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
