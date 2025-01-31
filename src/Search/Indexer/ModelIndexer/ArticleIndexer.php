@@ -12,6 +12,7 @@ use Symfony\Component\Serializer\Serializer;
 
 final class ArticleIndexer extends AbstractModelIndexer
 {
+    use Helper\TermsIndex;
     private $rdsArticles;
 
     public function __construct(Serializer $serializer, array $rdsArticles = [])
@@ -92,6 +93,8 @@ final class ArticleIndexer extends AbstractModelIndexer
         if ($article instanceof ArticleVoR) {
             $changeSet->addDelete('reviewed-preprint-'.$article->getId());
         }
+
+        $articleObject->terms = $this->termsIndexValues($article);
 
         $articleObject->snippet = ['format' => 'json', 'value' => json_encode($snippet)];
 

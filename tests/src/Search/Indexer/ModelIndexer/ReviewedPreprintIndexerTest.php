@@ -17,6 +17,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
     use GetSerializer;
     use CallSerializer;
     use ModelProvider;
+    use ElifeAssessmentTermsProvider;
 
     private MockInterface&MappedElasticsearchClient $elastic;
 
@@ -124,5 +125,82 @@ final class ReviewedPreprintIndexerTest extends TestCase
 
         $this->assertCount(0, $changeSet->getDeletes());
         $this->assertCount(0, $changeSet->getInserts());
+    }
+    
+    #[DataProvider('elifeAssessmentTermsProvider')]
+    #[Test]
+    public function testIndexWithElifeAssessmentTerms(array $elifeAssessment, array $expected)
+    {
+        $reviewedPreprint = $this->getReviewedPreprint(2, $elifeAssessment);
+
+        /** @var \Mockery\Expectation $getDocumentByResearchArticleIdExpectation */
+        $getDocumentByResearchArticleIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByResearchArticleIdExpectation
+            ->with('research-article-'.$reviewedPreprint->getId(), null, true)
+            ->andReturn(null);
+        /** @var \Mockery\Expectation $getDocumentByToolsAndResourcesIdExpectation */
+        $getDocumentByToolsAndResourcesIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByToolsAndResourcesIdExpectation
+            ->with('tools-resources-'.$reviewedPreprint->getId(), null, true)
+            ->andReturn(null);
+        /** @var \Mockery\Expectation $getDocumentByShortReportIdExpectation */
+        $getDocumentByShortReportIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByShortReportIdExpectation
+            ->with('short-report-'.$reviewedPreprint->getId(), null, true)
+            ->andReturn(null);
+        /** @var \Mockery\Expectation $getDocumentByResearchAdvanceIdExpectation */
+        $getDocumentByResearchAdvanceIdExpectation = $this->elastic->shouldReceive('getDocumentById');
+        $getDocumentByResearchAdvanceIdExpectation
+            ->with('research-advance-'.$reviewedPreprint->getId(), null, true)
+            ->andReturn(null);
+
+        $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
+        
+        $return = json_decode($changeSet->getInserts()[0]['json'], true);
+
+        $this->assertEquals($expected, $return['terms']);
+    }
+    
+    private function getReviewedPreprint($id = 1, array $elifeAssessment = null)
+    {
+        $fullId = 'reviewed-preprint-'.$id;
+        return $this->getSerializer()->denormalize([
+            'id' => $fullId,
+            'type' => 'reviewed-preprint',
+            'status' => 'reviewed',
+            'title' => 'Reviewed preprint',
+            'stage' => 'published',
+            'doi' => '10.7554/eLife.'.$fullId,
+            'authorLine' => 'Lee R Berger, John Hawks ... Scott A Williams',
+            'titlePrefix' => 'Title prefix',
+            'published' => '2022-08-01T00:00:00Z',
+            'reviewedDate' => '2022-08-01T00:00:00Z',
+            'versionDate' => '2022-08-01T00:00:00Z',
+            'statusDate' => '2022-08-01T00:00:00Z',
+            'volume' => 4,
+            'version' => 2,
+            'elocationId' => 'RP19560',
+            'pdf' => 'http://www.example.com/pdf',
+            'curationLabels' => [
+                'one',
+                'two',
+            ],
+            ...($elifeAssessment !== null ? $elifeAssessment : [
+                'elifeAssessment' => [
+                    'title' => 'eLife assessment title',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'Article '.$fullId.' elife assessment text',
+                        ],
+                    ],
+                    'significance' => ['landmark'],
+                    'strength' => ['solid'],
+                ],
+            ]),
+            'subjects' => [
+                ['id' => 'subject1', 'name' => 'Subject 1'],
+            ],
+        ], ReviewedPreprint::class);
     }
 }
