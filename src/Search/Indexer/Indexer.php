@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 use InvalidArgumentException;
 use Throwable;
 use Assert\Assertion;
-use eLife\Search\Indexer\ModelIndexer\ResearchArticleIndexer;
+use eLife\Search\Indexer\ModelIndexer\ArticleIndexer;
 use eLife\Search\Indexer\ModelIndexer\BlogArticleIndexer;
 use eLife\Search\Indexer\ModelIndexer\InterviewIndexer;
 use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
@@ -42,7 +42,7 @@ class Indexer
     public static function getDefaultModelIndexers(Serializer $serializer, MappedElasticsearchClient $client, $rdsArticles) : array
     {
         return [
-            'article' => new ResearchArticleIndexer($serializer, $rdsArticles),
+            'article' => new ArticleIndexer($serializer, $rdsArticles),
             'blog-article' => new BlogArticleIndexer($serializer),
             'interview' => new InterviewIndexer($serializer),
             'reviewed-preprint' => new ReviewedPreprintIndexer($serializer, $client),

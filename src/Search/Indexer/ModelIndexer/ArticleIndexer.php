@@ -10,7 +10,7 @@ use eLife\Search\Indexer\ChangeSet;
 use RuntimeException;
 use Symfony\Component\Serializer\Serializer;
 
-final class ResearchArticleIndexer extends AbstractModelIndexer
+final class ArticleIndexer extends AbstractModelIndexer
 {
     use Helper\TermsIndex;
     private $rdsArticles;

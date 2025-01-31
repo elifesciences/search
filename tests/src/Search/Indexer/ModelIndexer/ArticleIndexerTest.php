@@ -11,21 +11,21 @@ use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Indexer\ModelIndexer\ResearchArticleIndexer;
+use eLife\Search\Indexer\ModelIndexer\ArticleIndexer;
 use Mockery\MockInterface;
 
-final class ResearchArticleIndexerTest extends TestCase
+final class ArticleIndexerTest extends TestCase
 {
     use GetSerializer;
     use CallSerializer;
     use ModelProvider;
     use ElifeAssessmentTermsProvider;
 
-    private ResearchArticleIndexer $indexer;
+    private ArticleIndexer $indexer;
 
     protected function setUp(): void
     {
-        $this->indexer = new ResearchArticleIndexer($this->getSerializer(), []);
+        $this->indexer = new ArticleIndexer($this->getSerializer(), []);
     }
 
     protected static function getModelDefinitions(): array
@@ -38,10 +38,10 @@ final class ResearchArticleIndexerTest extends TestCase
 
     #[DataProvider('modelProvider')]
     #[Test]
-    public function testSerializationSmokeTest(ArticleVersion $researchArticle)
+    public function testSerializationSmokeTest(ArticleVersion $articleVersion)
     {
         // Check A to B
-        $serialized = $this->callSerialize($this->indexer, $researchArticle);
+        $serialized = $this->callSerialize($this->indexer, $articleVersion);
         /** @var ArticlePoA $deserialized */
         $deserialized = $this->callDeserialize($this->indexer, $serialized);
         $this->assertInstanceOf(ArticleVersion::class, $deserialized);
@@ -52,20 +52,20 @@ final class ResearchArticleIndexerTest extends TestCase
 
     #[DataProvider('modelProvider')]
     #[Test]
-    public function testIndexOfResearchArticle(ArticleVersion $researchArticle)
+    public function testIndexOfArticle(ArticleVersion $articleVersion)
     {
-        $changeSet = $this->indexer->prepareChangeSet($researchArticle);
+        $changeSet = $this->indexer->prepareChangeSet($articleVersion);
 
         $this->assertCount(1, $changeSet->getInserts());
 
         $insert = $changeSet->getInserts()[0];
-        $article = $insert['json'];
+        $articleJson = $insert['json'];
         $id = $insert['id'];
-        $this->assertJson($article, 'Article is not valid JSON');
+        $this->assertJson($articleJson, 'Article is not valid JSON');
         $this->assertNotNull($id, 'An ID is required.');
         $this->assertStringStartsWith('research-article-', $id, 'ID should be assigned an appropriate prefix.');
 
-        if ($researchArticle instanceof ArticleVoR) {
+        if ($articleVersion instanceof ArticleVoR) {
             $this->assertCount(1, $changeSet->getDeletes());
             $delete = $changeSet->getDeletes()[0];
             $this->assertStringStartsWith('reviewed-preprint-', $delete, 'The ID of the delete should be assigned an appropriate prefix.');
@@ -77,7 +77,7 @@ final class ResearchArticleIndexerTest extends TestCase
     #[Test]
     public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
     {
-        $indexer = new ResearchArticleIndexer(
+        $indexer = new ArticleIndexer(
             $this->getSerializer(),
             ['article-2' => ['date' => '2020-09-08T07:06:05Z']]
         );
@@ -93,7 +93,7 @@ final class ResearchArticleIndexerTest extends TestCase
     #[Test]
     public function testRdsDateIsUsedAsTheSortDateWhenThereIsAnRdsArticle()
     {
-        $indexer = new ResearchArticleIndexer(
+        $indexer = new ArticleIndexer(
             $this->getSerializer(),
             ['article-2' => ['date' => '2020-09-08T07:06:05Z']]
         );

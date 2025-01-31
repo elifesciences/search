@@ -1,0 +1,10 @@
+services:
+  setup:
+    build:
+      target: prod
+  app:
+    build:
+      target: prod
+  queue-watcher:
+    build:
+      target: prod
