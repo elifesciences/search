@@ -29,7 +29,7 @@ trait TermsIndex
         $significance = $maxValue;
         
         $maxLevel = function ($terms, callable $getValue) use ($maxValue) {
-            return array_reduce($terms ?? [], fn($carry, $term) => max($carry, $getValue($term)), 0) ?: $maxValue - 1;
+            return array_reduce($terms ?? [], fn($carry, $term) => max($carry, $getValue($term)), 0);
         };
         if ($object->getElifeAssessment()) {
             $strength = $maxLevel($object->getElifeAssessment()->getStrength(), [$this, 'getStrengthValue']);

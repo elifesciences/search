@@ -34,8 +34,8 @@ trait ElifeAssessmentTermsProvider
         yield "elife assessment, no terms" => [
             $elifeAssessment([]),
             [
-                'significance' => 998,
-                'strength' => 998,
+                'significance' => 0,
+                'strength' => 0,
             ],
         ];
         
@@ -45,7 +45,7 @@ trait ElifeAssessmentTermsProvider
             ]),
             [
                 'significance' => 2,
-                'strength' => 998,
+                'strength' => 0,
             ],
         ];
         
@@ -54,7 +54,7 @@ trait ElifeAssessmentTermsProvider
                 'strength' => ['solid'],
             ]),
             [
-                'significance' => 998,
+                'significance' => 0,
                 'strength' => 3,
             ],
         ];
