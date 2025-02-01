@@ -301,6 +301,16 @@ final class ElasticQueryBuilder implements QueryBuilder
 
         return $this;
     }
+    
+    public function whereElifeAssessmentSignificance(array $significance = []): QueryBuilder
+    {
+        return $this;
+    }
+    
+    public function whereElifeAssessmentStrength(array $strength = []): QueryBuilder
+    {
+        return $this;
+    }
 
     public function getRawQuery() : array
     {
