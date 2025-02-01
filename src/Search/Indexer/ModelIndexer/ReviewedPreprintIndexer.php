@@ -53,7 +53,6 @@ final class ReviewedPreprintIndexer extends AbstractModelIndexer
 
         $this->addSortDate($reviewedPreprintObject, $reviewedPreprint->getStatusDate());
 
-        unset($reviewedPreprintObject->elifeAssessment);
         $changeSet->addInsert(
             $reviewedPreprintObject->type.'-'.$reviewedPreprint->getId(),
             json_encode($reviewedPreprintObject),
