@@ -302,12 +302,49 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
     
-    public function whereElifeAssessmentSignificance(array $significance = []): QueryBuilder
+    private function whereElifeAssessmentTerms(string $termGroup, array $terms): QueryBuilder
     {
-        if (!empty($significance)) {
+        if (!empty($terms)) {
+            $filters = [
+                [
+                    'terms' => [
+                        'elifeAssessment.'.$termGroup => $terms,
+                    ],
+                ],
+            ];
+
+            if (in_array('not-assigned', $terms)) {
+                $filters[] = [
+                    'bool' => [
+                        'must' => [
+                            'exists' => [
+                                'field' => 'elifeAssessment',
+                            ],
+                        ],
+                        'must_not' => [
+                            'exists' => [
+                                'field' => 'elifeAssessment.'.$termGroup,
+                            ],
+                        ],
+                    ],
+                ];
+            }
+
+            if (in_array('does-not-have-elife-assessment', $terms)) {
+                $filters[] = [
+                    'bool' => [
+                        'must_not' => [
+                            'exists' => [
+                                'field' => 'elifeAssessment',
+                            ],
+                        ],
+                    ],
+                ];
+            }
+
             $this->postFilter([
-                'terms' => [
-                    'elifeAssessment.significance' => $significance,
+                'bool' => [
+                    'should' => $filters
                 ],
             ]);
         }
@@ -315,17 +352,14 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
     
+    public function whereElifeAssessmentSignificance(array $significance = []): QueryBuilder
+    {
+        return $this->whereElifeAssessmentTerms('significance', $significance);
+    }
+    
     public function whereElifeAssessmentStrength(array $strength = []): QueryBuilder
     {
-        if (!empty($strength)) {
-            $this->postFilter([
-                'terms' => [
-                    'elifeAssessment.strength' => $strength,
-                ],
-            ]);
-        }
-
-        return $this;
+        return $this->whereElifeAssessmentTerms('strength', $strength);
     }
 
     public function getRawQuery() : array
