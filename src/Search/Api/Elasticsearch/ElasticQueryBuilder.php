@@ -304,11 +304,27 @@ final class ElasticQueryBuilder implements QueryBuilder
     
     public function whereElifeAssessmentSignificance(array $significance = []): QueryBuilder
     {
+        if (!empty($significance)) {
+            $this->postFilter([
+                'terms' => [
+                    'elifeAssessment.significance' => $significance,
+                ],
+            ]);
+        }
+
         return $this;
     }
     
     public function whereElifeAssessmentStrength(array $strength = []): QueryBuilder
     {
+        if (!empty($strength)) {
+            $this->postFilter([
+                'terms' => [
+                    'elifeAssessment.strength' => $strength,
+                ],
+            ]);
+        }
+
         return $this;
     }
 
