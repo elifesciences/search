@@ -2,6 +2,9 @@
 
 namespace tests\eLife\Search\Web;
 
+use PHPUnit\Framework\Attributes\Group;
+
+#[Group('web')]
 class PingTest extends WebTestCase
 {
     public function testItIsNotCached()

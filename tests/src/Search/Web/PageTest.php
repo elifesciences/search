@@ -3,9 +3,11 @@
 namespace tests\eLife\Search\Web;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Traversable;
 
+#[Group('web')]
 final class PageTest extends ElasticTestCase
 {
     #[Test]
