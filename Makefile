@@ -22,17 +22,21 @@ build:
 	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml build
 
 .PHONY: check
-check: static-analysis test
+check: static-analysis fast-test
 
 .PHONY: static-analysis
-static-analysis: config.php build
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml run --rm --no-deps app vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml run --rm --no-deps app vendor/bin/composer-dependency-analyser
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml run --rm --no-deps app vendor/bin/phpstan analyse
+static-analysis: vendor
+	vendor/bin/phpcs --standard=phpcs.xml.dist --warning-severity=0 -p src/ tests/ web/
+	vendor/bin/composer-dependency-analyser
+	vendor/bin/phpstan analyse
 
 .PHONY: test
 test: config.php bring-up-app-and-queue-watcher
 	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml exec app vendor/bin/phpunit $(TEST)
+
+.PHONY: fast-test
+fast-test: vendor
+	vendor/bin/phpunit --exclude-group web --exclude-group slow $(TEST)
 
 .PHONY: clean
 clean:
@@ -67,3 +71,6 @@ clean-index-for-search-test:
 
 config.php:
 	cp config.php.dist config.php
+
+vendor: composer.json composer.lock
+	composer install
