@@ -22,17 +22,9 @@ COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
 RUN composer install
 
 ##
-## Application builder
-#
-FROM base AS app
-COPY . /app/
-COPY --from=deps /app/vendor /app/vendor
-EXPOSE 80
-
-##
 ## Dev environment
 #
-FROM app AS dev
+FROM base AS dev
 
 COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
 
@@ -41,16 +33,20 @@ RUN apt-get update && apt-get install retry -y
 
 # Use the PHP dev server to run the app
 CMD ["php", "-S", "0.0.0.0:80", "-t", "./web", "./web/app_dev.php"]
+EXPOSE 80
 
 ##
 ## Prod environment
 #
-FROM app AS prod
+FROM base AS prod
+COPY . /app/
+COPY --from=deps /app/vendor /app/vendor
 
 ENV APACHE_DOCUMENT_ROOT=/app/web
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 RUN sed -ri -e 's!</VirtualHost>!\tFallbackResource app_prod.php\n</VirtualHost>!g' /etc/apache2/sites-available//000-default.conf
+EXPOSE 80
 
 # Create /app/var only if it doesn't exist as a file or directory
 RUN sh -c '[ ! -e /app/var ] && mkdir /app/var || echo "/app/var already exists"'
