@@ -2,16 +2,22 @@
 
 This project is using opensearch to index content of the eLife API and provide a full-text search for Journal.
 
-## Prerequisites for local development
+## Local development
 
 1. Clone the project `git clone https://github.com/elifesciences/search.git`
+2. To bring up all services, run: `make dev`
 
-### Starting the app
+You should now be able to access the search API on http://localhost:8888/search
 
-To bring up all services, run:
-```shell
-make dev
-```
+Common tasks include:
+
+- To run fast checks (e.g. linting) and fast tests: `make check`
+- To run all PHPUnit tests, including slow ones: `make test`
+- To replicate CI checks, including integration tests: `make all-checks`
+- To run a production rather than a development image: `make prod`
+- To empty the database and all state: `make clean`
+
+See the Makefile for further targets.
 
 ### Importing and using search
 
@@ -30,22 +36,3 @@ If you are not running the watcher, inspect the queue count via
 ```shell
 docker compose exec app bin/console queue:count
 ```
-
-### Testing
-
-To run the tests:
-```shell
-make test
-```
-
-To run additional fast checks (e.g. linting) as well as the tests:
-```shell
-make check
-```
-
-To run all the project tests (inc above tests and integration tests)
-```shell
-docker compose down queue-watcher
-docker compose exec app bash project_tests.sh
-```
-NOTE: these integration tests require the queue watcher  to not be running so the tests can control when items are consumed. This is why we make sure to stop watcher services.
