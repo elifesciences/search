@@ -21,18 +21,14 @@ See the Makefile for further targets.
 
 ### Importing and using search
 
-The `bin/console queue:import` command imports items from API (in dev this is the api-dummy instance running in docker compose) and adds them into the queue. Run this in the docker environment with:
+`make import-entity` will enqueue _all_ items from a local instance of the api-dummy.
 
-```shell
-docker compose exec app bin/console queue:import all
-```
+An optional make variable `ENTITY` can be passed in. Possible values for `ENTITY` can be found in [src/Search/Queue/Command/ImportCommand.php](src/Search/Queue/Command/ImportCommand.php).
 
-> **Note**: `all` here means all types of search content. Other possible values can be found in src/Search/Queue/Command/ImportCommand.php
-
-If you are running the queue watcher, you should now see the results by accessing the search API on http://localhost:8888/search
-
-If you are not running the watcher, inspect the queue count via
+To monitor the queue count:
 
 ```shell
 docker compose exec app bin/console queue:count
 ```
+
+Reload http://localhost:8888/search to see items being served by the search API.
