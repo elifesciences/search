@@ -13,15 +13,6 @@ WORKDIR /app
 
 
 ##
-## Composer Dependency builder
-#
-FROM base AS deps
-COPY composer.json composer.json
-COPY composer.lock composer.lock
-COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
-RUN composer install
-
-##
 ## Dev environment
 #
 FROM base AS dev
@@ -34,6 +25,15 @@ RUN apt-get update && apt-get install retry -y
 # Use the PHP dev server to run the app
 CMD ["php", "-S", "0.0.0.0:80", "-t", "./web", "./web/app_dev.php"]
 EXPOSE 80
+
+##
+## Composer Dependency builder for prod
+#
+FROM base AS deps
+COPY composer.json composer.json
+COPY composer.lock composer.lock
+COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
+RUN composer install --no-dev
 
 ##
 ## Prod environment
