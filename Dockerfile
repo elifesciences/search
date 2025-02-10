@@ -39,7 +39,12 @@ EXPOSE 80
 ## Prod environment
 #
 FROM base AS prod
-COPY . /app/
+
+COPY bin /app/bin
+COPY src /app/src
+COPY web /app/web
+COPY smoke_test* /app/
+
 COPY --from=deps /app/vendor /app/vendor
 
 ENV APACHE_DOCUMENT_ROOT=/app/web
@@ -48,7 +53,5 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 RUN sed -ri -e 's!</VirtualHost>!\tFallbackResource app_prod.php\n</VirtualHost>!g' /etc/apache2/sites-available//000-default.conf
 EXPOSE 80
 
-# Create /app/var only if it doesn't exist as a file or directory
-RUN sh -c '[ ! -e /app/var ] && mkdir /app/var || echo "/app/var already exists"'
-
+RUN mkdir /app/var
 RUN chown -R www-data:www-data /app/var
