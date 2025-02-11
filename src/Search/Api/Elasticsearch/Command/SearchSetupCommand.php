@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use Throwable;
 
-class BuildIndexCommand extends Command
+class SearchSetupCommand extends Command
 {
     private $client;
     private $logger;

@@ -27,7 +27,7 @@ use eLife\Logging\Monitoring;
 use eLife\Logging\Silex\LoggerProvider;
 use eLife\Ping\Silex\PingControllerProvider;
 use eLife\Search\Api\ApiValidator;
-use eLife\Search\Api\Elasticsearch\Command\BuildIndexCommand;
+use eLife\Search\Api\Elasticsearch\Command\SearchSetupCommand;
 use eLife\Search\Api\Elasticsearch\ElasticsearchDiscriminator;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Api\Elasticsearch\PlainElasticsearchClient;
@@ -436,7 +436,7 @@ final class Kernel implements MinimalKernel
         };
 
         $container['console.build_index'] = function (Container $container) {
-            return new BuildIndexCommand(
+            return new SearchSetupCommand(
                 $container['elastic.client.plain'],
                 $container['logger']
             );
