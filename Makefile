@@ -59,6 +59,10 @@ ENTITY = all
 import-entity: config.php bring-up-app-and-queue-watcher
 	$(APP_CONSOLE) queue:import $(ENTITY)
 
+.PHONY: create-new-index
+create-new-index:
+	$(APP_CONSOLE) search:setup --index=elife_search_$(shell date "+%Y%m%d%H%M")
+
 .PHONY: import-all-entities-in-journal-test-environment
 import-all-entities-in-journal-test-environment:
 	kubectl -n journal--test create job --from=cronjob/search-queue-import-all import-all-$(shell date "+%Y%m%d-%H%M")
