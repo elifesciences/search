@@ -7,7 +7,7 @@ return [
     'validate' => false,
     'ttl' => 0,
     'elastic_servers' => ['http://opensearch:9200'],
-    'elastic_logging' => true,
+    'elastic_logging' => false,
     'elastic_force_sync' => true,
     'elastic_ssl_verification' => false,
     'api_url' => 'http://api-dummy:8080',
