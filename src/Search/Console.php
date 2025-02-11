@@ -297,8 +297,17 @@ final class Console
     public function indexListCommand(InputInterface $input, OutputInterface $output)
     {
         $client = $this->kernel->get('elastic.client.plain');
+        $writeIndexName = $this->kernel->indexMetadata()->write();
+        $readIndexName = $this->kernel->indexMetadata()->read();
         foreach ($client->allIndexes() as $indexName) {
-            $output->writeln($indexName);
+            $line = $indexName;
+            if ($indexName === $writeIndexName) {
+                $line .= " [write]";
+            }
+            if ($indexName === $readIndexName) {
+                $line .= " [read]";
+            }
+            $output->writeln($line);
         }
     }
 

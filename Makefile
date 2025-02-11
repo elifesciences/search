@@ -63,8 +63,8 @@ NEW_INDEX_NAME = elife_search_$(shell date "+%Y%m%d%H%M%S")
 .PHONY: create-new-index
 create-new-index:
 	$(APP_CONSOLE) search:setup --index=$(NEW_INDEX_NAME)
-	$(APP_CONSOLE) index:list
 	$(APP_CONSOLE) index:switch:write $(NEW_INDEX_NAME)
+	$(APP_CONSOLE) index:list
 
 .PHONY: import-all-entities-in-journal-test-environment
 import-all-entities-in-journal-test-environment:
