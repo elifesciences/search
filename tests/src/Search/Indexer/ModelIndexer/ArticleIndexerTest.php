@@ -103,7 +103,7 @@ final class ArticleIndexerTest extends TestCase
         $this->assertSame('2020-09-08T07:06:05Z', $return['sortDate']);
     }
 
-    private function getArticle($id = 1, $status = 'poa', $other = [])
+    private function getArticle($id = 1, $status = 'poa')
     {
         $sanitisedStatus = ($status === 'vor') ? 'vor' : 'poa';
 

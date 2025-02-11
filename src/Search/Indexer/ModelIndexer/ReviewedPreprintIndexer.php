@@ -47,7 +47,7 @@ final class ReviewedPreprintIndexer extends AbstractModelIndexer
         $reviewedPreprintObject->type = 'reviewed-preprint';
         $reviewedPreprintObject->body = $reviewedPreprint->getIndexContent() ?? '';
         $reviewedPreprintObject->snippet = ['format' => 'json', 'value' => json_encode($this->snippet($reviewedPreprint))];
-        
+
         $this->addSortDate($reviewedPreprintObject, $reviewedPreprint->getStatusDate());
 
         $changeSet->addInsert(
