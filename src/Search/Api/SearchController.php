@@ -84,6 +84,9 @@ final class SearchController
     {
         $for = $request->query->get('for', '');
         $order = $request->query->get('order', 'desc');
+        $strength = $request->query->get('strength');
+        $significance = $request->query->get('significance');
+        $prcOnly = $request->query->get('prc');
         $page = $request->query->getInt('page', 1);
         $perPage = $request->query->getInt('per-page', 10);
         $useDate = $request->query->get('use-date', 'default');
@@ -138,6 +141,11 @@ final class SearchController
         if (is_array($types)) {
             $query->whereType($types);
         }
+        $query->whereTerms(
+            $strength,
+            $significance,
+            isset($prcOnly),
+        );
 
         if ($startDateTime || $endDateTime) {
             $query->betweenDates($startDateTime, $endDateTime);

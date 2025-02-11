@@ -4,9 +4,11 @@ namespace eLife\Search\Api\Elasticsearch;
 
 use DateTimeImmutable;
 use eLife\Search\Api\Query\QueryBuilder;
+use eLife\Search\Indexer\ModelIndexer\Helper\TermsIndex;
 
 final class ElasticQueryBuilder implements QueryBuilder
 {
+    use TermsIndex;
     private $order;
 
     const PHP_DATETIME_FORMAT = 'yyyy/MM/dd HH:mm:ss';
@@ -264,6 +266,38 @@ final class ElasticQueryBuilder implements QueryBuilder
                 'type' => $types,
             ],
         ]);
+
+        return $this;
+    }
+    
+    public function whereTerms(string $strength = null, string $significance = null, bool $prcOnly = true) : QueryBuilder
+    {
+        $strength = (!$strength && $prcOnly) ? 1 : $strength;
+        $significance = (!$significance && $prcOnly) ? 1 : $significance;
+        $strengthRange = [];
+        $significanceRange = [];
+        if ($strength) {
+            $strengthRange['gte'] = $this->getStrengthValue($strength);
+            if ($prcOnly) {
+                $strengthRange['lt'] = $this->getTermsMaxValue();
+            }
+            $this->query['body']['query']['bool']['must'][] = [
+                'range' => [
+                    'terms.strength' => $strengthRange,
+                ],
+            ];
+        }
+        if ($significance) {
+            $significanceRange['gte'] = $this->getSignificanceValue($significance);
+            if ($prcOnly) {
+                $significanceRange['lt'] = $this->getTermsMaxValue();
+            }
+            $this->query['body']['query']['bool']['must'][] = [
+                'range' => [
+                    'terms.significance' => $significanceRange,
+                ],
+            ];
+        }
 
         return $this;
     }
