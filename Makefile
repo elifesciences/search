@@ -73,6 +73,10 @@ observe-indexing-status:
 	$(APP_CONSOLE) index:total:write
 	$(APP_CONSOLE) index:total:read
 
+.PHONY: test-reindexing
+test-reindexing: bring-up-app-and-queue-watcher
+	$(DOCKER_COMPOSE_DEV) exec app bin/reindex $(NEW_INDEX_NAME)
+
 .PHONY: import-all-entities-in-journal-test-environment
 import-all-entities-in-journal-test-environment:
 	kubectl -n journal--test create job --from=cronjob/search-queue-import-all import-all-$(shell date "+%Y%m%d-%H%M")
