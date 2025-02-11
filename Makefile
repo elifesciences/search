@@ -59,10 +59,12 @@ ENTITY = all
 import-entity: config.php bring-up-app-and-queue-watcher
 	$(APP_CONSOLE) queue:import $(ENTITY)
 
+NEW_INDEX_NAME = elife_search_$(shell date "+%Y%m%d%H%M%S")
 .PHONY: create-new-index
 create-new-index:
-	$(APP_CONSOLE) search:setup --index=elife_search_$(shell date "+%Y%m%d%H%M%S")
+	$(APP_CONSOLE) search:setup --index=$(NEW_INDEX_NAME)
 	$(APP_CONSOLE) index:list
+	$(APP_CONSOLE) index:switch:write $(NEW_INDEX_NAME)
 
 .PHONY: import-all-entities-in-journal-test-environment
 import-all-entities-in-journal-test-environment:
