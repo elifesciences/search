@@ -82,6 +82,9 @@ final class Console
                 ],
             ],
         ],
+        'index:list' => [
+            'description' => 'Shows the names of all present indexes',
+        ],
         'index:read' => [
             'description' => 'The name of the index we are reading from in the API',
         ],
@@ -288,6 +291,14 @@ final class Console
             }
             $this->logger->info("Deleting index {$indexName}");
             $client->deleteIndex($indexName);
+        }
+    }
+
+    public function indexListCommand(InputInterface $input, OutputInterface $output)
+    {
+        $client = $this->kernel->get('elastic.client.plain');
+        foreach ($client->allIndexes() as $indexName) {
+            $output->writeln($indexName);
         }
     }
 
