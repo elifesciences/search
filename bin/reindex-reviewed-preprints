@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-./bin/console queue:import ReviewedPreprints
-
-. bin/wait-for-empty-queues
