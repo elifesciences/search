@@ -10,13 +10,16 @@ class MappedElasticsearchClient
 {
     private $libraryClient;
     private $index;
+    /** @phpstan-ignore property.onlyWritten */
+    private $indexDeterminer;
     private $forceSync;
     private $readClientOptions;
 
-    public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $readClientOptions = [])
+    public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $readClientOptions = [], IndexDeterminer $indexDeterminer = null)
     {
         $this->libraryClient = $libraryClient;
         $this->index = $index;
+        $this->indexDeterminer = $indexDeterminer;
         $this->forceSync = $forceSync;
         $this->readClientOptions = $readClientOptions;
     }

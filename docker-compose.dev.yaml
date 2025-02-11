@@ -11,7 +11,6 @@ services:
       - GATEWAY_HOST=api-dummy:8080
     volumes:
       - ./:/app
-      - ./.docker/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
   queue-watcher:
     build:
       target: dev

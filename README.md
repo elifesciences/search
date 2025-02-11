@@ -1,61 +1,34 @@
 # eLife Search
 
-This project is using elasticsearch to index content of the eLife articles and provide a full-text search for Journal.
+This project is using opensearch to index content of the eLife API and provide a full-text search for Journal.
 
-To reliably recreate any issue experienced in CI or Prod you should continue to use [builder](https://github.com/elifesciences/builder).
-
-## Prerequisites for local development
-
-Important: Keep in mind that docker is just used to improve the developer experience.
+## Local development
 
 1. Clone the project `git clone https://github.com/elifesciences/search.git`
-2. Copy`config.php.dist` on local to `config.php`
+2. To bring up all services, run: `make dev`
 
-### Starting the app
+You should now be able to access the search API on http://localhost:8888/search
 
-To bring up all services, run:
-```shell
-make dev
-```
+Common tasks include:
 
-Alternatively, you can run without the SQS queue watcher by just bring up the app service:
-```shell
-docker compose up app
-```
+- To run fast checks (e.g. linting) and fast tests: `make check`
+- To run all PHPUnit tests, including slow ones: `make test`
+- To replicate CI checks, including integration tests: `make all-checks`
+- To run a production rather than a development image: `make prod`
+- To empty the database and all state: `make clean`
+
+See the Makefile for further targets.
 
 ### Importing and using search
 
-The `bin/console queue:import` command imports items from API (in dev this is the api-dummy instance running in docker compose) and adds them into the queue. Run this in the docker environment with:
+`make import-entity` will enqueue _all_ items from a local instance of the api-dummy.
 
-```shell
-docker compose exec app bin/console queue:import all
-```
+An optional make variable `ENTITY` can be passed in. Possible values for `ENTITY` can be found in [src/Search/Queue/Command/ImportCommand.php](src/Search/Queue/Command/ImportCommand.php).
 
-> **Note**: `all` here means all types of search content. Other possible values can be found in src/Search/Queue/Command/ImportCommand.php
-
-If you are running the queue watcher, you should now see the results by accessing the search API on http://localhost:8888/search
-
-If you are not running the watcher, inspect the queue count via
+To monitor the queue count:
 
 ```shell
 docker compose exec app bin/console queue:count
 ```
 
-### Testing
-
-To run the tests:
-```shell
-make test
-```
-
-To run additional fast checks (e.g. linting) as well as the tests:
-```shell
-make check
-```
-
-To run all the project tests (inc above tests and integration tests)
-```shell
-docker compose down queue-watcher
-docker compose exec app bash project_tests.sh
-```
-NOTE: these integration tests require the queue watcher  to not be running so the tests can control when items are consumed. This is why we make sure to stop watcher services.
+Reload http://localhost:8888/search to see items being served by the search API.

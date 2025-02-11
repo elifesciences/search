@@ -2,9 +2,11 @@
 
 namespace test\eLife\Search\KeyValueStore;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use tests\eLife\Search\Web\ElasticTestCase;
 
+#[Group('slow')]
 class ElasticSearchKeyValueStoreTest extends ElasticTestCase
 {
     #[Test]

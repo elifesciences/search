@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -e
-
-./bin/console rds:reindex
-
-. bin/wait-for-empty-queues
