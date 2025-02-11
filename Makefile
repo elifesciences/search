@@ -1,6 +1,8 @@
+DOCKER_COMPOSE_DEV = docker compose --file docker-compose.yaml --file docker-compose.dev.yaml
+
 .PHONY: dev
 dev: bring-up-app-and-queue-watcher
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml logs --follow
+	$(DOCKER_COMPOSE_DEV) logs --follow
 
 .PHONY: prod
 prod: config.php
@@ -10,16 +12,16 @@ prod: config.php
 
 .PHONY: bring-up-app-and-queue-watcher
 bring-up-app-and-queue-watcher: config.php build
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml up --wait
+	$(DOCKER_COMPOSE_DEV) up --wait
 
 .PHONY: bring-up-app-without-queue-watcher
 bring-up-app-without-queue-watcher: config.php build
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml up app --wait
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml down queue-watcher
+	$(DOCKER_COMPOSE_DEV) up app --wait
+	$(DOCKER_COMPOSE_DEV) down queue-watcher
 
 .PHONY: build
 build:
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml build
+	$(DOCKER_COMPOSE_DEV) build
 
 .PHONY: check
 check: static-analysis fast-test
@@ -32,7 +34,7 @@ static-analysis: vendor
 
 .PHONY: test
 test: config.php bring-up-app-and-queue-watcher
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml exec app vendor/bin/phpunit $(TEST)
+	$(DOCKER_COMPOSE_DEV) exec app vendor/bin/phpunit $(TEST)
 
 .PHONY: fast-test
 fast-test: vendor
@@ -40,21 +42,21 @@ fast-test: vendor
 
 .PHONY: clean
 clean:
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml down --volumes
+	$(DOCKER_COMPOSE_DEV) down --volumes
 	rm -rf var/logs/*.json
 
 .PHONY: all-checks
 all-checks: config.php clean bring-up-app-without-queue-watcher
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml exec app bash project_tests.sh
+	$(DOCKER_COMPOSE_DEV) exec app bash project_tests.sh
 
 .PHONY: stop
 stop:
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml down
+	$(DOCKER_COMPOSE_DEV) down
 
 ENTITY = all
 .PHONY: import-entity
 import-entity: config.php bring-up-app-and-queue-watcher
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml exec app bin/console queue:import $(ENTITY)
+	$(DOCKER_COMPOSE_DEV) exec app bin/console queue:import $(ENTITY)
 
 .PHONY: import-all-entities-in-journal-test-environment
 import-all-entities-in-journal-test-environment:
@@ -62,8 +64,8 @@ import-all-entities-in-journal-test-environment:
 
 .PHONY: update-api-sdk
 update-api-sdk: config.php build
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml run --no-deps setup composer install
-	docker compose --file docker-compose.yaml --file docker-compose.dev.yaml run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --no-suggest --no-interaction
+	$(DOCKER_COMPOSE_DEV) run --no-deps setup composer install
+	$(DOCKER_COMPOSE_DEV) run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --no-suggest --no-interaction
 
 .PHONY: clean-index-for-search-test
 clean-index-for-search-test:
