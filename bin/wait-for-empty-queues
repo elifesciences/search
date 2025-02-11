@@ -1,29 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-# with just a single sqs watcher the polling may fail often as there is a gap between accepting and completing a job.
-# with more sqs watchers this becomes less unlikely.
-# more sqs watchers also means more CPU usage which means less CPU available for serving traffic.
-num_watches_threshold=100 # 100 attempts with a .10s interval is 10 seconds
-num_watches_attempt=0
-
-echo "Waiting for empty queues"
-
 while true; do
-    # `|| true` avoid failing the script when there are no results
-    watches=$(pgrep -cf queue:watch || true)
-
-    if [ "$watches" -eq "0" ]; then
-        if [ "$num_watches_attempt" = "$num_watches_threshold" ]; then
-            echo "No alive queue:watch processes"
-            break
-        fi
-        num_watches_attempt=$((num_watches_attempt+1))
-        sleep .10
-        continue
-    fi
-    num_watches_attempt=0
-
     sqs_queue=$(bin/console queue:count)
     echo "Job in SQS queue (approximate): $sqs_queue"
     if [ "$sqs_queue" -eq 0 ]; then
