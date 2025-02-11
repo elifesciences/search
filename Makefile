@@ -65,6 +65,13 @@ create-new-index:
 	$(APP_CONSOLE) search:setup --index=$(NEW_INDEX_NAME)
 	$(APP_CONSOLE) index:switch:write $(NEW_INDEX_NAME)
 	$(APP_CONSOLE) index:list
+	$(APP_CONSOLE) queue:import all
+
+.PHONY: observe-indexing-status
+observe-indexing-status:
+	$(APP_CONSOLE) queue:count
+	$(APP_CONSOLE) index:total:write
+	$(APP_CONSOLE) index:total:read
 
 .PHONY: import-all-entities-in-journal-test-environment
 import-all-entities-in-journal-test-environment:
