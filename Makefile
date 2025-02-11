@@ -1,4 +1,5 @@
 DOCKER_COMPOSE_DEV = docker compose --file docker-compose.yaml --file docker-compose.dev.yaml
+APP_CONSOLE = $(DOCKER_COMPOSE_DEV) exec app bin/console
 
 .PHONY: dev
 dev: bring-up-app-and-queue-watcher
@@ -56,7 +57,7 @@ stop:
 ENTITY = all
 .PHONY: import-entity
 import-entity: config.php bring-up-app-and-queue-watcher
-	$(DOCKER_COMPOSE_DEV) exec app bin/console queue:import $(ENTITY)
+	$(APP_CONSOLE) queue:import $(ENTITY)
 
 .PHONY: import-all-entities-in-journal-test-environment
 import-all-entities-in-journal-test-environment:
