@@ -330,7 +330,7 @@ final class ElasticQueryBuilder implements QueryBuilder
                 ];
             }
 
-            if (in_array('does-not-have-elife-assessment', $terms)) {
+            if (in_array('not-applicable', $terms)) {
                 $filters[] = [
                     'bool' => [
                         'must_not' => [
