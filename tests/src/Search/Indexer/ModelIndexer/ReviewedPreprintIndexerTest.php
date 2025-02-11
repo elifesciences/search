@@ -17,7 +17,6 @@ final class ReviewedPreprintIndexerTest extends TestCase
     use GetSerializer;
     use CallSerializer;
     use ModelProvider;
-    use ElifeAssessmentTermsProvider;
 
     private MockInterface&MappedElasticsearchClient $elastic;
 
@@ -125,40 +124,6 @@ final class ReviewedPreprintIndexerTest extends TestCase
 
         $this->assertCount(0, $changeSet->getDeletes());
         $this->assertCount(0, $changeSet->getInserts());
-    }
-    
-    #[DataProvider('elifeAssessmentTermsProvider')]
-    #[Test]
-    public function testIndexWithElifeAssessmentTerms(array $elifeAssessment, array $expected)
-    {
-        $reviewedPreprint = $this->getReviewedPreprint(2, $elifeAssessment);
-
-        /** @var \Mockery\Expectation $getDocumentByResearchArticleIdExpectation */
-        $getDocumentByResearchArticleIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByResearchArticleIdExpectation
-            ->with('research-article-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn(null);
-        /** @var \Mockery\Expectation $getDocumentByToolsAndResourcesIdExpectation */
-        $getDocumentByToolsAndResourcesIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByToolsAndResourcesIdExpectation
-            ->with('tools-resources-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn(null);
-        /** @var \Mockery\Expectation $getDocumentByShortReportIdExpectation */
-        $getDocumentByShortReportIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByShortReportIdExpectation
-            ->with('short-report-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn(null);
-        /** @var \Mockery\Expectation $getDocumentByResearchAdvanceIdExpectation */
-        $getDocumentByResearchAdvanceIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByResearchAdvanceIdExpectation
-            ->with('research-advance-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn(null);
-
-        $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
-        
-        $return = json_decode($changeSet->getInserts()[0]['json'], true);
-
-        $this->assertEquals($expected, $return['terms']);
     }
     
     private function getReviewedPreprint($id = 1, array $elifeAssessment = null)

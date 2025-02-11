@@ -22,8 +22,6 @@ interface QueryBuilder
 
     public function whereType(array $types = []) : QueryBuilder;
 
-    public function whereTerms(string $strength = null, string $significance = null, bool $prcOnly = true) : QueryBuilder;
-
     public function whereElifeAssessmentSignificance(array $significance = []) : QueryBuilder;
 
     public function whereElifeAssessmentStrength(array $strength = []) : QueryBuilder;

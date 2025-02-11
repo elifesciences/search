@@ -39,12 +39,6 @@ properties:
         fields:
           keyword:
             type: keyword
-  terms:
-    properties:
-      significance:
-        type: integer
-      strength:
-        type: integer
   snippet:
     type: object
     enabled: false

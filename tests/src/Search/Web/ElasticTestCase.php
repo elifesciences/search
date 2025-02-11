@@ -94,16 +94,6 @@ abstract class ElasticTestCase extends WebTestCase
                 ', true);
         }
     }
-    
-    public function getArticleFixtureWithTerms(int $num, array $terms, string $id = null)
-    {
-        return [
-            ...$this->getArticleFixture($num),
-            'type' => 'vor',
-            'terms' => $terms,
-            ...($id !== null ? ['id' => $id] : []),
-        ];
-    }
 
     public function getArticleFixture(int $num)
     {
