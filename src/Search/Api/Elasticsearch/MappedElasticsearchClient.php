@@ -24,11 +24,6 @@ class MappedElasticsearchClient
         $this->readClientOptions = $readClientOptions;
     }
 
-    public function defaultIndex(string $indexName)
-    {
-        $this->index = $indexName;
-    }
-
     public function indexJsonDocument($id, $body, $flush = false, string $index = null)
     {
         $index = $index ?? $this->index;
