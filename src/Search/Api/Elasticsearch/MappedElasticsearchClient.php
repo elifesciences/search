@@ -24,11 +24,10 @@ class MappedElasticsearchClient
         $this->readClientOptions = $readClientOptions;
     }
 
-    public function indexJsonDocument($id, $body, $flush = false, string $index = null)
+    public function indexJsonDocument($id, $body, $flush = false)
     {
-        $index = $index ?? $this->index;
         $params = [
-            'index' => $index,
+            'index' => $this->index,
             'id' => $id,
             'body' => $body,
         ];
