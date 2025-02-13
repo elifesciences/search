@@ -3,6 +3,7 @@
 namespace eLife\Search;
 
 use eLife\Search\Api\Elasticsearch\IndexDeterminer;
+use eLife\Search\KeyValueStore\KeyValueStore;
 
 enum Target
 {
@@ -12,15 +13,26 @@ enum Target
 
 class DynamicIndexDeterminer implements IndexDeterminer
 {
-    private Target $target;
+    const INDEX_METADATA_KEY = 'index-metadata';
 
-    public function __construct(Target $target)
+    private Target $target;
+    private KeyValueStore $keyValueStore;
+
+    public function __construct(KeyValueStore $keyValueStore, Target $target)
     {
         $this->target = $target;
+        $this->keyValueStore = $keyValueStore;
     }
 
     public function getCurrentIndexName(): string
     {
+        IndexMetadata::fromDocument(
+            $this->keyValueStore->load(
+                self::INDEX_METADATA_KEY,
+                IndexMetadata::fromContents('elife_search', 'elife_search')->toDocument()
+            )
+        );
+
         $suffix = match ($this->target) {
             Target::Write => 'write',
             Target::Read => 'read',
