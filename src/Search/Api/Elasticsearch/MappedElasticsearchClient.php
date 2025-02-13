@@ -29,11 +29,6 @@ class MappedElasticsearchClient
         $this->index = $indexName;
     }
 
-    public function index(): string
-    {
-        return $this->index;
-    }
-
     public function indexJsonDocument($id, $body, $flush = false, string $index = null)
     {
         $index = $index ?? $this->index;
