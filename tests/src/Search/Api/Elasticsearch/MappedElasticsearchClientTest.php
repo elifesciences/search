@@ -4,11 +4,20 @@ namespace test\eLife\Search\Api\Elasticsearch;
 
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use eLife\Search\Api\Elasticsearch\IndexDeterminer;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+
+class StubbedIndexDeterminer implements IndexDeterminer
+{
+    public function getCurrentIndexName(): string
+    {
+        return 'index';
+    }
+}
 
 class MappedElasticsearchClientTest extends TestCase
 {
@@ -20,7 +29,7 @@ class MappedElasticsearchClientTest extends TestCase
         /** @var Client&MockInterface $client */
         $client = Mockery::mock(Client::class);
         $this->client = $client;
-        $this->elasticsearchClient = new MappedElasticsearchClient($this->client, 'index');
+        $this->elasticsearchClient = new MappedElasticsearchClient($this->client, 'index', new StubbedIndexDeterminer);
     }
 
     #[Test]

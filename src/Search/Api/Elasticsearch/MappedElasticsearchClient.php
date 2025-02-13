@@ -15,7 +15,7 @@ class MappedElasticsearchClient
     private $forceSync;
     private $readClientOptions;
 
-    public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $readClientOptions = [], IndexDeterminer $indexDeterminer = null)
+    public function __construct(Client $libraryClient, string $index, IndexDeterminer $indexDeterminer, bool $forceSync = false, array $readClientOptions = [])
     {
         $this->libraryClient = $libraryClient;
         $this->index = $index;
