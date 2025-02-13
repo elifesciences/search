@@ -12,8 +12,7 @@ enum Target
 
 class DynamicIndexDeterminer implements IndexDeterminer
 {
-    /** @phpstan-ignore property.onlyWritten */
-    private $target;
+    private Target $target;
 
     public function __construct(Target $target)
     {
@@ -22,6 +21,10 @@ class DynamicIndexDeterminer implements IndexDeterminer
 
     public function getCurrentIndexName(): string
     {
-        return 'bogus';
+        $suffix = match ($this->target) {
+            Target::Write => 'write',
+            Target::Read => 'read',
+        };
+        return 'bogus'.$suffix;
     }
 }
