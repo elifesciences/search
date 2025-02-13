@@ -26,17 +26,16 @@ class DynamicIndexDeterminer implements IndexDeterminer
 
     public function getCurrentIndexName(): string
     {
-        IndexMetadata::fromDocument(
+        $indexMetadata = IndexMetadata::fromDocument(
             $this->keyValueStore->load(
                 self::INDEX_METADATA_KEY,
                 IndexMetadata::fromContents('elife_search', 'elife_search')->toDocument()
             )
         );
 
-        $suffix = match ($this->target) {
-            Target::Write => 'write',
-            Target::Read => 'read',
+        return match ($this->target) {
+            Target::Write => $indexMetadata->write(),
+            Target::Read => $indexMetadata->read(),
         };
-        return 'bogus'.$suffix;
     }
 }
