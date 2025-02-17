@@ -9,43 +9,29 @@ use eLife\Search\Api\Query\QueryResponse;
 class MappedElasticsearchClient
 {
     private $libraryClient;
-    private $index;
-    /** @phpstan-ignore property.onlyWritten */
     private $indexDeterminer;
     private $forceSync;
     private $readClientOptions;
 
-    public function __construct(Client $libraryClient, string $index, bool $forceSync = false, array $readClientOptions = [], IndexDeterminer $indexDeterminer = null)
+    public function __construct(Client $libraryClient, IndexDeterminer $indexDeterminer, bool $forceSync = false, array $readClientOptions = [])
     {
         $this->libraryClient = $libraryClient;
-        $this->index = $index;
         $this->indexDeterminer = $indexDeterminer;
         $this->forceSync = $forceSync;
         $this->readClientOptions = $readClientOptions;
     }
 
-    public function defaultIndex(string $indexName)
+    public function indexJsonDocument($id, $body, $flush = false)
     {
-        $this->index = $indexName;
-    }
-
-    public function index(): string
-    {
-        return $this->index;
-    }
-
-    public function indexJsonDocument($id, $body, $flush = false, string $index = null)
-    {
-        $index = $index ?? $this->index;
         $params = [
-            'index' => $index,
+            'index' => $this->indexDeterminer->getCurrentIndexName(),
             'id' => $id,
             'body' => $body,
         ];
 
         $con = $this->libraryClient->index($params)['payload'] ?? null;
         if ($flush || $this->forceSync) {
-            $this->libraryClient->indices()->refresh(['index' => $this->index]);
+            $this->libraryClient->indices()->refresh(['index' => $this->indexDeterminer->getCurrentIndexName()]);
         }
 
         return $con;
@@ -54,7 +40,7 @@ class MappedElasticsearchClient
     public function deleteDocument($id)
     {
         $params = [
-            'index' => $this->index,
+            'index' => $this->indexDeterminer->getCurrentIndexName(),
             'id' => $id,
             'client' => ['ignore' => [400, 404]],
         ];
@@ -72,7 +58,7 @@ class MappedElasticsearchClient
     public function getDocumentById($id, $index = null, $ignore404 = false)
     {
         $params = [
-            'index' => $index ?? $this->index,
+            'index' => $index ?? $this->indexDeterminer->getCurrentIndexName(),
             'id' => $id,
         ];
         $params['client'] = $this->readClientOptions;
@@ -91,7 +77,7 @@ class MappedElasticsearchClient
     public function articleExists($id, array $types): bool
     {
         $params = [
-            'index' => $this->index,
+            'index' => $this->indexDeterminer->getCurrentIndexName(),
             'body'  => [
                 'query' => [
                     'bool' => [
