@@ -351,7 +351,7 @@ final class Kernel implements MinimalKernel
             return new MappedElasticsearchClient(
                 $container['elastic.elasticsearch'],
                 $this->indexMetadata()->operation(IndexMetadata::READ),
-                new DynamicIndexDeterminer($container['keyvaluestore'], Target::Write),
+                new DynamicIndexDeterminer($container['keyvaluestore'], Target::Read),
                 $container['config']['elastic_force_sync'],
                 $container['config']['elastic_read_client_options']
             );
