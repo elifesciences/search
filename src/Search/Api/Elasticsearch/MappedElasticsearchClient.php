@@ -9,8 +9,8 @@ use eLife\Search\Api\Query\QueryResponse;
 class MappedElasticsearchClient
 {
     private $libraryClient;
-    private $index;
     /** @phpstan-ignore property.onlyWritten */
+    private $index;
     private $indexDeterminer;
     private $forceSync;
     private $readClientOptions;
@@ -27,14 +27,14 @@ class MappedElasticsearchClient
     public function indexJsonDocument($id, $body, $flush = false)
     {
         $params = [
-            'index' => $this->index,
+            'index' => $this->indexDeterminer->getCurrentIndexName(),
             'id' => $id,
             'body' => $body,
         ];
 
         $con = $this->libraryClient->index($params)['payload'] ?? null;
         if ($flush || $this->forceSync) {
-            $this->libraryClient->indices()->refresh(['index' => $this->index]);
+            $this->libraryClient->indices()->refresh(['index' => $this->indexDeterminer->getCurrentIndexName()]);
         }
 
         return $con;
@@ -43,7 +43,7 @@ class MappedElasticsearchClient
     public function deleteDocument($id)
     {
         $params = [
-            'index' => $this->index,
+            'index' => $this->indexDeterminer->getCurrentIndexName(),
             'id' => $id,
             'client' => ['ignore' => [400, 404]],
         ];
@@ -61,7 +61,7 @@ class MappedElasticsearchClient
     public function getDocumentById($id, $index = null, $ignore404 = false)
     {
         $params = [
-            'index' => $index ?? $this->index,
+            'index' => $index ?? $this->indexDeterminer->getCurrentIndexName(),
             'id' => $id,
         ];
         $params['client'] = $this->readClientOptions;
@@ -80,7 +80,7 @@ class MappedElasticsearchClient
     public function articleExists($id, array $types): bool
     {
         $params = [
-            'index' => $this->index,
+            'index' => $this->indexDeterminer->getCurrentIndexName(),
             'body'  => [
                 'query' => [
                     'bool' => [
