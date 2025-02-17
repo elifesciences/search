@@ -29,9 +29,14 @@ class PlainElasticsearchClient
     public function allIndexes() : array
     {
         $indexes = $this->libraryClient->cat()->indices(['h' => 'index']);
-        return array_map(function($item) {
-            return trim($item['index']);
-        }, $indexes);
+        return array_filter(
+            array_map(function($item) {
+                return trim($item['index']);
+            }, $indexes),
+            function($index) {
+                return !str_starts_with($index, '.');
+            }
+        );
     }
 
     public function createIndex(string $indexName = null, $additionalParams = [])
