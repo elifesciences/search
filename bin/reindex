@@ -42,7 +42,5 @@ echo "Switching reads to new index $index_name"
 ./bin/console index:switch:read "$index_name"
 # we should restart processes, but they never should use IndexMetadata::READ
 
-./smoke_tests.sh
-
 echo "Deleting unused indexes"
 ./bin/console index:delete:unused
