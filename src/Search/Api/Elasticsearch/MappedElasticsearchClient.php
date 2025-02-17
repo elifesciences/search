@@ -9,16 +9,13 @@ use eLife\Search\Api\Query\QueryResponse;
 class MappedElasticsearchClient
 {
     private $libraryClient;
-    /** @phpstan-ignore property.onlyWritten */
-    private $index;
     private $indexDeterminer;
     private $forceSync;
     private $readClientOptions;
 
-    public function __construct(Client $libraryClient, string $index, IndexDeterminer $indexDeterminer, bool $forceSync = false, array $readClientOptions = [])
+    public function __construct(Client $libraryClient, IndexDeterminer $indexDeterminer, bool $forceSync = false, array $readClientOptions = [])
     {
         $this->libraryClient = $libraryClient;
-        $this->index = $index;
         $this->indexDeterminer = $indexDeterminer;
         $this->forceSync = $forceSync;
         $this->readClientOptions = $readClientOptions;

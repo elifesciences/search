@@ -29,7 +29,7 @@ class MappedElasticsearchClientTest extends TestCase
         /** @var Client&MockInterface $client */
         $client = Mockery::mock(Client::class);
         $this->client = $client;
-        $this->elasticsearchClient = new MappedElasticsearchClient($this->client, 'index', new StubbedIndexDeterminer);
+        $this->elasticsearchClient = new MappedElasticsearchClient($this->client, new StubbedIndexDeterminer);
     }
 
     #[Test]
