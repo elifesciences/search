@@ -75,6 +75,10 @@ test-reindexing: bring-up-app-and-queue-watcher
 import-all-entities-in-journal-test-environment:
 	kubectl -n journal--test create job --from=cronjob/search-queue-import-all import-all-$(shell date "+%Y%m%d-%H%M")
 
+.PHONY: reindex-in-journal-test-environment
+reindex-in-journal-test-environment:
+	kubectl -n journal--test create job --from=cronjob/search-queue-reindex reindex-$(shell date "+%Y%m%d-%H%M")
+
 .PHONY: update-api-sdk
 update-api-sdk: config.php build
 	$(DOCKER_COMPOSE_DEV) run --no-deps setup composer install
