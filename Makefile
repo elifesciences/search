@@ -79,6 +79,10 @@ import-all-entities-in-journal-test-environment:
 reindex-in-journal-test-environment:
 	kubectl -n journal--test create job --from=cronjob/search-queue-reindex reindex-$(shell date "+%Y%m%d-%H%M")
 
+.PHONY: reindex-in-journal-prod-environment
+reindex-in-journal-prod-environment:
+	kubectl -n journal--prod create job --from=cronjob/search-queue-reindex reindex-$(shell date "+%Y%m%d-%H%M")
+
 .PHONY: update-api-sdk
 update-api-sdk: config.php build
 	$(DOCKER_COMPOSE_DEV) run --no-deps setup composer install
@@ -96,6 +100,15 @@ journal-test-index-details:
 	@kubectl -n journal--test exec -c search -it $$(kubectl get pods -n journal--test -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- ./bin/console index:total:write
 	@echo "Total items in the journal-test read index: "
 	@kubectl -n journal--test exec -c search -it $$(kubectl get pods -n journal--test -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- ./bin/console index:total:read
+
+.PHONY: journal-prod-index-details
+journal-prod-index-details:
+	@echo "journal-prod search indices: "
+	@kubectl -n journal--prod exec -c search -it $$(kubectl get pods -n journal--prod -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- ./bin/console index:list
+	@echo "Total items in the journal-prod write index: "
+	@kubectl -n journal--prod exec -c search -it $$(kubectl get pods -n journal--prod -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- ./bin/console index:total:write
+	@echo "Total items in the journal-prod read index: "
+	@kubectl -n journal--prod exec -c search -it $$(kubectl get pods -n journal--prod -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- ./bin/console index:total:read
 
 config.php:
 	cp config.php.dist config.php
