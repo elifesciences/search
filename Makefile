@@ -88,6 +88,15 @@ update-api-sdk: config.php build
 clean-index-for-search-test:
 	kubectl -n journal--test exec -it $$(kubectl get pods -n journal--test -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- ./bin/console search:setup -d
 
+.PHONY: journal-test-index-details
+journal-test-index-details:
+	@echo "journal-test search indices: "
+	@kubectl -n journal--test exec -c search -it $$(kubectl get pods -n journal--test -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- ./bin/console index:list
+	@echo "Total items in the journal-test write index: "
+	@kubectl -n journal--test exec -c search -it $$(kubectl get pods -n journal--test -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- ./bin/console index:total:write
+	@echo "Total items in the journal-test read index: "
+	@kubectl -n journal--test exec -c search -it $$(kubectl get pods -n journal--test -o json | jq -r '.items[] | select(.metadata.name | startswith("search-queue-watcher-")) | .metadata.name' | head -n1) -- ./bin/console index:total:read
+
 config.php:
 	cp config.php.dist config.php
 
