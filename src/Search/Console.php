@@ -354,7 +354,7 @@ final class Console
             $this->enqueue('article', $id);
             $ids[] = $id;
         }
-        $output->writeln('Queued: '.implode(', ', $ids));
+        $output->writeln('Queued '.count($ids).' article(s) with id(s): '.implode(', ', $ids));
         $this->logger->info('RDS articles added to indexing queue.');
     }
 
