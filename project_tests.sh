@@ -31,8 +31,8 @@ bin/ci-import
 echo "Reindexing api-dummy"
 timeout 60 bin/ci-reindex
 
-echo "Reindexing RDS articles"
-bin/ci-reindex-rds
+echo "Importing ERA (formerly known as RDS) articles"
+bin/ci-import-era
 
 echo "Reindexing reviewed-preprint articles"
 bin/ci-reindex-reviewed-preprints
