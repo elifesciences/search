@@ -5,15 +5,10 @@ set -e
 # Clean the queues
 ./bin/ci-empty-queue-and-wait
 
-./bin/console search:setup --index="ci-reindex" --delete
-
-./bin/console index:switch:write "ci-reindex"
 . bin/ci-start-processes
 
 echo "Starting reindexing"
-./bin/console queue:import all
+. bin/reindex "ci-reindex"
 echo "Finished launching reindexing"
 
-. bin/ci-wait-steady-state
-./bin/console index:switch:read "ci-reindex"
 . bin/ci-expected-results
