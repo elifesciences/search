@@ -29,7 +29,7 @@ echo "Importing api-dummy"
 bin/ci-import
 
 echo "Reindexing api-dummy"
-bin/ci-reindex
+timeout 60 bin/ci-reindex
 
 echo "Reindexing RDS articles"
 bin/ci-reindex-rds
