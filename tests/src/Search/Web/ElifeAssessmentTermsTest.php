@@ -8,7 +8,7 @@ use tests\eLife\Search\Web\ElasticTestCase;
 #[Group('web')]
 class ElifeAssessmentTermsTest extends ElasticTestCase
 {
-    public function testSignificanceFilteringWorks()
+    public function testGivenOnlyOneOfTwoPapersIsLandmarkWhenFilteringForLandmarkSignificanceItOnlyReturnsTheLandmarkPaper()
     {
         $significance = 'landmark';
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => [$significance]]);
