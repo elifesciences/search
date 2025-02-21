@@ -92,6 +92,8 @@ final class SearchController
         $subjects = $request->query->get('subject');
         /** @var string[]|null $types */
         $types = $request->query->get('type');
+        /** @var string[]|null $elifeAssessmentSignificance */
+        $elifeAssessmentSignificance = $request->query->get('elifeAssessmentSignificance');
         $startDate = $request->query->get('start-date');
         $endDate = $request->query->get('end-date');
         $startDateTime = null;
@@ -138,7 +140,9 @@ final class SearchController
         if (is_array($types)) {
             $query->whereType($types);
         }
-
+        if (is_array($elifeAssessmentSignificance)) {
+            $query->whereElifeAssessmentSignificance($elifeAssessmentSignificance);
+        }
         if ($startDateTime || $endDateTime) {
             $query->betweenDates($startDateTime, $endDateTime);
         }
