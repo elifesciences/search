@@ -10,9 +10,11 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
 {
     public function testSignificanceFilteringWorks()
     {
+        $significance = 'landmark';
+        $response = $this->performApiRequest(['elifeAssessmentSignificance' => [$significance]]);
         $this->markTestIncomplete();
         /** @phpstan-ignore deadCode.unreachable */
-        $this->assertEquals(1, $total);
+        $this->assertEquals(1, $response->total);
         $this->assertResultsOnlyContainFilteredSignificance($significance, $results);
     }
 
@@ -23,5 +25,12 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             /** @phpstan-ignore method.notFound */
             $this->assertItemContainsElifeAssessment($item);
         }
+    }
+
+    private function performApiRequest(array $queryStringParameters)
+    {
+        $this->newClient();
+        $this->jsonRequest('GET', '/search', $queryStringParameters);
+        return $this->getJsonResponse();
     }
 }
