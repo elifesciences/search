@@ -16,9 +16,10 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             $this->provideArticleWithElifeAssessmentSignificance($significance)
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => [$significance]]);
-        $this->markTestIncomplete();
+        $this->markTestSkipped();
         /** @phpstan-ignore deadCode.unreachable */
         $this->assertEquals(1, $response->total);
+        $this->markTestIncomplete();
         $this->assertResultsOnlyContainFilteredSignificance($significance, $results);
     }
 
@@ -79,6 +80,7 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         return array_merge(
             $this->provideArbitraryArticleWithoutElifeAssessment(),
             [
+                'id' => '19663',
                 'elifeAssessment' => [
                     'significance' => [$significance],
                 ],
