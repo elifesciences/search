@@ -15,4 +15,13 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertEquals(1, $total);
         $this->assertResultsOnlyContainFilteredSignificance($significance, $results);
     }
+
+    /** @phpstan-ignore method.unused */
+    private function assertResultsOnlyContainFilteredSignificance(string $significance, array $results)
+    {
+        foreach ($results as $item) {
+            /** @phpstan-ignore method.notFound */
+            $this->assertItemContainsElifeAssessment($item);
+        }
+    }
 }
