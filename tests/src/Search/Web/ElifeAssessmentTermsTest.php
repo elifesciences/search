@@ -11,6 +11,10 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
     public function testGivenOnlyOneOfTwoPapersIsLandmarkWhenFilteringForLandmarkSignificanceItOnlyReturnsTheLandmarkPaper()
     {
         $significance = 'landmark';
+        $this->addDocumentsToElasticSearch([
+            $this->provideArbitraryArticleWithoutElifeAssessment(),
+            $this->provideArticleWithElifeAssessmentSignificance($significance)
+        ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => [$significance]]);
         $this->markTestIncomplete();
         /** @phpstan-ignore deadCode.unreachable */
@@ -32,5 +36,15 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->newClient();
         $this->jsonRequest('GET', '/search', $queryStringParameters);
         return $this->getJsonResponse();
+    }
+
+    private function provideArbitraryArticleWithoutElifeAssessment()
+    {
+        return [];
+    }
+
+    private function provideArticleWithElifeAssessmentSignificance(string $significance)
+    {
+        return [];
     }
 }
