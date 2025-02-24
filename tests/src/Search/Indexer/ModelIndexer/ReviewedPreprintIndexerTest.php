@@ -53,7 +53,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
 
     #[DataProvider('modelProvider')]
     #[Test]
-    public function testIndexOfReviewedPreprint(ReviewedPreprint $reviewedPreprint)
+    public function testGivenNoArticlesWithTheSameIdItInsertsTheReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
         /** @var \Mockery\Expectation $getDocumentByResearchArticleIdExpectation */
         $getDocumentByResearchArticleIdExpectation = $this->elastic->shouldReceive('getDocumentById');
@@ -91,7 +91,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
 
     #[DataProvider('modelProvider')]
     #[Test]
-    public function testIndexOfReviewedPreprintSkipped(ReviewedPreprint $reviewedPreprint)
+    public function testGivenAResearchArticleWithTheSameIdItReturnsAnEmptyChangeSet(ReviewedPreprint $reviewedPreprint)
     {
         /** @var \Mockery\Expectation $getDocumentByIdExpectation */
         $getDocumentByIdExpectation = $this->elastic->shouldReceive('getDocumentById');
@@ -107,7 +107,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
 
     #[DataProvider('modelProvider')]
     #[Test]
-    public function testIndexOfReviewedPreprintSkippedToolsResources(ReviewedPreprint $reviewedPreprint)
+    public function testGivenAToolsAndResourcesArticleItReturnsAnEmptyChangeSet(ReviewedPreprint $reviewedPreprint)
     {
         /** @var \Mockery\Expectation $getDocumentByResearchArticleIdExpectation */
         $getDocumentByResearchArticleIdExpectation = $this->elastic->shouldReceive('getDocumentById');
