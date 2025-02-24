@@ -13,6 +13,7 @@ use eLife\ApiSdk\Model\ArticleVersion;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ArticleIndexer;
 use Mockery\MockInterface;
+use Traversable;
 
 final class ArticleIndexerTest extends TestCase
 {
@@ -71,6 +72,25 @@ final class ArticleIndexerTest extends TestCase
         } else {
             $this->assertCount(0, $changeSet->getDeletes());
         }
+    }
+
+    public static function articleWithElifeAssessmentSignificanceProvider(): Traversable
+    {
+        foreach (self::modelProvider() as $key => $arguments) {
+            /** @var ArticleVersion $articleVersion */
+            $articleVersion = $arguments[0];
+            if ($articleVersion->getElifeAssessment()) {
+                yield $key => [$articleVersion];
+            }
+        }
+    }
+
+    #[DataProvider('articleWithElifeAssessmentSignificanceProvider')]
+    #[Test]
+    public function testIndexOfArticleWithElifeAssessmentSignificance(ArticleVersion $articleVersion)
+    {
+        $this->assertNotNull($articleVersion->getElifeAssessment());
+        $this->markTestIncomplete();
     }
 
     public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
