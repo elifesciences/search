@@ -7,8 +7,6 @@ services:
   app:
     build:
       target: dev
-    environment:
-      - GATEWAY_HOST=api-dummy:8080
     volumes:
       - ./:/app
   queue-watcher:
