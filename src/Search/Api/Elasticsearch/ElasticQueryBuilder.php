@@ -270,6 +270,12 @@ final class ElasticQueryBuilder implements QueryBuilder
 
     public function whereElifeAssessmentSignificance(array $significance = []) : QueryBuilder
     {
+        $this->postFilter([
+            'terms' => [
+                'elifeAssessment.significance' => $significance,
+            ],
+        ]);
+        
         return $this;
     }
 

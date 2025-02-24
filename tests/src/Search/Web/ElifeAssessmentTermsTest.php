@@ -16,10 +16,9 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             $this->provideArticleWithElifeAssessmentSignificance($significance)
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => [$significance]]);
-        $this->markTestSkipped();
-        /** @phpstan-ignore deadCode.unreachable */
         $this->assertEquals(1, $response->total);
         $this->markTestIncomplete();
+        /** @phpstan-ignore deadCode.unreachable */
         $this->assertResultsOnlyContainFilteredSignificance($significance, $results);
     }
 
