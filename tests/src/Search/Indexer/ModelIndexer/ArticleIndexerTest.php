@@ -96,8 +96,6 @@ final class ArticleIndexerTest extends TestCase
         $insert = $changeSet->getInserts()[0];
 
         $articleJson = json_decode($insert['json'], true);
-        $this->markTestSkipped('failing test due to missing behaviour');
-        /** @phpstan-ignore deadCode.unreachable */
         $this->assertArrayHasKey('elifeAssessment', $articleJson);
         $this->assertArrayHasKey('significance', $articleJson['elifeAssessment']);
     }
