@@ -79,7 +79,7 @@ final class ArticleIndexerTest extends TestCase
         foreach (self::modelProvider() as $key => $arguments) {
             /** @var ArticleVersion $articleVersion */
             $articleVersion = $arguments[0];
-            if ($articleVersion->getElifeAssessment()) {
+            if ($articleVersion->getElifeAssessment() && !empty($articleVersion->getElifeAssessment()->getSignificance())) {
                 yield $key => [$articleVersion];
             }
         }
