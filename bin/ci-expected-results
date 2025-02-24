@@ -90,7 +90,7 @@ echo $results
 
 echo "CHECK: List of reviewed preprints by date desc default"
 actual_reviewed_preprint_title=$(curl --no-progress-meter "localhost/search?type[]=reviewed-preprint&order=desc&sort=date&per-page=100" | jq ".items[0].title")
-expected_reviewed_preprint_title='"B cell expression of the enzyme PexRAP, an intermediary in ether lipid biosynthesis, promotes antibody responses and germinal center size"'
+expected_reviewed_preprint_title=$(curl --no-progress-meter "api-dummy:8080/search?type[]=reviewed-preprint&order=desc&sort=date&per-page=100" | jq ".items[0].title")
 if [ "$actual_reviewed_preprint_title" != "$expected_reviewed_preprint_title" ]; then
     echo "When listing all reviewed-preprints by default date desc the most recently updated preprint should be the first result"
     echo "Expected title $expected_reviewed_preprint_title, actual title $actual_reviewed_preprint_title"
@@ -99,7 +99,7 @@ fi
 
 echo "CHECK: List of reviewed preprints by date desc published"
 actual_reviewed_preprint_title=$(curl --no-progress-meter "localhost/search?type[]=reviewed-preprint&order=desc&sort=date&use-date=published&per-page=100" | jq ".items[0].title")
-expected_reviewed_preprint_title='"B cell expression of the enzyme PexRAP, an intermediary in ether lipid biosynthesis, promotes antibody responses and germinal center size"'
+expected_reviewed_preprint_title=$(curl --no-progress-meter "api-dummy:8080/search?type[]=reviewed-preprint&order=desc&sort=date&use-date=published&per-page=100" | jq ".items[0].title")
 if [ "$actual_reviewed_preprint_title" != "$expected_reviewed_preprint_title" ]; then
     echo "When listing all reviewed-preprints by published date desc the most recently published preprint should be the first result"
     echo "Expected title $expected_reviewed_preprint_title, actual title $actual_reviewed_preprint_title"
