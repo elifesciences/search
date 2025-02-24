@@ -112,3 +112,8 @@ properties:
     type: date
   statusDate:
     type: date
+  elifeAssessment:
+    type: object
+    properties:
+      significance:
+        type: keyword
