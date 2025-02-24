@@ -84,6 +84,10 @@ if [ "$total_with_reserved_chars" -lt 0 ]; then
     exit 2
 fi
 
+echo "WIP CHECK: Search by elifeAssessment significance"
+results=$(curl --no-progress-meter "localhost/search?per-page=100&elifeAssessmentSignificance[]=important" | jq ".total")
+echo $results
+
 echo "CHECK: List of reviewed preprints by date desc default"
 actual_reviewed_preprint_title=$(curl --no-progress-meter "localhost/search?type[]=reviewed-preprint&order=desc&sort=date&per-page=100" | jq ".items[0].title")
 expected_reviewed_preprint_title='"B cell expression of the enzyme PexRAP, an intermediary in ether lipid biosynthesis, promotes antibody responses and germinal center size"'
