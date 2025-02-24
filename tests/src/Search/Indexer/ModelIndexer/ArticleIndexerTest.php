@@ -90,7 +90,16 @@ final class ArticleIndexerTest extends TestCase
     public function testIndexOfArticleWithElifeAssessmentSignificance(ArticleVersion $articleVersion)
     {
         $this->assertNotNull($articleVersion->getElifeAssessment());
-        $this->markTestIncomplete();
+
+        $changeSet = $this->indexer->prepareChangeSet($articleVersion);
+        $this->assertCount(1, $changeSet->getInserts());
+        $insert = $changeSet->getInserts()[0];
+
+        $articleJson = json_decode($insert['json'], true);
+        $this->markTestSkipped('failing test due to missing behaviour');
+        /** @phpstan-ignore deadCode.unreachable */
+        $this->assertArrayHasKey('elifeAssessment', $articleJson);
+        $this->assertArrayHasKey('significance', $articleJson['elifeAssessment']);
     }
 
     public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
