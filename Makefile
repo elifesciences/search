@@ -41,6 +41,10 @@ test: config.php bring-up-app-and-queue-watcher
 fast-test: vendor
 	vendor/bin/phpunit --exclude-group web --exclude-group slow $(TEST)
 
+.PHONY: integration-test
+integration-test: config.php clean bring-up-app-without-queue-watcher
+	$(DOCKER_COMPOSE_DEV) exec app bash bin/ci-import
+
 .PHONY: clean
 clean:
 	$(DOCKER_COMPOSE_DEV) down --volumes
