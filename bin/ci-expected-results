@@ -86,7 +86,11 @@ fi
 
 echo "WIP CHECK: Search by elifeAssessment significance"
 results=$(curl --no-progress-meter "localhost/search?per-page=100&elifeAssessmentSignificance[]=important" | jq ".total")
-echo $results
+expected_results=$(curl --no-progress-meter "api-dummy:8080/search?per-page=100&elifeAssessmentSignificance[]=important" | jq ".total")
+if [ "$results" != "$expected_results" ]; then
+    echo "When filtering by elifeAssessmentSignificance term, only items with this significance are returned"
+    echo "Expected total $expected_results, actual total $results"
+fi
 
 echo "CHECK: List of reviewed preprints by date desc default"
 actual_reviewed_preprint_title=$(curl --no-progress-meter "localhost/search?type[]=reviewed-preprint&order=desc&sort=date&per-page=100" | jq ".items[0].title")
