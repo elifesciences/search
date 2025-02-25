@@ -13,6 +13,7 @@ use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
 use Mockery;
 use Mockery\MockInterface;
+use Traversable;
 
 final class ReviewedPreprintIndexerTest extends TestCase
 {
@@ -69,13 +70,23 @@ final class ReviewedPreprintIndexerTest extends TestCase
         $this->assertStringStartsWith('reviewed-preprint-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
-    #[DataProvider('modelProvider')]
+    public static function reviewedPreprintWithElifeAssessmentSignificanceProvider(): Traversable
+    {
+        foreach (self::modelProvider() as $key => $arguments) {
+            /** @var ReviewedPreprint $reviewedPreprint */
+            $reviewedPreprint = $arguments[0];
+            if ($reviewedPreprint->getElifeAssessment() && !empty($reviewedPreprint->getElifeAssessment()->getSignificance())) {
+                yield $key => [$reviewedPreprint];
+            }
+        }
+    }
+
+    #[DataProvider('reviewedPreprintWithElifeAssessmentSignificanceProvider')]
     #[Test]
     public function testGivenAReviewedPreprintWithElifeAssessmentSignificanceThatHasNotBeenSupersededItCreatesAnInsertion(ReviewedPreprint $reviewedPreprint)
     {
-        $this->markTestSkipped();
-        // @phpstan-ignore deadCode.unreachable
         $this->assertNotNull($reviewedPreprint->getElifeAssessment());
+        $this->markTestIncomplete();
     }
 
     #[DataProvider('modelProvider')]
