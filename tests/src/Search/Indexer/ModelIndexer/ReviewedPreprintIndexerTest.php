@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
+use eLife\Search\Indexer\ModelIndexer\ElasticsearchBackedReviewedPreprintLifecycle;
 use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
 use Mockery;
 use Mockery\MockInterface;
@@ -27,7 +28,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
         /** @var MockInterface&MappedElasticsearchClient $mockElastic */
         $mockElastic = Mockery::mock(MappedElasticsearchClient::class);
         $this->elastic = $mockElastic;
-        $this->indexer = new ReviewedPreprintIndexer($this->getSerializer(), $this->elastic);
+        $this->indexer = new ReviewedPreprintIndexer($this->getSerializer(), $this->elastic, new ElasticsearchBackedReviewedPreprintLifecycle());
     }
 
     protected static function getModelDefinitions(): array

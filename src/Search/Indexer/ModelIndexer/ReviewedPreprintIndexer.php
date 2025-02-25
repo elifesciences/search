@@ -11,11 +11,13 @@ use Symfony\Component\Serializer\Serializer;
 final class ReviewedPreprintIndexer extends AbstractModelIndexer
 {
     private MappedElasticsearchClient $client;
+    private ReviewedPreprintLifecycle $reviewedPreprintLifecycle;
 
-    public function __construct(Serializer $serializer, MappedElasticsearchClient $client)
+    public function __construct(Serializer $serializer, MappedElasticsearchClient $client, ReviewedPreprintLifecycle $reviewedPreprintLifecycle)
     {
         parent::__construct($serializer);
         $this->client = $client;
+        $this->reviewedPreprintLifecycle = $reviewedPreprintLifecycle;
     }
 
     protected function getSdkClass(): string
@@ -30,6 +32,9 @@ final class ReviewedPreprintIndexer extends AbstractModelIndexer
     public function prepareChangeSet(Model $reviewedPreprint) : ChangeSet
     {
         $changeSet = new ChangeSet();
+        if ($this->reviewedPreprintLifecycle->isSuperseded($reviewedPreprint->getId())) {
+            return $changeSet;
+        }
 
         // Don't index if article with same id present in index.
         foreach ([
