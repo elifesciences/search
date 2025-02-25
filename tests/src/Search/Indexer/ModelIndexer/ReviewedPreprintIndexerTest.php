@@ -86,7 +86,18 @@ final class ReviewedPreprintIndexerTest extends TestCase
     public function testGivenAReviewedPreprintWithElifeAssessmentSignificanceThatHasNotBeenSupersededItCreatesAnInsertion(ReviewedPreprint $reviewedPreprint)
     {
         $this->assertNotNull($reviewedPreprint->getElifeAssessment());
-        $this->markTestIncomplete();
+
+        $this->reviewedPreprintLifecycle->method('isSuperseded')->willReturn(false);
+        $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
+
+        $this->assertCount(1, $changeSet->getInserts());
+        $insert = $changeSet->getInserts()[0];
+
+        $articleJson = json_decode($insert['json'], true);
+        $this->markTestSkipped();
+        // @phpstan-ignore deadCode.unreachable
+        $this->assertArrayHasKey('elifeAssessment', $articleJson);
+        $this->assertArrayHasKey('significance', $articleJson['elifeAssessment']);
     }
 
     #[DataProvider('modelProvider')]
