@@ -10,13 +10,12 @@ use Symfony\Component\Serializer\Serializer;
 
 final class ReviewedPreprintIndexer extends AbstractModelIndexer
 {
-    private MappedElasticsearchClient $client;
     private ReviewedPreprintLifecycle $reviewedPreprintLifecycle;
 
+    // @phpstan-ignore constructor.unusedParameter
     public function __construct(Serializer $serializer, MappedElasticsearchClient $client, ReviewedPreprintLifecycle $reviewedPreprintLifecycle)
     {
         parent::__construct($serializer);
-        $this->client = $client;
         $this->reviewedPreprintLifecycle = $reviewedPreprintLifecycle;
     }
 
@@ -34,18 +33,6 @@ final class ReviewedPreprintIndexer extends AbstractModelIndexer
         $changeSet = new ChangeSet();
         if ($this->reviewedPreprintLifecycle->isSuperseded($reviewedPreprint->getId())) {
             return $changeSet;
-        }
-
-        // Don't index if article with same id present in index.
-        foreach ([
-            'research-article',
-            'tools-resources',
-            'short-report',
-            'research-advance',
-        ] as $type) {
-            if ($this->client->getDocumentById($type.'-'. $reviewedPreprint->getId(), null, true) !== null) {
-                return $changeSet;
-            }
         }
 
         $reviewedPreprintObject = json_decode($this->serialize($reviewedPreprint));
