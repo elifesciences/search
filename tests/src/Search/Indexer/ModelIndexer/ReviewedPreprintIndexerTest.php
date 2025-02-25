@@ -53,7 +53,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
 
     #[DataProvider('modelProvider')]
     #[Test]
-    public function testGivenNoArticlesWithTheSameIdItInsertsTheReviewedPreprint(ReviewedPreprint $reviewedPreprint)
+    public function testGivenAReviewedPreprintThatHasNotBeenSupersededItCreatesAnInsertion(ReviewedPreprint $reviewedPreprint)
     {
         $this->reviewedPreprintLifecycle->method('isSuperseded')->willReturn(false);
         $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
@@ -69,21 +69,9 @@ final class ReviewedPreprintIndexerTest extends TestCase
         $this->assertStringStartsWith('reviewed-preprint-', $id, 'ID should be assigned an appropriate prefix.');
     }
 
-
     #[DataProvider('modelProvider')]
     #[Test]
-    public function testGivenAResearchArticleWithTheSameIdItReturnsAnEmptyChangeSet(ReviewedPreprint $reviewedPreprint)
-    {
-        $this->reviewedPreprintLifecycle->method('isSuperseded')->willReturn(true);
-        $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
-
-        $this->assertCount(0, $changeSet->getDeletes());
-        $this->assertCount(0, $changeSet->getInserts());
-    }
-
-    #[DataProvider('modelProvider')]
-    #[Test]
-    public function testGivenAToolsAndResourcesArticleItReturnsAnEmptyChangeSet(ReviewedPreprint $reviewedPreprint)
+    public function testGivenAReviewedPreprintThatHasBeenSupersededItDoesNotCreateAnInsertion(ReviewedPreprint $reviewedPreprint)
     {
         $this->reviewedPreprintLifecycle->method('isSuperseded')->willReturn(true);
         $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
