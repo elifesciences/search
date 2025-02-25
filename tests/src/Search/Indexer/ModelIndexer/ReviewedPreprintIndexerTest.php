@@ -75,7 +75,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
         foreach (self::modelProvider() as $key => $arguments) {
             /** @var ReviewedPreprint $reviewedPreprint */
             $reviewedPreprint = $arguments[0];
-            if ($reviewedPreprint->getElifeAssessment() && !empty($reviewedPreprint->getElifeAssessment()->getSignificance())) {
+            if ($reviewedPreprint->getElifeAssessment() && ($reviewedPreprint->getElifeAssessment()->getSignificance() !== null)) {
                 yield $key => [$reviewedPreprint];
             }
         }
