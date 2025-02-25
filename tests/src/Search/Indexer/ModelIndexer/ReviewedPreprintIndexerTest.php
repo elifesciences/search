@@ -4,11 +4,12 @@ namespace tests\eLife\Search\Indexer\ModelIndexer;
 
 use eLife\ApiSdk\Client\ReviewedPreprints;
 use eLife\ApiSdk\Model\ReviewedPreprint;
+use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintLifecycle;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
-use eLife\Search\Indexer\ModelIndexer\ElasticsearchBackedReviewedPreprintLifecycle;
 use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
 use Mockery;
 use Mockery\MockInterface;
@@ -19,16 +20,14 @@ final class ReviewedPreprintIndexerTest extends TestCase
     use CallSerializer;
     use ModelProvider;
 
-    private MockInterface&MappedElasticsearchClient $elastic;
-
     private ReviewedPreprintIndexer $indexer;
+
+    private Stub&ReviewedPreprintLifecycle $reviewedPreprintLifecycle;
 
     protected function setUp(): void
     {
-        /** @var MockInterface&MappedElasticsearchClient $mockElastic */
-        $mockElastic = Mockery::mock(MappedElasticsearchClient::class);
-        $this->elastic = $mockElastic;
-        $this->indexer = new ReviewedPreprintIndexer($this->getSerializer(), new ElasticsearchBackedReviewedPreprintLifecycle($this->elastic));
+        $this->reviewedPreprintLifecycle = $this->createStub(ReviewedPreprintLifecycle::class);
+        $this->indexer = new ReviewedPreprintIndexer($this->getSerializer(), $this->reviewedPreprintLifecycle);
     }
 
     protected static function getModelDefinitions(): array
@@ -56,26 +55,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
     #[Test]
     public function testGivenNoArticlesWithTheSameIdItInsertsTheReviewedPreprint(ReviewedPreprint $reviewedPreprint)
     {
-        /** @var \Mockery\Expectation $getDocumentByResearchArticleIdExpectation */
-        $getDocumentByResearchArticleIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByResearchArticleIdExpectation
-            ->with('research-article-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn(null);
-        /** @var \Mockery\Expectation $getDocumentByToolsAndResourcesIdExpectation */
-        $getDocumentByToolsAndResourcesIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByToolsAndResourcesIdExpectation
-            ->with('tools-resources-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn(null);
-        /** @var \Mockery\Expectation $getDocumentByShortReportIdExpectation */
-        $getDocumentByShortReportIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByShortReportIdExpectation
-            ->with('short-report-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn(null);
-        /** @var \Mockery\Expectation $getDocumentByResearchAdvanceIdExpectation */
-        $getDocumentByResearchAdvanceIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByResearchAdvanceIdExpectation
-            ->with('research-advance-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn(null);
+        $this->reviewedPreprintLifecycle->method('isSuperseded')->willReturn(false);
         $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
 
         $this->assertCount(0, $changeSet->getDeletes());
@@ -94,12 +74,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
     #[Test]
     public function testGivenAResearchArticleWithTheSameIdItReturnsAnEmptyChangeSet(ReviewedPreprint $reviewedPreprint)
     {
-        /** @var \Mockery\Expectation $getDocumentByIdExpectation */
-        $getDocumentByIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByIdExpectation
-            ->with('research-article-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn('found');
-
+        $this->reviewedPreprintLifecycle->method('isSuperseded')->willReturn(true);
         $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
 
         $this->assertCount(0, $changeSet->getDeletes());
@@ -110,17 +85,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
     #[Test]
     public function testGivenAToolsAndResourcesArticleItReturnsAnEmptyChangeSet(ReviewedPreprint $reviewedPreprint)
     {
-        /** @var \Mockery\Expectation $getDocumentByResearchArticleIdExpectation */
-        $getDocumentByResearchArticleIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByResearchArticleIdExpectation
-            ->with('research-article-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn(null);
-        /** @var \Mockery\Expectation $getDocumentByToolsAndResourcesIdExpectation */
-        $getDocumentByToolsAndResourcesIdExpectation = $this->elastic->shouldReceive('getDocumentById');
-        $getDocumentByToolsAndResourcesIdExpectation
-            ->with('tools-resources-'.$reviewedPreprint->getId(), null, true)
-            ->andReturn('found');
-
+        $this->reviewedPreprintLifecycle->method('isSuperseded')->willReturn(true);
         $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
 
         $this->assertCount(0, $changeSet->getDeletes());
