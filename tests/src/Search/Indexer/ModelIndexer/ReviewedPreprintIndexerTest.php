@@ -71,6 +71,15 @@ final class ReviewedPreprintIndexerTest extends TestCase
 
     #[DataProvider('modelProvider')]
     #[Test]
+    public function testGivenAReviewedPreprintWithElifeAssessmentSignificanceThatHasNotBeenSupersededItCreatesAnInsertion(ReviewedPreprint $reviewedPreprint)
+    {
+        $this->markTestSkipped();
+        // @phpstan-ignore deadCode.unreachable
+        $this->assertNotNull($reviewedPreprint->getElifeAssessment());
+    }
+
+    #[DataProvider('modelProvider')]
+    #[Test]
     public function testGivenAReviewedPreprintThatHasBeenSupersededItDoesNotCreateAnInsertion(ReviewedPreprint $reviewedPreprint)
     {
         $this->reviewedPreprintLifecycle->method('isSuperseded')->willReturn(true);
