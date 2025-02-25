@@ -4,7 +4,6 @@ namespace eLife\Search\Indexer\ModelIndexer;
 
 use eLife\ApiSdk\Model\ReviewedPreprint;
 use eLife\ApiSdk\Model\Model;
-use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ChangeSet;
 use Symfony\Component\Serializer\Serializer;
 
@@ -12,8 +11,7 @@ final class ReviewedPreprintIndexer extends AbstractModelIndexer
 {
     private ReviewedPreprintLifecycle $reviewedPreprintLifecycle;
 
-    // @phpstan-ignore constructor.unusedParameter
-    public function __construct(Serializer $serializer, MappedElasticsearchClient $client, ReviewedPreprintLifecycle $reviewedPreprintLifecycle)
+    public function __construct(Serializer $serializer, ReviewedPreprintLifecycle $reviewedPreprintLifecycle)
     {
         parent::__construct($serializer);
         $this->reviewedPreprintLifecycle = $reviewedPreprintLifecycle;

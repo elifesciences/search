@@ -46,11 +46,7 @@ class Indexer
             'article' => new ArticleIndexer($serializer, $rdsArticles),
             'blog-article' => new BlogArticleIndexer($serializer),
             'interview' => new InterviewIndexer($serializer),
-            'reviewed-preprint' => new ReviewedPreprintIndexer(
-                $serializer,
-                $client,
-                new ElasticsearchBackedReviewedPreprintLifecycle($client)
-            ),
+            'reviewed-preprint' => new ReviewedPreprintIndexer($serializer, new ElasticsearchBackedReviewedPreprintLifecycle($client)),
             'labs-post' => new LabsPostIndexer($serializer),
             'podcast-episode' => new PodcastEpisodeIndexer($serializer),
             'collection' => new CollectionIndexer($serializer),

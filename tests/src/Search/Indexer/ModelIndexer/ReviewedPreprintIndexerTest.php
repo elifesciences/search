@@ -28,7 +28,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
         /** @var MockInterface&MappedElasticsearchClient $mockElastic */
         $mockElastic = Mockery::mock(MappedElasticsearchClient::class);
         $this->elastic = $mockElastic;
-        $this->indexer = new ReviewedPreprintIndexer($this->getSerializer(), $this->elastic, new ElasticsearchBackedReviewedPreprintLifecycle($this->elastic));
+        $this->indexer = new ReviewedPreprintIndexer($this->getSerializer(), new ElasticsearchBackedReviewedPreprintLifecycle($this->elastic));
     }
 
     protected static function getModelDefinitions(): array
