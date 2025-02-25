@@ -84,12 +84,13 @@ if [ "$total_with_reserved_chars" -lt 0 ]; then
     exit 2
 fi
 
-echo "WIP CHECK: Search by elifeAssessment significance"
+echo "CHECK: Search by elifeAssessment significance"
 results=$(curl --no-progress-meter "localhost/search?per-page=100&elifeAssessmentSignificance[]=important" | jq ".total")
 expected_results=$(curl --no-progress-meter "api-dummy:8080/search?per-page=100&elifeAssessmentSignificance[]=important" | jq ".total")
 if [ "$results" != "$expected_results" ]; then
     echo "When filtering by elifeAssessmentSignificance term, only items with this significance are returned"
     echo "Expected total $expected_results, actual total $results"
+    exit 2
 fi
 
 echo "CHECK: List of reviewed preprints by date desc default"

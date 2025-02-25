@@ -94,8 +94,6 @@ final class ReviewedPreprintIndexerTest extends TestCase
         $insert = $changeSet->getInserts()[0];
 
         $articleJson = json_decode($insert['json'], true);
-        $this->markTestSkipped();
-        // @phpstan-ignore deadCode.unreachable
         $this->assertArrayHasKey('elifeAssessment', $articleJson);
         $this->assertArrayHasKey('significance', $articleJson['elifeAssessment']);
     }
