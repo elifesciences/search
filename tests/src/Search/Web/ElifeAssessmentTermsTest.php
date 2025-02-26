@@ -30,6 +30,19 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertEquals(2, $response['total']);
     }
 
+    public function testGivenTwoPapersOneOfWhichWithNoAssignedSignificanceWhenFilteringForNotAssignedSignificanceItReturnsThePaperWithNoAssignedSignificance()
+    {
+        $this->addDocumentsToElasticSearch([
+            $this->provideArticleWithElifeAssessmentSignificance('landmark'),
+            $this->provideArticleWithElifeAssessmentAndNoSignificance(),
+        ]);
+        $response = $this->performApiRequest(['elifeAssessmentSignificance' => ['not-assigned']]);
+        $this->markTestSkipped('failing test');
+        // @phpstan-ignore deadCode.unreachable
+        $this->assertEquals(1, $response['total']);
+        $this->markTestIncomplete('check the right paper is returned');
+    }
+
     private function assertResultsOnlyContainFilteredSignificance(string $significance, array $items)
     {
         foreach ($items as $item) {
@@ -95,6 +108,19 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
                 'id' => (string) rand(1, 99999),
                 'elifeAssessment' => [
                     'significance' => [$significance],
+                ],
+            ],
+        );
+    }
+
+    private function provideArticleWithElifeAssessmentAndNoSignificance()
+    {
+        return array_merge(
+            $this->provideArbitraryArticleWithoutElifeAssessment(),
+            [
+                'id' => (string) rand(1, 99999),
+                'elifeAssessment' => [
+                    'significance' => [],
                 ],
             ],
         );
