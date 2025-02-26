@@ -16,32 +16,29 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             $this->provideArticleWithElifeAssessmentSignificance($significance)
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => [$significance]]);
-        $this->assertEquals(1, $response->total);
-        $this->assertResultsOnlyContainFilteredSignificance($significance, $response->items);
+        $this->assertEquals(1, $response['total']);
+        $this->assertResultsOnlyContainFilteredSignificance($significance, $response['items']);
     }
 
     private function assertResultsOnlyContainFilteredSignificance(string $significance, array $items)
     {
         foreach ($items as $item) {
-            $this->markTestSkipped();
-            /** @phpstan-ignore deadCode.unreachable */
             $this->assertItemContainsElifeAssessmentWithSpecificSignificanceProperty($significance, $item);
         }
     }
 
-    /** @phpstan-ignore method.unused */
     private function assertItemContainsElifeAssessmentWithSpecificSignificanceProperty(string $significance, array $item)
     {
         $this->assertArrayHasKey('elifeAssessment', $item);
         $this->assertArrayHasKey('significance', $item['elifeAssessment']);
-        $this->assertEquals($significance, $item['elifeAssessment']['significance']);
+        $this->assertEquals([$significance], $item['elifeAssessment']['significance']);
     }
 
     private function performApiRequest(array $queryStringParameters)
     {
         $this->newClient();
         $this->jsonRequest('GET', '/search', $queryStringParameters);
-        return $this->getJsonResponse();
+        return $this->getJsonResponseAsAssociativeArray();
     }
 
     private function provideArbitraryArticleWithoutElifeAssessment()

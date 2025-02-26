@@ -291,6 +291,22 @@ abstract class ElasticTestCase extends WebTestCase
         return $json;
     }
 
+    public function getJsonResponseAsAssociativeArray()
+    {
+        /** @var Response $response */
+        $response = $this->getResponse();
+        if (!$response->isOk()) {
+            $decodedResponse = json_decode($response->getContent(), true);
+            if (!$decodedResponse) {
+                $decodedResponse = $response->getContent();
+            }
+            $this->fail('Response returned was not 200 but '.$response->getStatusCode().': '.var_export($decodedResponse, true));
+        }
+        $json = json_decode($response->getContent(), true);
+
+        return $json;
+    }
+
 
     public function addDocumentToElasticSearch($doc)
     {
