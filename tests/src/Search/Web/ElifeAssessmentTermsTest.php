@@ -107,6 +107,13 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             [
                 'id' => (string) rand(1, 99999),
                 'elifeAssessment' => [
+                    'title' => 'eLife assessment',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'lorem ipsum',
+                        ],
+                    ],
                     'significance' => [$significance],
                 ],
             ],
@@ -120,6 +127,13 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             [
                 'id' => (string) rand(1, 99999),
                 'elifeAssessment' => [
+                    'title' => 'eLife assessment',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'lorem ipsum',
+                        ],
+                    ],
                     'significance' => [],
                 ],
             ],
