@@ -30,10 +30,11 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertEquals(2, $response['total']);
     }
 
-    public function testGivenTwoPapersOneOfWhichWithNoAssignedSignificanceWhenFilteringForNotAssignedSignificanceItReturnsThePaperWithNoAssignedSignificance()
+    public function testGivenThreePapersOneOfWhichWithNoAssignedSignificanceWhenFilteringForNotAssignedSignificanceItReturnsThePaperWithNoAssignedSignificance()
     {
         $this->addDocumentsToElasticSearch([
             $this->provideArticleWithElifeAssessmentSignificance('landmark'),
+            $this->provideArbitraryArticleWithoutElifeAssessment(),
             $this->provideArticleWithElifeAssessmentAndNoSignificance(),
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => ['not-assigned']]);
