@@ -276,7 +276,7 @@ final class ElasticQueryBuilder implements QueryBuilder
                 'elifeAssessment.significance' => $significance,
             ],
         ];
-        $this->postFilter($filters[0]);
+        $this->postFilter($this->atLeastOneOf($filters));
         
         return $this;
     }
@@ -307,5 +307,14 @@ final class ElasticQueryBuilder implements QueryBuilder
         $this->query['body']['query']['bool']['filter'][] = ['range' => $this->dateQuery($query)];
 
         return $this;
+    }
+
+    private function atLeastOneOf(array $filters) : array
+    {
+        return [
+            'bool' => [
+                'should' => $filters
+            ],
+        ];
     }
 }
