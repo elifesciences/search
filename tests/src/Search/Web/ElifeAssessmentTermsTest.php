@@ -20,6 +20,16 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertResultsOnlyContainFilteredSignificance($significance, $response['items']);
     }
 
+    public function testGivenTwoPapersOneLandmarkAndOneImportantWhenFilteringForLandmarkOrImportantSignificanceItReturnsBothPapers()
+    {
+        $this->addDocumentsToElasticSearch([
+            $this->provideArticleWithElifeAssessmentSignificance('landmark'),
+            $this->provideArticleWithElifeAssessmentSignificance('important'),
+        ]);
+        $response = $this->performApiRequest(['elifeAssessmentSignificance' => ['landmark', 'important']]);
+        $this->assertEquals(2, $response['total']);
+    }
+
     private function assertResultsOnlyContainFilteredSignificance(string $significance, array $items)
     {
         foreach ($items as $item) {
@@ -82,7 +92,7 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         return array_merge(
             $this->provideArbitraryArticleWithoutElifeAssessment(),
             [
-                'id' => '19663',
+                'id' => (string) rand(1, 99999),
                 'elifeAssessment' => [
                     'significance' => [$significance],
                 ],
