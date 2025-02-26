@@ -17,18 +17,24 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => [$significance]]);
         $this->assertEquals(1, $response->total);
-        $this->markTestIncomplete();
-        /** @phpstan-ignore deadCode.unreachable */
-        $this->assertResultsOnlyContainFilteredSignificance($significance, $results);
+        $this->assertResultsOnlyContainFilteredSignificance($significance, $response->items);
+    }
+
+    private function assertResultsOnlyContainFilteredSignificance(string $significance, array $items)
+    {
+        foreach ($items as $item) {
+            $this->markTestSkipped();
+            /** @phpstan-ignore deadCode.unreachable */
+            $this->assertItemContainsElifeAssessmentWithSpecificSignificanceProperty($significance, $item);
+        }
     }
 
     /** @phpstan-ignore method.unused */
-    private function assertResultsOnlyContainFilteredSignificance(string $significance, array $results)
+    private function assertItemContainsElifeAssessmentWithSpecificSignificanceProperty(string $significance, array $item)
     {
-        foreach ($results as $item) {
-            /** @phpstan-ignore method.notFound */
-            $this->assertItemContainsElifeAssessment($item);
-        }
+        $this->assertArrayHasKey('elifeAssessment', $item);
+        $this->assertArrayHasKey('significance', $item['elifeAssessment']);
+        $this->assertEquals($significance, $item['elifeAssessment']['significance']);
     }
 
     private function performApiRequest(array $queryStringParameters)
