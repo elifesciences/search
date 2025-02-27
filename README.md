@@ -11,9 +11,6 @@ You should now be able to access the search API on http://localhost:8888/search
 
 Common tasks include:
 
-- To run fast checks (e.g. linting) and fast tests: `make check`
-- To run all PHPUnit tests, including slow ones: `make test`
-- To replicate CI checks, including integration tests: `make all-checks`
 - To run a production rather than a development image: `make prod`
 - To empty the database and all state: `make clean`
 
@@ -32,3 +29,23 @@ docker compose exec app bin/console queue:count
 ```
 
 Reload http://localhost:8888/search to see items being served by the search API.
+
+### Testing
+To run all PHPUnit tests, including slow ones:
+```
+make test
+```
+To run fast checks (e.g. linting) and fast tests: 
+```
+make check
+```
+
+To replicate CI checks, including integration tests:
+```
+make all-checks
+```
+
+To access all documents in the local database under the index named `elife_test`:
+```
+curl -v 'localhost:9200/elife_test/_search?pretty=true&q=*:*' | jq .
+```
