@@ -93,6 +93,17 @@ if [ "$results" != "$expected_results" ]; then
     exit 2
 fi
 
+echo "FAILING CHECK: Search by elifeAssessment significance not assigned"
+results=$(curl --no-progress-meter "localhost/search?per-page=100&elifeAssessmentSignificance[]=not-assigned" | jq ".total")
+expected_results=$(curl --no-progress-meter "api-dummy:8080/search?per-page=100&elifeAssessmentSignificance[]=not-assigned" | jq ".total")
+if [ "$results" != "$expected_results" ]; then
+    echo "When filtering for 'not-assigned' elifeAssessmentSignificance, only items without significance are returned"
+    echo "Expected total $expected_results, actual total $results"
+else
+  echo "Failing test is passing"
+  exit 2
+fi
+
 echo "CHECK: List of reviewed preprints by date desc default"
 actual_reviewed_preprint_title=$(curl --no-progress-meter "localhost/search?type[]=reviewed-preprint&order=desc&sort=date&per-page=100" | jq ".items[0].title")
 expected_reviewed_preprint_title=$(curl --no-progress-meter "api-dummy:8080/search?type[]=reviewed-preprint&order=desc&sort=date&per-page=100" | jq ".items[0].title")
