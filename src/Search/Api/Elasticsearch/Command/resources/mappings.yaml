@@ -115,5 +115,7 @@ properties:
   elifeAssessment:
     type: object
     properties:
+      title:
+        type: text
       significance:
         type: keyword
