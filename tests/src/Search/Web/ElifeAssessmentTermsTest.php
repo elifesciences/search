@@ -42,8 +42,6 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => ['not-assigned']]);
         $idsOfReturnedArticles = $this->toItemIds($response['items']);
-        $this->markTestSkipped('failing test');
-        // @phpstan-ignore deadCode.unreachable
         $this->assertContains($articleWithNoSignificanceKey['id'], $idsOfReturnedArticles, 'Expected article with no significance key to be returned');
         $this->assertContains($articleWithEmptySignificanceArray['id'], $idsOfReturnedArticles, 'Expected article with empty significance array to be returned');
         $this->assertEquals(2, $response['total']);

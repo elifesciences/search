@@ -276,6 +276,24 @@ final class ElasticQueryBuilder implements QueryBuilder
                 'elifeAssessment.significance' => $significance,
             ],
         ];
+
+        if (in_array('not-assigned', $significance)) {
+            $filters[] = [
+                'bool' => [
+                    'must' => [
+                        'exists' => [
+                            'field' => 'elifeAssessment.title',
+                        ],
+                    ],
+                    'must_not' => [
+                        'exists' => [
+                            'field' => 'elifeAssessment.significance',
+                        ],
+                    ],
+                ],
+            ];
+        }
+
         $this->postFilter($this->atLeastOneOf($filters));
         
         return $this;
