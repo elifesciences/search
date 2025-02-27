@@ -32,16 +32,28 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
 
     public function testGivenThreePapersOneOfWhichWithNoAssignedSignificanceWhenFilteringForNotAssignedSignificanceItReturnsThePaperWithNoAssignedSignificance()
     {
+        $articleWithEmptySignificanceArray = $this->provideArticleWithElifeAssessmentWithAnEmptySignificanceArray();
         $this->addDocumentsToElasticSearch([
-            $this->provideArticleWithElifeAssessmentSignificance('landmark'),
-            $this->provideArbitraryArticleWithoutElifeAssessment(),
-            $this->provideArticleWithElifeAssessmentAndNoSignificance(),
+            $this->provideArticleWithElifeAssessmentSignificance('landmark'), //assigned significance
+            $this->provideArbitraryArticleWithoutElifeAssessment(), //not applicable
+            $articleWithEmptySignificanceArray, //this is one of the two not-assigned cases
+            //$articleWithNoSignificanceKey, //this is the other case of the two not-assigned cases
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => ['not-assigned']]);
+        $idsOfReturnedArticles = $this->toItemIds($response['items']);
         $this->markTestSkipped('failing test');
         // @phpstan-ignore deadCode.unreachable
+        $this->assertContains($articleWithEmptySignificanceArray['id'], $idsOfReturnedArticles, 'Expected article with empty significance array to be returned');
         $this->assertEquals(1, $response['total']);
-        $this->markTestIncomplete('check the right paper is returned');
+    }
+
+    private function toItemIds(array $items) : array
+    {
+        $ids = [];
+        foreach ($items as $item) {
+            $ids[] = $item['id'];
+        }
+        return $ids;
     }
 
     private function assertResultsOnlyContainFilteredSignificance(string $significance, array $items)
@@ -121,7 +133,7 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         );
     }
 
-    private function provideArticleWithElifeAssessmentAndNoSignificance()
+    private function provideArticleWithElifeAssessmentWithAnEmptySignificanceArray()
     {
         return array_merge(
             $this->provideArbitraryArticleWithoutElifeAssessment(),
