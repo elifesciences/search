@@ -30,21 +30,23 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertEquals(2, $response['total']);
     }
 
-    public function testGivenThreePapersOneOfWhichWithNoAssignedSignificanceWhenFilteringForNotAssignedSignificanceItReturnsThePaperWithNoAssignedSignificance()
+    public function testGivenFourPapersTwoOfWhichLackSignificanceWhenFilteringForNotAssignedSignificanceItReturnsThePapersWithNoAssignedSignificance()
     {
         $articleWithEmptySignificanceArray = $this->provideArticleWithElifeAssessmentWithAnEmptySignificanceArray();
+        $articleWithNoSignificanceKey = $this->provideArticleWithElifeAssessmentWithoutSignificanceKey();
         $this->addDocumentsToElasticSearch([
-            $this->provideArticleWithElifeAssessmentSignificance('landmark'), //assigned significance
-            $this->provideArbitraryArticleWithoutElifeAssessment(), //not applicable
-            $articleWithEmptySignificanceArray, //this is one of the two not-assigned cases
-            //$articleWithNoSignificanceKey, //this is the other case of the two not-assigned cases
+            $this->provideArticleWithElifeAssessmentSignificance('landmark'), // assigned significance
+            $this->provideArbitraryArticleWithoutElifeAssessment(), // not applicable
+            $articleWithEmptySignificanceArray, // this is one of the two not-assigned cases
+            $articleWithNoSignificanceKey, // this is the other case of the two not-assigned cases
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => ['not-assigned']]);
         $idsOfReturnedArticles = $this->toItemIds($response['items']);
         $this->markTestSkipped('failing test');
         // @phpstan-ignore deadCode.unreachable
+        $this->assertContains($articleWithNoSignificanceKey['id'], $idsOfReturnedArticles, 'Expected article with no significance key to be returned');
         $this->assertContains($articleWithEmptySignificanceArray['id'], $idsOfReturnedArticles, 'Expected article with empty significance array to be returned');
-        $this->assertEquals(1, $response['total']);
+        $this->assertEquals(2, $response['total']);
     }
 
     private function toItemIds(array $items) : array
@@ -128,6 +130,25 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
                         ],
                     ],
                     'significance' => [$significance],
+                ],
+            ],
+        );
+    }
+
+    private function provideArticleWithElifeAssessmentWithoutSignificanceKey()
+    {
+        return array_merge(
+            $this->provideArbitraryArticleWithoutElifeAssessment(),
+            [
+                'id' => (string) rand(1, 99999),
+                'elifeAssessment' => [
+                    'title' => 'eLife assessment',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'lorem ipsum',
+                        ],
+                    ],
                 ],
             ],
         );
