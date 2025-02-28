@@ -87,8 +87,8 @@ reindex-in-journal-test-environment:
 reindex-in-journal-prod-environment:
 	kubectl -n journal--prod create job --from=cronjob/search-queue-reindex reindex-$(shell date "+%Y%m%d-%H%M")
 
-.PHONY: update-api-sdk
-update-api-sdk: config.php build
+.PHONY: update-api
+update-api: config.php build
 	$(DOCKER_COMPOSE_DEV) run --no-deps setup composer install
 	$(DOCKER_COMPOSE_DEV) run --no-deps setup composer update 'elife/api' 'elife/api-sdk' --no-suggest --no-interaction
 
