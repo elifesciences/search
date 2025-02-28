@@ -12,9 +12,8 @@ final class ElasticsearchBackedReviewedPreprintLifecycleTest extends TestCase
     #[Test]
     public function givenAReviewedPreprintIdWhenNoSupportedArticleTypeWithThatIdIsFoundThenIsNotSuperseded()
     {
-        $this->markTestSkipped();
-        // @phpstan-ignore deadCode.unreachable
-        $client = $this->createStub(MappedElasticsearchClient::class);
+        $client = $this->createMock(MappedElasticsearchClient::class);
+        $client->method('getDocumentById')->willReturn(null);
         $idOfReviewedPreprintThatIsNotSuperseded = '12345';
         $result = (new ElasticsearchBackedReviewedPreprintLifecycle($client))->isSuperseded($idOfReviewedPreprintThatIsNotSuperseded);
         $this->assertFalse($result);
