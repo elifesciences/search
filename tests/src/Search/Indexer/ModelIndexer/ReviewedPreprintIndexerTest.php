@@ -75,7 +75,7 @@ final class ReviewedPreprintIndexerTest extends TestCase
         foreach (self::modelProvider() as $key => $arguments) {
             /** @var ReviewedPreprint $reviewedPreprint */
             $reviewedPreprint = $arguments[0];
-            if ($reviewedPreprint->getElifeAssessment() && ($reviewedPreprint->getElifeAssessment()->getSignificance() !== null)) {
+            if ($reviewedPreprint->getElifeAssessment() && !empty($reviewedPreprint->getElifeAssessment()->getSignificance())) {
                 yield $key => [$reviewedPreprint];
             }
         }
@@ -93,9 +93,10 @@ final class ReviewedPreprintIndexerTest extends TestCase
         $this->assertCount(1, $changeSet->getInserts());
         $insert = $changeSet->getInserts()[0];
 
-        $articleJson = json_decode($insert['json'], true);
-        $this->assertArrayHasKey('elifeAssessment', $articleJson);
-        $this->assertArrayHasKey('significance', $articleJson['elifeAssessment']);
+        $reviewedPreprintJson = json_decode($insert['json'], true);
+        $this->assertArrayHasKey('elifeAssessment', $reviewedPreprintJson);
+        $this->assertArrayHasKey('significance', $reviewedPreprintJson['elifeAssessment']);
+        $this->assertNotEmpty($reviewedPreprintJson['elifeAssessment']['significance']);
     }
 
     #[DataProvider('modelProvider')]
