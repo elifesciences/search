@@ -6,7 +6,10 @@
   colors="true" 
   bootstrap="tests/bootstrap" 
   cacheDirectory=".phpunit.cache"
-  displayDetailsOnTestsThatTriggerWarnings="true">
+  displayDetailsOnTestsThatTriggerWarnings="true"
+  displayDetailsOnTestsThatTriggerErrors="true"
+  displayDetailsOnTestsThatTriggerNotices="true"
+  displayDetailsOnPhpunitDeprecations="true">
   <testsuites>
     <testsuite name="eLife Search">
       <directory>tests/src</directory>
