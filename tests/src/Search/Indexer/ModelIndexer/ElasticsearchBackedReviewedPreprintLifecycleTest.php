@@ -18,4 +18,14 @@ final class ElasticsearchBackedReviewedPreprintLifecycleTest extends TestCase
         $result = (new ElasticsearchBackedReviewedPreprintLifecycle($client))->isSuperseded($idOfReviewedPreprintThatIsNotSuperseded);
         $this->assertFalse($result);
     }
+
+    #[Test]
+    public function givenAReviewedPreprintIdWhenResearchArticleWithThatIdIsFoundThenItIsSuperseded()
+    {
+        $client = $this->createMock(MappedElasticsearchClient::class);
+        $idOfReviewedPreprintThatIsSuperseded = '54321';
+        $client->method('getDocumentById')->willReturn('found');
+        $result = (new ElasticsearchBackedReviewedPreprintLifecycle($client))->isSuperseded($idOfReviewedPreprintThatIsSuperseded);
+        $this->assertTrue($result);
+    }
 }
