@@ -49,6 +49,7 @@ integration-test: config.php clean bring-up-app-without-queue-watcher
 clean:
 	$(DOCKER_COMPOSE_DEV) down --volumes
 	rm -rf var/logs/*.json
+	rm -rf vendor
 
 .PHONY: all-checks
 all-checks: config.php clean bring-up-app-without-queue-watcher
