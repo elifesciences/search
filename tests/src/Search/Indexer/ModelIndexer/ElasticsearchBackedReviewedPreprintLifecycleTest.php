@@ -15,7 +15,8 @@ final class ElasticsearchBackedReviewedPreprintLifecycleTest extends TestCase
         $this->markTestSkipped();
         // @phpstan-ignore deadCode.unreachable
         $client = $this->createStub(MappedElasticsearchClient::class);
-        $result = (new ElasticsearchBackedReviewedPreprintLifecycle($client))->isSuperseded('');
+        $idOfReviewedPreprintThatIsNotSuperseded = '12345';
+        $result = (new ElasticsearchBackedReviewedPreprintLifecycle($client))->isSuperseded($idOfReviewedPreprintThatIsNotSuperseded);
         $this->assertFalse($result);
     }
 }
