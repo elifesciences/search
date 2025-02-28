@@ -9,10 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
-use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ReviewedPreprintIndexer;
-use Mockery;
-use Mockery\MockInterface;
 use Traversable;
 
 final class ReviewedPreprintIndexerTest extends TestCase

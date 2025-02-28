@@ -6,13 +6,10 @@ use eLife\ApiSdk\Client\Articles;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Mockery;
 use eLife\ApiSdk\Model\ArticleVoR;
 use eLife\ApiSdk\Model\ArticlePoA;
 use eLife\ApiSdk\Model\ArticleVersion;
-use eLife\Search\Api\Elasticsearch\MappedElasticsearchClient;
 use eLife\Search\Indexer\ModelIndexer\ArticleIndexer;
-use Mockery\MockInterface;
 use Traversable;
 
 final class ArticleIndexerTest extends TestCase
