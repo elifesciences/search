@@ -79,7 +79,7 @@ final class ArticleIndexerTest extends TestCase
         foreach (self::modelProvider() as $key => $arguments) {
             /** @var ArticleVersion $articleVersion */
             $articleVersion = $arguments[0];
-            if ($articleVersion->getElifeAssessment() && ($articleVersion->getElifeAssessment()->getSignificance()) !== null) {
+            if ($articleVersion->getElifeAssessment() && !empty($articleVersion->getElifeAssessment()->getSignificance())) {
                 yield $key => [$articleVersion];
             }
         }
@@ -98,6 +98,7 @@ final class ArticleIndexerTest extends TestCase
         $articleJson = json_decode($insert['json'], true);
         $this->assertArrayHasKey('elifeAssessment', $articleJson);
         $this->assertArrayHasKey('significance', $articleJson['elifeAssessment']);
+        $this->assertNotEmpty($articleJson['elifeAssessment']['significance']);
     }
 
     public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
