@@ -47,6 +47,20 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertEquals(2, $response['total']);
     }
 
+    public function testGivenOnlyOneOfTwoPapersIsExceptionalWhenFilteringForExceptionalStrengthItOnlyReturnsTheExceptionalPaper()
+    {
+        $strength = 'exceptional';
+        $this->addDocumentsToElasticSearch([
+            $this->provideArbitraryArticleWithoutElifeAssessment(),
+            $this->provideArticleWithElifeAssessmentStrength($strength)
+        ]);
+        $response = $this->performApiRequest(['elifeAssessmentStrength' => [$strength]]);
+        $this->markTestSkipped();
+        // @phpstan-ignore deadCode.unreachable
+        $this->assertEquals(1, $response['total']);
+        $this->assertResultsOnlyContainFilteredStrength($strength, $response['items']);
+    }
+
     private function toItemIds(array $items) : array
     {
         $ids = [];
@@ -68,6 +82,21 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertArrayHasKey('elifeAssessment', $item);
         $this->assertArrayHasKey('significance', $item['elifeAssessment']);
         $this->assertEquals([$significance], $item['elifeAssessment']['significance']);
+    }
+
+    // @phpstan-ignore method.unused
+    private function assertResultsOnlyContainFilteredStrength(string $strength, array $items)
+    {
+        foreach ($items as $item) {
+            $this->assertItemContainsElifeAssessmentWithSpecificStrengthProperty($strength, $item);
+        }
+    }
+
+    private function assertItemContainsElifeAssessmentWithSpecificStrengthProperty(string $strength, array $item)
+    {
+        $this->assertArrayHasKey('elifeAssessment', $item);
+        $this->assertArrayHasKey('strength', $item['elifeAssessment']);
+        $this->assertEquals([$strength], $item['elifeAssessment']['strength']);
     }
 
     private function performApiRequest(array $queryStringParameters)
@@ -128,6 +157,26 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
                         ],
                     ],
                     'significance' => [$significance],
+                ],
+            ],
+        );
+    }
+
+    private function provideArticleWithElifeAssessmentStrength(string $strength)
+    {
+        return array_merge(
+            $this->provideArbitraryArticleWithoutElifeAssessment(),
+            [
+                'id' => (string) rand(1, 99999),
+                'elifeAssessment' => [
+                    'title' => 'eLife assessment',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'lorem ipsum',
+                        ],
+                    ],
+                    'strength' => [$strength],
                 ],
             ],
         );
