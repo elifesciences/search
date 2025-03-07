@@ -60,6 +60,16 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertResultsOnlyContainFilteredStrength($strength, $response['items']);
     }
 
+    public function testGivenTwoPapersOneExceptionalAndOneCompellingWhenFilteringForExceptionalOrCompellingStrengthItReturnsBothPapers()
+    {
+        $this->addDocumentsToElasticSearch([
+            $this->provideArticleWithElifeAssessmentStrength('exceptional'),
+            $this->provideArticleWithElifeAssessmentStrength('compelling'),
+        ]);
+        $response = $this->performApiRequest(['elifeAssessmentStrength' => ['exceptional', 'compelling']]);
+        $this->assertEquals(2, $response['total']);
+    }
+
     private function toItemIds(array $items) : array
     {
         $ids = [];
