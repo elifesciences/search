@@ -119,3 +119,5 @@ properties:
         type: text
       significance:
         type: keyword
+      strength:
+        type: keyword
