@@ -55,8 +55,7 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             $this->provideArticleWithElifeAssessmentStrength($strength)
         ]);
         $response = $this->performApiRequest(['elifeAssessmentStrength' => [$strength]]);
-        $this->markTestSkipped();
-        // @phpstan-ignore deadCode.unreachable
+
         $this->assertEquals(1, $response['total']);
         $this->assertResultsOnlyContainFilteredStrength($strength, $response['items']);
     }
@@ -84,7 +83,6 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertEquals([$significance], $item['elifeAssessment']['significance']);
     }
 
-    // @phpstan-ignore method.unused
     private function assertResultsOnlyContainFilteredStrength(string $strength, array $items)
     {
         foreach ($items as $item) {

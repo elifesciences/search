@@ -94,6 +94,8 @@ final class SearchController
         $types = $request->query->get('type');
         /** @var string[]|null $elifeAssessmentSignificance */
         $elifeAssessmentSignificance = $request->query->get('elifeAssessmentSignificance');
+        /** @var string[]|null $elifeAssessmentStrength */
+        $elifeAssessmentStrength = $request->query->get('elifeAssessmentStrength');
         $startDate = $request->query->get('start-date');
         $endDate = $request->query->get('end-date');
         $startDateTime = null;
@@ -142,6 +144,9 @@ final class SearchController
         }
         if (is_array($elifeAssessmentSignificance)) {
             $query->whereElifeAssessmentSignificance($elifeAssessmentSignificance);
+        }
+        if (is_array($elifeAssessmentStrength)) {
+            $query->whereElifeAssessmentStrength($elifeAssessmentStrength);
         }
         if ($startDateTime || $endDateTime) {
             $query->betweenDates($startDateTime, $endDateTime);

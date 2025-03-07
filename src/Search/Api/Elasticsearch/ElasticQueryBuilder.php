@@ -299,6 +299,20 @@ final class ElasticQueryBuilder implements QueryBuilder
         return $this;
     }
 
+    public function whereElifeAssessmentStrength(array $strength = []) : QueryBuilder
+    {
+        $filters = [];
+        $filters[] = [
+            'terms' => [
+                'elifeAssessment.strength' => $strength,
+            ],
+        ];
+
+        $this->postFilter($this->atLeastOneOf($filters));
+        
+        return $this;
+    }
+
     public function getRawQuery() : array
     {
         return $this->query;

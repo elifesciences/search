@@ -24,6 +24,8 @@ interface QueryBuilder
 
     public function whereElifeAssessmentSignificance(array $significance = []) : QueryBuilder;
 
+    public function whereElifeAssessmentStrength(array $strength = []) : QueryBuilder;
+
     public function betweenDates(DateTimeImmutable $startDate = null, DateTimeImmutable $endDate = null) : QueryBuilder;
 
     public function getRawQuery() : array;
