@@ -98,6 +98,33 @@ final class ArticleIndexerTest extends TestCase
         $this->assertNotEmpty($articleJson['elifeAssessment']['significance']);
     }
 
+    public static function articleWithElifeAssessmentStrengthProvider(): Traversable
+    {
+        foreach (self::modelProvider() as $key => $arguments) {
+            /** @var ArticleVersion $articleVersion */
+            $articleVersion = $arguments[0];
+            if ($articleVersion->getElifeAssessment() && !empty($articleVersion->getElifeAssessment()->getStrength())) {
+                yield $key => [$articleVersion];
+            }
+        }
+    }
+
+    #[DataProvider('articleWithElifeAssessmentStrengthProvider')]
+    #[Test]
+    public function testIndexOfArticleWithElifeAssessmentStrength(ArticleVersion $articleVersion)
+    {
+        $this->assertNotNull($articleVersion->getElifeAssessment());
+
+        $changeSet = $this->indexer->prepareChangeSet($articleVersion);
+        $this->assertCount(1, $changeSet->getInserts());
+        $insert = $changeSet->getInserts()[0];
+
+        $articleJson = json_decode($insert['json'], true);
+        $this->assertArrayHasKey('elifeAssessment', $articleJson);
+        $this->assertArrayHasKey('strength', $articleJson['elifeAssessment']);
+        $this->assertNotEmpty($articleJson['elifeAssessment']['strength']);
+    }
+
     public function testStatusDateIsUsedAsTheSortDateWhenThereIsNoRdsArticle()
     {
         $indexer = new ArticleIndexer(

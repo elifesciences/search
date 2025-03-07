@@ -96,6 +96,35 @@ final class ReviewedPreprintIndexerTest extends TestCase
         $this->assertNotEmpty($reviewedPreprintJson['elifeAssessment']['significance']);
     }
 
+    public static function reviewedPreprintWithElifeAssessmentStrengthProvider(): Traversable
+    {
+        foreach (self::modelProvider() as $key => $arguments) {
+            /** @var ReviewedPreprint $reviewedPreprint */
+            $reviewedPreprint = $arguments[0];
+            if ($reviewedPreprint->getElifeAssessment() && !empty($reviewedPreprint->getElifeAssessment()->getStrength())) {
+                yield $key => [$reviewedPreprint];
+            }
+        }
+    }
+
+    #[DataProvider('reviewedPreprintWithElifeAssessmentStrengthProvider')]
+    #[Test]
+    public function testGivenAReviewedPreprintWithElifeAssessmentStrengthThatHasNotBeenSupersededItCreatesAnInsertion(ReviewedPreprint $reviewedPreprint)
+    {
+        $this->assertNotNull($reviewedPreprint->getElifeAssessment());
+
+        $this->reviewedPreprintLifecycle->method('isSuperseded')->willReturn(false);
+        $changeSet = $this->indexer->prepareChangeSet($reviewedPreprint);
+
+        $this->assertCount(1, $changeSet->getInserts());
+        $insert = $changeSet->getInserts()[0];
+
+        $reviewedPreprintJson = json_decode($insert['json'], true);
+        $this->assertArrayHasKey('elifeAssessment', $reviewedPreprintJson);
+        $this->assertArrayHasKey('strength', $reviewedPreprintJson['elifeAssessment']);
+        $this->assertNotEmpty($reviewedPreprintJson['elifeAssessment']['strength']);
+    }
+
     #[DataProvider('modelProvider')]
     #[Test]
     public function testGivenAReviewedPreprintThatHasBeenSupersededItDoesNotCreateAnInsertion(ReviewedPreprint $reviewedPreprint)
