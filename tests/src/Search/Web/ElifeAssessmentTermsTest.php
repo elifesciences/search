@@ -30,7 +30,7 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertEquals(2, $response['total']);
     }
 
-    public function testGivenTwoPapersOneLandmarkAndOneWithoutElifAssessmentWhenFilteringForNotApplicableAndLandmarkSignificanceItReturnsBothPapers()
+    public function testGivenTwoPapersOneLandmarkAndOneWithoutElifeAssessmentWhenFilteringForNotApplicableAndLandmarkSignificanceItReturnsBothPapers()
     {
         $this->addDocumentsToElasticSearch([
             $this->provideArticleWithElifeAssessmentSignificance('landmark'),
@@ -80,7 +80,7 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertEquals(2, $response['total']);
     }
 
-    public function testGivenTwoPapersOneExceptionalAndOneWithoutElifAssessmentWhenFilteringForNotApplicableAndExceptionalStrengthItReturnsBothPapers()
+    public function testGivenTwoPapersOneExceptionalAndOneWithoutElifeAssessmentWhenFilteringForNotApplicableAndExceptionalStrengthItReturnsBothPapers()
     {
         $this->addDocumentsToElasticSearch([
             $this->provideArticleWithElifeAssessmentStrength('exceptional'),
