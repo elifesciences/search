@@ -87,8 +87,6 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             $this->provideArbitraryArticleWithoutElifeAssessment(),
         ]);
         $response = $this->performApiRequest(['elifeAssessmentStrength' => ['exceptional', 'not-applicable']]);
-        $this->markTestSkipped();
-        // @phpstan-ignore deadCode.unreachable
         $this->assertEquals(2, $response['total']);
     }
 

@@ -320,6 +320,18 @@ final class ElasticQueryBuilder implements QueryBuilder
             ],
         ];
 
+        if (in_array('not-applicable', $strength)) {
+            $filters[] = [
+                'bool' => [
+                    'must_not' => [
+                        'exists' => [
+                            'field' => 'elifeAssessment.title',
+                        ],
+                    ],
+                ],
+            ];
+        }
+
         $this->postFilter($this->atLeastOneOf($filters));
         
         return $this;
