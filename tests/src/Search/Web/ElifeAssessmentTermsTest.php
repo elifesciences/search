@@ -37,7 +37,6 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             $this->provideArbitraryArticleWithoutElifeAssessment(),
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => ['landmark', 'not-applicable']]);
-//        $this->markTestSkipped();
         $this->assertEquals(2, $response['total']);
     }
 
