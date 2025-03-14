@@ -32,7 +32,13 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
 
     public function testGivenTwoPapersOneLandmarkAndOneWithoutElifAssessmentWhenFilteringForNotApplicableAndLandmarkSignificanceItReturnsBothPapers()
     {
-        $this->markTestIncomplete();
+        $this->addDocumentsToElasticSearch([
+            $this->provideArticleWithElifeAssessmentSignificance('landmark'),
+            $this->provideArbitraryArticleWithoutElifeAssessment(),
+        ]);
+        $response = $this->performApiRequest(['elifeAssessmentSignificance' => ['landmark', 'not-applicable']]);
+        $this->markTestSkipped();
+        $this->assertEquals(2, $response['total']);
     }
 
     public function testGivenFourPapersTwoOfWhichLackSignificanceWhenFilteringForNotAssignedSignificanceItReturnsThePapersWithNoAssignedSignificance()
