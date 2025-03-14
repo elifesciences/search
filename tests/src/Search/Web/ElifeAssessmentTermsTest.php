@@ -89,6 +89,18 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $response = $this->performApiRequest(['elifeAssessmentStrength' => ['exceptional', 'not-applicable']]);
         $this->assertEquals(2, $response['total']);
     }
+    
+    public function testGivenFourPapersWithOnlyOneWithLandmarkAndExceptionalWhenFilteringForLandmarkAndExceptionalItReturnsOnlyThatPaper()
+    {
+        $this->addDocumentsToElasticSearch([
+            $this->provideArticleWithElifeAssessment('landmark', 'exceptional'),
+            $this->provideArbitraryArticleWithoutElifeAssessment(),
+            $this->provideArticleWithElifeAssessment('landmark', 'compelling'),
+            $this->provideArticleWithElifeAssessment('important', 'exceptional'),
+        ]);
+        $response = $this->performApiRequest(['elifeAssessmentSignificance' => ['landmark'], 'elifeAssessmentStrength' => ['exceptional']]);
+        $this->assertEquals(1, $response['total']);
+    }
 
     private function toItemIds(array $items) : array
     {
@@ -204,6 +216,27 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
                             'text' => 'lorem ipsum',
                         ],
                     ],
+                    'strength' => [$strength],
+                ],
+            ],
+        );
+    }
+    
+    private function provideArticleWithElifeAssessment(string $significance, string $strength)
+    {
+        return array_merge(
+            $this->provideArbitraryArticleWithoutElifeAssessment(),
+            [
+                'id' => (string) rand(1, 99999),
+                'elifeAssessment' => [
+                    'title' => 'eLife assessment',
+                    'content' => [
+                        [
+                            'type' => 'paragraph',
+                            'text' => 'lorem ipsum',
+                        ],
+                    ],
+                    'significance' => [$significance],
                     'strength' => [$strength],
                 ],
             ],
