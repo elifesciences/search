@@ -80,6 +80,18 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
         $this->assertEquals(2, $response['total']);
     }
 
+    public function testGivenTwoPapersOneExceptionalAndOneWithoutElifAssessmentWhenFilteringForNotApplicableAndExceptionalStrengthItReturnsBothPapers()
+    {
+        $this->addDocumentsToElasticSearch([
+            $this->provideArticleWithElifeAssessmentStrength('exceptional'),
+            $this->provideArbitraryArticleWithoutElifeAssessment(),
+        ]);
+        $response = $this->performApiRequest(['elifeAssessmentStrength' => ['exceptional', 'not-applicable']]);
+        $this->markTestSkipped();
+        // @phpstan-ignore deadCode.unreachable
+        $this->assertEquals(2, $response['total']);
+    }
+
     private function toItemIds(array $items) : array
     {
         $ids = [];
