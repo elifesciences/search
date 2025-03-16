@@ -8,7 +8,7 @@ jobs:
   update-api-dummy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
     - id: old-versions
       run: |
@@ -26,7 +26,7 @@ jobs:
         echo api-version=$(jq -r '.packages[]|select(.name == "elife/api").version' < composer.lock) >> $GITHUB_OUTPUT
 
     - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v7
+      uses: peter-evans/create-pull-request@271a8d0340265f705b14b6d32b9829c1cb33d45e # v7
       with:
         add-paths: composer.lock
         commit-message: |

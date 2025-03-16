@@ -1,6 +1,6 @@
 services:
   opensearch:
-    image: opensearchproject/opensearch:2
+    image: opensearchproject/opensearch:2@sha256:31e58ca6ea8ac0dde92004414043e1c3dc8f7403f3b8de7a11d73d531e0c54ef
     environment:
       - cluster.name=opensearch-cluster
       - node.name=opensearch
@@ -25,7 +25,7 @@ services:
       timeout: 2s
       retries: 50
   api-dummy:
-    image: ghcr.io/elifesciences/api-dummy:20250227145147.0.0-g32c427c-13569188705-1
+    image: ghcr.io/elifesciences/api-dummy:20250227145147.0.0-g32c427c-13569188705-1@sha256:5815c369a2bc6427a3f62c04e9730e5f2a18e1b4c595d714763fc3a8de4d076f
     platform: linux/amd64
     ports:
       - '5002:8080'
@@ -36,7 +36,7 @@ services:
       retries: 10
     stop_grace_period: 1s
   localstack:
-    image: localstack/localstack:4.0.3
+    image: localstack/localstack:4.0.3@sha256:17c2f79ca4e1f804eb912291a19713d4134806325ef0d21d4c1053161dfa72d0
     environment:
       - SERVICES=sqs
       - AWS_DEFAULT_REGION=eu-central-1
