@@ -1,7 +1,7 @@
 ##
 ## base image setup
 #
-FROM php:8.3-apache AS base
+FROM php:8.3-apache@sha256:c8a56aefe4152966790c226440dde7d42f9c21c5ca793057a8e5fa639348b11d AS base
 
 USER root
 
@@ -17,7 +17,7 @@ WORKDIR /app
 #
 FROM base AS dev
 
-COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.8@sha256:685473b4cd31d70bfe71926409f812d5dd9245972d38b659ba35d70f4007808c /usr/bin/composer /usr/bin/composer
 
 # Install additional tools needed for tests
 RUN apt-get update && apt-get install retry -y
@@ -32,7 +32,7 @@ EXPOSE 80
 FROM base AS deps
 COPY composer.json composer.json
 COPY composer.lock composer.lock
-COPY --from=composer:2.8 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.8@sha256:685473b4cd31d70bfe71926409f812d5dd9245972d38b659ba35d70f4007808c /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev
 
 ##
