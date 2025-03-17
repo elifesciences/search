@@ -31,6 +31,21 @@ final class ElasticQueryBuilder implements QueryBuilder
         ],
     ];
 
+    private $includeItemsWithElifeAssessmentAndWithoutAssignedSignificance = [
+                'bool' => [
+                    'must' => [
+                        'exists' => [
+                            'field' => 'elifeAssessment.title',
+                        ],
+                    ],
+                    'must_not' => [
+                        'exists' => [
+                            'field' => 'elifeAssessment.significance',
+                        ],
+                    ],
+                ],
+            ];
+
     public function __construct(string $index)
     {
         $this->query['index'] = $index;
@@ -287,20 +302,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         ];
 
         if (in_array('not-assigned', $significance)) {
-            $filters[] = [
-                'bool' => [
-                    'must' => [
-                        'exists' => [
-                            'field' => 'elifeAssessment.title',
-                        ],
-                    ],
-                    'must_not' => [
-                        'exists' => [
-                            'field' => 'elifeAssessment.significance',
-                        ],
-                    ],
-                ],
-            ];
+            $filters[] = $this->includeItemsWithElifeAssessmentAndWithoutAssignedSignificance;
         }
 
         if (in_array('not-applicable', $significance)) {
