@@ -21,6 +21,15 @@ final class ElasticQueryBuilder implements QueryBuilder
     const WORD_LIMIT = 32;
 
     private $dateType;
+    private $includeItemsWithoutElifeAssessment = [
+        'bool' => [
+            'must_not' => [
+                'exists' => [
+                    'field' => 'elifeAssessment.title',
+                ],
+            ],
+        ],
+    ];
 
     public function __construct(string $index)
     {
@@ -295,15 +304,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         }
 
         if (in_array('not-applicable', $significance)) {
-            $filters[] = [
-                'bool' => [
-                    'must_not' => [
-                        'exists' => [
-                            'field' => 'elifeAssessment.title',
-                        ],
-                    ],
-                ],
-            ];
+            $filters[] = $this->includeItemsWithoutElifeAssessment;
         }
 
         $this->postFilter($this->atLeastOneOf($filters));
@@ -321,15 +322,7 @@ final class ElasticQueryBuilder implements QueryBuilder
         ];
 
         if (in_array('not-applicable', $strength)) {
-            $filters[] = [
-                'bool' => [
-                    'must_not' => [
-                        'exists' => [
-                            'field' => 'elifeAssessment.title',
-                        ],
-                    ],
-                ],
-            ];
+            $filters[] = $this->includeItemsWithoutElifeAssessment;
         }
 
         $this->postFilter($this->atLeastOneOf($filters));
