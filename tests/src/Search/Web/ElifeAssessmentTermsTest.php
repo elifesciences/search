@@ -11,13 +11,15 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
     public function testGivenOnlyOneOfTwoPapersIsLandmarkWhenFilteringForLandmarkSignificanceItOnlyReturnsTheLandmarkPaper()
     {
         $significance = 'landmark';
+        $landmarkPaper = $this->provideArticleWithElifeAssessmentSignificance($significance);
         $this->addDocumentsToElasticSearch([
             $this->provideArbitraryArticleWithoutElifeAssessment(),
-            $this->provideArticleWithElifeAssessmentSignificance($significance)
+            $landmarkPaper
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => [$significance]]);
+        $idsOfReturnedArticles = $this->toItemIds($response['items']);
+        $this->assertContains($landmarkPaper['id'], $idsOfReturnedArticles, 'Expected article landmark significance to be returned');
         $this->assertEquals(1, $response['total']);
-        $this->assertResultsOnlyContainFilteredSignificance($significance, $response['items']);
     }
 
     public function testGivenTwoPapersOneLandmarkAndOneImportantWhenFilteringForLandmarkOrImportantSignificanceItReturnsBothPapers()
@@ -112,20 +114,6 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             $ids[] = $item['id'];
         }
         return $ids;
-    }
-
-    private function assertResultsOnlyContainFilteredSignificance(string $significance, array $items)
-    {
-        foreach ($items as $item) {
-            $this->assertItemContainsElifeAssessmentWithSpecificSignificanceProperty($significance, $item);
-        }
-    }
-
-    private function assertItemContainsElifeAssessmentWithSpecificSignificanceProperty(string $significance, array $item)
-    {
-        $this->assertArrayHasKey('elifeAssessment', $item);
-        $this->assertArrayHasKey('significance', $item['elifeAssessment']);
-        $this->assertEquals([$significance], $item['elifeAssessment']['significance']);
     }
 
     private function assertResultsOnlyContainFilteredStrength(string $strength, array $items)
