@@ -92,13 +92,16 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
     
     public function testGivenFourPapersWithOnlyOneWithLandmarkAndExceptionalWhenFilteringForLandmarkAndExceptionalItReturnsOnlyThatPaper()
     {
+        $landmarkAndExceptionalPaper =  $this->provideArticleWithElifeAssessment('landmark', 'exceptional');
         $this->addDocumentsToElasticSearch([
-            $this->provideArticleWithElifeAssessment('landmark', 'exceptional'),
+            $landmarkAndExceptionalPaper,
             $this->provideArbitraryArticleWithoutElifeAssessment(),
             $this->provideArticleWithElifeAssessment('landmark', 'compelling'),
             $this->provideArticleWithElifeAssessment('important', 'exceptional'),
         ]);
         $response = $this->performApiRequest(['elifeAssessmentSignificance' => ['landmark'], 'elifeAssessmentStrength' => ['exceptional']]);
+        $idsOfReturnedArticles = $this->toItemIds($response['items']);
+        $this->assertContains($landmarkAndExceptionalPaper['id'], $idsOfReturnedArticles, 'Expected article with landmark and exceptional terms');
         $this->assertEquals(1, $response['total']);
     }
 
