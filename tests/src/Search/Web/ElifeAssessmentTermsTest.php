@@ -62,14 +62,15 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
     public function testGivenOnlyOneOfTwoPapersIsExceptionalWhenFilteringForExceptionalStrengthItOnlyReturnsTheExceptionalPaper()
     {
         $strength = 'exceptional';
+        $exceptionalPaper = $this->provideArticleWithElifeAssessmentStrength($strength);
         $this->addDocumentsToElasticSearch([
             $this->provideArbitraryArticleWithoutElifeAssessment(),
-            $this->provideArticleWithElifeAssessmentStrength($strength)
+            $exceptionalPaper
         ]);
         $response = $this->performApiRequest(['elifeAssessmentStrength' => [$strength]]);
-
+        $idsOfReturnedArticles = $this->toItemIds($response['items']);
+        $this->assertContains($exceptionalPaper['id'], $idsOfReturnedArticles, 'Expected article exceptional strength to be returned');
         $this->assertEquals(1, $response['total']);
-        $this->assertResultsOnlyContainFilteredStrength($strength, $response['items']);
     }
 
     public function testGivenTwoPapersOneExceptionalAndOneCompellingWhenFilteringForExceptionalOrCompellingStrengthItReturnsBothPapers()
@@ -114,20 +115,6 @@ class ElifeAssessmentTermsTest extends ElasticTestCase
             $ids[] = $item['id'];
         }
         return $ids;
-    }
-
-    private function assertResultsOnlyContainFilteredStrength(string $strength, array $items)
-    {
-        foreach ($items as $item) {
-            $this->assertItemContainsElifeAssessmentWithSpecificStrengthProperty($strength, $item);
-        }
-    }
-
-    private function assertItemContainsElifeAssessmentWithSpecificStrengthProperty(string $strength, array $item)
-    {
-        $this->assertArrayHasKey('elifeAssessment', $item);
-        $this->assertArrayHasKey('strength', $item['elifeAssessment']);
-        $this->assertEquals([$strength], $item['elifeAssessment']['strength']);
     }
 
     private function performApiRequest(array $queryStringParameters)
