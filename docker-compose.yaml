@@ -1,6 +1,6 @@
 services:
   opensearch:
-    image: opensearchproject/opensearch:2@sha256:31e58ca6ea8ac0dde92004414043e1c3dc8f7403f3b8de7a11d73d531e0c54ef
+    image: opensearchproject/opensearch:3@sha256:37440d0ab48ced077dd59348ad47efafb189d532766678ed98b204c8c577d465
     environment:
       - cluster.name=opensearch-cluster
       - node.name=opensearch
