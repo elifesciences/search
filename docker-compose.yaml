@@ -36,7 +36,7 @@ services:
       retries: 10
     stop_grace_period: 1s
   localstack:
-    image: localstack/localstack:4.0.3@sha256:17c2f79ca4e1f804eb912291a19713d4134806325ef0d21d4c1053161dfa72d0
+    image: localstack/localstack:4.7.0@sha256:12253acd9676770e9bd31cbfcf17c5ca6fd7fb5c0c62f3c46dd701f20304260c
     environment:
       - SERVICES=sqs
       - AWS_DEFAULT_REGION=eu-central-1
