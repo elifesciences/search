@@ -5,6 +5,7 @@
     ":prHourlyLimitNone",
     ":prConcurrentLimitNone"
   ],
+  "assigneesFromCodeOwners": true,
   "packageRules": [
     {
       "matchPackageNames": ["ghcr.io/elifesciences/api-dummy"],
