@@ -25,7 +25,7 @@ services:
       timeout: 2s
       retries: 50
   api-dummy:
-    image: ghcr.io/elifesciences/api-dummy:20250806105144.0.0-gf285818-16774861501-1@sha256:5f27f788aa6d04b99e0b54e9b814ef2e38bd36706793b2b12b46c2447d916e55
+    image: ghcr.io/elifesciences/api-dummy:20250814055346.0.0-g39f4cce-16957090322-1@sha256:38c8978ad4f85b9a3997a2d8f6ce0b75586bf4bd121ca6f59b2d4038ffc9bfbf
     platform: linux/amd64
     ports:
       - '5002:8080'
