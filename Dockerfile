@@ -17,7 +17,7 @@ WORKDIR /app
 #
 FROM base AS dev
 
-COPY --from=composer:2.8@sha256:5248900ab8b5f7f880c2d62180e40960cd87f60149ec9a1abfd62ac72a02577c /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.9@sha256:7384cf9fa70b710af02c9f40bec6e44472e07138efa5ab3428a058087c0d2724 /usr/bin/composer /usr/bin/composer
 
 # Install additional tools needed for tests
 RUN apt-get update && apt-get install retry -y
@@ -32,7 +32,7 @@ EXPOSE 80
 FROM base AS deps
 COPY composer.json composer.json
 COPY composer.lock composer.lock
-COPY --from=composer:2.8@sha256:5248900ab8b5f7f880c2d62180e40960cd87f60149ec9a1abfd62ac72a02577c /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.9@sha256:7384cf9fa70b710af02c9f40bec6e44472e07138efa5ab3428a058087c0d2724 /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev
 
 ##
