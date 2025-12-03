@@ -46,7 +46,7 @@
         "willdurand/negotiation": "^3.1"
     },
     "require-dev": {
-        "guzzlehttp/promises": "^1.5",
+        "guzzlehttp/promises": "^2.0",
         "mockery/mockery": "^1.0",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^12.0",
