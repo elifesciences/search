@@ -10,6 +10,7 @@ on:
   push:
     branches:
       - master
+      - feature-*
 
 jobs:
   tests:
@@ -24,7 +25,7 @@ jobs:
   build-and-push:
     needs: [tests]
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/feature-')
     env:
       IMAGE_REPO: ghcr.io/elifesciences/search
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
