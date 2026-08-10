@@ -257,7 +257,7 @@ final class ElasticQueryBuilder implements QueryBuilder
             'order' => $this->getSort($reverse),
             'missing' => '_last',
         ]));
-
+        $this->sort(['_id' => $this->getSort($reverse)]);   // tiebreaker
         return $this;
     }
 
