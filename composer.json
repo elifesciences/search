@@ -16,7 +16,7 @@
         "php": "8.3.*",
         "aws/aws-sdk-php": "3.336.10",
         "beberlei/assert": "^3.3",
-        "doctrine/annotations": "^1.4",
+        "doctrine/annotations": "^2.0",
         "elasticsearch/elasticsearch": "^7.11",
         "elife/api": "^2.30",
         "elife/api-client": "^1.1",
