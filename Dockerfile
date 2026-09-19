@@ -1,7 +1,7 @@
 ##
 ## base image setup
 #
-FROM php:8.3-apache@sha256:16185165dcfb607cf4766ea302eb907dd1f76a7fff22581d705b094142ea3dcc AS base
+FROM php:8.3-apache@sha256:257dcf070787a1ffc782d90bd589297b63a007064d024cdfb6d30464836ded56 AS base
 
 USER root
 
