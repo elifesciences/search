@@ -958,21 +958,21 @@
         },
         {
             "name": "elife/bus-sdk",
-            "version": "v1.4.0",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elifesciences/bus-sdk-php.git",
-                "reference": "0f59099c97f631b3a36d79f6fd43b6df798ffb3e"
+                "reference": "bc26e3bdc211a54930a9f1230045479d767c3601"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/0f59099c97f631b3a36d79f6fd43b6df798ffb3e",
-                "reference": "0f59099c97f631b3a36d79f6fd43b6df798ffb3e",
+                "url": "https://api.github.com/repos/elifesciences/bus-sdk-php/zipball/bc26e3bdc211a54930a9f1230045479d767c3601",
+                "reference": "bc26e3bdc211a54930a9f1230045479d767c3601",
                 "shasum": ""
             },
             "require": {
                 "aws/aws-sdk-php": "^3.238",
-                "elife/api-sdk": "dev-master",
+                "elife/api-sdk": "^1.0",
                 "elife/logging-sdk": "^1.1",
                 "jms/serializer": "^1.4 || ^3.0",
                 "php": "^7.1 || ^8.0",
@@ -982,7 +982,7 @@
                 "sebastian/comparator": "<1.2.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.5 | ^9.5",
+                "phpunit/phpunit": "^6.5 || ^9.5",
                 "squizlabs/php_codesniffer": "^3.5",
                 "symfony/console": "^2.7 || ^3.2 || ^4.4 || ^5.0"
             },
@@ -1008,9 +1008,10 @@
             "description": "eLife Sciences Bus SDK",
             "support": {
                 "issues": "https://github.com/elifesciences/bus-sdk-php/issues",
-                "source": "https://github.com/elifesciences/bus-sdk-php/tree/v1.4.0"
+                "source": "https://github.com/elifesciences/bus-sdk-php/tree/v1.5.0"
             },
-            "time": "2024-12-16T17:40:16+00:00"
+            "time": "2026-10-29T15:15:24+00:00",
+            "published-time": "2026-10-29T15:18:03+00:00"
         },
         {
             "name": "elife/content-negotiator",
@@ -8010,5 +8011,5 @@
         "php": "8.3.*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
