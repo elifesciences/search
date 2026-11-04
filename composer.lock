@@ -2458,7 +2458,8 @@
                 "issues": "https://github.com/php-fig/event-dispatcher/issues",
                 "source": "https://github.com/php-fig/event-dispatcher/tree/1.0.0"
             },
-            "time": "2019-01-08T18:20:26+00:00"
+            "time": "2019-01-08T18:20:26+00:00",
+            "published-time": "2019-03-25T15:31:44+00:00"
         },
         {
             "name": "psr/http-client",
@@ -3013,16 +3014,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "v5.4.47",
+            "version": "v5.4.55",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "c4ba980ca61a9eb18ee6bcc73f28e475852bb1ed"
+                "reference": "0b8208c757a9f97e372c6297a1863ffe19686dc0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/c4ba980ca61a9eb18ee6bcc73f28e475852bb1ed",
-                "reference": "c4ba980ca61a9eb18ee6bcc73f28e475852bb1ed",
+                "url": "https://api.github.com/repos/symfony/console/zipball/0b8208c757a9f97e372c6297a1863ffe19686dc0",
+                "reference": "0b8208c757a9f97e372c6297a1863ffe19686dc0",
                 "shasum": ""
             },
             "require": {
@@ -3092,7 +3093,7 @@
                 "terminal"
             ],
             "support": {
-                "source": "https://github.com/symfony/console/tree/v5.4.47"
+                "source": "https://github.com/symfony/console/tree/v5.4.55"
             },
             "funding": [
                 {
@@ -3104,11 +3105,16 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-06T11:30:55+00:00"
+            "time": "2026-10-28T09:02:56+00:00",
+            "published-time": "2026-10-28T18:14:06+00:00"
         },
         {
             "name": "symfony/dependency-injection",
@@ -3264,7 +3270,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:20:29+00:00"
+            "time": "2024-09-25T14:20:29+00:00",
+            "published-time": "2024-11-27T12:27:11+00:00"
         },
         {
             "name": "symfony/error-handler",
@@ -3335,7 +3342,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-05T14:17:06+00:00"
+            "time": "2024-11-05T14:17:06+00:00",
+            "published-time": "2024-11-06T09:31:26+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -3420,7 +3428,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:11:13+00:00"
+            "time": "2024-09-25T14:11:13+00:00",
+            "published-time": "2024-10-27T12:57:37+00:00"
         },
         {
             "name": "symfony/event-dispatcher-contracts",
@@ -3496,7 +3505,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:20:29+00:00"
+            "time": "2024-09-25T14:20:29+00:00",
+            "published-time": "2024-11-27T12:27:12+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -3646,16 +3656,16 @@
         },
         {
             "name": "symfony/http-kernel",
-            "version": "v5.4.51",
+            "version": "v5.4.56",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-kernel.git",
-                "reference": "85432f7548b2757b8387f7e1a468abd62fc4c9bc"
+                "reference": "fcbb6e3da7b4a7ba9272010c3016008f2f0775f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/85432f7548b2757b8387f7e1a468abd62fc4c9bc",
-                "reference": "85432f7548b2757b8387f7e1a468abd62fc4c9bc",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/fcbb6e3da7b4a7ba9272010c3016008f2f0775f6",
+                "reference": "fcbb6e3da7b4a7ba9272010c3016008f2f0775f6",
                 "shasum": ""
             },
             "require": {
@@ -3739,7 +3749,7 @@
             "description": "Provides a structured process for converting a Request into a Response",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/http-kernel/tree/v5.4.51"
+                "source": "https://github.com/symfony/http-kernel/tree/v5.4.56"
             },
             "funding": [
                 {
@@ -3759,7 +3769,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-28T07:10:35+00:00"
+            "time": "2026-11-04T10:34:07+00:00",
+            "published-time": "2026-11-04T10:52:01+00:00"
         },
         {
             "name": "symfony/monolog-bridge",
@@ -3994,7 +4005,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:33+00:00"
         },
         {
             "name": "symfony/polyfill-intl-grapheme",
@@ -4072,7 +4084,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:35+00:00"
         },
         {
             "name": "symfony/polyfill-intl-normalizer",
@@ -4153,7 +4166,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:35+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -4233,7 +4247,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:35+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
@@ -4374,7 +4389,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:33+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
@@ -4454,7 +4470,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-09T11:45:10+00:00"
+            "time": "2024-09-09T11:45:10+00:00",
+            "published-time": "2024-09-09T12:24:33+00:00"
         },
         {
             "name": "symfony/polyfill-php81",
@@ -5409,12 +5426,12 @@
             },
             "type": "library",
             "extra": {
+                "thanks": {
+                    "url": "https://github.com/symfony/contracts",
+                    "name": "symfony/contracts"
+                },
                 "branch-alias": {
                     "dev-main": "2.5-dev"
-                },
-                "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
                 }
             },
             "autoload": {
@@ -5463,7 +5480,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:11:13+00:00"
+            "time": "2024-09-25T14:11:13+00:00",
+            "published-time": "2024-11-27T12:25:27+00:00"
         },
         {
             "name": "symfony/string",
@@ -5549,7 +5567,8 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-13T13:31:12+00:00"
+            "time": "2024-11-13T13:31:12+00:00",
+            "published-time": "2024-11-13T14:05:41+00:00"
         },
         {
             "name": "symfony/var-dumper",
@@ -8010,5 +8029,5 @@
         "php": "8.3.*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.11.0"
 }
